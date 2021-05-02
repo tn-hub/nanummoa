@@ -20,6 +20,5 @@
 		<%@ include file="/common/footer.jsp"%>
 	</div>
 </div>
-여기를 수정
 </body>
 </html>
