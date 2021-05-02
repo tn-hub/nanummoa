@@ -1,0 +1,143 @@
+@charset "UTF-8";
+/** 기본 */
+* {
+	font-family: "맑은 고딕", 굴림, 돋움;
+
+}
+table {
+	padding: 0;
+	border-spacing: 0px;
+	border: 0;
+	border-collapse: collapse;
+}
+
+ul, ol {
+	list-style: none;
+}
+
+a {
+	color: black;
+	text-decoration: none;
+}
+
+/** 에러 페이지  */
+.error_image{
+	margin:200px auto; 
+	text-align: center;
+}
+.error_image img{
+	 width: 500px;
+}
+
+/** header */
+/** header : 상단바 */
+.header_info{
+	width: 100%;
+	height: 35px;
+	text-align: center;
+	background-color: black;
+	cursor: pointer;
+	font-weight: bold;
+}
+.header_info a{
+	color: white;
+	float : left;
+}
+.header_wrapper{
+	align-items: center;
+	max-width: 1200px;
+	width: 100%;
+	height: 100px;
+	display: block;
+	font-weight: bold;
+	margin : 0 auto;
+}
+.login_menu{
+	float: right;	
+	width : 200px;
+}
+.header_info_menu ul li{
+	float: left; 
+	text-align: center;  
+}
+.a_button{
+	display: block;   
+}
+.info_color {
+	color:#FBD157;
+	font-size: 1.2em;
+}
+/** header : 로고 & 메뉴 */
+.header_logo{
+	color: white;
+	text-decoration: none;
+	margin:0 auto;
+	float : left;
+}
+.header_logo img{
+	width : 100px;
+}
+.header_menu{
+	float : left;
+}
+.header_menu ul li{
+	width : 200px;
+	float : left;	
+}
+
+
+/** main_contents */
+.main_wrapper{
+	margin: 0px auto;
+	width: 1200px;
+	text-align: justify;
+}
+.main_banner{
+	margin: 0 auto;
+	width: 100%;
+	display: block;
+}
+.main_banner img{
+	width : 100%;
+	height: 300px;
+	
+}
+/** contents */
+#contents{
+	min-height: 800px;
+}
+/** main_contents : 모집중인 자원봉사 */
+.main_title{
+	margin: 30px 0;
+}
+.vol_wrapper {
+	
+	
+}
+
+.block_row{
+	
+}
+
+.block_col{
+	float: left;
+	width: 300px;
+}
+
+.vol_local{
+	
+}
+
+.btn_apply{
+	
+}
+/** footer */
+.footer_wrapper{
+	margin: 0px auto;
+	width: 1200px;
+	text-align: justify;
+}
+.footer_menu li{
+	float : left;
+}
+

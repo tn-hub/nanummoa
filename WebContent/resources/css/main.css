@@ -1,0 +1,530 @@
+html {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	height: 100%;
+}
+
+html {
+	overflow-y: scroll;
+}
+
+@font-face {
+	font-family: 'Cafe24Simplehae';
+	src:
+		url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Cafe24Simplehae.woff')
+		format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+body, p, ul, ol, li, dl, dt, dd, form, table, th, td, fieldset, input,
+	textarea, select, button, h1, h2, h3, h4, h5, h6, pre {
+	margin: 0;
+	padding: 0;
+	-webkit-text-size-adjust: none;
+	font-family: 'Cafe24Simplehae', "돋움", Dotum, Droid Sans,
+		AppleSDGothicNeo, AppleGothic, Helvetica, Sans-serif;
+}
+
+/* 아이폰 가로모드 글자 크기 확대 방지: -webkit-text-size-adjust:none; */
+body, input, textarea, select, button {
+	/* 	color: lightgrey; */
+	font-size: 12px;
+	font-family: 'Cafe24Simplehae';
+}
+
+header, footer, nav, aside, section, article {
+	display: block;
+}
+
+fieldset, img {
+	border: 0;
+}
+
+img {
+	-ms-interpolation-mode: bicubic !important;
+	border: 0;
+}
+
+table {
+	padding: 0;
+	border-spacing: 0px;
+	border: 0;
+	border-collapse: collapse;
+}
+
+ul, ol {
+	list-style: none;
+}
+
+a {
+	color: grey;
+	text-decoration: none;
+}
+
+a:link {
+	color: grey;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #orange;
+}
+
+.clear {
+	clear: both;
+}
+
+@font-face {
+	font-family: 'Cafe24Simplehae';
+	src:
+		url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Cafe24Simplehae.woff');
+	format ('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+body {
+	font-family: 'Cafe24Simplehae';
+}
+
+/* 헤더파트 */
+.header {
+	display: block;
+	font-weight: bold;
+}
+/* 헤더 홈페이지 이용안내 */
+.lecfly_header_info_wrapper {/* 헤더 홈페이지 이용안내 래퍼 */
+	width: 100%;
+	height: 35px;
+	text-align: center;
+	background-color: black;
+}
+/* .lecfly_header_info_wrapper:hover {헤더 홈페이지 이용안내 래퍼
+	background-color: purple;
+} */
+
+.lecfly_header_info {/* 헤더 홈페이지 이용안내 문구 */
+	padding: 10px;
+	cursor: pointer;
+}
+
+
+.lecfly_header_info a {
+	color: white;
+	font-size: 1.2em;
+}
+
+.lecfly_header_info a:hover {
+	color: orangered;
+}
+
+/* .lecfly_header_info a:active {
+	color: orange;
+}
+
+.lecfly_header_info a:visited {
+	color: white;
+} */
+
+.header_wrapper {
+	width: 100%;
+	height: 100px;
+	margin: 0 auto;
+	max-width: 1200px;
+	align-items: center;
+}
+
+.header_logo { /* 헤더 로고 img */
+	width: 180px;
+	height: 100%;
+	padding: 15px 15px 15px 0;
+}
+
+.header_column_logo { /* 헤더 로고열  */
+	float: left;
+	cursor: pointer;
+}
+
+@media ( max-width : 558px) {
+	.header_column_search {
+		width: 0 !important;
+		display: none !important;
+	}
+}
+
+@media screen and (min-width: 559px) {
+	.header_column_search {
+		
+	}
+}
+
+.header_column_search { /* 헤더 검색창열 */
+	width: 370px;
+	float: left;
+	padding-top: 35px;
+	padding-left: 30px;
+	border-radius: 5px;
+	background-color: white;
+}
+
+#backC {
+	position: relative;
+	border-radius: 20px;
+	background-color: white;
+	box-shadow: rgba(0, 0, 0, 0.04) 0px 0px 1px 0px, rgba(41, 42, 43, 0.34)
+		0px 1px 3px 0px;
+	width: 340px;
+}
+
+#backC form {
+	width: 340px;
+}
+
+.search_btn {
+	background-color: white;
+	border : 0px;
+}
+
+.search_bar {
+	border: 0px;
+	margin-left: 20px;
+	height: 32px;
+	width: 270px;
+}
+
+input:focus {
+	outline: none;
+}
+
+.header_column_menu { /* 헤더 메뉴열 */
+	float: right;
+	text-align: right;
+	padding-top: 40px;
+}
+
+.header_column_menu li { /* 헤더 메뉴 목록 */
+	float: left;
+	font-size: 1.2em;
+	margin-left: 30px;
+}
+
+@media ( max-width : 845px) {
+	.header_column_menu {
+		width: 0 !important;
+		display: none !important;
+	}
+}
+
+@media screen and (min-width: 846px) {
+	.header_column_menu {
+		
+	}
+}
+/* 메인 광고 배너: 가로 full, slide */
+
+/* 메인파트 */
+#homemain {
+	/* 	padding-top: 15px; */
+	
+}
+
+.main_content { /* 메인배너 하단 */
+	min-height: 700px;
+	margin: 0 auto;
+	/* 	text-align: center; */
+	width: 100%;
+}
+
+.main_banner { /* 메인_배너 파트 */
+ 
+	margin: 0 auto;
+	width: 100%;
+	height: 440px;
+	margin-bottom: 60px;
+	background-color: rgb(255, 165, 0, 0.25);
+	/* background-color: #D3D3D3; */
+}
+
+.main_wrapper { /* 메인 파트: width 1200 */
+	margin: 0px auto;
+	width: 1200px;
+	text-align: justify;
+}
+
+.main_category { /* 메인_카테고리 */
+	margin-bottom: 80px;
+	text-align: center;
+}
+
+.category_block img { /* 메인_카테고리블럭아이콘 */
+	margin-bottom: 30px;
+	margin-top: 15px;
+}
+.category_block span {/* 메인_카테고리블럭아이콘명 */
+	padding-top: 30px;
+	color: black;
+}
+.category_block { /* 메인_카테고리블럭 */
+	display: inline-block;
+	text-align: center;
+	margin: 40px 20px 0px 20px;
+	padding: 0px 0px 0px 0px;
+	cursor: pointer;
+	width: 100px;
+	height: 100px;
+	border-radius: 50px;
+}
+
+.category_block:hover {
+	background-color: orange;
+}
+
+.main_title {
+	margin-bottom: 15px;
+}
+
+.main_recommend { /* 메인_추천 강의 */
+	margin: 0 30px 150px 30px;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-template-rows: repeat(1, 450px);
+	grid-gap: 40px;
+}
+
+/* 메인 비디오블럭 목록*/
+.main_video_wrapper { /* 비디오 리스트 출력 래퍼 */
+	width: 100%;
+	height: 70vh;
+	display: table;
+	table-layout: fixed;
+
+}
+
+.main_video_thumb_rec { /* 비디오 리스트 강의 비디오블럭 */
+	position: relative;
+}
+
+.main_video_thumb { /* 비디오 리스트 강의 비디오블럭 */
+	position: relative;
+
+}
+.main_video_thumb_btn i:hover{
+	color : orangered;
+}
+.main_video_thumb_btn i { /* 비디오 리스트 강의 찜버튼 */
+	position: absolute;
+	right: 0px;
+	padding: 10px 10px;
+}
+
+.main_video_block:nth-child(4n+1) { /* 비디오 리스트_ 일반 강의 비디오블럭 4n+1 */
+	display: table-cell;
+	vertical-alighn: middle;
+	padding: 0 10px 45px 0px;
+	width: 282px;
+}
+
+.main_video_block:nth-child(4n+2) { /* 비디오 리스트_ 일반 강의 비디오블럭 */
+	display: table-cell;
+	vertical-alighn: middle;
+	padding: 0 10px 45px 10px;
+	width: 282px;
+}
+
+.main_video_block:nth-child(4n+3) { /* 비디오 리스트_ 일반 강의 비디오블럭 */
+	display: table-cell;
+	vertical-alighn: middle;
+	padding: 0 10px 45px 10px;
+	width: 282px;
+}
+
+.main_video_block:nth-child(4n) { /* 비디오 리스트_ 일반 강의 비디오블럭 4n */
+	display: table-cell;
+	vertical-alighn: middle;
+	padding: 0 0px 45px 10px;
+	width: 282px;
+}
+
+.main_video_block_rec:first-child { /* 비디오 리스트_ 추천 강의 비디오블럭 first */
+	display: table-cell;
+	vertical-alighn: middle;
+	padding: 0 60px 40px 0;
+
+}
+
+.main_video_block_rec:nth-child(2) { /* 비디오 리스트_ 추천 강의 비디오블럭 second */
+	display: table-cell;
+	vertical-alighn: middle;
+	padding: 0 30px 40px 30px;
+
+}
+
+.main_video_block_rec:last-child { /* 비디오 리스트_ 추천 강의 비디오블럭 last */
+	display: table-cell;
+	padding: 0px 0px 40px 60px;
+	vertical-alighn: middle;
+
+}
+
+.main_video_block_row { /* 비디오 리스트_ 비디오 row */
+	display: table-row;
+	table-layout: fixed;
+	float: left;
+}
+.main_video_thumb_rec, .main_video_thumb {
+	overflow : hidden;
+}
+.main_video_thumb_rec img { /* 비디오 리스트_추천강의 썸네일 */
+	width: 100%;
+	height: 450px;
+	width: 340px;
+	
+}
+.main_video_thumb_rec img:hover{
+	transform:scale(1.1);
+	transition:transform .5s;
+}
+.main_video_thumb img { /* 비디오 리스트_일반강의 썸네일 */
+	width: 100%;
+	height: 180px;
+	width: 300px;
+	overflow: hidden;
+}
+.main_video_thumb img:hover {
+	transform:scale(1.1);
+	transition:transform .2s;
+}
+.main_video_info_lec { /* 비디오 리스트_정보창 래퍼 */
+	padding: 10px 0;
+	text-align: justify;
+	width: 340px;
+	margin: 0px;
+}
+.main_video_info { /* 비디오 리스트_정보창 래퍼 */
+	padding: 10px 0;
+	text-align: justify;
+	max-width: 282px;
+	margin: 0px;
+}
+.main_video_info_category { /* 비디오 리스트_카테고리 */
+	display: inline-block;
+	font-size: 1.0em;
+	padding: 10px 0;
+}
+
+.main_video_info_title { /* 비디오 리스트_제목 */
+	font-size: 1.4em;
+	font-weight: 600;
+	/* 여러 줄 자르기 */
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	/* 여러 줄 자르기 - 2줄 제한*/
+	white-space: normal;
+	line-height: 1.4em;
+	height: 2.8em;
+	text-align: left;
+	word-wrap: break-word;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+}
+.video_info_creator_img { /* 비디오 리스트_크리에이터 사진 */
+	width: 25px;
+	height: 25px;
+	border-radius: 50%;
+	vertical-align: middle;
+	display: inline-block;
+}
+.main_video_info_creator_img { /* 비디오 리스트_크리에이터 사진 */
+	width: 25px;
+	height: 25px;
+	border-radius: 50%;
+	vertical-align: middle;
+	display: inline-block;
+}
+
+.main_video_info_creator_name { /* 비디오 리스트_크리에이터 이름 */
+	display: inline-block;
+	font-size: 1.0em;
+	padding: 10px 0;
+}
+
+.main_video_like { /* 비디오 리스트_좋아요, 평점 */
+	display: inline-block;
+	vertical-align: bottom;
+	padding: 10px 0;
+	float: right;
+}
+
+.main_video_like i {
+	display: inline-block;
+	color: orange;
+}
+
+.main_video_like i:active {
+	color: orangered;
+}
+.main_video_like i:active {
+	color: orangered;
+}
+.main_video_like i:visited {
+	color: orangered;
+}
+/* 푸터파트 */
+.footer {
+	clear: both;
+	display: block;
+	background-color: gold;
+	height: 200px;
+	margin: 0 auto;
+	text-align: center;
+	background-color: lightgrey;
+	z-index: 999;
+	bottom: 0;
+}
+
+.footer_wrapper {
+	width: 100%;
+	height: 200px;
+	width: 1200px;
+	margin: 0 auto;;
+	text-align: justify;
+}
+
+.footer_wrapper p {
+	padding-left: 150px;
+	margin-bottom: 15px;
+}
+
+.footer_title {
+	padding-top: 50px;
+	font-size: 1.2em;
+	font-weight: 700;
+}
+
+/* 세현 추가 0521 헤더에 로그인 로그아웃 마우스 호버시 줄생기는거 */
+
+.header_menues >a:hover {
+	color: purple;
+
+.header_menues:hover {
+	border-bottom: 1px solid orange;
+}
+
+#TEST3 {
+	margin-right: -20px;
+}
+
+#TEST3:hover {
+	border-bottom: 1px solid orange;
+
+/* 검색파트 */
+.search_wrapper {
+	min-height: 700px;
+}
+
