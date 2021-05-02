@@ -20,5 +20,8 @@
 		<%@ include file="/common/footer.jsp"%>
 	</div>
 </div>
+<div class="by_suhyeon">
+SSSS급 충돌
+</div>
 </body>
 </html>
