@@ -8,10 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 일반회원 컨트롤러
+ * 센터회원 컨트롤러
  */
-@WebServlet("/general/generalController")
-public class GeneralController extends HttpServlet {
+@WebServlet("/center/centerController")
+public class CenterController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
