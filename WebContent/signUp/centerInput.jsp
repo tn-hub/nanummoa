@@ -63,7 +63,7 @@ height: 200px;
 	</tr>
 	
 	<tr>
-		<th>주소</th>
+		<th>주소</th>  
 		<td>
 			<input type="text" id="zipCode" name="zipCode" placeholder="우편번호" readonly="readonly" size="5">
 			<input type="button" value="우편번호 찾기" ><br>
@@ -113,7 +113,7 @@ height: 200px;
 				<option value="none">선택</option>			
 				<option value="1">생활편의</option>			
 				<option value="2">주거환경</option>			
-				<option value="3">상담</option>			
+				<option value="3">상담</option>
 			</select>
 		</td>
 	</tr>
