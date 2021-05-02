@@ -20,7 +20,6 @@ width: 600px;
 height: 200px;
 }
 </style>
-
 </head>
 <body>
 <h3>회원가입</h3>
@@ -113,7 +112,7 @@ height: 200px;
 				<option value="none">선택</option>			
 				<option value="1">생활편의</option>			
 				<option value="2">주거환경</option>			
-				<option value="3">상담</option>
+				<option value="3">상담</option>			
 			</select>
 		</td>
 	</tr>
