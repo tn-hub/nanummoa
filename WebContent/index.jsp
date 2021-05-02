@@ -20,5 +20,6 @@
 		<%@ include file="/common/footer.jsp"%>
 	</div>
 </div>
+-유연우
 </body>
 </html>
