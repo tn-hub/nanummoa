@@ -12,24 +12,79 @@ a:visited{color: gray;}
 a:hover { font-weight: bold; }
 a:active { font-weight: bold; }
 a.bold { font-weight: bold; }
-#section_contents{width: 1000px; border: 1px gray; margin: 0 auto;}
-#search_qna{float: right;}
-#sec_qTable{border: 1px solid red; height: 600px;}
-#addQna_btn{float: right;}
-#qna_table{ margin-top: 30px;}
-#qna_table tr, th, td{border: 1px solid gray; padding: 5px 5px 5px 5px;}
-.qna_no{width: 70px;}
-.qna_ti{width: 438px;}
-.qna_wr{width: 150px;}
-.qna_dt{width: 200px;}
-#page_btn{text-align: center; margin: 20px 0px 20px 0px;}
+
+em{
+	color: red;
+}
+
+#section_contents{
+	width: 900px; 
+	border: 1px gray; 
+	margin: 0 auto;
+}
+
+#search_qna{
+	float: right;
+}
+
+#addQna{
+	width: 900px;
+	height: 30px;
+	float: right;  
+	width: 20px; 
+	margin-right: 80px; 
+	margin-top: 10px;
+}
+
+#btn_addQna{
+	width: 100px;
+	height: 30px;
+}
+
+#sec_qTable{
+	height: 500px; 
+	width: 900px; 
+}
+
+#qna_table{
+	margin-top: 70px; 
+	text-align: center; 
+	border-collapse: collapse;
+}
+
+#qna_table tr, th, td{
+	border: 1px solid gray; 
+	padding: 5px;
+}
+
+.qna_no{
+	width: 50px;
+}
+
+.qna_ti{
+	width: 400px;
+}
+
+.qna_wr{
+	width: 105px;
+}
+
+.qna_dt{
+	width: 217px;
+}
+
+#page_btn{
+	text-align: center; 
+	margin: 20px 0px 20px 0px;
+}
+
 </style>
 </head>
 <body>
 <div id="section_contents">
 <h2>QNA</h2>
 <hr>
-[전체 0건, 현재 페이지 1/1]
+[전체 <em>0</em> 건, 현재 페이지 <em>1</em> /1]
 <div id="search_qna">
 	<select>
 		<option>== 검색 조건 ==</option>
@@ -41,7 +96,7 @@ a.bold { font-weight: bold; }
 	<input type="submit" value="검색">
 </div>
 <hr>
-<div id="addQna_btn"><input type="button" value="글 쓰기"></div>
+<div id="addQna"><input type="button" value="글 쓰기" id="btn_addQna"></div>
 <div id="sec_qTable">
 <table id="qna_table">
 	<tr>
