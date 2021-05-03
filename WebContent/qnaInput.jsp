@@ -7,19 +7,19 @@
 <title>QNA 등록</title>
 <style type="text/css">
 #section_contents{
-	width: 900px; 
+	width: 1000px; 
 	border: 1px gray; 
 	margin: 0 auto;
 }
 
 #qnaInTitle{
-	width: 890px; 
+	width: 990px; 
 	height: 20px; 
 	margin-bottom: 20px;
 }
 
 #qna_text{
-	width: 875px;
+	width: 975px;
 	height: 500px;
 	padding: 10px; 
 	margin-bottom: 20px;
