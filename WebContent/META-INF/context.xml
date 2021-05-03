@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Context>
+	<WatchedResource>WEB-INF/web.xml</WatchedResource>
+	<Resource auth="Container" 
+		driverClassName="oracle.jdbc.driver.OracleDriver" 
+		maxActive="20" 
+		maxIdle="2" 
+		maxWait="-1" 
+		name="jdbc/Oracle11g" 
+		username="nanummoa"
+		password="nanummoa" 
+		type="javax.sql.DataSource"
+		url="jdbc:oracle:thin:@localhost:1521:XE"  />
+</Context>
