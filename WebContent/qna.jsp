@@ -13,6 +13,12 @@ a:hover { font-weight: bold; }
 a:active { font-weight: bold; }
 a.bold { font-weight: bold; }
 
+* {
+	font-family: "맑은 고딕", 굴림, 돋움;
+
+}
+
+
 em{
 	color: red;
 }

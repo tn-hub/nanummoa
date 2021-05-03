@@ -6,6 +6,13 @@
 <meta charset="UTF-8">
 <title>자원봉사 등록</title>
 <style type="text/css">
+
+* {
+	font-family: "맑은 고딕", 굴림, 돋움;
+
+}
+
+
 #section_contents{
 	width: 1000px; 
 	border: 1px gray; 
