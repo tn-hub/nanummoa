@@ -5,6 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>봉사 조회</title>
+<link type="text/css" rel="stylesheet" href="${initParam.CONTEXT_PATH}/resources/css/common.css">
 <style type="text/css">
 	#vol_list_div {
 		width: 1000px;
