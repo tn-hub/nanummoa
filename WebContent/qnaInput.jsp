@@ -42,7 +42,7 @@
 <div id="section_contents">
 <h2>질문 하기</h2>
 <hr>
-<form>
+<form action="${CONTEXT_PATH}/CommonController?action=" method="post">
 <input class="btn_list" type="button" value="목록">
 <input id="btn_addQna" type="button" value="등록 하기">
 <hr>
