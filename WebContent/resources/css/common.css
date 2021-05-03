@@ -31,42 +31,60 @@ a {
 
 /** header */
 /** header : 상단바 */
-.header_info{
+.header{
 	width: 100%;
-	height: 35px;
-	text-align: center;
-	background-color: black;
+	height: 40px;
+	background-color: #444444;
+}
+/** header : 이용안내 &로그인메뉴 */
+.header_info{
+	width:1200px;
+	margin: 0 auto;
 	cursor: pointer;
 	font-weight: bold;
+	text-align: center;
+	padding: 7px 0px 5px 0px;
+	margin-bottom: 5px;
+	position: relative;
+}
+.info_color {
+	color:#FBD157;
 }
 .header_info a{
 	color: white;
-	float : left;
+}
+.login_menu{
+	float:right;
+	position: absolute; 
+	top: -5px; 
+	right: 5px;
+	font-weight: 600;
+	font-size: 14px;
+	color: #F5F7F7;
+}
+.login_menu ul li{
+	float: left; 
+	text-align: center;
+	margin-left: 40px;   
+}
+.login_menu ul li:hover{
+	color: #cecece;
 }
 .header_wrapper{
 	align-items: center;
 	max-width: 1200px;
-	width: 100%;
-	height: 100px;
-	display: block;
+	height: 35px;
 	font-weight: bold;
 	margin : 0 auto;
 }
-.login_menu{
-	float: right;	
-	width : 200px;
-}
+
 .header_info_menu ul li{
 	float: left; 
 	text-align: center;  
 }
 .a_button{
-	display: block;   
 }
-.info_color {
-	color:#FBD157;
-	font-size: 1.2em;
-}
+
 /** header : 로고 & 메뉴 */
 .header_logo{
 	color: white;
@@ -75,18 +93,33 @@ a {
 	float : left;
 }
 .header_logo img{
-	width : 100px;
+	width : 270px;
+	margin: 5px;
 }
 .header_menu{
 	float : left;
+	padding-top: 50px;
+	width: 900px;
+}
+.header_menu ul{
+	margin-left: -20px;
 }
 .header_menu ul li{
-	width : 200px;
+	text-align:center;
+	font-size:20px;
+	width : 170px;
 	float : left;	
 }
+.header_menu ul li a{
+	color: #444444;
+}
 
-
-/** main_contents */
+/** contents */
+.contents{
+	width: 100%;
+	min-height: 1000px;
+	display: block;
+}
 .main_wrapper{
 	margin: 0px auto;
 	width: 1200px;
@@ -100,44 +133,137 @@ a {
 .main_banner img{
 	width : 100%;
 	height: 300px;
-	
 }
-/** contents */
-#contents{
-	min-height: 800px;
-}
-/** main_contents : 모집중인 자원봉사 */
+
+/** contents : 모집중인 자원봉사 */
 .main_title{
+	clear:both;
 	margin: 30px 0;
 }
 .vol_wrapper {
-	
-	
+	display:inline-block;
+	width: 100%;
 }
 
 .block_row{
-	
+	display:inline-block;
+	width: 100%;
 }
-
+.first_col{
+	margin: 25px 25px 25px 0;
+}
+.middle_col{
+	margin: 25px 25px 25px 25px;
+}
+.last_col{
+	margin: 25px 0 25px 25px;
+}
 .block_col{
 	float: left;
-	width: 300px;
+	width: 262px;
+	height: 260px;
+	text-align: center;
+	background-color: #e5e5e5;
+	display:block;
+	border-radius: 5px;
+	font-weight:bolder;
 }
 
 .vol_local{
+	width:100%;
+	height: 28px;
+	text-align:center;
+	font-size:18px;
+	font-weight:bolder;
+	background-color: #444444;
+	padding: 5px 0;
+	border-radius: 5px;
+	color : white;
+}
+.vol_block_title{
+	font-size: 22px;
+	color:#4285F4;
 	
+}
+.apply_btn{
+	background-color: #4285F4;
+	border: none;
+	width : 130px;
+	padding: 10px;
+	color : white;
+	font-weight: bold;
+	border-radius: 5px;
+	font-size:16px;
+}
+.apply_btn:hover{
+	background-color: grey;
 }
 
-.btn_apply{
-	
+.more_btn_line{
+	margin-top:30px;
+	position: relative;
+    padding-top: 18px;
+    margin-bottom: 42px;
+    border-bottom: 1px solid #e4e8eb;
+    text-align: center;
 }
+.more_btn{
+	position: absolute;
+    top: 0;
+    left: 44%;
+    width: 150px;
+    color: #505050;
+    background-color:white;
+    cursor: pointer;
+    border: none;
+    font-size:16px;
+}
+.more_btn:hover{
+	text-decoration: underline;
+}
+
+/** contents : 자원봉사 통계 */
+.chart_wrapper{
+	display: block;
+}
+.graph{
+	margin: 25px;
+	width: 350px;
+	height: 350px;
+	float: left;
+}
+
 /** footer */
+.footer{
+	clear:both;
+	width: 100%;
+	height: 250px;
+	display: block;
+}
 .footer_wrapper{
 	margin: 0px auto;
 	width: 1200px;
-	text-align: justify;
+	text-align: left;
+}
+.footer_title{
+	margin : 30px 0;
+}
+.footer_menu{
+	display: block;
+	margin-left: -40px;
 }
 .footer_menu li{
 	float : left;
 }
-
+.footer_address{
+	clear: both;
+}
+.footer_link{
+	
+}
+.footer_link:hover{
+	text-decoration: underline;
+}
+.separator{
+	margin: 0 10px;
+}

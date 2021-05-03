@@ -40,6 +40,15 @@ width: 300px;
 height: 180px;
 }
 
+.wrapper{
+width: 100%;
+}
+
+.title{
+width: 1200px;
+margin: 0 auto;
+}
+
 </style>
 
 <title>로그인</title>
@@ -49,9 +58,12 @@ height: 180px;
 	<%@ include file="/common/header.jsp"%>
 </div>
 
-<div class="title">
-	<h1>로그인</h1>
-	<hr>
+
+<div class="wrapper">
+	<div class="title">
+		<h1>로그인</h1>
+		<hr>
+	</div>
 </div>
 
 <div id="wrap">	
