@@ -2,7 +2,14 @@ package com.nanum.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Properties;
 
+import javax.mail.*;
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,6 +23,9 @@ import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.GeneralMemberDto;
 import com.nanum.model.biz.CommonBiz;
 import com.nanum.util.CommonException;
+import com.nanum.util.Gmail;
+import com.nanum.util.SHA256;
+import com.nanum.util.Utility;
 
 /**
  * 공통 컨트롤러
@@ -43,6 +53,15 @@ public class CommonController extends HttpServlet {
 			break;
 		case "login":
 			login(request, response);
+			break;
+		case "mail":
+			mail(request, response);
+			break;
+		case "addSecureCode":
+			addSecureCode(request, response);
+			break;
+		case "findId":
+			findId(request, response);
 			break;
 		}
 	}
@@ -102,7 +121,7 @@ public class CommonController extends HttpServlet {
 		HttpSession session = request.getSession();
 
 		CommonBiz biz = new CommonBiz();
-		
+
 		if (grade.equals("G")) {
 			GeneralMemberDto dto = new GeneralMemberDto();
 			dto.setGeneralId(memberId);
@@ -118,7 +137,6 @@ public class CommonController extends HttpServlet {
 					PrintWriter out = response.getWriter();
 					out.println("<script>alert('[오류] 로그인 정보가 맞지 않습니다.');history.go(-1); </script>");
 					out.flush();
-					//response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
 					return;
 				}
 			} catch (CommonException e) {
@@ -136,7 +154,7 @@ public class CommonController extends HttpServlet {
 					session.setAttribute("dto", dto);
 					session.setAttribute("grade", grade);
 					request.getRequestDispatcher("/index.jsp").forward(request, response);
-				}else {
+				} else {
 					response.setContentType("text/html; charset=utf-8");
 					PrintWriter out = response.getWriter();
 					out.println("<script>alert('[오류] 로그인 정보가 맞지 않습니다.');history.go(-1); </script>");
@@ -156,8 +174,8 @@ public class CommonController extends HttpServlet {
 				if (dto.getAdminName() != null) {
 					session.setAttribute("dto", dto);
 					session.setAttribute("grade", grade);
-					request.getRequestDispatcher("/index.jsp").forward(request, response);	
-				}else {
+					request.getRequestDispatcher("/index.jsp").forward(request, response);
+				} else {
 					response.setContentType("text/html; charset=utf-8");
 					PrintWriter out = response.getWriter();
 					out.println("<script>alert('[오류] 로그인 정보가 맞지 않습니다.');history.go(-1); </script>");
@@ -169,7 +187,147 @@ public class CommonController extends HttpServlet {
 				response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
 			}
 		}
+
+	}
+
+	String secureCode = null;
+	/**
+	 * 이메일 임시번호 발급
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void addSecureCode(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String email1 = request.getParameter("email1");
+		String email2 = request.getParameter("email2");
+		String email = email1 + "@" + email2;
+		// DB 저장 했다고 가정 (DB에는 emailAuth 필드가 있어야 하고 최초에는 0이 저장되어 있음) 1 인증 0 미인증
+		// DB에 저장했으니 google email 인증 페이지로 이동
+
+		String host = "http://localhost:8090/nanummoa/";
+		String from = "gusqls904@gmail.com";
+		String to = request.getParameter("email");
+		String code = SHA256.getEncrypt(email, "cos");
+
+		// 사용자에게 보낼 메시지
+		String subject = "나눔모아(아이디찾기) 이메일 인증 메일입니다.";
+
+		// 임시번호 발급
+		secureCode = Utility.getSecureString(10, true);
+
+		Properties p = new Properties();
+		p.put("mail.smtp.user", from);
+		p.put("mail.smtp.host", "smtp.gmail.com");
+		p.put("mail.smtp.port", "465"); // TLS 587, SSL 465
+		p.put("mail.smtp.starttls.enable", "true");
+		p.put("mail.smtp.auth", "true");
+		p.put("mail.smtp.debug", "true");
+		p.put("mail.smtp.socketFactory.port", "465");
+		p.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+		p.put("mail.smtp.sockerFactory.fallback", "false");
+
+		try {
+			Authenticator auth = new Gmail();
+			Session ses = Session.getInstance(p, auth);
+			ses.setDebug(true);
+			MimeMessage msg = new MimeMessage(ses);
+			msg.setSubject(subject);
+			Address fromAddr = new InternetAddress(from);
+			msg.setFrom(fromAddr);
+			Address toAddr = new InternetAddress(email);
+			msg.addRecipient(Message.RecipientType.TO, toAddr);
+			msg.setContent(secureCode, "text/html; charset=UTF8");
+			Transport.send(msg);
+
+			HttpSession session = request.getSession();
+			session.setAttribute("secureCode", secureCode);
+			session.setAttribute("email", email);
+
+			response.setContentType("text/html; charset=utf-8");
+			PrintWriter out = response.getWriter();
+			out.println("<script>alert('메일확인해주세요');history.go(-1); </script>");
+			out.flush();
+		} catch (Exception e) {
+			response.setContentType("text/html; charset=utf-8");
+			PrintWriter script = response.getWriter();
+			script.println("<script>");
+			script.println("alert('이메일 인증 오류')");
+			script.println("history.back();");
+			script.println("</script>");
+		}
+
+	}
+
+	/**
+	 * 이메일 임시번호 인증
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void mail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String code = request.getParameter("code");
 		
+		response.setContentType("text/html; charset=utf-8");
+		PrintWriter script = response.getWriter();
+		 if(code.equals(secureCode)){	
+			script.println("<script>");
+			script.println("alert('이메일 인증에 성공하였습니다.')");
+			script.println("location.href='/nanummoa/common/commonController?action=findId'");
+			script.println("</script>");
+		} else{
+			script.println("<script>");
+			script.println("alert('이메일 인증을 실패하였습니다.')");
+			script.println("location.href='/nanummoa/common/error.jsp'");
+			script.println("</script>");
+		}  
+	}
+
+	/**
+	 * 아이디 찾기
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void findId(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		String email = (String)session.getAttribute("email");
+		
+		CommonBiz biz = new CommonBiz();
+		
+		GeneralMemberDto dto = new GeneralMemberDto();
+		dto.setGeneralEmail(email);
+		
+		try {
+			biz.findId(dto);
+			if (dto.getGeneralId() != null) {
+				System.out.println("일반회원 아이디 : " + dto.getGeneralId());
+			}else {
+				CenterMemberDto center = new CenterMemberDto();
+				center.setCenterEmail(email);
+				try {
+					biz.findId(center);	
+					if (center.getCenterId() != null) {
+						System.out.println("센터 아이디 : " + center.getCenterId());
+					}else {
+						System.out.println("정보 틀림");
+						return;
+					}
+				} catch (Exception e) {
+					System.out.println("아이디 찾기 오류");
+					return;
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("아이디 찾기 오류");
+			return;
+		}
 		
 	}
 

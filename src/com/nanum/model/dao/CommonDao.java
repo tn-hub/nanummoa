@@ -147,5 +147,67 @@ public class CommonDao {
 		}
 	}
 	
+	/**
+	 * 일반회원 아이디 찾기 
+	 * @param conn
+	 * @param email
+	 * @throws CommonException 
+	 */
+	public void findId(Connection conn, GeneralMemberDto dto) throws CommonException {
+		String sql = "select * from general_member where g_email=?";
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, dto.getGeneralEmail());
+			
+			rs = stmt.executeQuery();
+			
+			if(rs.next()) {
+				dto.setGeneralId(rs.getString("g_id"));
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(stmt);
+		}
+	}
+
+	/**
+	 * 센터회원 아이디 찾기
+	 * @param conn
+	 * @param center
+	 * @throws CommonException 
+	 */
+	public void findId(Connection conn, CenterMemberDto center) throws CommonException {
+		String sql = "select * from center_member where c_email=?";
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, center.getCenterEmail());
+			
+			rs = stmt.executeQuery();
+			
+			if(rs.next()) {
+				center.setCenterId(rs.getString("c_id"));
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(stmt);
+		}
+	}
+	
 }
 

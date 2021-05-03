@@ -72,5 +72,38 @@ public class CommonBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
-
+	
+	/**
+	 * 일반회원 아이디 찾기
+	 * @param email	이메일
+	 * @throws CommonException 
+	 */
+	public void findId(GeneralMemberDto dto) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.findId(conn,dto);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		}finally {
+			JdbcTemplate.close(conn);
+		}
+		
+	}
+	/**
+	 * 센터회원 아이디 찾기
+	 * @param center
+	 * @throws CommonException 
+	 */
+	public void findId(CenterMemberDto center) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.findId(conn,center);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		}finally {
+			JdbcTemplate.close(conn);
+		}
+	}
 }
