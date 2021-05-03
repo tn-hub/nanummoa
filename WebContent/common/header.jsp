@@ -10,7 +10,7 @@
 		<a href ="#" class="">자원봉사 지원 플랫폼 <span class="info_color">나눔모아</span> 이용 안내 </a>
 		<div class="login_menu">
 			<ul>
-				<li id= "" class=""><a href="#" class="">로그인</a></li>
+				<li id= "" class=""><a href="${CONTEXT_PATH}/common/commonController?action=loginForm" class="">로그인</a></li>
 				<li id= "" class="" ><a href="#" class="">회원가입</a></li>
 			</ul>
 		</div>
