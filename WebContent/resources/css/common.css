@@ -82,8 +82,6 @@ a {
 	float: left; 
 	text-align: center;  
 }
-.a_button{
-}
 
 /** header : 로고 & 메뉴 */
 .header_logo{
@@ -114,6 +112,11 @@ a {
 	color: #444444;
 }
 
+.header_end{
+	clear: both; 
+	display: block; 
+	width: 100%;
+}
 /** contents */
 .contents{
 	width: 100%;
@@ -257,9 +260,6 @@ a {
 }
 .footer_address{
 	clear: both;
-}
-.footer_link{
-	
 }
 .footer_link:hover{
 	text-decoration: underline;
