@@ -7,13 +7,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 import com.nanum.dto.AdminMemberDto;
 import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.GeneralMemberDto;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
-import com.nanum.util.MessageEntity;
 
 
 /**
@@ -29,6 +29,7 @@ public class CommonDao {
 	public static CommonDao getInstance() {
 		return instance;
 	}
+	
 	/**
 	 * 일반회원 로그인
 	 * @param conn
@@ -52,7 +53,7 @@ public class CommonDao {
 				dto.setGeneralPass(rs.getString("g_pass"));
 				dto.setGeneralName(rs.getString("g_name"));
 				dto.setGender(rs.getString("gender"));
-				dto.setBirthday(rs.getDate("birthday")); 
+				dto.setBirthday(rs.getString("BIRTHDAY"));
 				dto.setGeneralZipCode(rs.getString("g_zipcode"));
 				dto.setGeneralAddress(rs.getString("g_address"));
 				dto.setGeneralMobile(rs.getString("g_mobile"));
@@ -64,11 +65,6 @@ public class CommonDao {
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
-			
-//			MessageEntity message = new MessageEntity("error", 2);
-//			message.setLinkTitle("로그인");
-//			message.setUrl("/exercise/exe02/teacher/login.html");
-			
 			throw new CommonException();
 		} finally {
 			JdbcTemplate.close(rs);
@@ -84,7 +80,7 @@ public class CommonDao {
 	 * @throws CommonException 
 	 */
 	public void login(Connection conn, CenterMemberDto dto) throws CommonException {
-		String sql = "select * from GENERAL_MEMBER where g_id = ? and g_pass = ?";
+		String sql = "select * from center_MEMBER where c_id = ? and c_pass = ?";
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
@@ -107,11 +103,6 @@ public class CommonDao {
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
-			
-//			MessageEntity message = new MessageEntity("error", 2);
-//			message.setLinkTitle("로그인");
-//			message.setUrl("/exercise/exe02/teacher/login.html");
-			
 			throw new CommonException();
 		} finally {
 			JdbcTemplate.close(rs);
@@ -149,11 +140,6 @@ public class CommonDao {
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
-			
-//			MessageEntity message = new MessageEntity("error", 2);
-//			message.setLinkTitle("로그인");
-//			message.setUrl("/exercise/exe02/teacher/login.html");
-			
 			throw new CommonException();
 		} finally {
 			JdbcTemplate.close(rs);

@@ -18,55 +18,57 @@ import com.nanum.util.JdbcTemplate;
  */
 public class CommonBiz {
 	private CommonDao dao = CommonDao.getInstance();
-	
-	
+
 	/**
-	 * 일반회원 로그인 
+	 * 일반회원 로그인
+	 * 
 	 * @param dto
-	 * @throws CommonException 
+	 * @throws CommonException
 	 */
 	public void login(GeneralMemberDto dto) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
 		try {
-			dao.login(conn,dto);
+			dao.login(conn, dto);
 		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;
-		}finally {
+		} finally {
 			JdbcTemplate.close(conn);
 		}
 	}
-	
+
 	/**
-	 * 센터회원 로그인 
+	 * 센터회원 로그인
+	 * 
 	 * @param dto
-	 * @throws CommonException 
+	 * @throws CommonException
 	 */
 	public void login(CenterMemberDto dto) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
 		try {
-			dao.login(conn,dto);
+			dao.login(conn, dto);
 		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;
-		}finally {
+		} finally {
 			JdbcTemplate.close(conn);
 		}
 	}
-	
+
 	/**
-	 * 관리자 로그인 
+	 * 관리자 로그인
+	 * 
 	 * @param dto
-	 * @throws CommonException 
+	 * @throws CommonException
 	 */
 	public void login(AdminMemberDto dto) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
 		try {
-			dao.login(conn,dto);
+			dao.login(conn, dto);
 		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;
-		}finally {
+		} finally {
 			JdbcTemplate.close(conn);
 		}
 	}

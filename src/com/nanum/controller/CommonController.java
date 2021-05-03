@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.websocket.Session;
 
 import com.nanum.dto.AdminMemberDto;
 import com.nanum.dto.CenterMemberDto;
@@ -38,12 +37,12 @@ public class CommonController extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		String action = request.getParameter("action");
 		switch (action) {
+		case "loginForm":
+			loginForm(request, response);
+			break;
 		case "login":
 			login(request, response);
 			break;
-//		case "":
-//			(request, response);
-//			break;
 		}
 	}
 
@@ -66,7 +65,20 @@ public class CommonController extends HttpServlet {
 	}
 
 	/**
-	 * 로그인 요청 서비스
+	 * 로그인 페이지 요청
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void loginForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		response.sendRedirect(CONTEXT_PATH + "/common/login.jsp");
+	}
+
+	/**
+	 * 로그인 요청
 	 */
 	protected void login(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -74,22 +86,12 @@ public class CommonController extends HttpServlet {
 		String memberPw = request.getParameter("memberPw");
 		String grade = request.getParameter("grade");
 
-		if (memberId.trim() == null || memberId.trim().length() == 0) {
-//			MessageEntity messageEntity = new MessageEntity("validation",0);
-//			messageEntity.setLinkTitle("로그인");
-//			messageEntity.setUrl(CONTEXT_PATH +"/mms04/loginController?action=loginForm");
-//			
-//			request.setAttribute("messageEntity", messageEntity);
-			request.getRequestDispatcher("/mms04/message.jsp").forward(request, response);
+		if (memberId == null || memberId.trim().length() == 0 || memberId == "") {
+			response.sendRedirect(CONTEXT_PATH + "/common/login.jsp");
 			return;
 		}
-		if (memberPw.trim() == null || memberPw.trim().length() == 0) {
-//			MessageEntity messageEntity = new MessageEntity("validation",1);
-//			messageEntity.setLinkTitle("로그인");
-//			messageEntity.setUrl(CONTEXT_PATH + "/mms04/loginController?action=loginForm");
-//			
-//			request.setAttribute("messageEntity", messageEntity);
-			request.getRequestDispatcher("/mms04/message.jsp").forward(request, response);
+		if (memberPw == null || memberPw.trim().length() == 0 || memberPw == "") {
+			response.sendRedirect(CONTEXT_PATH + "/common/login.jsp");
 			return;
 		}
 
@@ -99,21 +101,27 @@ public class CommonController extends HttpServlet {
 		HttpSession session = request.getSession();
 
 		CommonBiz biz = new CommonBiz();
-
+		System.out.println("등급 : "+grade);
+		System.out.println("아이디 : "+ memberId);
+		System.out.println("비밀번호 : "+ memberPw);
+		
 		if (grade.equals("G")) {
 			GeneralMemberDto dto = new GeneralMemberDto();
 			dto.setGeneralId(memberId);
 			dto.setGeneralPass(memberPw);
 			try {
 				biz.login(dto);
-				session.setAttribute("dto", dto);
-				session.setAttribute("grade", grade);
-				System.out.println("성공");
-				request.getRequestDispatcher("/index.jsp").forward(request, response);
+				if (dto.getGeneralName() != null) {
+					session.setAttribute("dto", dto);
+					session.setAttribute("grade", grade);
+					request.getRequestDispatcher("/index.jsp").forward(request, response);
+				} else {
+					response.sendRedirect(CONTEXT_PATH + "/common/login.jsp");
+					return;
+				}
 			} catch (CommonException e) {
 				e.printStackTrace();
-				System.out.println("실패");
-				request.getRequestDispatcher("/index.jsp").forward(request, response);
+				response.sendRedirect(CONTEXT_PATH + "/common/login.jsp");
 				return;
 			}
 		} else if (grade.equals("C")) {
@@ -122,14 +130,19 @@ public class CommonController extends HttpServlet {
 			dto.setCenterPass(memberPw);
 			try {
 				biz.login(dto);
-				session.setAttribute("dto", dto);
-				session.setAttribute("grade", grade);
-				System.out.println("성공");
-				request.getRequestDispatcher("/index.jsp").forward(request, response);
+				if (dto.getCenterName() != null) {
+					session.setAttribute("dto", dto);
+					session.setAttribute("grade", grade);
+					System.out.println("로그인");
+					request.getRequestDispatcher("/index.jsp").forward(request, response);
+				}else {
+					response.sendRedirect(CONTEXT_PATH + "/common/login.jsp");
+					System.out.println("로그인 정보 오류");
+					return;
+				}
 			} catch (CommonException e) {
 				e.printStackTrace();
-				System.out.println("실패");
-				request.getRequestDispatcher("/index.jsp").forward(request, response);
+				response.sendRedirect(CONTEXT_PATH + "/common/login.jsp");
 			}
 		} else if (grade.equals("A")) {
 			AdminMemberDto dto = new AdminMemberDto();
@@ -137,14 +150,18 @@ public class CommonController extends HttpServlet {
 			dto.setAdminPass(memberPw);
 			try {
 				biz.login(dto);
-				session.setAttribute("dto", dto);
-				session.setAttribute("grade", grade);
-				System.out.println("성공");
-				request.getRequestDispatcher("/index.jsp").forward(request, response);
+				if (dto.getAdminName() != null) {
+					session.setAttribute("dto", dto);
+					session.setAttribute("grade", grade);
+					request.getRequestDispatcher("/index.jsp").forward(request, response);	
+				}else {
+					System.out.println("로그인 정보 오류");
+					response.sendRedirect(CONTEXT_PATH + "/common/login.jsp");
+					return;
+				}
 			} catch (CommonException e) {
 				e.printStackTrace();
-				System.out.println("실패");
-				request.getRequestDispatcher("/index.jsp").forward(request, response);
+				response.sendRedirect(CONTEXT_PATH + "/common/login.jsp");
 			}
 		}
 	}

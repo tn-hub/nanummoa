@@ -27,7 +27,7 @@ public class GeneralMemberDto {
 	private String gender;
 
 	/** 생년월일 */
-	private Date birthday;
+	private String birthday;
 
 	/** 우편번호 */
 	private String generalZipCode;
@@ -67,7 +67,7 @@ public class GeneralMemberDto {
 	 * @param categoryNo     봉사분야번호
 	 * @param localNo        지역번호
 	 */
-	public GeneralMemberDto(String generalId, String generalPass, String generalName, String gender, Date birthday,
+	public GeneralMemberDto(String generalId, String generalPass, String generalName, String gender, String birthday,
 			String generalZipCode, String generalAddress, String generalMobile, String generalEmail, String categoryNo,
 			String localNo) {
 		this.generalId = generalId;
@@ -142,14 +142,14 @@ public class GeneralMemberDto {
 	/**
 	 * @return the birthday
 	 */
-	public Date getBirthday() {
+	public String getBirthday() {
 		return birthday;
 	}
 
 	/**
 	 * @param birthday the birthday to set
 	 */
-	public void setBirthday(Date birthday) {
+	public void setBirthday(String birthday) {
 		this.birthday = birthday;
 	}
 
