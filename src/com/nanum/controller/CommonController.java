@@ -169,6 +169,8 @@ public class CommonController extends HttpServlet {
 				response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
 			}
 		}
+		
+		
 	}
 
 }
