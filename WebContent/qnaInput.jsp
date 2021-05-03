@@ -7,19 +7,19 @@
 <title>QNA 등록</title>
 <style type="text/css">
 #section_contents{
-	width: 900px; 
+	width: 1000px; 
 	border: 1px gray; 
 	margin: 0 auto;
 }
 
 #qnaInTitle{
-	width: 890px; 
+	width: 990px; 
 	height: 20px; 
 	margin-bottom: 20px;
 }
 
 #qna_text{
-	width: 875px;
+	width: 975px;
 	height: 500px;
 	padding: 10px; 
 	margin-bottom: 20px;
@@ -38,10 +38,11 @@
 </style>
 </head>
 <body>
+<%@ include file="/common/header.jsp"%>
 <div id="section_contents">
 <h2>질문 하기</h2>
 <hr>
-<form>
+<form action="${CONTEXT_PATH}/common/CommonController?action=qnaInput" method="post">
 <input class="btn_list" type="button" value="목록">
 <input id="btn_addQna" type="button" value="등록 하기">
 <hr>
@@ -58,6 +59,9 @@
 <input type="button" value="등록 하기">
 </div>
 </form>
+<div id="footer" class="footer">
+		<%@ include file="/common/footer.jsp"%>
+	</div>
 </div>
 </body>
 </html>

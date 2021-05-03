@@ -161,7 +161,7 @@
 </style>
 </head>
 <body>
-<h3>봉사활동 조회</h3>
+<%@ include file="/common/header.jsp"%>
 <div id="vol_list_div">
 	<h1>봉사조회</h1>
 	<hr class="head_hr">
@@ -324,5 +324,6 @@
 	</ul>
 	<!-- 봉사모집글 목록 -->
 </div>
+<%@ include file="/common/footer.jsp"%>
 </body>
 </html>

@@ -1,6 +1,8 @@
 package com.nanum.controller;
 
 import java.io.IOException;
+
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,21 +15,35 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/admin/adminController")
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+	
+	public ServletContext application;
+	public String CONTEXT_PATH;
+	
+	public void init() {
+		application = getServletContext();
+		CONTEXT_PATH = (String)application.getAttribute("CONTEXT_PATH");
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+	protected void process(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("utf-8");
+		String action = request.getParameter("action");
+		System.out.println("action : " + action);
+//		switch (action) {
+//		case "" :
+//			(request, response);
+//			break;
+//		case "":
+//			(request, response);
+//			break;
+//		}
+	}
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		process(request, response);
+	}
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		process(request, response);
 	}
 
 }

@@ -80,6 +80,7 @@ a.bold { font-weight: bold; }
 </style>
 </head>
 <body>
+<%@ include file="/common/header.jsp"%>
 <div id="section_contents">
 <h2>QNA</h2>
 <hr>
@@ -120,6 +121,9 @@ a.bold { font-weight: bold; }
 	<input type="button" value="다음 > ">
 </div>
 <hr>
+<div id="footer" class="footer">
+		<%@ include file="/common/footer.jsp"%>
+	</div>
 </div>
 </body>
 </html>
