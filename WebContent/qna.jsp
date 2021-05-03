@@ -13,9 +13,8 @@ a:hover { font-weight: bold; }
 a:active { font-weight: bold; }
 a.bold { font-weight: bold; }
 
-em{
-	color: red;
-}
+
+
 
 #section_contents{
 	width: 900px; 
