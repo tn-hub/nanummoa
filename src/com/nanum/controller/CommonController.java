@@ -1,6 +1,7 @@
 package com.nanum.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -113,7 +114,11 @@ public class CommonController extends HttpServlet {
 					session.setAttribute("grade", grade);
 					request.getRequestDispatcher("/index.jsp").forward(request, response);
 				} else {
-					response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+					response.setContentType("text/html; charset=utf-8");
+					PrintWriter out = response.getWriter();
+					out.println("<script>alert('[오류] 로그인 정보가 맞지 않습니다.');history.go(-1); </script>");
+					out.flush();
+					//response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
 					return;
 				}
 			} catch (CommonException e) {
@@ -132,7 +137,10 @@ public class CommonController extends HttpServlet {
 					session.setAttribute("grade", grade);
 					request.getRequestDispatcher("/index.jsp").forward(request, response);
 				}else {
-					response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+					response.setContentType("text/html; charset=utf-8");
+					PrintWriter out = response.getWriter();
+					out.println("<script>alert('[오류] 로그인 정보가 맞지 않습니다.');history.go(-1); </script>");
+					out.flush();
 					return;
 				}
 			} catch (CommonException e) {
@@ -150,7 +158,10 @@ public class CommonController extends HttpServlet {
 					session.setAttribute("grade", grade);
 					request.getRequestDispatcher("/index.jsp").forward(request, response);	
 				}else {
-					response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+					response.setContentType("text/html; charset=utf-8");
+					PrintWriter out = response.getWriter();
+					out.println("<script>alert('[오류] 로그인 정보가 맞지 않습니다.');history.go(-1); </script>");
+					out.flush();
 					return;
 				}
 			} catch (CommonException e) {

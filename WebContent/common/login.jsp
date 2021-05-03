@@ -59,9 +59,7 @@ input[type='text'],input[type='password'] {
 <title>로그인</title>
 </head>
 <body>
-<div id="header" class="header">
-	<%@ include file="/common/header.jsp"%>
-</div>
+<%@ include file="/common/header.jsp"%>
 
 <div class="contents">
 
@@ -98,8 +96,7 @@ input[type='text'],input[type='password'] {
 		</div>
 	</div>
 </div>
-<div id="footer" class="footer">
-	<%@ include file="/common/footer.jsp"%>
-</div>
+
+<%@ include file="/common/footer.jsp"%>
 </body>
 </html>
