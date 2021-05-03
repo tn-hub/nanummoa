@@ -114,11 +114,7 @@ textarea{
 <hr>
 <input class="btn_list" type="button" value="목록">
 <hr>
-<<<<<<< HEAD
 <input id="vol_info_title" type="text" placeholder="제목을 입력하세요">
-=======
-<input id="title" type="text" placeholder="제목을 입력하세요">
->>>>>>> origin/yeonwoo
 <table id="volAdd">
 	<tr>
 		<th>봉사 시작 일</th>
