@@ -4,10 +4,14 @@
 package com.nanum.dto;
 
 /**
+ * <pre>
+ * 지역
+ * 
+ * </pre>
  * @author 메타쓰리
  *
  */
-public class Local {
+public class LocalDto {
 	/** 지역번호 */
 	private String localNo;
 
@@ -17,7 +21,7 @@ public class Local {
 	/**
 	 * 기본생성자
 	 */
-	public Local() {
+	public LocalDto() {
 	}
 
 	/**
@@ -26,7 +30,7 @@ public class Local {
 	 * @param localNo   지역번호
 	 * @param localName 지역이름
 	 */
-	public Local(String localNo, String localName) {
+	public LocalDto(String localNo, String localName) {
 		this.localNo = localNo;
 		this.localName = localName;
 	}
