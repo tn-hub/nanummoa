@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.nms.etc.dto;
+package com.nanum.dto;
 
 /**
  * @author 메타쓰리
