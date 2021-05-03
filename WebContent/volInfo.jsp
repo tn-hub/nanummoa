@@ -6,20 +6,19 @@
 <meta charset="UTF-8">
 <title>자원봉사 등록</title>
 <style type="text/css">
-
-
-* {
-	font-family: "맑은 고딕", 굴림, 돋움;
-
-}
-
-
+<<<<<<< HEAD
 #section_contents{
 	width: 1000px; 
 	border: 1px gray; 
 	margin: 0 auto;
 	margin-top: 70px;
 	margin-bottom: 70px;
+=======
+#section{
+	width: 900px; 
+	border: 1px gray; 
+	margin: 0 auto;
+>>>>>>> origin/yeonwoo
 }
 
 .btn_list{
@@ -27,8 +26,13 @@
 	width: 50px;
 }
 
+<<<<<<< HEAD
 #vol_info_title{
 	width: 990px; 
+=======
+#title{
+	width: 890px; 
+>>>>>>> origin/yeonwoo
 	margin-top:20px; 
 	margin-bottom: 20px; 
 	padding: 5px; 
@@ -36,7 +40,11 @@
 }
 
 #volAdd{
+<<<<<<< HEAD
 	width:1000px;
+=======
+	width:900px;
+>>>>>>> origin/yeonwoo
 	margin-bottom: 20px;
 	border-top: 2px solid black;
 	border-bottom: 2px solid black;	
@@ -121,8 +129,11 @@ textarea{
 <hr>
 <input class="btn_list" type="button" value="목록">
 <hr>
+<<<<<<< HEAD
 <input id="vol_info_title" type="text" placeholder="제목을 입력하세요">
-
+=======
+<input id="title" type="text" placeholder="제목을 입력하세요">
+>>>>>>> origin/yeonwoo
 <table id="volAdd">
 	<tr>
 		<th>봉사 시작 일</th>

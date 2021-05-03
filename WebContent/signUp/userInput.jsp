@@ -23,11 +23,9 @@ height: 200px;
 </style>
 </head>
 <body>
-<div id="wrapper">
 	<div id="header" class="header">
 		<%@ include file="/common/header.jsp"%>
 	</div>
-</div>
 
 <h3>회원가입</h3>
 <form action="" method="post">
@@ -126,10 +124,8 @@ height: 200px;
 	</table>
 </form>
 
-<div id="wrapper">	
 	<div id="footer" class="footer">
 		<%@ include file="/common/footer.jsp"%>
 	</div>
-</div>
 </body>
 </html>

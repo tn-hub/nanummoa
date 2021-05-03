@@ -24,11 +24,9 @@ height: 200px;
 
 </head>
 <body>
-<div id="wrapper">
 	<div id="header" class="header">
 		<%@ include file="/common/header.jsp"%>
 	</div>
-</div>
 
 <h3>봉사센터 회원가입</h3>
 <form action="" method="post">
@@ -126,11 +124,10 @@ height: 200px;
 			<td><input type="text" id="service" name="service" size="5"></td>
 		</tr>
 	</table>
+	
 </form>
-<div id="wrapper">	
 	<div id="footer" class="footer">
 		<%@ include file="/common/footer.jsp"%>
 	</div>
-</div>
 </body>
 </html>
