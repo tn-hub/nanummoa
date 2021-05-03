@@ -79,6 +79,7 @@ ul li{
 </style>
 </head>
 <body>
+<%@ include file="/common/header.jsp"%>
 <div id="section_contents">
 <h3>게시글 상세</h3>
 <hr>

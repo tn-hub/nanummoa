@@ -38,6 +38,7 @@
 </style>
 </head>
 <body>
+<%@ include file="/common/header.jsp"%>
 <div id="section_contents">
 <h2>질문 하기</h2>
 <hr>
@@ -58,6 +59,9 @@
 <input type="button" value="등록 하기">
 </div>
 </form>
+<div id="footer" class="footer">
+		<%@ include file="/common/footer.jsp"%>
+	</div>
 </div>
 </body>
 </html>

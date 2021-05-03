@@ -115,10 +115,7 @@ textarea{
 </style>
 </head>
 <body>
-<div id="wrapper">
-	<div id="header" class="header">
-		<%@ include file="/common/header.jsp"%>
-	</div>
+<%@ include file="/common/header.jsp"%>
 <div id="section_contents">
 <h3>자원봉사 등록</h3>
 <hr>
@@ -214,7 +211,6 @@ textarea{
 <div id="footer" class="footer">
 		<%@ include file="/common/footer.jsp"%>
 	</div>
-</div>
 </div>
 </body>
 </html>
