@@ -1,4 +1,4 @@
-package com.nanum.model.dao;
+package com.nanum.util;
 
 import java.sql.*;
 
