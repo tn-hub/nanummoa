@@ -8,6 +8,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 
 /**
  * 일반회원 컨트롤러
@@ -28,14 +30,14 @@ public class GeneralController extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		String action = request.getParameter("action");
 		System.out.println("action : " + action);
-//		switch (action) {
-//		case "" :
-//			(request, response);
-//			break;
+		switch (action) {
+		case "generalInputForm" :
+			generalInputForm(request, response);
+			break;
 //		case "":
 //			(request, response);
 //			break;
-//		}
+		}
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -44,6 +46,13 @@ public class GeneralController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		process(request, response);
+	}
+	
+	/**
+	 * 일반회원 회원가입 폼 요청
+	 */
+	protected void generalInputForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 	}
 
 }
