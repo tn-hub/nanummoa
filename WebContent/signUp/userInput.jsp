@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="/inc/taglib_menu.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -55,6 +56,10 @@ height: 200px;
 
 #mobile1 {
 	height: 30px;
+}
+
+.large_select {
+	width: 100px;
 }
 </style>
 <script type="text/javascript">
@@ -128,7 +133,7 @@ function generalIdCheck(){
 		generalIdElement.focus();
 		return false;
 	} else if (!generalIdReg(generalId)) {
-		generalIdMessageElement.html("아이디는 6 ~ 30자리 이내로 입력해 주세요");
+		generalIdMessageElement.html("아이디는 6 ~ 30자리 이내 영문,숫자로 입력해 주세요");
 		generalIdElement.val("");
 		generalIdElement.focus();
 		return false;
@@ -373,9 +378,10 @@ function clearMessageBirthday(){
 	$("#birthdayMessage").html("");
 }
 
-/* 아이디 에러메세지 클리어 */
+/* 아이디 에러메세지 클리어, 중복확인 버튼 활성화 */
 function clearMessageGeneralId(){
 	$("#generalIdMessage").html("");
+	$("#idBtn").attr("disabled", false);
 }
 
 /* 비밀번호 에러메세지 클리어 */
@@ -405,10 +411,16 @@ function clearMessageEmail(){
 
 /* 일반회원 회원가입 체크 */
 function GeneralInputCheck() {
-	if (nameCheck() && birthdayCheck() && generalIdCheck() && generalPwCheck() && 
-			addressCheck() && mobileCheck() && emailCheck()) {
+	if (!$("#idBtn").prop("disabled")){
+		alert("아이디 중복확인을 해주세요");
+		return false;
+	}
+	
+	if (nameCheck() && birthdayCheck() && generalIdCheck() &&
+		generalPwCheck() && addressCheck() && mobileCheck() && emailCheck()) {
 		return true;
 	}
+	
 	return false;
 }
 
@@ -417,10 +429,38 @@ function GeneralInputCheck() {
 $(document).ready(function(){
 	console.log("제이쿼리");
 	
+	/* 회원가입 입력항목 체크*/
 	$("input[type='submit']").click(function(e){
 		e.preventDefault();
 		if (GeneralInputCheck()) {
-			$("#generalInputForm").submit;
+			$("#generalInputForm").submit();
+		}
+	});
+	
+	/* 아이디 중복 확인*/
+	$("#idBtn").click(function(){
+		if(generalIdCheck()) {
+			var id = $("#generalId").val();
+			$.ajax({
+				  type:'get',
+				  url:'${CONTEXT_PATH}/general/generalController?action=idCheck',
+				  data:{id:id},
+				  dataType: 'text',
+				  success: function(data, textStatus){
+					  if (data == "usable") {
+						  alert("사용 가능한 아이디 입니다");
+						  $("#idBtn").attr("disabled", true);
+					  } else if (data == "not-usable") {
+						  alert("이미 존재하는 아이디 입니다");
+					  } else if (data == "none") {
+						  alert("아이디를 입력해 주세요");
+					  }
+				      
+				  },
+				  error : function(xhr,status,error) {
+				     console.log("error");
+				  }
+				});
 		}
 	});
 	
@@ -436,7 +476,7 @@ $(document).ready(function(){
 <div id="userInput_div">
 <h3>회원가입</h3>
 <hr class="head_hr">
-	<form action="asd" method="post" id="generalInputForm">
+	<form action="${CONTEXT_PATH}/general/generalController?action=generalInput" method="post" id="generalInputForm">
 		<table border="1">
 			<tr>
 				<th>이름</th>
@@ -449,8 +489,8 @@ $(document).ready(function(){
 			<tr>
 				<th>성별</th>
 				<td>
-					<input type="radio" id="man" name="gender" checked="checked"> 남성
-					<input type="radio" id="woman" name="gender"> 여성
+					<input type="radio" id="man" name="gender" value="M" checked="checked"> 남성
+					<input type="radio" id="woman" name="gender" value="Y"> 여성
 				</td>
 			</tr>
 		
@@ -466,7 +506,7 @@ $(document).ready(function(){
 				<th>아이디</th>
 				<td>
 					<input type="text" id="generalId" name="generalId" placeholder="6 ~ 30자리 이내" size="30" onkeydown="clearMessageGeneralId()">
-					<input type="button" value="중복조회">
+					<input type="button" value="중복확인" id="idBtn">
 					<span id="generalIdMessage" class="error_message"></span>
 					</td>
 			</tr>
@@ -538,10 +578,11 @@ $(document).ready(function(){
 			<tr>
 				<th>봉사희망지역</th>
 				<td>
-					<select>
-						<option value="none">시/군/구 선택</option>
-						<option value="1">은평구</option>
-						<option value="2">도봉구</option>
+					<select class="large_select" name="localNo">
+						<option value="none">선택</option>
+						<c:forEach var="dto" items="${local}">
+							<option value="${dto.localNo}">${dto.localName }</option>
+						</c:forEach>
 					</select>
 				</td>		
 			</tr>
@@ -549,11 +590,11 @@ $(document).ready(function(){
 			<tr>
 				<th>희망분야</th>
 				<td>
-					<select>
-						<option value="none">선택</option>			
-						<option value="1">생활편의</option>			
-						<option value="2">주거환경</option>			
-						<option value="3">상담</option>			
+					<select class="large_select" name="categoryNo">
+						<option value="none">선택</option>	
+						<c:forEach var="dto" items="${volCategory }">
+							<option value="${dto.categoryNo }">${dto.categoryName }</option>			
+						</c:forEach>		
 					</select>
 				</td>
 			</tr>
