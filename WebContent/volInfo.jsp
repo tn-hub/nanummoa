@@ -7,6 +7,7 @@
 <title>자원봉사 등록</title>
 <style type="text/css">
 
+
 * {
 	font-family: "맑은 고딕", 굴림, 돋움;
 
@@ -124,6 +125,7 @@ textarea{
 <input class="btn_list" type="button" value="목록">
 <hr>
 <input id="vol_info_title" type="text" placeholder="제목을 입력하세요">
+
 <table id="volAdd">
 	<tr>
 		<th>봉사 시작 일</th>
