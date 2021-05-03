@@ -27,13 +27,13 @@ public class GeneralMemberDto {
 	private String gender;
 
 	/** 생년월일 */
-	private Date birthday;
+	private String birthday;
 
 	/** 우편번호 */
 	private String generalZipCode;
 
 	/** 기본주소 */
-	private String generalAdress;
+	private String generalAddress;
 
 	/** 연락처 */
 	private String generalMobile;
@@ -61,14 +61,14 @@ public class GeneralMemberDto {
 	 * @param gender         성별
 	 * @param birthday       생년월일
 	 * @param generalZipCode 우편번호
-	 * @param generalAdress  기본주소
+	 * @param generalAddress  기본주소
 	 * @param generalMobile  연락처
 	 * @param generalEmail   이메일
 	 * @param categoryNo     봉사분야번호
 	 * @param localNo        지역번호
 	 */
-	public GeneralMemberDto(String generalId, String generalPass, String generalName, String gender, Date birthday,
-			String generalZipCode, String generalAdress, String generalMobile, String generalEmail, String categoryNo,
+	public GeneralMemberDto(String generalId, String generalPass, String generalName, String gender, String birthday,
+			String generalZipCode, String generalAddress, String generalMobile, String generalEmail, String categoryNo,
 			String localNo) {
 		this.generalId = generalId;
 		this.generalPass = generalPass;
@@ -76,7 +76,7 @@ public class GeneralMemberDto {
 		this.gender = gender;
 		this.birthday = birthday;
 		this.generalZipCode = generalZipCode;
-		this.generalAdress = generalAdress;
+		this.generalAddress = generalAddress;
 		this.generalMobile = generalMobile;
 		this.generalEmail = generalEmail;
 		this.categoryNo = categoryNo;
@@ -142,14 +142,14 @@ public class GeneralMemberDto {
 	/**
 	 * @return the birthday
 	 */
-	public Date getBirthday() {
+	public String getBirthday() {
 		return birthday;
 	}
 
 	/**
 	 * @param birthday the birthday to set
 	 */
-	public void setBirthday(Date birthday) {
+	public void setBirthday(String birthday) {
 		this.birthday = birthday;
 	}
 
@@ -168,17 +168,17 @@ public class GeneralMemberDto {
 	}
 
 	/**
-	 * @return the generalAdress
+	 * @return the generalAddress
 	 */
 	public String getGeneralAdress() {
-		return generalAdress;
+		return generalAddress;
 	}
 
 	/**
-	 * @param generalAdress the generalAdress to set
+	 * @param generalAddress the generalAddress to set
 	 */
-	public void setGeneralAdress(String generalAdress) {
-		this.generalAdress = generalAdress;
+	public void setGeneralAddress(String generalAddress) {
+		this.generalAddress = generalAddress;
 	}
 
 	/**
@@ -252,7 +252,7 @@ public class GeneralMemberDto {
 		builder.append(", ");
 		builder.append(generalZipCode);
 		builder.append(", ");
-		builder.append(generalAdress);
+		builder.append(generalAddress);
 		builder.append(", ");
 		builder.append(generalMobile);
 		builder.append(", ");
