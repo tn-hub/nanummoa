@@ -127,11 +127,17 @@ public class CommonController extends HttpServlet {
 		String grade = request.getParameter("grade");
 
 		if (memberId == null || memberId.trim().length() == 0 || memberId == "") {
-			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+			response.setContentType("text/html; charset=utf-8");
+			PrintWriter out = response.getWriter();
+			out.println("<script>alert('[오류] 아이디를 입력하세요');history.go(-1); </script>");
+			out.flush();
 			return;
 		}
 		if (memberPw == null || memberPw.trim().length() == 0 || memberPw == "") {
-			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+			response.setContentType("text/html; charset=utf-8");
+			PrintWriter out = response.getWriter();
+			out.println("<script>alert('[오류] 비밀번호를 입력하세요');history.go(-1); </script>");
+			out.flush();
 			return;
 		}
 
@@ -151,7 +157,8 @@ public class CommonController extends HttpServlet {
 				if (dto.getGeneralName() != null) {
 					session.setAttribute("dto", dto);
 					session.setAttribute("grade", grade);
-					request.getRequestDispatcher("/index.jsp").forward(request, response);
+					
+					response.sendRedirect(CONTEXT_PATH + "/home");
 				} else {
 					response.setContentType("text/html; charset=utf-8");
 					PrintWriter out = response.getWriter();
@@ -160,8 +167,10 @@ public class CommonController extends HttpServlet {
 					return;
 				}
 			} catch (CommonException e) {
-				e.printStackTrace();
-				request.getRequestDispatcher("/common/commonController?action=loginForm").forward(request, response);
+				response.setContentType("text/html; charset=utf-8");
+				PrintWriter out = response.getWriter();
+				out.println("<script>alert('[오류]');history.go(-1); </script>");
+				out.flush();
 				return;
 			}
 		} else if (grade.equals("C")) {
@@ -173,7 +182,7 @@ public class CommonController extends HttpServlet {
 				if (dto.getCenterName() != null) {
 					session.setAttribute("dto", dto);
 					session.setAttribute("grade", grade);
-					request.getRequestDispatcher("/index.jsp").forward(request, response);
+					response.sendRedirect("/home");
 				} else {
 					response.setContentType("text/html; charset=utf-8");
 					PrintWriter out = response.getWriter();
@@ -182,8 +191,10 @@ public class CommonController extends HttpServlet {
 					return;
 				}
 			} catch (CommonException e) {
-				e.printStackTrace();
-				response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+				response.setContentType("text/html; charset=utf-8");
+				PrintWriter out = response.getWriter();
+				out.println("<script>alert('[오류]');history.go(-1); </script>");
+				out.flush();
 			}
 		} else if (grade.equals("A")) {
 			AdminMemberDto dto = new AdminMemberDto();
@@ -194,7 +205,7 @@ public class CommonController extends HttpServlet {
 				if (dto.getAdminName() != null) {
 					session.setAttribute("dto", dto);
 					session.setAttribute("grade", grade);
-					request.getRequestDispatcher("/index.jsp").forward(request, response);
+					response.sendRedirect("/home");
 				} else {
 					response.setContentType("text/html; charset=utf-8");
 					PrintWriter out = response.getWriter();
@@ -203,14 +214,17 @@ public class CommonController extends HttpServlet {
 					return;
 				}
 			} catch (CommonException e) {
-				e.printStackTrace();
-				response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+				response.setContentType("text/html; charset=utf-8");
+				PrintWriter out = response.getWriter();
+				out.println("<script>alert('[오류]');history.go(-1); </script>");
+				out.flush();
 			}
 		}
 
 	}
 
 	String secureCode = null;
+	
 	/**
 	 * 이메일 임시번호 발급
 	 * 
@@ -282,7 +296,6 @@ public class CommonController extends HttpServlet {
 			script.println("history.back();");
 			script.println("</script>");
 		}
-
 	}
 
 	/**
@@ -362,7 +375,6 @@ public class CommonController extends HttpServlet {
 			System.out.println("아이디 찾기 오류");
 			return;
 		}
-		
 	}
 	
 	
@@ -429,12 +441,10 @@ public class CommonController extends HttpServlet {
 	 * QNA 목록조회 
 	 */
 	private void qnaList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		
-		String searchOpt = request.getParameter("search_opt");  // 검색 조건
-		String searchText = request.getParameter("search_text"); // 검색문구 
-		
+		String searchOpt = request.getParameter("search_opt");
+		String searchText = request.getParameter("search_text");
 		CommonBiz biz = new CommonBiz();
-		ArrayList<QnADto> qnaList = new ArrayList<QnADto>(); // 담을 곳 선언
+		ArrayList<QnADto> qnaList = new ArrayList<QnADto>();
 		
 		try {
 			biz.qnaList(qnaList, searchOpt, searchText);
@@ -452,17 +462,14 @@ public class CommonController extends HttpServlet {
 	 */
 	private void qnaDtl(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String qnaNo = request.getParameter("qnaNo");
-		System.out.println("qnaNo : " + qnaNo);
-		
 		CommonBiz biz = new CommonBiz();
-		QnADto dto = new QnADto();	// 담을 곳 선언
+		QnADto dto = new QnADto();
 		
 		try {
-			biz.qnaDetail(dto, qnaNo); 	// dao단에서 (담을곳, 조건,,,,)
-			request.setAttribute("sdto", dto);	// 화면단에 던지기
+			biz.qnaDetail(dto, qnaNo);
+			request.setAttribute("sdto", dto);
 			request.getRequestDispatcher("/qna/qnaDetail.jsp").forward(request, response);
 		} catch (CommonException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -472,13 +479,11 @@ public class CommonController extends HttpServlet {
 	 * QNA 수정
 	 */
 	private void qnaUpt(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		System.out.println("수정 ======");
-		
 		String qnaTitle = request.getParameter("qnaTitle");
 		String qnaContents = request.getParameter("qnaContents");
 		String qnaNo = request.getParameter("qnaNo");
 		
-		QnADto dto = new QnADto(); //담을곳 선언
+		QnADto dto = new QnADto();
 		dto.setQnaNo(Integer.parseInt(qnaNo));
 		dto.setQnaContents(qnaContents);
 		dto.setQnaTitle(qnaTitle);
@@ -486,7 +491,7 @@ public class CommonController extends HttpServlet {
 		try {
 			CommonBiz biz = new CommonBiz();
 			biz.qnaUpdate(dto);
-			request.getRequestDispatcher("/qna/qnaList.jsp").forward(request, response);
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=qnaList");
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
@@ -496,13 +501,12 @@ public class CommonController extends HttpServlet {
 	 * QNA 삭제
 	 */
 	private void qnaDel(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		System.out.println("삭제 ======");
 		String qnaNo = request.getParameter("qnaNo");
 		
 		try {
 			CommonBiz biz = new CommonBiz();
 			biz.qnaDelete(qnaNo);
-			request.getRequestDispatcher("/qna/qnaList.jsp").forward(request, response);
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=qnaList");
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
