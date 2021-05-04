@@ -3,6 +3,7 @@ package com.nanum.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Properties;
+import java.util.ArrayList;
 
 import javax.mail.*;
 import javax.mail.Message;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpSession;
 import com.nanum.dto.AdminMemberDto;
 import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.GeneralMemberDto;
+import com.nanum.dto.QnADto;
 import com.nanum.model.biz.CommonBiz;
 import com.nanum.util.CommonException;
 import com.nanum.util.Gmail;
@@ -63,6 +65,24 @@ public class CommonController extends HttpServlet {
 		case "findId":
 			findId(request, response);
 			break;
+		case "qnaInput":
+			qnaInput(request, response);
+			break;
+		case "qnaInputForm":
+			qnaInputForm(request, response);
+			break;
+		case "qnaList":
+			qnaList(request, response);
+			break;	
+		case "qnaDtl":
+			qnaDtl(request, response);
+			break;	
+		case "qnaUpt":
+			qnaUpt(request, response);
+			break;		
+		case "qnaDel":
+			qnaDel(request, response);
+			break;			
 		}
 	}
 
@@ -330,5 +350,150 @@ public class CommonController extends HttpServlet {
 		}
 		
 	}
+	
+	
+	/**
+	 * 전체 문의글에서 글쓰기 연동
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void qnaInputForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		request.getRequestDispatcher("/qna/qnaInput.jsp").forward(request, response);
+	}
 
+	
+	/**
+	 * QNA 등록
+	 */
+	private void qnaInput(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		HttpSession session = request.getSession();
+		String grade = (String) session.getAttribute("grade");
+		String qnaTitle = request.getParameter("qnaTitle");
+		String qnaContents = request.getParameter("qnaContents");
+		
+		QnADto dto = new QnADto();
+		dto.setQnaTitle(qnaTitle);
+		dto.setQnaContents(qnaContents);
+		
+		CommonBiz biz = new CommonBiz();
+		
+		// 작성자는 로그인에서
+		if (grade.equals("G")) { 
+			//GeneralMemberDto gdto = (GeneralMemberDto) session.getAttribute("dto");
+			//System.out.println("gdto.getGeneralId()" + gdto.getGeneralId());
+			//dto.setGeneralId(gdto.getGeneralId());
+			dto.setGeneralId("user02");
+
+			System.out.println("dto.getGeneralId() = "+dto.getGeneralId());
+			try {
+				biz.addQna_gen(dto);
+				request.getRequestDispatcher("/qna/qnaList.jsp").forward(request, response);
+			} catch (CommonException e) {
+				e.printStackTrace();
+			}
+			
+			
+		}else if  (grade.equals("C")) {
+			//CenterMemberDto cdto = (CenterMemberDto) session.getAttribute("dto");
+			//dto.setCenterId(cdto.getCenterId());
+			dto.setCenterId("user02");
+
+			try {
+				biz.addQna_cen(dto);
+				request.getRequestDispatcher("/qna/qnaList.jsp").forward(request, response);
+			} catch (CommonException e) {
+				e.printStackTrace();
+			}
+		}else if  (grade.equals("A")) {// 어드민
+			//AdminMemberDto adto = (AdminMemberDto) session.getAttribute("dto");
+		}
+	}
+	
+	/**
+	 * QNA 목록조회 
+	 */
+	private void qnaList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		
+		String searchOpt = request.getParameter("search_opt");  // 검색 조건
+		String searchText = request.getParameter("search_text"); // 검색문구 
+		
+		CommonBiz biz = new CommonBiz();
+		ArrayList<QnADto> qnaList = new ArrayList<QnADto>(); // 담을 곳 선언
+		
+		try {
+			biz.qnaList(qnaList, searchOpt, searchText);
+			request.setAttribute("qnaList", qnaList);
+			request.getRequestDispatcher("/qna/qnaList.jsp").forward(request, response);
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
+			
+	}
+	
+	
+	/**
+	 * QNA 상세조회 
+	 */
+	private void qnaDtl(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		String qnaNo = request.getParameter("qnaNo");
+		System.out.println("qnaNo : " + qnaNo);
+		
+		CommonBiz biz = new CommonBiz();
+		QnADto dto = new QnADto();	// 담을 곳 선언
+		
+		try {
+			biz.qnaDetail(dto, qnaNo); 	// dao단에서 (담을곳, 조건,,,,)
+			request.setAttribute("sdto", dto);	// 화면단에 던지기
+			request.getRequestDispatcher("/qna/qnaDetail.jsp").forward(request, response);
+		} catch (CommonException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	/**
+	 * QNA 수정
+	 */
+	private void qnaUpt(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		System.out.println("수정 ======");
+		
+		String qnaTitle = request.getParameter("qnaTitle");
+		String qnaContents = request.getParameter("qnaContents");
+		String qnaNo = request.getParameter("qnaNo");
+		
+		QnADto dto = new QnADto(); //담을곳 선언
+		dto.setQnaNo(Integer.parseInt(qnaNo));
+		dto.setQnaContents(qnaContents);
+		dto.setQnaTitle(qnaTitle);
+		
+		try {
+			CommonBiz biz = new CommonBiz();
+			biz.qnaUpdate(dto);
+			request.getRequestDispatcher("/qna/qnaList.jsp").forward(request, response);
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * QNA 삭제
+	 */
+	private void qnaDel(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		System.out.println("삭제 ======");
+		String qnaNo = request.getParameter("qnaNo");
+		
+		try {
+			CommonBiz biz = new CommonBiz();
+			biz.qnaDelete(qnaNo);
+			request.getRequestDispatcher("/qna/qnaList.jsp").forward(request, response);
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
 }
