@@ -6,6 +6,8 @@ package com.nanum.model.biz;
 import java.sql.Connection;
 import java.util.ArrayList;
 
+import com.nanum.dto.CenterInfo;
+import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.VolInfoDto;
 import com.nanum.model.dao.CenterDao;
 import com.nanum.util.CommonException;
@@ -56,4 +58,26 @@ public class CenterBiz {
 		}
 	}
 	
+	
+	/**
+	 * 센터회원 회원가입
+	 * @param cMemberDto CenterMemberDto
+	 * @param centerDto CenterInfo
+	 * @throws CommonException
+	 */
+	public void addGeneralMember(CenterMemberDto cMemberDto, CenterInfo centerDto) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		
+		try {
+			cDao.insertCenterMember(conn, cMemberDto);
+			cDao.insertCenterInfo(conn, centerDto);
+			JdbcTemplate.commit(conn);
+		} catch (CommonException e) {
+			JdbcTemplate.rollback(conn);
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
 }

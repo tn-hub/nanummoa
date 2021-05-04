@@ -249,47 +249,45 @@ public class CenterController extends HttpServlet {
 		CenterMemberDto cMemberDto = new CenterMemberDto();
 		CenterInfo centerDto = new CenterInfo();
 		
-		String appStatus = "N";
+		String appStatus = "0";
 		 try {
-	            String urlStr = "http://openapi.seoul.go.kr:8088/4f5874664c7268783837774a656e55/json/VOpenGroup/1/2477/";
-	            
-	            URL url = new URL(urlStr);
-	            
-	            String line = "";
-	            String result = "";
-	            
-	            BufferedReader br;
-	            br = new BufferedReader(new InputStreamReader(url.openStream()));
-	            while ((line = br.readLine()) != null) {
-	            	System.out.println(line);
-	                result = result.concat(line);
-	                System.out.println(result);
-	                //System.out.println(line);                
-	            }            
-	            
-	            // JSON parser 만들어 문자열 데이터를 객체화한다.
-	            JSONParser parser = new JSONParser();
-	            JSONObject obj = (JSONObject)parser.parse(result);
-	           
-	            JSONObject data = (JSONObject)obj.get("VOpenGroup");
-	            
-	            JSONArray data2 = (JSONArray)data.get("row");
-	            System.out.println("obj : " + obj);
-	            System.out.println("data : " + data);
-	            System.out.println("data2 : " + data2.size());
-	            
-	            // 객체형태로
-	            for (int i=0;i< data2.size();i++) {
-	                JSONObject row = (JSONObject) data2.get(i);
-	                String centerNameData = (String) row.get("KORNAME");
-	                if (centerName.equals(centerNameData)) {
-	                	appStatus = "Y";
-	                }
-	            }
-	            br.close();
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
+			String urlStr1 = "http://openapi.seoul.go.kr:8088/4f5874664c7268783837774a656e55/json/VOpenGroup/1/1000/";
+			String urlStr2 = "http://openapi.seoul.go.kr:8088/4f5874664c7268783837774a656e55/json/VOpenGroup/1001/2000/";
+			String urlStr3 = "http://openapi.seoul.go.kr:8088/4f5874664c7268783837774a656e55/json/VOpenGroup/2001/2477/";
+			String[] urlStrArr = {urlStr1, urlStr2, urlStr3};
+			
+			for (String urlStr : urlStrArr) {
+				URL url = new URL(urlStr);
+
+				String line = "";
+				String result = "";
+
+				BufferedReader br;
+				br = new BufferedReader(new InputStreamReader(url.openStream()));
+				while ((line = br.readLine()) != null) {
+					result = result.concat(line);
+				}
+				// JSON parser 만들어 문자열 데이터를 객체화한다.
+				JSONParser parser = new JSONParser();
+				JSONObject obj = (JSONObject) parser.parse(result);
+				JSONObject data = (JSONObject) obj.get("VOpenGroup");
+				JSONArray data2 = (JSONArray) data.get("row");
+
+				// 객체형태로
+				for (int i = 0; i < data2.size(); i++) {
+					JSONObject row = (JSONObject) data2.get(i);
+					String centerNameData = (String) row.get("KORNAME");
+					if (centerName.equals(centerNameData)) {
+						System.out.println("centerName : " + centerNameData);
+						appStatus = "1";
+					}
+				}
+				br.close();
+			}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 		 
 		 System.out.println("appStatus : " + appStatus);
 		 cMemberDto.setCenterName(centerMemberName);
@@ -307,7 +305,28 @@ public class CenterController extends HttpServlet {
 		 centerDto.setCenterAddress(address);
 		 centerDto.setCeoName(ceoName);
 		 centerDto.setCeoMobile(ceoMobile);
-
+		 if (service != null || service.trim().length() != 0) {
+			 centerDto.setService(service);
+		 }
+		 
+		 CenterBiz biz = new CenterBiz();
+		 
+		 try {
+			biz.addGeneralMember(cMemberDto, centerDto);
+			String url = CONTEXT_PATH + "/common/commonController?action=loginForm";
+			if (appStatus.equals("Y")) {
+				out.println("<script>alert('회원가입 완료');location.href='" + url + "'; </script>");
+			} else {
+				url = CONTEXT_PATH + "/home";
+				out.println("<script>alert('관리자 승인 후 로그인 하실 수 있습니다');location.href='" + url + "'; </script>");
+			}
+		} catch (CommonException e) {
+			e.printStackTrace();
+			out.println("<script>alert('회원가입 정보가 올바르지 않습니다');history.go(-1); </script>");
+		} finally {
+			out.flush();
+			out.close();
+		}
 	}
 
 	/**

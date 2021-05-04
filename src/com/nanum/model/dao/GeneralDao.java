@@ -53,8 +53,7 @@ public class GeneralDao {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			MessageEntity messageEntity = new MessageEntity("error", 2);
-			throw new CommonException(messageEntity);
+			throw new CommonException();
 		} finally {
 			JdbcTemplate.close(rs);
 			JdbcTemplate.close(pstmt);
@@ -86,8 +85,7 @@ public class GeneralDao {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			MessageEntity messageEntity = new MessageEntity("error", 2);
-			throw new CommonException(messageEntity);
+			throw new CommonException();
 		} finally {
 			JdbcTemplate.close(rs);
 			JdbcTemplate.close(pstmt);
@@ -114,8 +112,7 @@ public class GeneralDao {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			MessageEntity messageEntity = new MessageEntity("error", 2);
-			throw new CommonException(messageEntity);
+			throw new CommonException();
 		} finally {
 			JdbcTemplate.close(rs);
 			JdbcTemplate.close(pstmt);
@@ -145,8 +142,8 @@ public class GeneralDao {
 			pstmt.setString(7, dto.getGeneralAdress());
 			pstmt.setString(8, dto.getGeneralMobile());
 			pstmt.setString(9, dto.getGeneralEmail());
-			pstmt.setString(10, "1");
-			pstmt.setString(11, "1");
+			pstmt.setString(10, dto.getCategoryNo());
+			pstmt.setString(11, dto.getLocalNo());
 			int rows = pstmt.executeUpdate();
 			System.out.println("rows : " + rows);
 			if (rows != 1) {
@@ -155,8 +152,7 @@ public class GeneralDao {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			MessageEntity messageEntity = new MessageEntity("error", 2);
-			throw new CommonException(messageEntity);
+			throw new CommonException();
 		} finally {
 			JdbcTemplate.close(pstmt);
 		}

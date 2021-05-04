@@ -8,14 +8,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 import com.nanum.dto.AdminMemberDto;
 import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.GeneralMemberDto;
-import com.nanum.dto.QnADto;
 import com.nanum.dto.LocalDto;
+import com.nanum.dto.QnADto;
+import com.nanum.dto.ServiceCategoryDto;
 import com.nanum.dto.VolBlockDto;
 import com.nanum.dto.VolCategoryDto;
 import com.nanum.util.CommonException;
@@ -257,7 +257,7 @@ public class CommonDao {
 	 * @throws CommonException
 	 */
 	public void insertQna_cen(Connection conn, QnADto dto) throws CommonException  {
-		String sql = "insert into qna(q_no, c_id, q_title, q_contents, q_write_date) values(Q_NO.nextval, ?, ?, ?, sysdate)";
+		String sql = "insert into qna(q_no, c_id, q_title, q_contents, q_write_date) values(q_no.nextval, ?, ?, ?, sysdate)";
 		
 		PreparedStatement stmt = null; //초기화 
 		
@@ -583,5 +583,40 @@ public class CommonDao {
 			JdbcTemplate.close(stmt);
 		}
 	}
+	
+	/**
+	 * 봉사 대상 조회
+	 * @param conn
+	 * @param categoryMap
+	 */
+	public void searchServiceCategory(Connection conn, ArrayList<ServiceCategoryDto> list) throws CommonException {
+		String sql = "select * from service_category";
+	
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+	
+			stmt = conn.prepareStatement(sql);
+			
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				ServiceCategoryDto dto = new ServiceCategoryDto();
+				dto.setServiceNo(rs.getString("service_no"));
+				dto.setServiceName(rs.getString("service_name"));
+				
+				list.add(dto);
+			} 
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(stmt);
+		}
+	}
+	
+	
+	
 }
 

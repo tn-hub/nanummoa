@@ -795,7 +795,7 @@ $(document).ready(function(){
 				<tr>
 					<th>등록(설립)일자</th>
 					<td>
-						<input type="text" id="centerEntryDate" name="centerEntryDate" size="30" placeholder="19920101" onkeydown="clearMessageCenterEntryDate()">
+						<input type="text" id="centerEntryDate" name="centerEntryDate" size="30" placeholder="ex) 19920101" onkeydown="clearMessageCenterEntryDate()">
 						<span id="centerEntryDateMessage" class="error_message"></span>
 					</td>
 				</tr>

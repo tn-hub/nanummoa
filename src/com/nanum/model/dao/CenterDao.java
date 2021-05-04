@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+import com.nanum.dto.CenterInfo;
+import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.VolInfoDto;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
@@ -46,8 +48,7 @@ public class CenterDao {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			MessageEntity messageEntity = new MessageEntity("error", 2);
-			throw new CommonException(messageEntity);
+			throw new CommonException();
 		} finally {
 			JdbcTemplate.close(rs);
 			JdbcTemplate.close(pstmt);
@@ -96,6 +97,71 @@ public class CenterDao {
 			throw new CommonException(messageEntity);
 		} finally {
 			JdbcTemplate.close(rs);
+			JdbcTemplate.close(pstmt);
+		}
+	}
+	
+	/**
+	 * 센터회원 회원가입
+	 */
+	public void insertCenterMember(Connection conn, CenterMemberDto dto) throws CommonException {
+		String sql = "insert into center_member (c_id, c_pass, c_name, c_mobile, c_email, app_status) values(?,?,?,?,?,?)";
+		System.out.println(sql);
+		
+		PreparedStatement pstmt = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getCenterId());
+			pstmt.setString(2, dto.getCenterPass());
+			pstmt.setString(3, dto.getCenterName());
+			pstmt.setString(4, dto.getCenterMobile());
+			pstmt.setString(5, dto.getCenterEmail());
+			pstmt.setString(6, dto.getAppStatus());
+			int rows = pstmt.executeUpdate();
+			System.out.println("rows : " + rows);
+			if (rows != 1) {
+				throw new Exception();
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(pstmt);
+		}
+	}
+	
+	/**
+	 * 센터정보 등록
+	 */
+	public void insertCenterInfo(Connection conn, CenterInfo dto) throws CommonException {
+		String sql = "insert into center_info values(?,?,?,?,?,?,?,?,?)";
+		System.out.println(sql);
+		
+		PreparedStatement pstmt = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getCenterId());
+			pstmt.setString(2, dto.getCenterName());
+			pstmt.setString(3, dto.getCenterEntryDate());
+			pstmt.setString(4, dto.getCenterZipCode());
+			pstmt.setString(5, dto.getCenterAddress());
+			pstmt.setString(6, dto.getRegisterCode());
+			pstmt.setString(7, dto.getService());
+			pstmt.setString(8, dto.getCeoName());
+			pstmt.setString(9, dto.getCeoMobile());
+			int rows = pstmt.executeUpdate();
+			System.out.println("rows : " + rows);
+			if (rows != 1) {
+				throw new Exception();
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
 			JdbcTemplate.close(pstmt);
 		}
 	}

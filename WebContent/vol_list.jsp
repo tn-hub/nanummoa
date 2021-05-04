@@ -197,9 +197,12 @@
 					<td>
 						<select class="search_small_select">
 							<option value="0">전체</option>
-							<option value="1">도봉구</option>
-							<option value="2">은평구</option>
-							<option value="3">동대문구</option>
+							<option value="1">아동</option>
+							<option value="2">청소년</option>
+							<option value="3">장애인</option>
+							<option value="4">노인</option>
+							<option value="5">환경</option>
+							<option value="6">기타</option>
 						</select>
 					</td>
 					<td>
