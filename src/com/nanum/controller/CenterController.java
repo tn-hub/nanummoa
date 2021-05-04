@@ -282,14 +282,32 @@ public class CenterController extends HttpServlet {
 	            for (int i=0;i< data2.size();i++) {
 	                JSONObject row = (JSONObject) data2.get(i);
 	                String centerNameData = (String) row.get("KORNAME");
-	                
-	                System.out.println("기관이름 : " + centerNameData);                
+	                if (centerName.equals(centerNameData)) {
+	                	appStatus = "Y";
+	                }
 	            }
-	            
 	            br.close();
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	        }
+		 
+		 System.out.println("appStatus : " + appStatus);
+		 cMemberDto.setCenterName(centerMemberName);
+		 cMemberDto.setCenterId(centerMemberId);
+		 cMemberDto.setCenterPass(centerMemberPw);
+		 cMemberDto.setCenterMobile(mobile);
+		 cMemberDto.setCenterEmail(email);
+		 cMemberDto.setAppStatus(appStatus);
+		 
+		 centerDto.setCenterId(centerMemberId);
+		 centerDto.setRegisterCode(registerCode);
+		 centerDto.setCenterName(centerName);
+		 centerDto.setCenterEntryDate(centerEntryDate);
+		 centerDto.setCenterZipCode(zipCode);
+		 centerDto.setCenterAddress(address);
+		 centerDto.setCeoName(ceoName);
+		 centerDto.setCeoMobile(ceoMobile);
+
 	}
 
 	/**
