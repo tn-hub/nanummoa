@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>QNA 등록</title>
+<script type="text/javascript" src="${CONTEXT_PATH }/resources/js/jquery-3.6.0.min.js"></script>
 <style type="text/css">
 #section_contents{
 	width: 1000px; 

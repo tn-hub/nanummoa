@@ -8,5 +8,13 @@ package com.nanum.model.dao;
  *
  */
 public class AdminDao {
-
+	private static AdminDao instance = new AdminDao();
+	
+	public AdminDao() {}
+	
+	public static AdminDao getInstance() {
+		return instance;
+	}
+	
+	
 }

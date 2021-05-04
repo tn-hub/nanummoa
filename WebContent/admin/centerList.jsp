@@ -70,12 +70,10 @@
 <table id="cList_table">
 	<tr>
 		<th id="cenList_name">센터이름</th>
-		<th id="cenList_entryDate">센터 등록일자</th>
 		<th id="cenList_adrr">센터 주소</th>
 		<th id="cenList_service">서비스 대상</th>
 	</tr>
 	<tr>
-		<td></td>
 		<td></td>
 		<td></td>
 		<td></td>
