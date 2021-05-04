@@ -32,7 +32,14 @@ public class QnADto {
 
 	/** 작성일 */
 	private Date qnaWriteDate;
-
+	
+	/** 작성자 */
+	private String qnaWriter;
+	
+	/** 답변여부 */
+	private String answerYn;
+	
+	
 	/**
 	 * 기본생성자
 	 */
@@ -50,13 +57,15 @@ public class QnADto {
 	 * @param qnaWriteDate 작성일
 	 */
 	public QnADto(int qnaNo, String generalId, String centerId, String qnaTitle, String qnaContents,
-			Date qnaWriteDate) {
+			Date qnaWriteDate, String qnaWriter, String answerYn) {
 		this.qnaNo = qnaNo;
 		this.generalId = generalId;
 		this.centerId = centerId;
 		this.qnaTitle = qnaTitle;
 		this.qnaContents = qnaContents;
 		this.qnaWriteDate = qnaWriteDate;
+		this.qnaWriter = qnaWriter;
+		this.answerYn = answerYn;
 	}
 
 	/**
@@ -143,6 +152,37 @@ public class QnADto {
 		this.qnaWriteDate = qnaWriteDate;
 	}
 
+	
+	/**
+	 * @return the qnaWriter
+	 */
+	public String getQnaWriter() {
+		return qnaWriter;
+	}
+
+	/**
+	 * @param qnaWriter the qnaWriter to set
+	 */
+	public void setQnaWriter(String qnaWriter) {
+		this.qnaWriter = qnaWriter;
+	}
+
+	
+		
+	/**
+	 * @return the answerYn
+	 */
+	public String getAnswerYn() {
+		return answerYn;
+	}
+
+	/**
+	 * @param answerYn the answerYn to set
+	 */
+	public void setAnswerYn(String answerYn) {
+		this.answerYn = answerYn;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -157,6 +197,8 @@ public class QnADto {
 		builder.append(qnaContents);
 		builder.append(", ");
 		builder.append(qnaWriteDate);
+		builder.append(", ");
+		builder.append(qnaWriter);
 		return builder.toString();
 	}
 
