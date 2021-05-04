@@ -9,86 +9,28 @@
 			<img src="${initParam.CONTEXT_PATH}/resources/img/main_banner.png">
 		</div>
 		
-		
 		<h2 class="main_title">모집중인 자원봉사</h2>
 		<div class="vol_wrapper">
+		<c:forEach var="vol" items="${volList}" varStatus="vs">
+			<c:if test="${vs.count % 4 == 1 }">
 			<div class="block_row">
-				<div class="block_col first_col">
-					<div class="vol_local">노원구</div>
+			</c:if>
+				<div class="block_col">
+					<div class="vol_local">${localMap[vol.localNo].localName}</div>
 					<div class="vol_info">
-						<p class="vol_block_title">업무지원</p>
-						<p>모집인원 : 4명/1일</p>
-						<p>2021.05.02 ~ 2021.05.02</p>
+						<p class="vol_block_title">${volCategoryMap[vol.categoryNo].categoryName}</p>
+						<span class="vol_title">${vol.volTitle}</span>
+						<p class="vol_period">모집기간 : ${vol.startDate}~${vol.endDate}</p>
+						<p class="vol_period">봉사기간 : ${vol.startVolDate}~${vol.endVolDate}</p>
 						<button class="apply_btn">신청하기</button>
 					</div>
 				</div>
-				<div class="block_col middle_col">
-					<div class="vol_local">노원구</div>
-					<div class="vol_info">
-						<p class="vol_block_title">업무지원</p>
-						<p>모집인원 : 4명/1일</p>
-						<p>2021.05.02 ~ 2021.05.02</p>
-						<button class="apply_btn">신청하기</button>
-					</div>
-				</div>
-				<div class="block_col middle_col">
-					<div class="vol_local">노원구</div>
-					<div class="vol_info">
-						<p class="vol_block_title">업무지원</p>
-						<p>모집인원 : 4명/1일</p>
-						<p>2021.05.02 ~ 2021.05.02</p>
-						<button class="apply_btn">신청하기</button>
-					</div>
-				</div>
-				<div class="block_col last_col">
-					<div class="vol_local">노원구</div>
-					<div class="vol_info">
-						<p class="vol_block_title">업무지원</p>
-						<p>모집인원 : 4명/1일</p>
-						<p>2021.05.02 ~ 2021.05.02</p>
-						<button class="apply_btn">신청하기</button>
-					</div>
-				</div>
+			<c:if test="${vs.count % 4 == 0 }">
 			</div>
-			<div class="block_row">
-				<div class="block_col first_col">
-					<div class="vol_local">노원구</div>
-					<div class="vol_info">
-						<p class="vol_block_title">업무지원</p>
-						<p>모집인원 : 4명/1일</p>
-						<p>2021.05.02 ~ 2021.05.02</p>
-						<button class="apply_btn">신청하기</button>
-					</div>
-				</div>
-				<div class="block_col middle_col">
-					<div class="vol_local">노원구</div>
-					<div class="vol_info">
-						<p class="vol_block_title">업무지원</p>
-						<p>모집인원 : 4명/1일</p>
-						<p>2021.05.02 ~ 2021.05.02</p>
-						<button class="apply_btn">신청하기</button>
-					</div>
-				</div>
-				<div class="block_col middle_col">
-					<div class="vol_local">노원구</div>
-					<div class="vol_info">
-						<p class="vol_block_title">업무지원</p>
-						<p>모집인원 : 4명/1일</p>
-						<p>2021.05.02 ~ 2021.05.02</p>
-						<button class="apply_btn">신청하기</button>
-					</div>
-				</div>
-				<div class="block_col last_col">
-					<div class="vol_local">노원구</div>
-					<div class="vol_info">
-						<p class="vol_block_title">업무지원</p>
-						<p>모집인원 : 4명/1일</p>
-						<p>2021.05.02 ~ 2021.05.02</p>
-						<button class="apply_btn">신청하기</button>
-					</div>
-				</div>
-			</div>
+			</c:if>
+		</c:forEach>
 		</div>
+		
 		<div class="more_btn_line">
 			<button class="more_btn">더보기</button>
 		</div>

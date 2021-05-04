@@ -109,100 +109,98 @@ textarea{
 </head>
 <body>
 <%@ include file="/common/header.jsp"%>
+<hr>
 <div id="section_contents">
-<h3>자원봉사 등록</h3>
+<h2>자원봉사 등록</h2>
 <hr>
 <input class="btn_list" type="button" value="목록">
 <hr>
-<input id="vol_info_title" type="text" placeholder="제목을 입력하세요">
-<table id="volAdd">
-	<tr>
-		<th>봉사 시작 일</th>
-		<td>
-			<input type="date">
-		</td>
-		<th>봉사 마감 일</th>
-		<td>
-			<input type="date">
-		</td>
-	</tr>
-	<tr>
-		<th>봉사 시작 시간</th>
-		<td><select>
-			<option>== 시간 선택 ==</option>
-			<option>16:00</option>
-		</select></td>
-		<th>봉사 마감 시간</th>
-		<td><select>
-			<option>== 시간 선택 ==</option>
-			<option>16:00</option>
-		</select></td>
-	</tr>
-	<tr>
-		<th>모집 시작 일</th>
-		<td>
-			<input type="date">
-		</td>
-		<th>모집 마감 일</th>
-		<td>
-			<input type="date">
-		</td>
-	</tr>
-	<tr>
-		<th>모집 인원</th>
-		<td><select>
-			<option>== 인원 선택 ==</option>
-			<option> 1명 </option>
-		</select></td>
-		<th>신청 인원</th>
-		<td></td>
-	</tr>
-	<tr>
-		<th>봉사 분야</th>
-		<td><select>
-			<option>== 분야 선택 ==</option>
-			<option>생활편의</option>
-			<option>주거환경</option>
-			<option>상담</option>
-			<option>교육</option>
-			<option>보건의료</option>
-		</select></td>
-		<th>봉사자 유형</th>
-		<td><select>
-			<option>== 유형 선택 ==</option>
-			<option>성인</option>
-			<option>청소년</option>
-		</select></td>
-	</tr>
-	<tr>
-		<th>봉사 장소</th>
-		<td id="place_td" colspan="3">
-			<input id="vol_adrr1" type="text" placeholder="우편 번호">
-			<input type="button" value="우편번호 찾기"><br>
-			<input id="vol_adrr2" type="text" placeholder="기본 주소">
-			<input id="vol_adrr3" type="text" placeholder="상세 주소">
+<form action="">
+	<input id="vol_info_title" type="text" placeholder="제목을 입력하세요">
+	<table id="volAdd">
+		<tr>
+			<th>봉사 시작일</th>
+			<td>
+				<input type="date">
 			</td>
-	</tr>
-</table>
-<div id="area_text"><textarea placeholder="내용을 입력하세요."></textarea></div>
-<div id="add_map">지도영역</div>
-<div id="center_info">
-	<ul>
-		<li>담당자명 : </li>
-		<li>전화번호 : </li>
-		<li>주소 : </li>
-	</ul>
-</div>
-
-<hr>
-<div id="add_btn">
-<input class="btn_add" type="button" value="취소">
-<input class="btn_add" type="submit" value="등록">
-</div>
-
-<div id="footer" class="footer">
-		<%@ include file="/common/footer.jsp"%>
+			<th>봉사 마감일</th>
+			<td>
+				<input type="date">
+			</td>
+		</tr>
+		<tr>
+			<th>봉사 시작 시간</th>
+			<td><select>
+				<option>== 시간 선택 ==</option>
+				<option>16:00</option>
+			</select></td>
+			<th>봉사 마감 시간</th>
+			<td><select>
+				<option>== 시간 선택 ==</option>
+				<option>16:00</option>
+			</select></td>
+		</tr>
+		<tr>
+			<th>모집 시작일</th>
+			<td>
+				<input type="date">
+			</td>
+			<th>모집 마감일</th>
+			<td>
+				<input type="date">
+			</td>
+		</tr>
+		<tr>
+			<th>모집 인원</th>
+			<td><select>
+				<option>== 인원 선택 ==</option>
+				<option> 1명 </option>
+			</select></td>
+			<th>신청 인원</th>
+			<td></td>
+		</tr>
+		<tr>
+			<th>봉사 분야</th>
+			<td><select>
+				<option>== 분야 선택 ==</option>
+				<option>생활편의</option>
+				<option>주거환경</option>
+				<option>상담</option>
+				<option>교육</option>
+				<option>보건의료</option>
+			</select></td>
+			<th>봉사자 유형</th>
+			<td><select>
+				<option>== 유형 선택 ==</option>
+				<option>성인</option>
+				<option>청소년</option>
+			</select></td>
+		</tr>
+		<tr>
+			<th>봉사 장소</th>
+			<td id="place_td" colspan="3">
+				<input id="vol_adrr1" type="text" placeholder="우편 번호">
+				<input type="button" value="우편번호 찾기"><br>
+				<input id="vol_adrr2" type="text" placeholder="기본 주소">
+				<input id="vol_adrr3" type="text" placeholder="상세 주소">
+				</td>
+		</tr>
+	</table>
+	<div id="area_text"><textarea placeholder="내용을 입력하세요."></textarea></div>
+	<div id="add_map">지도영역</div>
+	<div id="center_info">
+		<ul>
+			<li>담당자명 : </li>
+			<li>전화번호 : </li>
+			<li>주소 : </li>
+		</ul>
 	</div>
-</div>
+	<hr>
+	<div id="add_btn">
+		<input class="btn_add" type="button" value="취소">
+		<input class="btn_add" type="submit" value="등록">
+	</div>
+</form>
+<%@ include file="/common/footer.jsp"%>
 </body>
 </html>
