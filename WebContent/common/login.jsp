@@ -54,6 +54,11 @@ input[type='text'],input[type='password'] {
     font-size: 20px;
 }
 
+.radio{
+height : 100px;
+font-size: 20px;
+}
+
 </style>
 
 <title>로그인</title>
@@ -73,10 +78,11 @@ input[type='text'],input[type='password'] {
 	<div id="wrap">	
 		<div class="box">
 		<form action="${CONTEXT_PATH }/common/commonController?action=login" method="post">
+		<div class="radio">
 			<input type="radio" id="genaral" name="grade" value="G" checked="checked">일반회원
 			<input type="radio" id="center" name="grade" value="C" >센터회원
 			<input type="radio" id="admin" name="grade" value="A">관리자
-			
+		</div>
 		 <div class="wrap_form">
 			<h3>아이디</h3>
 			<input type="text" id="memberId" name="memberId" placeholder="아이디" size="40" height="50px">

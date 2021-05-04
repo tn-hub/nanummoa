@@ -449,7 +449,7 @@ public class CommonController extends HttpServlet {
 		try {
 			biz.qnaList(qnaList, searchOpt, searchText);
 			request.setAttribute("qnaList", qnaList);
-			request.getRequestDispatcher("/qna/qnaList.jsp").forward(request, response);
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=qnaList");
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
