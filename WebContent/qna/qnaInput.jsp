@@ -40,32 +40,37 @@
 </head>
 <script type="text/javascript">
 
-function add_qna(){
-	var qnaTitleEl = ${"qnaTitle"};
-	var title = qnaTitleEl.value;
+$(document).ready(function() {
+	$("#add_qna").click(function () {
+		var qnaTitleEl = $("#qnaTitle").val();
+		var title = $("#qnaTitle").val();
+		
+		if (title == "" || title == null){
+			alert("제목을 입력해주세요");
+			qnaTitleEl.focus();
+			return;
+		}
+			// 제목 빈값 확인 
+			if (title == "" || title == null){
+				alert("제목을 입력해주세요");
+				qnaTitleEl.focus();
+				return;
+			}
+		
+		var qnaContentsEl = $("#qnaContents"); 
+		var qnaContents = qnaContentsEl.val();
 
-	// 제목 빈값 확인 
-	if (title == "" || title == null){
-		alert("제목을 입력해주세요");
-		qnaTitleEl.focus();
-		return;
-	}
-	
-	var qnaContentsEl = ${"qnaContents"}; 
-	var qnaContents = qnaContentsEl.value;
-
-	// 제목 빈값 확인 
-	if (qnaContents == "" || qnaContents == null){
-		alert("내용을 입력해주세요");
-		qnaContentsEl.focus();
-		return;
-	}
-	
-	// 저장 submit 
-	document.qnaAddForm.submit();
-	alert("저장되었습니다.");
-	
-}
+		// 제목 빈값 확인 
+		if (qnaContents == "" || qnaContents == null){
+			alert("내용을 입력해주세요");
+			qnaContentsEl.focus();
+			return;
+		}
+		
+		// 저장 submit 
+		document.qnaAddForm.submit();
+		alert("저장되었습니다.");
+	});
 
 
 </script>
