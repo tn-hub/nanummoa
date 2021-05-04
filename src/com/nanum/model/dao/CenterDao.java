@@ -67,8 +67,6 @@ public class CenterDao {
 				
 				list.add(dto);
 			}
-			
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 			MessageEntity messageEntity = new MessageEntity("error", 2);

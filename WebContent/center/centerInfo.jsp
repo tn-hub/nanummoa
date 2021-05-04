@@ -19,6 +19,7 @@ margin:  auto;
 
 .link{
 text-align: center;
+
 }
 
 #vol_list_div {
@@ -222,7 +223,8 @@ text-align: center;
 				</div>
 			</div>
 			<div class="deadline_box">
-					<p>마감 <em>00</em> 일전
+					<p>
+						마감 <em>00</em> 일전
 					</p>
 			</div>
 			<hr class="list_hr">
