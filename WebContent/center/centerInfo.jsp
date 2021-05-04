@@ -200,7 +200,7 @@ text-align: center;
 			<div class="list_box">
 				<div>
 					<span class="title_span">모집중</span>
-					<span>${dto.categoryNo }</span>
+					<span>${volCategoryMap[dto.categoryNo].categoryName}</span>
 				</div>
 				
 				<h3><a href="#">${dto.volTitle }</a></h3>
