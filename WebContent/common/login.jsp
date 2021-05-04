@@ -56,9 +56,18 @@ input[type='text'],input[type='password'] {
 
 .radio{
 height : 100px;
-font-size: 20px;
-}
+width: 500px;
 
+font-size: 22px;
+font-weight: bold;
+margin: 0 auto;
+
+}
+input[type='radio'] {
+	width: 30px;
+    height: 20px;
+}
+    
 </style>
 
 <title>로그인</title>
@@ -84,9 +93,9 @@ font-size: 20px;
 			<input type="radio" id="admin" name="grade" value="A">관리자
 		</div>
 		 <div class="wrap_form">
-			<h3>아이디</h3>
+			<h2>아이디</h2>
 			<input type="text" id="memberId" name="memberId" placeholder="아이디" size="40" height="50px">
-			<h3>비밀번호</h3>
+			<h2>비밀번호</h2>
 			<input type="password" id="memberPw" name="memberPw" placeholder="패스워드" size="40">
 		</div>
 		

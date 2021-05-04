@@ -415,11 +415,10 @@ public class CommonController extends HttpServlet {
 			System.out.println("dto.getGeneralId() = "+dto.getGeneralId());
 			try {
 				biz.addQna_gen(dto);
-				request.getRequestDispatcher("/qna/qnaList.jsp").forward(request, response);
+				response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=qnaList");
 			} catch (CommonException e) {
 				e.printStackTrace();
 			}
-			
 			
 		}else if  (grade.equals("C")) {
 			//CenterMemberDto cdto = (CenterMemberDto) session.getAttribute("dto");
@@ -428,7 +427,8 @@ public class CommonController extends HttpServlet {
 
 			try {
 				biz.addQna_cen(dto);
-				request.getRequestDispatcher("/qna/qnaList.jsp").forward(request, response);
+				//request.getRequestDispatcher("/qna/qnaList.jsp").forward(request, response);
+				response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=qnaList");
 			} catch (CommonException e) {
 				e.printStackTrace();
 			}
@@ -449,7 +449,7 @@ public class CommonController extends HttpServlet {
 		try {
 			biz.qnaList(qnaList, searchOpt, searchText);
 			request.setAttribute("qnaList", qnaList);
-			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=qnaList");
+			request.getRequestDispatcher("/qna/qnaList.jsp").forward(request, response);
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
