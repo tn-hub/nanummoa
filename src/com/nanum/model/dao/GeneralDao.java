@@ -39,7 +39,6 @@ public class GeneralDao {
 		ResultSet rs = null;
 		
 		try {
-			conn = JdbcTemplate.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			
@@ -73,7 +72,6 @@ public class GeneralDao {
 		ResultSet rs = null;
 		
 		try {
-			conn = JdbcTemplate.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			
@@ -107,7 +105,6 @@ public class GeneralDao {
 		ResultSet rs = null;
 		
 		try {
-			conn = JdbcTemplate.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, generalId);
 			rs = pstmt.executeQuery();
@@ -136,7 +133,6 @@ public class GeneralDao {
 		PreparedStatement pstmt = null;
 		
 		try {
-//			conn = JdbcTemplate.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			System.out.println(dto.getGeneralId());
 			System.out.println("localNo : " + dto.getLocalNo());
