@@ -45,6 +45,9 @@ public class VolInfoDto {
 	/** 봉사분야번호 */
 	private String categoryNo;
 
+	/** 지역번호 */
+	private String localNo;
+
 	/** 봉사자유형 */
 	private String volType;
 
@@ -79,6 +82,7 @@ public class VolInfoDto {
 	 * @param startDate    모집시작일
 	 * @param endDate      모집마감일
 	 * @param categoryNo   봉사분야번호
+	 * @param localNo      지역번호
 	 * @param volType      봉사자유형
 	 * @param volPlace     봉사장소
 	 * @param latitude     위도
@@ -86,8 +90,8 @@ public class VolInfoDto {
 	 * @param volSubject   봉사대상
 	 */
 	public VolInfoDto(int volInfoNo, String centerId, String volTitle, String volContents, Date volWriteDate,
-			Date startTime, Date endTime, Date startDate, Date endDate, String categoryNo, String volType,
-			String volPlace, String latitude, String longitude, String volSubject) {
+			Date startTime, Date endTime, Date startDate, Date endDate, String categoryNo, String localNo,
+			String volType, String volPlace, String latitude, String longitude, String volSubject) {
 		this.volInfoNo = volInfoNo;
 		this.centerId = centerId;
 		this.volTitle = volTitle;
@@ -98,6 +102,7 @@ public class VolInfoDto {
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.categoryNo = categoryNo;
+		this.localNo = localNo;
 		this.volType = volType;
 		this.volPlace = volPlace;
 		this.latitude = latitude;
@@ -246,6 +251,20 @@ public class VolInfoDto {
 	}
 
 	/**
+	 * @return the localNo
+	 */
+	public String getLocalNo() {
+		return localNo;
+	}
+
+	/**
+	 * @param localNo the localNo to set
+	 */
+	public void setLocalNo(String localNo) {
+		this.localNo = localNo;
+	}
+
+	/**
 	 * @return the volType
 	 */
 	public String getVolType() {
@@ -337,6 +356,8 @@ public class VolInfoDto {
 		builder.append(endDate);
 		builder.append(", ");
 		builder.append(categoryNo);
+		builder.append(", ");
+		builder.append(localNo);
 		builder.append(", ");
 		builder.append(volType);
 		builder.append(", ");

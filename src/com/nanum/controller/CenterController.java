@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -12,15 +13,18 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.nanum.dto.CenterMemberDto;
+import com.nanum.dto.VolInfoDto;
+import com.nanum.model.biz.CenterBiz;
+import com.nanum.util.CommonException;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import com.nanum.dto.CenterInfo;
-import com.nanum.dto.CenterMemberDto;
-import com.nanum.model.biz.CenterBiz;
-import com.nanum.util.CommonException;
 
 /**
  * 센터회원 컨트롤러
@@ -51,6 +55,12 @@ public class CenterController extends HttpServlet {
 		case "idCheck":
 			idCheck(request, response);
 			break;
+		case "centerVolListForm" :
+			centerVolListForm(request, response);
+			break;
+//		case "":
+//			(request, response);
+//			break;
 		}
 	}
 	
@@ -282,4 +292,35 @@ public class CenterController extends HttpServlet {
 	        }
 	}
 
+	/**
+	 * 센터회원 봉사 목록
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void centerVolListForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		
+		CenterMemberDto dto = new CenterMemberDto();
+		
+		//String centerId = dto.getCenterId();
+		String centerId = "center01";
+		
+		CenterBiz biz = new CenterBiz();
+		ArrayList<VolInfoDto> list = new ArrayList<VolInfoDto>();
+		
+		for(VolInfoDto dd : list) {
+			System.out.println(dd.getVolTitle());
+		}
+		
+		try {
+			biz.centerVolList(centerId,list);
+			request.setAttribute("list",list);
+			request.getRequestDispatcher("/center/centerInfo.jsp").forward(request, response);	
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
+	}
 }
