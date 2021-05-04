@@ -154,13 +154,15 @@ public class CommonDao {
 	 * @throws CommonException 
 	 */
 	public void findId(Connection conn, GeneralMemberDto dto) throws CommonException {
-		String sql = "select * from general_member where g_email=?";
+		String sql = "select g_id from general_member where g_name=? and g_email=?";
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
 
 			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, dto.getGeneralEmail());
+			
+			stmt.setString(1, dto.getGeneralName());
+			stmt.setString(2, dto.getGeneralEmail());
 			
 			rs = stmt.executeQuery();
 			
@@ -185,13 +187,14 @@ public class CommonDao {
 	 * @throws CommonException 
 	 */
 	public void findId(Connection conn, CenterMemberDto center) throws CommonException {
-		String sql = "select * from center_member where c_email=?";
+		String sql = "select c_id from center_member where c_name=? and c_email=?";
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
 
 			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, center.getCenterEmail());
+			stmt.setString(1, center.getCenterName());
+			stmt.setString(2, center.getCenterEmail());
 			
 			rs = stmt.executeQuery();
 			

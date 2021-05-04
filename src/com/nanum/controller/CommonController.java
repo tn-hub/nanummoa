@@ -201,9 +201,12 @@ public class CommonController extends HttpServlet {
 	 */
 	protected void addSecureCode(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		String name = request.getParameter("name");
 		String email1 = request.getParameter("email1");
 		String email2 = request.getParameter("email2");
 		String email = email1 + "@" + email2;
+		
+		
 		// DB 저장 했다고 가정 (DB에는 emailAuth 필드가 있어야 하고 최초에는 0이 저장되어 있음) 1 인증 0 미인증
 		// DB에 저장했으니 google email 인증 페이지로 이동
 
@@ -243,13 +246,14 @@ public class CommonController extends HttpServlet {
 			Transport.send(msg);
 
 			HttpSession session = request.getSession();
-			session.setAttribute("secureCode", secureCode);
+			session.setAttribute("name", name);
 			session.setAttribute("email", email);
 
 			response.setContentType("text/html; charset=utf-8");
 			PrintWriter out = response.getWriter();
 			out.println("<script>alert('메일확인해주세요');history.go(-1); </script>");
 			out.flush();
+			
 		} catch (Exception e) {
 			response.setContentType("text/html; charset=utf-8");
 			PrintWriter script = response.getWriter();
@@ -298,24 +302,34 @@ public class CommonController extends HttpServlet {
 	protected void findId(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		String email = (String)session.getAttribute("email");
+		String name = (String)session.getAttribute("name");
 		
 		CommonBiz biz = new CommonBiz();
 		
 		GeneralMemberDto dto = new GeneralMemberDto();
 		dto.setGeneralEmail(email);
+		dto.setGeneralName(name);
 		
 		try {
 			biz.findId(dto);
 			if (dto.getGeneralId() != null) {
 				System.out.println("일반회원 아이디 : " + dto.getGeneralId());
+				
+				request.setAttribute("dto", dto);
+				request.getRequestDispatcher("/common/idpwmessage.jsp").forward(request, response);
 			}else {
 				CenterMemberDto center = new CenterMemberDto();
 				center.setCenterEmail(email);
+				center.setCenterName(name);
 				try {
 					biz.findId(center);	
 					if (center.getCenterId() != null) {
 						System.out.println("센터 아이디 : " + center.getCenterId());
+						request.setAttribute("dto", center);
+						request.getRequestDispatcher("/common/idpwmessage.jsp").forward(request, response);		
 					}else {
+						System.out.println(dto.getGeneralId());
+						System.out.println(center.getCenterId());
 						System.out.println("정보 틀림");
 						return;
 					}

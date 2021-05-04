@@ -136,7 +136,7 @@ public class GeneralDao {
 		PreparedStatement pstmt = null;
 		
 		try {
-			conn = JdbcTemplate.getConnection();
+//			conn = JdbcTemplate.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			System.out.println(dto.getGeneralId());
 			System.out.println("localNo : " + dto.getLocalNo());
