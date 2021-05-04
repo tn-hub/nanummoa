@@ -231,6 +231,9 @@ public class CommonDao {
 		System.out.println();
 	
 		try {
+			System.out.println(dto.getGeneralId());
+			System.out.println(dto.getQnaTitle());
+			System.out.println(dto.getQnaContents());
 			 stmt = conn.prepareStatement(sql); // 실행 sql 넣기
 			 stmt.setString(1, dto.getGeneralId());
 		     stmt.setString(2, dto.getQnaTitle());
@@ -257,7 +260,7 @@ public class CommonDao {
 	 * @throws CommonException
 	 */
 	public void insertQna_cen(Connection conn, QnADto dto) throws CommonException  {
-		String sql = "insert into qna(q_no, c_id, q_title, q_contents, q_write_date) values(Q_NO.nextval, ?, ?, ?, sysdate)";
+		String sql = "insert into qna(q_no, c_id, q_title, q_contents, q_write_date) values(q_no.nextval, ?, ?, ?, sysdate)";
 		
 		PreparedStatement stmt = null; //초기화 
 		

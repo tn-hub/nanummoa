@@ -39,8 +39,8 @@
 </style>
 </head>
 <script type="text/javascript">
+
 function add_qna(){
-	
 	var qnaTitleEl = ${"qnaTitle"};
 	var title = qnaTitleEl.value;
 
@@ -66,6 +66,7 @@ function add_qna(){
 	alert("저장되었습니다.");
 	
 }
+
 
 </script>
 <body>

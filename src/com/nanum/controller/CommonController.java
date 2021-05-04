@@ -374,7 +374,7 @@ public class CommonController extends HttpServlet {
 	 * @throws IOException
 	 */
 	private void qnaInputForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		request.getRequestDispatcher("/qna/qnaInput.jsp").forward(request, response);
+		request.getRequestDispatcher("/qnaInput.jsp").forward(request, response);
 	}
 
 	
@@ -403,7 +403,7 @@ public class CommonController extends HttpServlet {
 			System.out.println("dto.getGeneralId() = "+dto.getGeneralId());
 			try {
 				biz.addQna_gen(dto);
-				request.getRequestDispatcher("/qna/qnaList.jsp").forward(request, response);
+				request.getRequestDispatcher("/qnaList.jsp").forward(request, response);
 			} catch (CommonException e) {
 				e.printStackTrace();
 			}
@@ -416,7 +416,7 @@ public class CommonController extends HttpServlet {
 
 			try {
 				biz.addQna_cen(dto);
-				request.getRequestDispatcher("/qna/qnaList.jsp").forward(request, response);
+				request.getRequestDispatcher("/qnaList.jsp").forward(request, response);
 			} catch (CommonException e) {
 				e.printStackTrace();
 			}
@@ -439,7 +439,7 @@ public class CommonController extends HttpServlet {
 		try {
 			biz.qnaList(qnaList, searchOpt, searchText);
 			request.setAttribute("qnaList", qnaList);
-			request.getRequestDispatcher("/qna/qnaList.jsp").forward(request, response);
+			request.getRequestDispatcher("/qnaList.jsp").forward(request, response);
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
@@ -460,7 +460,7 @@ public class CommonController extends HttpServlet {
 		try {
 			biz.qnaDetail(dto, qnaNo); 	// dao단에서 (담을곳, 조건,,,,)
 			request.setAttribute("sdto", dto);	// 화면단에 던지기
-			request.getRequestDispatcher("/qna/qnaDetail.jsp").forward(request, response);
+			request.getRequestDispatcher("/qnaDetail.jsp").forward(request, response);
 		} catch (CommonException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -486,7 +486,7 @@ public class CommonController extends HttpServlet {
 		try {
 			CommonBiz biz = new CommonBiz();
 			biz.qnaUpdate(dto);
-			request.getRequestDispatcher("/qna/qnaList.jsp").forward(request, response);
+			request.getRequestDispatcher("/qnaList.jsp").forward(request, response);
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
@@ -502,7 +502,7 @@ public class CommonController extends HttpServlet {
 		try {
 			CommonBiz biz = new CommonBiz();
 			biz.qnaDelete(qnaNo);
-			request.getRequestDispatcher("/qna/qnaList.jsp").forward(request, response);
+			request.getRequestDispatcher("/qnaList.jsp").forward(request, response);
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
