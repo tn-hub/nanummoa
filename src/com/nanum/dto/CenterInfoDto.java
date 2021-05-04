@@ -11,7 +11,7 @@ package com.nanum.dto;
  * @author 메타쓰리
  *
  */
-public class CenterInfo {
+public class CenterInfoDto {
 	/** 센터회원아이디 */
 	private String centerId;
 
@@ -42,7 +42,7 @@ public class CenterInfo {
 	/**
 	 * 기본 생성자
 	 */
-	public CenterInfo() {
+	public CenterInfoDto() {
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class CenterInfo {
 	 * @param ceoName         대표이름
 	 * @param ceoMobile       대표연락처
 	 */
-	public CenterInfo(String centerId, String centerName, String centerEntryDate, String centerZipCode,
+	public CenterInfoDto(String centerId, String centerName, String centerEntryDate, String centerZipCode,
 			String centerAddress, String registerCode, String service, String ceoName, String ceoMobile) {
 		this.centerId = centerId;
 		this.centerName = centerName;

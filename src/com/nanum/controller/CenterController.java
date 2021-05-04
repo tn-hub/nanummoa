@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.nanum.dto.CenterMemberDto;
+import com.nanum.dto.CenterVolDto;
 import com.nanum.dto.VolInfoDto;
 import com.nanum.model.biz.CenterBiz;
 import com.nanum.util.CommonException;
@@ -24,7 +25,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import com.nanum.dto.CenterInfo;
+import com.nanum.dto.CenterInfoDto;
 
 /**
  * 센터회원 컨트롤러
@@ -247,7 +248,7 @@ public class CenterController extends HttpServlet {
 		String ceoMobile = ceoMobile1 + "-" + ceoMobile2.trim() + "-" + ceoMobile3.trim();
 		
 		CenterMemberDto cMemberDto = new CenterMemberDto();
-		CenterInfo centerDto = new CenterInfo();
+		CenterInfoDto centerDto = new CenterInfoDto();
 		
 		String appStatus = "N";
 		 try {
@@ -320,21 +321,39 @@ public class CenterController extends HttpServlet {
 	 */
 	protected void centerVolListForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		
-		CenterMemberDto dto = new CenterMemberDto();
-		
-		//String centerId = dto.getCenterId();
-		String centerId = "center01";
+		CenterMemberDto dto = (CenterMemberDto)session.getAttribute("dto");
+		String centerId = dto.getCenterId();
 		
 		CenterBiz biz = new CenterBiz();
-		ArrayList<VolInfoDto> list = new ArrayList<VolInfoDto>();
-		
-		for(VolInfoDto dd : list) {
-			System.out.println(dd.getVolTitle());
-		}
+		ArrayList<CenterVolDto> list = new ArrayList<CenterVolDto>();
 		
 		try {
 			biz.centerVolList(centerId,list);
+			request.setAttribute("list",list);
+			request.getRequestDispatcher("/center/centerInfo.jsp").forward(request, response);	
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 센터회원 봉사 목록(모집중)
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void recruitList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		CenterMemberDto dto = (CenterMemberDto)session.getAttribute("dto");
+		String centerId = dto.getCenterId();
+		
+		CenterBiz biz = new CenterBiz();
+		ArrayList<CenterVolDto> list = new ArrayList<CenterVolDto>();
+		
+		try {
+			biz.recruitList(centerId,list);
 			request.setAttribute("list",list);
 			request.getRequestDispatcher("/center/centerInfo.jsp").forward(request, response);	
 		} catch (CommonException e) {
