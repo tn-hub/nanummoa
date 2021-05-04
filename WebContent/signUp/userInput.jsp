@@ -59,7 +59,7 @@ height: 200px;
 }
 
 .large_select {
-	width: 100px;
+	width: 150px;
 }
 </style>
 <script type="text/javascript">
@@ -76,7 +76,7 @@ function postcode() {
 
 /* 이름 체크 */
 function nameCheck(){
-	var nameElement = $("#generalName");
+	var nameElement = $("#name");
 	var name = nameElement.val();
 	var nameMessageElement = $("#nameMessage");
 	name = name.trim();
@@ -120,22 +120,22 @@ function birthdayCheck(){
 }
 
 /* 아이디 체크 */
-function generalIdCheck(){
+function idCheck(){
 	console.log("아이디 들어옴");
-	var generalIdElement = $("#generalId");
-	var generalId = generalIdElement.val();
-	var generalIdMessageElement = $("#generalIdMessage");
-	generalId = generalId.trim();
+	var idElement = $("#id");
+	var id = idElement.val();
+	var idMessageElement = $("#idMessage");
+	id = id.trim();
 	
-	if (generalId.length == 0) {
-		generalIdMessageElement.html("아이디를 입력해 주세요");
-		generalIdElement.val("");
-		generalIdElement.focus();
+	if (id.length == 0) {
+		idMessageElement.html("아이디를 입력해 주세요");
+		idElement.val("");
+		idElement.focus();
 		return false;
-	} else if (!generalIdReg(generalId)) {
-		generalIdMessageElement.html("아이디는 6 ~ 30자리 이내 영문,숫자로 입력해 주세요");
-		generalIdElement.val("");
-		generalIdElement.focus();
+	} else if (!idReg(id)) {
+		idMessageElement.html("아이디는 6 ~ 30자리 이내 영문,숫자로 입력해 주세요");
+		idElement.val("");
+		idElement.focus();
 		return false;
 	}
 	
@@ -143,38 +143,38 @@ function generalIdCheck(){
 }
 
 /* 비밀번호 체크 */
-function generalPwCheck(){
+function pwCheck(){
 	console.log("비밀번호 들어옴");
-	var generalPwElement = $("#generalPw");
-	var generalPw = generalPwElement.val();
-	var generalPwMessageElement = $("#generalPwMessage");
+	var pwElement = $("#pw");
+	var pw = pwElement.val();
+	var pwMessageElement = $("#pwMessage");
 	
-	var generalPw2Element = $("#generalPw2");
-	var generalPw2 = generalPw2Element.val();
-	var generalPw2MessageElement = $("#generalPw2Message");
+	var pw2Element = $("#pw2");
+	var pw2 = pw2Element.val();
+	var pw2MessageElement = $("#pw2Message");
 	
-	generalPw = generalPw.trim();
-	generalPw2 = generalPw2.trim();
+	pw = pw.trim();
+	pw2 = pw2.trim();
 	
-	if (generalPw.length == 0) {
-		generalPwMessageElement.html("비밀번호를 입력해 주세요");
-		generalPwElement.val("");
-		generalPwElement.focus();
+	if (pw.length == 0) {
+		pwMessageElement.html("비밀번호를 입력해 주세요");
+		pwElement.val("");
+		pwElement.focus();
 		return false;
-	} else if (!generalPwReg(generalPw)) {
-		generalPwMessageElement.html("비밀번호는 8 ~ 20자리 이내 숫자,영문,특수문자를 포함하여 입력해 주세요");
-		generalPwElement.val("");
-		generalPwElement.focus();
+	} else if (!pwReg(pw)) {
+		pwMessageElement.html("비밀번호는 8 ~ 20자리 이내 숫자,영문,특수문자를 포함하여 입력해 주세요");
+		pwElement.val("");
+		pwElement.focus();
 		return false;
-	} else if (generalPw2.length == 0) {
-		generalPw2MessageElement.html("비밀번호를 입력해 주세요");
-		generalPw2Element.val("");
-		generalPw2Element.focus();
+	} else if (pw2.length == 0) {
+		pw2MessageElement.html("비밀번호를 입력해 주세요");
+		pw2Element.val("");
+		pw2Element.focus();
 		return false;
-	} else if (generalPw != generalPw2) {
-		generalPw2MessageElement.html("비밀번호가 일치하지 않습니다");
-		generalPw2Element.val("");
-		generalPw2Element.focus();
+	} else if (pw != pw2) {
+		pw2MessageElement.html("비밀번호가 일치하지 않습니다");
+		pw2Element.val("");
+		pw2Element.focus();
 		return false;
 	}
 	
@@ -276,15 +276,15 @@ function emailCheck(){
 function visiblePw() {
 	console.log("비밀번호 체크 들어옴");
 	var visiblePwElement = $("#PwVisible");
-	var generalPwElement = $("#generalPw");
-	var generalPw2Element = $("#generalPw2");
+	var pwElement = $("#pw");
+	var pw2Element = $("#pw2");
 	
 	if (visiblePwElement.is(":checked")) {
-		generalPwElement.prop("type", "text");
-		generalPw2Element.prop("type", "text");
+		pwElement.prop("type", "text");
+		pw2Element.prop("type", "text");
 	} else {
-		generalPwElement.prop("type", "password");
-		generalPw2Element.prop("type", "password");
+		pwElement.prop("type", "password");
+		pw2Element.prop("type", "password");
 	}
 }
 
@@ -339,13 +339,13 @@ function birthdayReg(data) {
 }
 
 /* 아이디 정규식 */	
-function generalIdReg(data){
+function idReg(data){
 	var regExp = /^[a-zA-Z0-9]{6,30}$/;
 	return regExp.test(data);
 }
 
 /* 비밀번호 정규식 */
-function generalPwReg(data){
+function pwReg(data){
 	var regExp = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[~!@#$%^&*()+=]).{8,20}$/;
 	return regExp.test(data);
 }
@@ -379,19 +379,19 @@ function clearMessageBirthday(){
 }
 
 /* 아이디 에러메세지 클리어, 중복확인 버튼 활성화 */
-function clearMessageGeneralId(){
-	$("#generalIdMessage").html("");
+function clearMessageId(){
+	$("#idMessage").html("");
 	$("#idBtn").attr("disabled", false);
 }
 
 /* 비밀번호 에러메세지 클리어 */
-function clearMessageGeneralPw(){
-	$("#generalPwMessage").html("");
+function clearMessagePw(){
+	$("#pwMessage").html("");
 }
 
 /* 비밀번호2 에러메세지 클리어 */
-function clearMessageGeneralPw2(){
-	$("#generalPw2Message").html("");
+function clearMessagePw2(){
+	$("#pw2Message").html("");
 }
 
 /* 주소 에러메세지 클리어 */
@@ -410,14 +410,13 @@ function clearMessageEmail(){
 }
 
 /* 일반회원 회원가입 체크 */
-function GeneralInputCheck() {
-	if (!$("#idBtn").prop("disabled")){
-		alert("아이디 중복확인을 해주세요");
-		return false;
-	}
-	
-	if (nameCheck() && birthdayCheck() && generalIdCheck() &&
-		generalPwCheck() && addressCheck() && mobileCheck() && emailCheck()) {
+function generalInputCheck() {
+	if (nameCheck() && birthdayCheck() && idCheck() &&
+		pwCheck() && addressCheck() && mobileCheck() && emailCheck()) {
+		if (!$("#idBtn").prop("disabled")){
+			alert("아이디 중복확인을 해주세요");
+			return false;
+		}
 		return true;
 	}
 	
@@ -432,15 +431,15 @@ $(document).ready(function(){
 	/* 회원가입 입력항목 체크*/
 	$("input[type='submit']").click(function(e){
 		e.preventDefault();
-		if (GeneralInputCheck()) {
+		if (generalInputCheck()) {
 			$("#generalInputForm").submit();
 		}
 	});
 	
 	/* 아이디 중복 확인*/
 	$("#idBtn").click(function(){
-		if(generalIdCheck()) {
-			var id = $("#generalId").val();
+		if(idCheck()) {
+			var id = $("#id").val();
 			$.ajax({
 				  type:'get',
 				  url:'${CONTEXT_PATH}/general/generalController?action=idCheck',
@@ -474,14 +473,14 @@ $(document).ready(function(){
 
 <!-- 회원가입 폼 --------------------------------------------------------------------------------->
 <div id="userInput_div">
-<h3>회원가입</h3>
+<h1>회원가입</h1>
 <hr class="head_hr">
 	<form action="${CONTEXT_PATH}/general/generalController?action=generalInput" method="post" id="generalInputForm">
 		<table border="1">
 			<tr>
 				<th>이름</th>
 				<td>
-					<input type="text" id="generalName" name="generalName" placeholder="이름" size="30" onkeydown="clearMessageName()">
+					<input type="text" id="name" name="name" placeholder="이름" size="30" onkeydown="clearMessageName()">
 					<span id="nameMessage" class="error_message"></span>
 				</td>
 			</tr>
@@ -505,26 +504,26 @@ $(document).ready(function(){
 			<tr>
 				<th>아이디</th>
 				<td>
-					<input type="text" id="generalId" name="generalId" placeholder="6 ~ 30자리 이내" size="30" onkeydown="clearMessageGeneralId()">
+					<input type="text" id="id" name="id" placeholder="6 ~ 30자리 이내" size="30" onkeydown="clearMessageId()">
 					<input type="button" value="중복확인" id="idBtn">
-					<span id="generalIdMessage" class="error_message"></span>
+					<span id="idMessage" class="error_message"></span>
 					</td>
 			</tr>
 			
 			<tr>
 				<th>비밀번호</th>
 				<td>
-					<input type="password" id="generalPw" name="generalPw" placeholder="8 ~ 20자리 이내" size="30" onkeydown="clearMessageGeneralPw()">
+					<input type="password" id="pw" name="pw" placeholder="8 ~ 20자리 이내" size="30" onkeydown="clearMessagePw()">
 					<span class="small_span">* 숫자,영문,특수문자(~!@#$%^&*()+=) 포함</span>
-					<span id="generalPwMessage" class="error_message"></span>
+					<span id="pwMessage" class="error_message"></span>
 				</td>
 			</tr>
 			
 			<tr>
 				<th>비밀번호 확인</th>
 				<td>
-					<input type="password" id="generalPw2" placeholder="8 ~ 20자리 이내" name="generalPw2" size="30" onkeydown="clearMessageGeneralPw2()">
-					<span id="generalPw2Message" class="error_message"></span><br>
+					<input type="password" id="pw2" placeholder="8 ~ 20자리 이내" name="pw2" size="30" onkeydown="clearMessagePw2()">
+					<span id="pw2Message" class="error_message"></span><br>
 					<input type="checkbox" name="PwVisible" id="PwVisible" onclick="visiblePw()">
 					<span class="small_span">비밀번호 표시</span>
 				</td>
