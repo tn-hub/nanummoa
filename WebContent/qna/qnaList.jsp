@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="com.nanum.dto.QnADto" %>    
+<%@ page import="java.util.ArrayList" %>
+<%@ include file="/inc/taglib_menu.jsp" %>    
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,8 +15,6 @@ a:visited{color: gray;}
 a:hover { font-weight: bold; }
 a:active { font-weight: bold; }
 a.bold { font-weight: bold; }
-
-
 
 
 #section_contents{
@@ -61,7 +62,7 @@ a.bold { font-weight: bold; }
 }
 
 .qna_ti{
-	width: 400px;
+	width: 512px;
 }
 
 .qna_wr{
@@ -69,7 +70,7 @@ a.bold { font-weight: bold; }
 }
 
 .qna_dt{
-	width: 217px;
+	width: 105px;
 }
 
 #page_btn{
@@ -79,6 +80,33 @@ a.bold { font-weight: bold; }
 
 </style>
 </head>
+
+
+<script type="text/javascript">
+
+function search_qna(){
+	
+	//검색조건
+	var searchOptEl = ${"search_opt"};   
+	var searchOpt = searchOptEl.value;
+	
+	// 검색 값
+	var searchTextEl = ${"search_text"}; 	
+	var searchText = searchTextEl.value;
+	
+		
+	if (searchOpt == "T" || searchOpt == "C" || searchOpt == "W"){
+		if (searchText == null || searchText == ""){
+			alert("검색내용을 입력하세요");
+			searchTextEl.focus();
+		}		
+	}
+	// 검색 submit 
+	document.qnaListForm.submit();
+}
+
+</script>
+
 <body>
 <%@ include file="/common/header.jsp"%>
 <div id="section_contents">
@@ -86,34 +114,39 @@ a.bold { font-weight: bold; }
 <hr>
 [전체 <em>0</em> 건, 현재 페이지 <em>1</em> /1]
 <div id="search_qna">
-	<select>
+	<select  id="search_opt" name ="search_opt">
 		<option>== 검색 조건 ==</option>
-		<option>제목</option>
-		<option>내용</option>
-		<option>작성자</option>
+		<option value="T" >제목</option>
+		<option value="C" >내용</option>
+		<option value="W" >작성자</option>
 	</select>
-	<input type="text">
-	<input type="submit" value="검색">
+	<input type="text" id="search_text" name ="search_text">
+	<input type="button" value="검색" onclick="search_qna()">
 </div>
 <hr>
-<div id="addQna"><input type="button" value="글 쓰기" id="btn_addQna"></div>
+<div id="addQna"><a href="${CONTEXT_PATH}/common/commonController?action=qnaInputForm"><input type="button" value="글 쓰기" id="btn_addQna"></a></div>
 <div id="sec_qTable">
+<form name="qnaListForm" action="${CONTEXT_PATH}/common/commonController?action=qnaList" method="post">
 <table id="qna_table">
 	<tr>
 		<th class="qna_no">글번호</th>
 		<th class="qna_ti">제목</th>
 		<th class="qna_wr">작성자</th>
-		<th class="qna_dt">잘성일</th>
+		<th class="qna_dt">작성일</th>
 		<th class="qna_yn">답변 여부</th>
 	</tr>
+	<!-- QNA 반복행 -->
+	<c:forEach var="dto" items="${qnaList}">
 		<tr>
-		<td></td>
-		<td><a href="">클릭</a></td>
-		<td></td>
-		<td></td>
-		<td></td>
-	</tr>
+			<td>${dto.qnaNo}</td>
+			<td><a href="${CONTEXT_PATH}/common/commonController?action=qnaDtl&qnaNo=${dto.qnaNo}" >${dto.qnaTitle}</a></td>
+			<td>${dto.qnaWriter}</td>
+			<td>${dto.qnaWriteDate}</td>
+			<td>${dto.answerYn}</td>
+		</tr>
+	</c:forEach>
 </table>
+</form>
 </div>
 <div id=page_btn>
 	<input type="button" value="이전 < ">
@@ -123,7 +156,7 @@ a.bold { font-weight: bold; }
 <hr>
 <div id="footer" class="footer">
 		<%@ include file="/common/footer.jsp"%>
-	</div>
+</div>
 </div>
 </body>
 </html>

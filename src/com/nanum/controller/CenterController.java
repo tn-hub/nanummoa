@@ -1,6 +1,10 @@
 package com.nanum.controller;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.URL;
 import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
@@ -15,6 +19,12 @@ import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.VolInfoDto;
 import com.nanum.model.biz.CenterBiz;
 import com.nanum.util.CommonException;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+import com.nanum.dto.CenterInfo;
 
 /**
  * 센터회원 컨트롤러
@@ -36,6 +46,15 @@ public class CenterController extends HttpServlet {
 		String action = request.getParameter("action");
 		System.out.println("action : " + action);
 		switch (action) {
+		case "centerInputForm" :
+			centerInputForm(request, response);
+			break;
+		case "centerInput":
+			centerInput(request, response);
+			break;
+		case "idCheck":
+			idCheck(request, response);
+			break;
 		case "centerVolListForm" :
 			centerVolListForm(request, response);
 			break;
@@ -53,6 +72,226 @@ public class CenterController extends HttpServlet {
 		process(request, response);
 	}
 	
+	/**
+	 * 센터회원 회원가입 폼 요청
+	 */
+	protected void centerInputForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.sendRedirect(CONTEXT_PATH + "/signUp/centerInput.jsp");
+	}
+	
+	/**
+	 * 센터회원 아이디 중복 확인
+	 */
+	protected void idCheck(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html; charset=utf-8");
+		
+		String id = request.getParameter("id");
+		System.out.println("id : " + id);
+		PrintWriter out = response.getWriter();
+		
+		if (id == null || id.trim().length() == 0) {
+			out.print("none");
+			out.flush();
+			out.close();
+			return;
+		}
+		
+		id = id.trim();
+		CenterBiz biz = new CenterBiz();
+		try {
+			boolean result = biz.isCenterId(id);
+			System.out.println("result : " + result);
+			if (result) {
+				out.print("not-usable");
+			} else {
+				out.print("usable");
+			}
+		} catch (CommonException e) {
+			e.printStackTrace();
+		} finally {
+			out.flush();
+			out.close();
+		}
+	}
+	
+	/**
+	 * 센터회원 회원가입 서비스
+	 */
+	protected void centerInput(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		
+		String centerMemberName = request.getParameter("name");
+		String centerMemberId = request.getParameter("id");
+		String centerMemberPw = request.getParameter("pw");
+		String centerMemberPw2 = request.getParameter("pw2");
+		String mobile1 = request.getParameter("mobile1");
+		String mobile2 = request.getParameter("mobile2");
+		String mobile3 = request.getParameter("mobile3");
+		String email1 = request.getParameter("email1");
+		String email2 = request.getParameter("email2");
+		String registerCode = request.getParameter("registerCode");
+		String centerName = request.getParameter("centerName");
+		String centerEntryDate = request.getParameter("centerEntryDate");
+		String zipCode = request.getParameter("zipCode");
+		String address = request.getParameter("address");
+		String detailAddress = request.getParameter("detailAddress");
+		String ceoName = request.getParameter("ceoName");
+		String ceoMobile1 = request.getParameter("ceoMobile1");
+		String ceoMobile2 = request.getParameter("ceoMobile2");
+		String ceoMobile3 = request.getParameter("ceoMobile3");
+		String service = request.getParameter("service");
+		
+		if (centerMemberName == null || centerMemberName.trim().length() == 0) {
+			out.print("이름을 입력해 주세요");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (centerMemberId == null || centerMemberId.trim().length() == 0) {
+			out.print("아이디를 입력해 주세요");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (centerMemberPw == null || centerMemberPw.trim().length() == 0) {
+			out.print("비밀번호를 입력해 주세요");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (centerMemberPw2 == null || centerMemberPw2.trim().length() == 0) {
+			out.print("비밀번호를 입력해 주세요");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (mobile2 == null || mobile2.trim().length() == 0) {
+			out.print("휴대폰 번호를 입력해 주세요");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (mobile3 == null || mobile3.trim().length() == 0) {
+			out.print("휴대폰 번호를 입력해 주세요");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (email1 == null || email1.trim().length() == 0) {
+			out.print("이메일을 입력해 주세요");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (email2 == null || email2.trim().length() == 0) {
+			out.print("이메일을 입력해 주세요");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (registerCode == null || registerCode.trim().length() == 0) {
+			out.print("등록번호를 입력해 주세요");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (centerName == null || centerName.trim().length() == 0) {
+			out.print("기관이름을 입력해 주세요");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (centerName == null || centerName.trim().length() == 0) {
+			out.print("기관이름을 입력해 주세요");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (zipCode == null) {
+			out.print("주소를 입력해 주세요");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (ceoName == null || ceoName.trim().length() == 0) {
+			out.print("대표 이름을 입력해 주세요");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (ceoMobile2 == null || ceoMobile2.trim().length() == 0) {
+			out.print("휴대폰 번호 입력해 주세요");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (ceoMobile3 == null || ceoMobile3.trim().length() == 0) {
+			out.print("휴대폰 번호 입력해 주세요");
+			out.flush();
+			out.close();
+			return;
+		}
+		
+		centerMemberName = centerMemberName.trim();
+		centerMemberId = centerMemberId.trim();
+		centerMemberPw = centerMemberPw.trim();
+		String mobile = mobile1 + "-" + mobile2.trim() + "-" + mobile3.trim();
+		String email = email1.trim() + "@" + email2.trim();
+		registerCode = registerCode.trim();
+		centerName = centerName.trim();
+		centerEntryDate = centerEntryDate.trim();
+		if (detailAddress != null && detailAddress.trim().length() != 0) {
+			address = address + " " + detailAddress;
+		}
+		String ceoMobile = ceoMobile1 + "-" + ceoMobile2.trim() + "-" + ceoMobile3.trim();
+		
+		CenterMemberDto cMemberDto = new CenterMemberDto();
+		CenterInfo centerDto = new CenterInfo();
+		
+		String appStatus = "N";
+		 try {
+	            String urlStr = "http://openapi.seoul.go.kr:8088/4f5874664c7268783837774a656e55/json/VOpenGroup/1/2477/";
+	            
+	            URL url = new URL(urlStr);
+	            
+	            String line = "";
+	            String result = "";
+	            
+	            BufferedReader br;
+	            br = new BufferedReader(new InputStreamReader(url.openStream()));
+	            while ((line = br.readLine()) != null) {
+	            	System.out.println(line);
+	                result = result.concat(line);
+	                System.out.println(result);
+	                //System.out.println(line);                
+	            }            
+	            
+	            // JSON parser 만들어 문자열 데이터를 객체화한다.
+	            JSONParser parser = new JSONParser();
+	            JSONObject obj = (JSONObject)parser.parse(result);
+	           
+	            JSONObject data = (JSONObject)obj.get("VOpenGroup");
+	            
+	            JSONArray data2 = (JSONArray)data.get("row");
+	            System.out.println("obj : " + obj);
+	            System.out.println("data : " + data);
+	            System.out.println("data2 : " + data2.size());
+	            
+	            // 객체형태로
+	            for (int i=0;i< data2.size();i++) {
+	                JSONObject row = (JSONObject) data2.get(i);
+	                String centerNameData = (String) row.get("KORNAME");
+	                
+	                System.out.println("기관이름 : " + centerNameData);                
+	            }
+	            
+	            br.close();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	}
+
 	/**
 	 * 센터회원 봉사 목록
 	 * 
@@ -83,8 +322,5 @@ public class CenterController extends HttpServlet {
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
-		
-		
-		
 	}
 }

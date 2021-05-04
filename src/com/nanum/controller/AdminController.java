@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * 관리자 컨트롤러
@@ -28,16 +29,20 @@ public class AdminController extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		String action = request.getParameter("action");
 		System.out.println("action : " + action);
-//		switch (action) {
-//		case "" :
-//			(request, response);
-//			break;
-//		case "":
-//			(request, response);
-//			break;
-//		}
+		switch (action) {
+		case "centerAcceptListForm" :
+			centerAcceptListForm(request, response);
+			break;
+		case "centerInputAcceptForm":
+			centerInputAcceptForm(request, response);
+			break;
+		case "centerList":
+			centerList(request, response);
+			break;
+		}
 	}
 	
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		process(request, response);
 	}
@@ -46,4 +51,17 @@ public class AdminController extends HttpServlet {
 		process(request, response);
 	}
 
+	
+	private void centerAcceptListForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		request.getRequestDispatcher("/admin/centerList.jsp").forward(request, response);
+	}
+	
+	
+	private void centerInputAcceptForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		request.getRequestDispatcher("/admin/centerInputAccept.jsp").forward(request, response);
+	}
+	
+	private void centerList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		
+	}
 }

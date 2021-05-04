@@ -20,11 +20,39 @@ import com.nanum.util.MessageEntity;
 public class CenterDao {
 	private static CenterDao instance = new CenterDao();
 
-	public CenterDao() {
-	}
+	public CenterDao() {}
 
 	public static CenterDao getInstance() {
 		return instance;
+	}
+	
+	/**
+	 * 아이디 중복 체크
+	 */
+	public boolean isCenterId(Connection conn, String centerId) throws CommonException {
+		String sql = "select 1 from center_member where c_id = ?";
+		System.out.println(sql);
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, centerId);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				return true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			MessageEntity messageEntity = new MessageEntity("error", 2);
+			throw new CommonException(messageEntity);
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(pstmt);
+		}
+		return false;
 	}
 
 	/**
@@ -59,12 +87,7 @@ public class CenterDao {
 				dto.setEndDate(rs.getDate("end_date"));
 				dto.setCategoryNo(rs.getString("category_no"));
 				dto.setLocalNo(rs.getString("local_no"));
-				dto.setVolType(rs.getString("v_type"));
-				dto.setVolPlace(rs.getString("v_place"));
-				dto.setLatitude(rs.getString("latitude"));
-				dto.setLongitude(rs.getString("longitude"));
 				dto.setVolSubject(rs.getString("v_subject"));
-				
 				list.add(dto);
 			}
 		} catch (Exception e) {

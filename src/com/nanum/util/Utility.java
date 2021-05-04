@@ -3,6 +3,9 @@
  */
 package com.nanum.util;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -33,4 +36,21 @@ public class Utility {
 
 		return secureCode;
 	}
+	
+	/**
+	 * 현재날짜 반환 
+	 * @return 현재 기본형식(년도4-월2-일2) 날짜 
+	 */
+	public static String getCurrentDate() {
+		return getCurrentDate("yyyy-MM-dd", Locale.KOREA);
+	}
+	
+	public static String getCurrentDate(String pattern) {
+		return getCurrentDate(pattern, Locale.KOREA);
+	}
+	
+	public static String getCurrentDate(String pattern, Locale locale) {
+		return new SimpleDateFormat(pattern, locale).format(new Date());
+	}
+	
 }

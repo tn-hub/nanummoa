@@ -122,12 +122,12 @@ public class GeneralController extends HttpServlet {
 		response.setContentType("text/html; charset=utf-8");
 		PrintWriter out = response.getWriter();
 		
-		String generalName = request.getParameter("generalName");
+		String generalName = request.getParameter("name");
 		String gender = request.getParameter("gender");
 		String birthday = request.getParameter("birthday"); 
-		String generalId = request.getParameter("generalId");
-		String generalPw = request.getParameter("generalPw");
-		String generalPw2 = request.getParameter("generalPw2");
+		String generalId = request.getParameter("id");
+		String generalPw = request.getParameter("pw");
+		String generalPw2 = request.getParameter("pw2");
 		String zipCode = request.getParameter("zipCode");
 		String address = request.getParameter("address");
 		String detailAddress = request.getParameter("detailAddress");

@@ -16,6 +16,27 @@ import com.nanum.util.JdbcTemplate;
  *
  */
 public class CenterBiz {
+	private CenterDao cDao = CenterDao.getInstance();
+	
+	/**
+	 * 아이디 중복 체크 메서드
+	 * @param generalId 아이디
+	 * @return 아이디가 있으면 true, 없으면 false
+	 * @throws CommonException
+	 */
+	public boolean isCenterId(String centerId) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		
+		try {
+			return cDao.isCenterId(conn, centerId);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+		
+	}
 	private CenterDao dao = CenterDao.getInstance();
 
 	/**
@@ -34,7 +55,5 @@ public class CenterBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
-	
-	
 	
 }
