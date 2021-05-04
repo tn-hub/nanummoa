@@ -5,11 +5,14 @@ package com.nanum.model.biz;
 
 import java.sql.Connection;
 import java.util.ArrayList;
-
+import java.util.HashMap;
 import com.nanum.dto.AdminMemberDto;
 import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.QnADto;
+import com.nanum.dto.LocalDto;
+import com.nanum.dto.VolBlockDto;
+import com.nanum.dto.VolCategoryDto;
 import com.nanum.model.dao.CommonDao;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
@@ -115,7 +118,6 @@ public class CommonBiz {
 	 * @throws CommonException
 	 */
 	public void addQna_gen(QnADto dto) throws CommonException{
-		
 		Connection conn = JdbcTemplate.getConnection();// 비즈에서 커넥션 생성해서 dao전달
 		
 		try {
@@ -137,20 +139,19 @@ public class CommonBiz {
 	 * @throws CommonException
 	 */
 	public void addQna_cen(QnADto dto) throws CommonException{
-			
-			Connection conn = JdbcTemplate.getConnection();// 비즈에서 커넥션 생성해서 dao전달
-			
-			try {
-				dao.insertQna_cen(conn, dto);
-				JdbcTemplate.commit(conn); // commit;
-			} catch (CommonException e) {
-				e.printStackTrace();
-				JdbcTemplate.rollback(conn);// rollback;
-				throw e;
-			} finally {
-				JdbcTemplate.close(conn);
-			}
+		Connection conn = JdbcTemplate.getConnection();// 비즈에서 커넥션 생성해서 dao전달
+		
+		try {
+			dao.insertQna_cen(conn, dto);
+			JdbcTemplate.commit(conn); // commit;
+		} catch (CommonException e) {
+			e.printStackTrace();
+			JdbcTemplate.rollback(conn);// rollback;
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
 		}
+	}
 	
 	/**
 	 * 문의글 전체 조회
@@ -170,7 +171,6 @@ public class CommonBiz {
 		} finally {
 			JdbcTemplate.close(conn);
 		}
-		
 	}
 	
 	/**
@@ -190,7 +190,6 @@ public class CommonBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
-	
 	
 	/**
 	 * 문의글 수정
@@ -226,6 +225,54 @@ public class CommonBiz {
 		} catch (CommonException e) {
 			e.printStackTrace();
 			JdbcTemplate.rollback(conn);// rollback;
+		}
+	}
+		
+	/**
+	 * 자원봉사 목록 조회(메인)
+	 * 
+	 * @param dto
+	 * @throws CommonException
+	 */
+	public void searchVol(ArrayList<VolBlockDto> volList) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.searchVol(conn, volList);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}	
+		
+	/**
+	 * 봉사카테고리 목록 조회(메인)
+	 * @param categoryMap
+	 */
+	public void searchVolCategory(HashMap<String, VolCategoryDto> categoryMap) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.searchVolCategory(conn, categoryMap);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+	
+	/**
+	 * 지역 목록 조회(메인)
+	 * @param localMap
+	 * @throws CommonException
+	 */
+	public void searchLocal(HashMap<String, LocalDto> localMap) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.searchLocal(conn, localMap);
+		} catch (CommonException e) {
+			e.printStackTrace();
 			throw e;
 		} finally {
 			JdbcTemplate.close(conn);

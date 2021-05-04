@@ -9,11 +9,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import com.nanum.dto.AdminMemberDto;
 import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.QnADto;
+import com.nanum.dto.LocalDto;
+import com.nanum.dto.VolBlockDto;
+import com.nanum.dto.VolCategoryDto;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
 
@@ -148,7 +152,7 @@ public class CommonDao {
 			JdbcTemplate.close(stmt);
 		}
 	}
-
+	
 	/**
 	 * 일반회원 아이디 찾기 
 	 * @param conn
@@ -213,7 +217,7 @@ public class CommonDao {
 			JdbcTemplate.close(stmt);
 		}
 	}
-
+	////////////////////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * 문의글 일반회원
 	 * @param conn
@@ -472,6 +476,112 @@ public class CommonDao {
 		}
 		
 	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/**
+	 * 지역 목록 조회(메인)
+	 * @param conn
+	 * @param localMap
+	 * @throws CommonException
+	 */
+	public void searchLocal(Connection conn, HashMap<String, LocalDto> localMap) throws CommonException {
+		String sql = "select * from local";
+		
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
 	
+			stmt = conn.prepareStatement(sql);
+			
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				LocalDto dto = new LocalDto();
+				dto.setLocalNo(rs.getString(1));
+				dto.setLocalName(rs.getString(2));
+				
+				localMap.put(rs.getString(1), dto);
+			} 
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(stmt);
+		}
+	}
+	
+	/**
+	 * 봉사카테고리 목록 조회(메인)
+	 * @param conn
+	 * @param categoryMap
+	 */
+	public void searchVolCategory(Connection conn, HashMap<String, VolCategoryDto> categoryMap) throws CommonException {
+		String sql = "select * from vol_category";
+	
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+	
+			stmt = conn.prepareStatement(sql);
+			
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				VolCategoryDto dto = new VolCategoryDto();
+				dto.setCategoryNo(rs.getString(1));
+				dto.setCategoryName(rs.getString(2));
+				
+				categoryMap.put(rs.getString(1), dto);
+			} 
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(stmt);
+		}
+	}
+	
+	/**
+	 * 자원봉사 목록 조회(메인)
+	 * @param conn
+	 * @param volList
+	 */
+	public void searchVol(Connection conn, ArrayList<VolBlockDto> volList) throws CommonException {
+		String sql = "select i.vol_info_no as 글번호, i.v_title as 제목, i.category_no as 카테고리번호, i.local_no as 지역번호, "
+				+ "to_char(i.start_date,'yyyy-mm-dd') as 모집시작일, to_char(i.end_date,'yyyy-mm-dd') as 모집마감일,"
+				+ " min(d.vol_date) as 봉사시작일, max(d.vol_date) as 봉사종료일  " 
+				+ "from vol_info i, vol_detail d " 
+				+ "where i.vol_info_no = d.vol_info_no and d.rec_status = 0 "
+				+ "group by i.vol_info_no, i.v_title, i.category_no, i.local_no, i.start_date, i.end_date "
+				+ "order by 6";
+		
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			stmt = conn.prepareStatement(sql);
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				VolBlockDto dto = new VolBlockDto();
+				dto.setVolInfoNo(rs.getInt(1));
+				dto.setVolTitle(rs.getString(2));
+				dto.setCategoryNo(rs.getString(3));
+				dto.setLocalNo(rs.getString(4));
+				dto.setStartDate(rs.getString(5));
+				dto.setEndDate(rs.getString(6));
+				dto.setStartVolDate(rs.getString(7));
+				dto.setEndVolDate(rs.getString(8));
+				volList.add(dto);
+			} 
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(stmt);
+		}
+	}
 }
 

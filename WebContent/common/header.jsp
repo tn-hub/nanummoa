@@ -2,12 +2,10 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/inc/taglib_menu.jsp" %>  
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css">
-<link type="text/css" rel="stylesheet" href="${initParam.CONTEXT_PATH}/resources/css/common.css">
-
 <div class="header">
 
 	<div class="header_info">
-		<a href ="#" class="">자원봉사 지원 플랫폼 <span class="info_color">나눔모아</span> 이용 안내 </a>
+		<a href ="${initParam.CONTEXT_PATH}/common/guide.jsp" class="">자원봉사 지원 플랫폼 <span class="info_color">나눔모아</span> 이용 안내 </a>
 		<div class="login_menu">
 			<ul>
 				<li id= "" class=""><a href="${CONTEXT_PATH}/common/commonController?action=loginForm" class="">로그인</a></li>
@@ -19,7 +17,7 @@
 		
 	<div class="header_wrapper">
 		<div class="header_logo">
-			<a href="/${initParam.CONTEXT_PATH}"><img src="${initParam.CONTEXT_PATH}/resources/img/logo_title.png"/></a>
+			<a href="${initParam.CONTEXT_PATH}/home"><img src="${initParam.CONTEXT_PATH}/resources/img/logo_title.png"/></a>
 		</div>
 		
 		<div class="header_menu">
