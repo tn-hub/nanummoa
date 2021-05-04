@@ -2,10 +2,11 @@ package com.nanum.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Properties;
 import java.util.ArrayList;
+import java.util.Properties;
 
-import javax.mail.*;
+import javax.mail.Address;
+import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Transport;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpSession;
 
 import com.nanum.dto.AdminMemberDto;
 import com.nanum.dto.CenterMemberDto;
+import com.nanum.dto.CenterVolDto;
 import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.QnADto;
 import com.nanum.model.biz.CommonBiz;
@@ -83,7 +85,6 @@ public class CommonController extends HttpServlet {
 		case "qnaDel":
 			qnaDel(request, response);
 			break;
-
 		case "volListForm":
 			volListForm(request, response);
 			break;
@@ -537,7 +538,17 @@ public class CommonController extends HttpServlet {
 	 * 봉사조회 페이지 요청 서비스
 	 */
 	private void volListForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		CommonBiz biz = new CommonBiz();
+		ArrayList<CenterVolDto> list = new ArrayList<CenterVolDto>();
 		
+		try {
+			biz.searchVolList(list);
+			request.setAttribute("volList", list);
+			System.out.println("volList : " + list.size());
+			request.getRequestDispatcher("/vol_list.jsp").forward(request, response);
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
 	}
 	
 

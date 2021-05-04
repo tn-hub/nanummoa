@@ -257,74 +257,47 @@
 	<hr class="list_head_hr">
 	
 	<ul class="vol_list_ul">
+	<c:forEach var="list" items="${volList }">
 		<li>
 			<div class="list_box">
 				<div>
-					<span class="title_span">모집중</span>
-					<span>(봉사분야)</span>
+					<span class="title_span">
+					<c:choose> 
+						<c:when test="${list.recStatus == '0'}">모집중</c:when>
+						<c:when test="${list.recStatus == '1'}">모집완료</c:when>
+					</c:choose>
+					</span>
+					<span>(${list.categoryName})</span>
 				</div>
 				
-				<h3><a href="#">코로나19 예방접종 보조지원(안내 및 체온측정)</a></h3>
+				<h3><a href="#">${list.volTitle}</a></h3>
 				
 				<div class="span_box">
 					<span class="title_span">[모집기관]</span>
-					<span>푸른사람들</span>
+					<span>${list.centerName}</span>
 				</div>
 				
 				<div class="span_box">
 					<span class="title_span">[모집기간]</span>
-					<span>2021-00-00</span> ~
-					<span>2021-00-00</span>
+					<span>${list.startDate}</span> ~
+					<span>${list.endDate}</span>
 				</div>
 				
 				<div class="span_box">
 					<span class="title_span">[봉사기간]</span>
-					<span>2021-00-00</span> ~
-					<span>2021-00-00</span>
+					<span>${list.volStart}</span> ~
+					<span>${list.volEnd}</span>
 				</div>
 			</div>
 			<div class="deadline_box">
 					<p>마감
-						<em>00</em>
+						<em>${list.deadline}</em>
 						일전
 					</p>
 			</div>
 			<hr class="list_hr">
 		</li>
-		<li>
-			<div class="list_box">
-				<div>
-					<span class="title_span">모집중</span>
-					<span>(봉사분야)</span>
-				</div>
-				
-				<h3><a href="#">센터 방문자 응대 및 출입관리</a></h3>
-				
-				<div class="span_box">
-					<span class="title_span">[모집기관]</span>
-					<span>서울시립 서대문청소년센터</span>
-				</div>
-				
-				<div class="span_box">
-					<span class="title_span">[모집기간]</span>
-					<span>2021-00-00</span> ~
-					<span>2021-00-00</span>
-				</div>
-				
-				<div class="span_box">
-					<span class="title_span">[봉사기간]</span>
-					<span>2021-00-00</span> ~
-					<span>2021-00-00</span>
-				</div>
-			</div>
-			<div class="deadline_box">
-					<p>마감
-						<em>00</em>
-						일전
-					</p>
-			</div>
-			<hr class="list_hr">
-		</li>
+		</c:forEach>
 	</ul>
 	<!-- 봉사모집글 목록 -->
 </div>

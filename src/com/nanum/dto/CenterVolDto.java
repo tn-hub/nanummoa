@@ -54,6 +54,9 @@ public class CenterVolDto {
 
 	/** 마감일 */
 	private int deadline;
+	
+	/** 전체 모집일수 */
+	private int totaldate;
 
 	/**
 	 * 기본 생성자
@@ -75,10 +78,11 @@ public class CenterVolDto {
 	 * @param volDate     봉사실행일
 	 * @param recStatus   모집상태
 	 * @param deadline    마감일
+	 * @param totaldate	  전체 모집일수
 	 */
 	public CenterVolDto(int volInfoNo, String centerId, String centerName, String volTitle, Date startDate,
 			Date endDate, Date volStart, Date volEnd, String categoryNo, String categoryName, int volDetailNo,
-			String volDate, String recStatus, int deadline) {
+			String volDate, String recStatus, int deadline, int totaldate) {
 		super();
 		this.volInfoNo = volInfoNo;
 		this.centerId = centerId;
@@ -94,6 +98,7 @@ public class CenterVolDto {
 		this.volDate = volDate;
 		this.recStatus = recStatus;
 		this.deadline = deadline;
+		this.totaldate = totaldate;
 	}
 
 	/**
@@ -291,6 +296,20 @@ public class CenterVolDto {
 	public void setRecStatus(String recStatus) {
 		this.recStatus = recStatus;
 	}
+	
+	/**
+	 * @return the totaldate
+	 */
+	public int getTotaldate() {
+		return totaldate;
+	}
+
+	/**
+	 * @param totaldate the totaldate to set
+	 */
+	public void setTotaldate(int totaldate) {
+		this.totaldate = totaldate;
+	}
 
 	@Override
 	public String toString() {
@@ -322,6 +341,8 @@ public class CenterVolDto {
 		builder.append(recStatus);
 		builder.append(", ");
 		builder.append(deadline);
+		builder.append(", ");
+		builder.append(totaldate);
 		return builder.toString();
 	}
 

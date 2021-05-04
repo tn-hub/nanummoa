@@ -12,6 +12,7 @@ import java.util.HashMap;
 
 import com.nanum.dto.AdminMemberDto;
 import com.nanum.dto.CenterMemberDto;
+import com.nanum.dto.CenterVolDto;
 import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.LocalDto;
 import com.nanum.dto.QnADto;
@@ -616,7 +617,54 @@ public class CommonDao {
 		}
 	}
 	
-	
+	/**
+	 * 봉사모집 리스트 전체 조회
+	 * @param conn
+	 * @param list ArrayList<CenterVolDto>
+	 * @throws CommonException
+	 */
+	public void searchVolList(Connection conn, ArrayList<CenterVolDto> list) throws CommonException {
+		String sql = "select i.vol_info_no as 글번호, i.v_title as 제목, vc.category_name as 봉사분야, "
+				+ "i.start_date as 모집시작일, i.end_date as 모집마감일, min(d.vol_date) as 봉사시작일, "
+				+ "max(d.vol_date) as 봉사종료일, c_name as 단체이름, min(d.rec_status) as 모집상태, "
+				+ "i.end_date - trunc(sysdate) as 마감일수, i.c_id as 센터회원아이디 "
+				+ "from vol_info i left join vol_detail d on (i.vol_info_no = d.vol_info_no) "
+				+ "left join center_info c on (i.c_id = c.c_id) " 
+				+ "left join vol_category vc on (vc.category_no = i.category_no)"
+				+ "group by i.vol_info_no, i.v_title, vc.category_name, i.category_no, "
+				+ "i.start_date, i.end_date, c_name, i.c_id "
+				+ "order by 마감일수";
+		
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			stmt = conn.prepareStatement(sql);
+			rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				CenterVolDto dto = new CenterVolDto();
+				dto.setVolInfoNo(rs.getInt(1));
+				dto.setVolTitle(rs.getString(2));
+				dto.setCategoryName(rs.getString(3));
+				dto.setStartDate(rs.getDate(4));
+				dto.setEndDate(rs.getDate(5));
+				dto.setVolStart(rs.getDate(6));
+				dto.setVolEnd(rs.getDate(7));
+				dto.setCenterName(rs.getString(8));
+				dto.setRecStatus(rs.getString(9));
+				dto.setDeadline(rs.getInt(10));
+				dto.setCenterId(rs.getString(11));
+				list.add(dto);
+			} 
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(stmt);
+		}
+	}
 	
 }
 

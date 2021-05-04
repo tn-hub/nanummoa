@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import com.nanum.dto.AdminMemberDto;
 import com.nanum.dto.CenterMemberDto;
+import com.nanum.dto.CenterVolDto;
 import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.QnADto;
 import com.nanum.dto.LocalDto;
@@ -277,6 +278,18 @@ public class CommonBiz {
 		} finally {
 			JdbcTemplate.close(conn);
 		}
+	}
+	
+	public void searchVolList(ArrayList<CenterVolDto> list) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
 		
+		try {
+			dao.searchVolList(conn, list);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
 	}
 }
