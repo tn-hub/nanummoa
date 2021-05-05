@@ -181,28 +181,25 @@
 					<td>
 						<select class="search_large_select">
 							<option value="0">전체</option>
-							<option value="1">도봉구</option>
-							<option value="2">은평구</option>
-							<option value="3">동대문구</option>
+							<c:forEach var="dto" items="${localList}">
+								<option value="${dto.localNo}">${dto.localName}</option>
+							</c:forEach>
 						</select>
 					</td>
 					<td>
 						<select class="search_large_select">
 							<option value="0">전체</option>
-							<option value="1">생활편의</option>
-							<option value="2">주거환경</option>
-							<option value="3">상담</option>
+							<c:forEach var="dto" items="${volCategoryList}">
+								<option value="${dto.categoryNo}">${dto.categoryName}</option>
+							</c:forEach>
 						</select>
 					</td>
 					<td>
 						<select class="search_small_select">
 							<option value="0">전체</option>
-							<option value="1">아동</option>
-							<option value="2">청소년</option>
-							<option value="3">장애인</option>
-							<option value="4">노인</option>
-							<option value="5">환경</option>
-							<option value="6">기타</option>
+							<c:forEach var="dto" items="${serviceList}">
+								<option value="${dto.serviceNo}">${dto.serviceName}</option>
+							</c:forEach>
 						</select>
 					</td>
 					<td>
@@ -218,8 +215,8 @@
 			<div id="vol_search_box">
 				<div>
 					<span>봉사기간</span>
-					<input type="date" value="2021-05-01"> ~ 
-					<input type="date" value="2021-08-01">
+					<input type="date" value="${date[0]}"> ~ 
+					<input type="date" value="${date[1]}">
 				</div>
 				
 				<div>
@@ -249,7 +246,7 @@
 	
 	<!-- 봉사모집글 목록----------------------------------------------------------------------->
 	<p>[전체 
-		<em>00</em>
+		<em>${total}</em>
 		건, 현재페이지 
 		<em>0</em>
 		/0]
@@ -257,7 +254,7 @@
 	<hr class="list_head_hr">
 	
 	<ul class="vol_list_ul">
-	<c:forEach var="list" items="${volList }">
+	<c:forEach var="list" items="${volList}">
 		<li>
 			<div class="list_box">
 				<div>
@@ -291,7 +288,7 @@
 			</div>
 			<div class="deadline_box">
 					<p>마감
-						<em>${list.deadline}</em>
+						<em>${list.deadLine}</em>
 						일전
 					</p>
 			</div>

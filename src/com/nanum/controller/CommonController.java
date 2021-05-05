@@ -3,6 +3,7 @@ package com.nanum.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Properties;
 
 import javax.mail.Address;
@@ -24,8 +25,12 @@ import com.nanum.dto.AdminMemberDto;
 import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.CenterVolDto;
 import com.nanum.dto.GeneralMemberDto;
+import com.nanum.dto.LocalDto;
 import com.nanum.dto.QnADto;
+import com.nanum.dto.ServiceCategoryDto;
+import com.nanum.dto.VolCategoryDto;
 import com.nanum.model.biz.CommonBiz;
+import com.nanum.model.biz.GeneralBiz;
 import com.nanum.util.CommonException;
 import com.nanum.util.Gmail;
 import com.nanum.util.SHA256;
@@ -90,6 +95,9 @@ public class CommonController extends HttpServlet {
 			break;
 		case "findIdForm":
 			findIdForm(request, response);
+			break;
+		case "inputForm":
+			inputForm(request, response);
 			break;
 		}
 	}
@@ -539,17 +547,40 @@ public class CommonController extends HttpServlet {
 	 */
 	private void volListForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		CommonBiz biz = new CommonBiz();
-		ArrayList<CenterVolDto> list = new ArrayList<CenterVolDto>();
+		GeneralBiz gBiz = new GeneralBiz();
+		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
+		ArrayList<LocalDto> localList = new ArrayList<LocalDto>();
+		ArrayList<VolCategoryDto> volCategoryList = new ArrayList<VolCategoryDto>();
+		ArrayList<ServiceCategoryDto> serviceList = new ArrayList<ServiceCategoryDto>();
 		
 		try {
-			biz.searchVolList(list);
+			gBiz.getLocalList(localList);
+			gBiz.getVolCategoryList(volCategoryList);
+			biz.searchServiceCategory(serviceList);
+			String[] date = {Utility.getCurrentDate(), Utility.getCurrentDate(3)};
+			biz.searchVolList(list, date);
+			int total = biz.volListTotalCount(date);
+			System.out.println("total : " + total);
+			
+			request.setAttribute("date", date);
+			request.setAttribute("localList", localList);
+			request.setAttribute("volCategoryList", volCategoryList);
+			request.setAttribute("serviceList", serviceList);
 			request.setAttribute("volList", list);
+			request.setAttribute("total", total);
 			System.out.println("volList : " + list.size());
-			request.getRequestDispatcher("/vol_list.jsp").forward(request, response);
+			request.getRequestDispatcher("/common/vol_list.jsp").forward(request, response);
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
 	}
 	
+	/**
+	 * 회원가입 페이지 요청
+	 */
+	protected void inputForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		request.getRequestDispatcher("/common/inputForm.jsp").forward(request, response);
+	}
 
 }

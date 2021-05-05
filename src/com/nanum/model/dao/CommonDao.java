@@ -618,12 +618,12 @@ public class CommonDao {
 	}
 	
 	/**
-	 * 봉사모집 리스트 전체 조회
+	 * 봉사모집 리스트 전체 조회(모집중)
 	 * @param conn
 	 * @param list ArrayList<CenterVolDto>
 	 * @throws CommonException
 	 */
-	public void searchVolList(Connection conn, ArrayList<CenterVolDto> list) throws CommonException {
+	public void searchVolList(Connection conn, ArrayList<HashMap<String, Object>> list, String[] date) throws CommonException {
 		String sql = "select i.vol_info_no as 글번호, i.v_title as 제목, vc.category_name as 봉사분야, "
 				+ "i.start_date as 모집시작일, i.end_date as 모집마감일, min(d.vol_date) as 봉사시작일, "
 				+ "max(d.vol_date) as 봉사종료일, c_name as 단체이름, min(d.rec_status) as 모집상태, "
@@ -633,28 +633,30 @@ public class CommonDao {
 				+ "left join vol_category vc on (vc.category_no = i.category_no)"
 				+ "group by i.vol_info_no, i.v_title, vc.category_name, i.category_no, "
 				+ "i.start_date, i.end_date, c_name, i.c_id "
+				+ "having min(d.rec_status) = 0 and min(d.vol_date) >= ? and max(d.vol_date) <= ? "
 				+ "order by 마감일수";
 		
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
 			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, date[0]);
+			stmt.setString(2, date[1]);
 			rs = stmt.executeQuery();
-			
 			while(rs.next()) {
-				CenterVolDto dto = new CenterVolDto();
-				dto.setVolInfoNo(rs.getInt(1));
-				dto.setVolTitle(rs.getString(2));
-				dto.setCategoryName(rs.getString(3));
-				dto.setStartDate(rs.getDate(4));
-				dto.setEndDate(rs.getDate(5));
-				dto.setVolStart(rs.getDate(6));
-				dto.setVolEnd(rs.getDate(7));
-				dto.setCenterName(rs.getString(8));
-				dto.setRecStatus(rs.getString(9));
-				dto.setDeadline(rs.getInt(10));
-				dto.setCenterId(rs.getString(11));
-				list.add(dto);
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				map.put("volInfoNo", rs.getInt(1));
+				map.put("volTitle", rs.getString(2));
+				map.put("categoryName", rs.getString(3));
+				map.put("startDate", rs.getDate(4));
+				map.put("endDate", rs.getDate(5));
+				map.put("volStart", rs.getDate(6));
+				map.put("volEnd", rs.getDate(7));
+				map.put("centerName", rs.getString(8));
+				map.put("recStatus", rs.getString(9));
+				map.put("deadLine", rs.getInt(10));
+				map.put("centerId", rs.getString(11));
+				list.add(map);
 			} 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -664,6 +666,42 @@ public class CommonDao {
 			JdbcTemplate.close(rs);
 			JdbcTemplate.close(stmt);
 		}
+	}
+	
+	/**
+	 * 봉사모집 전체 수 조회(모집중)
+	 * @param conn
+	 * @return 전체수 반환
+	 * @throws CommonException
+	 */
+	public int volListTotalCount(Connection conn, String[] date) throws CommonException {
+		String sql = "select count(*) "
+				+ "from (select vol_info_no, min(rec_status) as 모집상태 "
+				+ "from vol_detail "
+				+ "group by vol_info_no "
+				+ "having min(rec_status) = 0 and min(vol_date) >= ? and max(vol_date) <= ?)";
+		
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, date[0]);
+			stmt.setString(2, date[1]);
+			rs = stmt.executeQuery();
+			
+			if (rs.next()) {
+				return rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(stmt);
+		}
+		
+		return 0;
 	}
 	
 }

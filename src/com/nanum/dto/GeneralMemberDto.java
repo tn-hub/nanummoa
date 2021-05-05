@@ -170,7 +170,7 @@ public class GeneralMemberDto {
 	/**
 	 * @return the generalAddress
 	 */
-	public String getGeneralAdress() {
+	public String getGeneralAddress() {
 		return generalAddress;
 	}
 

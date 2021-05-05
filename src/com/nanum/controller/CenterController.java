@@ -15,17 +15,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.nanum.dto.CenterMemberDto;
-import com.nanum.dto.CenterVolDto;
-import com.nanum.dto.VolInfoDto;
-import com.nanum.model.biz.CenterBiz;
-import com.nanum.util.CommonException;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import com.nanum.dto.CenterInfoDto;
+import com.nanum.dto.CenterMemberDto;
+import com.nanum.dto.CenterVolDto;
+import com.nanum.dto.GeneralMemberDto;
+import com.nanum.dto.LocalDto;
+import com.nanum.dto.VolCategoryDto;
+import com.nanum.model.biz.CenterBiz;
+import com.nanum.model.biz.GeneralBiz;
+import com.nanum.util.CommonException;
 
 /**
  * 센터회원 컨트롤러
@@ -59,9 +61,15 @@ public class CenterController extends HttpServlet {
 		case "centerVolListForm" :
 			centerVolListForm(request, response);
 			break;
-//		case "":
-//			(request, response);
-//			break;
+		case "centerMyInfoForm":
+			centerMyInfoForm(request, response);
+			break;
+		case "centerUpdate":
+			centerUpdate(request, response);
+			break;
+		case "centerDelete":
+			centerDelete(request, response);
+			break;
 		}
 	}
 	
@@ -77,7 +85,7 @@ public class CenterController extends HttpServlet {
 	 * 센터회원 회원가입 폼 요청
 	 */
 	protected void centerInputForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.sendRedirect(CONTEXT_PATH + "/signUp/centerInput.jsp");
+		response.sendRedirect(CONTEXT_PATH + "/center/centerInput.jsp");
 	}
 	
 	/**
@@ -144,90 +152,92 @@ public class CenterController extends HttpServlet {
 		String service = request.getParameter("service");
 		
 		if (centerMemberName == null || centerMemberName.trim().length() == 0) {
-			out.print("이름을 입력해 주세요");
+			out.println("<script>alert('이름을 입력해 주세요');history.go(-1); </script>");
 			out.flush();
 			out.close();
 			return;
 		}
 		if (centerMemberId == null || centerMemberId.trim().length() == 0) {
-			out.print("아이디를 입력해 주세요");
+			out.println("<script>alert('아이디를 입력해 주세요');history.go(-1); </script>");
 			out.flush();
 			out.close();
 			return;
 		}
 		if (centerMemberPw == null || centerMemberPw.trim().length() == 0) {
-			out.print("비밀번호를 입력해 주세요");
+			out.println("<script>alert('비밀번호를 입력해 주세요');history.go(-1); </script>");
 			out.flush();
 			out.close();
 			return;
 		}
 		if (centerMemberPw2 == null || centerMemberPw2.trim().length() == 0) {
-			out.print("비밀번호를 입력해 주세요");
+			out.println("<script>alert('비밀번호를 입력해 주세요');history.go(-1); </script>");
 			out.flush();
 			out.close();
 			return;
 		}
 		if (mobile2 == null || mobile2.trim().length() == 0) {
-			out.print("휴대폰 번호를 입력해 주세요");
+			out.println("<script>alert('휴대폰 번호를 입력해 주세요');history.go(-1); </script>");
 			out.flush();
 			out.close();
 			return;
 		}
 		if (mobile3 == null || mobile3.trim().length() == 0) {
+			out.println("<script>alert('휴대폰 번호를 입력해 주세요');history.go(-1); </script>");
 			out.print("휴대폰 번호를 입력해 주세요");
 			out.flush();
 			out.close();
 			return;
 		}
 		if (email1 == null || email1.trim().length() == 0) {
-			out.print("이메일을 입력해 주세요");
+			out.println("<script>alert('이메일을 입력해 주세요');history.go(-1); </script>");
 			out.flush();
 			out.close();
 			return;
 		}
 		if (email2 == null || email2.trim().length() == 0) {
-			out.print("이메일을 입력해 주세요");
+			out.println("<script>alert('이메일을 입력해 주세요');history.go(-1); </script>");
 			out.flush();
 			out.close();
 			return;
 		}
 		if (registerCode == null || registerCode.trim().length() == 0) {
-			out.print("등록번호를 입력해 주세요");
+			out.println("<script>alert('등록번호를 입력해 주세요');history.go(-1); </script>");
 			out.flush();
 			out.close();
 			return;
 		}
 		if (centerName == null || centerName.trim().length() == 0) {
-			out.print("기관이름을 입력해 주세요");
+			out.println("<script>alert('기관이름을 입력해 주세요');history.go(-1); </script>");
 			out.flush();
 			out.close();
 			return;
 		}
-		if (centerName == null || centerName.trim().length() == 0) {
-			out.print("기관이름을 입력해 주세요");
+		if (centerEntryDate == null || centerEntryDate.trim().length() == 0) {
+			out.println("<script>alert('기관 등록일을 입력해 주세요');history.go(-1); </script>");
 			out.flush();
 			out.close();
 			return;
 		}
 		if (zipCode == null) {
-			out.print("주소를 입력해 주세요");
+			out.println("<script>alert('주소를 입력해 주세요');history.go(-1); </script>");
 			out.flush();
 			out.close();
 			return;
 		}
 		if (ceoName == null || ceoName.trim().length() == 0) {
-			out.print("대표 이름을 입력해 주세요");
+			out.println("<script>alert('대표 이름을 입력해 주세요');history.go(-1); </script>");
 			out.flush();
 			out.close();
 			return;
 		}
 		if (ceoMobile2 == null || ceoMobile2.trim().length() == 0) {
-			out.print("휴대폰 번호 입력해 주세요");
+			out.println("<script>alert('휴대폰 번호 입력해 주세요');history.go(-1); </script>");
 			out.flush();
 			out.close();
 			return;
 		}
 		if (ceoMobile3 == null || ceoMobile3.trim().length() == 0) {
+			out.println("<script>alert('휴대폰 번호 입력해 주세요');history.go(-1); </script>");
 			out.print("휴대폰 번호 입력해 주세요");
 			out.flush();
 			out.close();
@@ -313,9 +323,9 @@ public class CenterController extends HttpServlet {
 		 CenterBiz biz = new CenterBiz();
 		 
 		 try {
-			biz.addGeneralMember(cMemberDto, centerDto);
+			biz.addCenterMember(cMemberDto, centerDto);
 			String url = CONTEXT_PATH + "/common/commonController?action=loginForm";
-			if (appStatus.equals("Y")) {
+			if (appStatus.equals("1")) {
 				out.println("<script>alert('회원가입 완료');location.href='" + url + "'; </script>");
 			} else {
 				url = CONTEXT_PATH + "/home";
@@ -377,6 +387,230 @@ public class CenterController extends HttpServlet {
 			request.getRequestDispatcher("/center/centerInfo.jsp").forward(request, response);	
 		} catch (CommonException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 센터회원 내 정보 조회 페이지 요청 서비스
+	 */
+	protected void centerMyInfoForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		
+		HttpSession session = request.getSession(false);
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null ) {
+			String url = CONTEXT_PATH + "/common/commonController?action=loginForm";
+			out.println("<script>alert('로그인 후 이용해 주시기 바랍니다');location.href='" + url + "'; </script>");
+			out.flush();
+			out.close();
+			return;
+		} 
+		
+		CenterMemberDto centerMemberDto = (CenterMemberDto)session.getAttribute("dto");
+		CenterInfoDto centerDto = new CenterInfoDto();
+		centerDto.setCenterId(centerMemberDto.getCenterId());
+		CenterBiz biz = new CenterBiz();
+		
+		try {
+			biz.getCenterMemberInfo(centerMemberDto, centerDto);
+			request.setAttribute("centerMemberDto", centerMemberDto);
+			request.setAttribute("centerDto", centerDto);
+			request.getRequestDispatcher("/center/centerMyInfo.jsp").forward(request, response);
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 센터회원 내 정보 수정 서비스
+	 */
+	protected void centerUpdate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		
+		String centerMemberName = request.getParameter("name");
+		String centerMemberPw = request.getParameter("pw");
+		String centerMemberPw2 = request.getParameter("pw2");
+		String mobile1 = request.getParameter("mobile1");
+		String mobile2 = request.getParameter("mobile2");
+		String mobile3 = request.getParameter("mobile3");
+		String email1 = request.getParameter("email1");
+		String email2 = request.getParameter("email2");
+		String registerCode = request.getParameter("registerCode");
+		String centerEntryDate = request.getParameter("centerEntryDate");
+		String zipCode = request.getParameter("zipCode");
+		String address = request.getParameter("address");
+		String detailAddress = request.getParameter("detailAddress");
+		String ceoName = request.getParameter("ceoName");
+		String ceoMobile1 = request.getParameter("ceoMobile1");
+		String ceoMobile2 = request.getParameter("ceoMobile2");
+		String ceoMobile3 = request.getParameter("ceoMobile3");
+		String service = request.getParameter("service");
+		
+		if (centerMemberName == null || centerMemberName.trim().length() == 0) {
+			out.println("<script>alert('이름을 입력해 주세요');history.go(-1); </script>");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (centerMemberPw != "") {
+			if (centerMemberPw == null || centerMemberPw.trim().length() == 0) {
+				out.println("<script>alert('비밀번호를 입력해 주세요');history.go(-1); </script>");
+				out.flush();
+				out.close();
+				return;
+			}
+			if (centerMemberPw2 == null || centerMemberPw2.trim().length() == 0) {
+				out.println("<script>alert('비밀번호를 입력해 주세요');history.go(-1); </script>");
+				out.flush();
+				out.close();
+				return;
+			}
+		}
+		if (mobile2 == null || mobile2.trim().length() == 0) {
+			out.println("<script>alert('휴대폰 번호를 입력해 주세요');history.go(-1); </script>");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (mobile3 == null || mobile3.trim().length() == 0) {
+			out.println("<script>alert('휴대폰 번호를 입력해 주세요');history.go(-1); </script>");
+			out.print("휴대폰 번호를 입력해 주세요");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (email1 == null || email1.trim().length() == 0) {
+			out.println("<script>alert('이메일을 입력해 주세요');history.go(-1); </script>");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (email2 == null || email2.trim().length() == 0) {
+			out.println("<script>alert('이메일을 입력해 주세요');history.go(-1); </script>");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (registerCode == null || registerCode.trim().length() == 0) {
+			out.println("<script>alert('등록번호를 입력해 주세요');history.go(-1); </script>");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (centerEntryDate == null || centerEntryDate.trim().length() == 0) {
+			out.println("<script>alert('기관 등록일을 입력해 주세요');history.go(-1); </script>");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (zipCode == null) {
+			out.println("<script>alert('주소를 입력해 주세요');history.go(-1); </script>");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (ceoName == null || ceoName.trim().length() == 0) {
+			out.println("<script>alert('대표 이름을 입력해 주세요');history.go(-1); </script>");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (ceoMobile2 == null || ceoMobile2.trim().length() == 0) {
+			out.println("<script>alert('휴대폰 번호 입력해 주세요');history.go(-1); </script>");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (ceoMobile3 == null || ceoMobile3.trim().length() == 0) {
+			out.println("<script>alert('휴대폰 번호 입력해 주세요');history.go(-1); </script>");
+			out.print("휴대폰 번호 입력해 주세요");
+			out.flush();
+			out.close();
+			return;
+		}
+		
+		HttpSession session = request.getSession();
+		CenterMemberDto centerMemberDto = (CenterMemberDto)session.getAttribute("dto");
+		CenterInfoDto centerDto = new CenterInfoDto();
+		
+		centerMemberName = centerMemberName.trim();
+		centerMemberPw = centerMemberPw.trim();
+		String mobile = mobile1 + "-" + mobile2.trim() + "-" + mobile3.trim();
+		String email = email1.trim() + "@" + email2.trim();
+		registerCode = registerCode.trim();
+		centerEntryDate = centerEntryDate.trim();
+		if (detailAddress != null && detailAddress.trim().length() != 0) {
+			address = address + " " + detailAddress;
+		}
+		String ceoMobile = ceoMobile1 + "-" + ceoMobile2.trim() + "-" + ceoMobile3.trim();
+		System.out.println("ceoMobile : " + ceoMobile + ", " + ceoMobile.length());
+		
+		centerMemberDto.setCenterName(centerMemberName);
+		if (centerMemberPw != "") {
+			centerMemberDto.setCenterPass(centerMemberPw);
+		}
+		centerMemberDto.setCenterMobile(mobile);
+		centerMemberDto.setCenterEmail(email);
+		 
+		 centerDto.setCenterId(centerMemberDto.getCenterId());
+		 centerDto.setRegisterCode(registerCode);
+		 centerDto.setCenterEntryDate(centerEntryDate);
+		 centerDto.setCenterZipCode(zipCode);
+		 centerDto.setCenterAddress(address);
+		 centerDto.setCeoName(ceoName);
+		 centerDto.setCeoMobile(ceoMobile);
+		 if (service != null || service.trim().length() != 0) {
+			 centerDto.setService(service);
+		 }
+		 
+		 CenterBiz biz = new CenterBiz();
+		 
+		 try {
+			biz.updateCenterMember(centerMemberDto, centerDto);
+			String url = CONTEXT_PATH + "/center/centerController?action=centerMyInfoForm";
+			out.println("<script>alert('내 정보 수정 완료');location.href='" + url + "'; </script>");
+		} catch (CommonException e) {
+			e.printStackTrace();
+			out.println("<script>alert('입력 정보가 올바르지 않습니다');history.go(-1); </script>");
+		} finally {
+			out.flush();
+			out.close();
+		}
+	}
+	
+	/**
+	 * 센터회원 회원탈퇴 서비스
+	 */
+	protected void centerDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		
+		HttpSession session = request.getSession(false);
+		CenterMemberDto dto = (CenterMemberDto)session.getAttribute("dto");
+		String centerId = dto.getCenterId();
+		CenterBiz biz = new CenterBiz();
+		
+		try {
+			biz.deleteCenterMember(centerId);
+			
+			if (session != null) {
+				if (session.getAttribute("dto") != null) {
+					session.removeAttribute("dto");
+				}
+				if (session.getAttribute("grade") != null) {
+					session.removeAttribute("grade");
+				}
+				session.invalidate();
+			}
+			
+			String url = CONTEXT_PATH + "/home";
+			out.println("<script>alert('회원탈퇴가 완료되었습니다');location.href='" + url + "'; </script>");
+		} catch (CommonException e) {
+			e.printStackTrace();
+		} finally {
+			out.flush();
+			out.close();
 		}
 	}
 }

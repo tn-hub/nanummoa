@@ -87,7 +87,7 @@ public class CenterBiz {
 	 * @param centerDto CenterInfo
 	 * @throws CommonException
 	 */
-	public void addGeneralMember(CenterMemberDto cMemberDto, CenterInfoDto centerDto) throws CommonException {
+	public void addCenterMember(CenterMemberDto cMemberDto, CenterInfoDto centerDto) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
 		
 		try {
@@ -102,5 +102,65 @@ public class CenterBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
+	
+	/**
+	 * 센터회원 및 센터정보 조회
+	 * 
+	 * @throws CommonException
+	 */
+	public void getCenterMemberInfo(CenterMemberDto centerMemberDto, CenterInfoDto centerDto) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
 
+		try {
+			dao.selectCenterMemberInfo(conn, centerMemberDto);
+			dao.selectCenterInfo(conn, centerDto);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+	/**
+	 * 센터회원 및 센터정보 수정
+	 * @param cMemberDto CenterMemberDto
+	 * @param centerDto CenterInfo
+	 * @throws CommonException
+	 */
+	public void updateCenterMember(CenterMemberDto cMemberDto, CenterInfoDto centerDto) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		
+		try {
+			cDao.updateCenterMember(conn, cMemberDto);
+			cDao.updateCenter(conn, centerDto);
+			JdbcTemplate.commit(conn);
+		} catch (CommonException e) {
+			JdbcTemplate.rollback(conn);
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+	
+	/**
+	 * 센터회원 및 센터정보 삭제
+	 * @param centerId 센터회원 아이디
+	 * @throws CommonException
+	 */
+	public void deleteCenterMember(String centerId) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		
+		try {
+			cDao.deleteCenter(conn, centerId);
+			cDao.deleteCenterMember(conn, centerId);
+			JdbcTemplate.commit(conn);
+		} catch (CommonException e) {
+			JdbcTemplate.rollback(conn);
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
 }

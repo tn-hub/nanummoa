@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import com.nanum.dto.CenterInfoDto;
 import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.CenterVolDto;
+import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.VolInfoDto;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
@@ -232,6 +233,199 @@ public class CenterDao {
 			throw new CommonException();
 		} finally {
 			JdbcTemplate.close(rs);
+			JdbcTemplate.close(pstmt);
+		}
+	}
+	
+	/**
+	 * 센터회원 정보 조회
+	 * @param conn
+	 * @param dto CenterMemberDto
+	 * @throws CommonException
+	 */
+	public void selectCenterMemberInfo(Connection conn, CenterMemberDto dto) throws CommonException {
+		String sql = "select * from center_member where c_id = ?";
+		System.out.println(sql);
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getCenterId());
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				dto.setCenterName(rs.getString("c_name"));
+				dto.setCenterMobile(rs.getString("c_mobile"));
+				dto.setCenterEmail(rs.getString("c_email"));
+				dto.setAppStatus(rs.getString("app_status"));
+				dto.setEntryDate(rs.getString("entry_date"));
+			} else {
+				throw new Exception();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(pstmt);
+		}
+	}
+	
+	/**
+	 * 센터 정보 조회
+	 * @param conn
+	 * @param dto CenterMemberDto
+	 * @throws CommonException
+	 */
+	public void selectCenterInfo(Connection conn, CenterInfoDto dto) throws CommonException {
+		String sql = "select * from center_info where c_id = ?";
+		System.out.println(sql);
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getCenterId());
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				dto.setCenterName(rs.getString("c_name"));
+				dto.setCenterEntryDate(rs.getString("c_entry_date"));
+				dto.setCenterZipCode(rs.getString("c_zipcode"));
+				dto.setCenterAddress(rs.getString("c_address"));
+				dto.setRegisterCode(rs.getString("register_code"));
+				dto.setService(rs.getString("service_subject"));
+				dto.setCeoName(rs.getString("ceo_name"));
+				dto.setCeoMobile(rs.getString("ceo_mobile"));
+			} else {
+				throw new Exception();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(pstmt);
+		}
+	}
+	
+	/**
+	 * 센터회원 회원 정보 수정
+	 */
+	public void updateCenterMember(Connection conn, CenterMemberDto dto) throws CommonException {
+		String sql = "update center_member "
+				+ "set c_pass = ?, c_name = ?, c_mobile = ?, c_email = ? "
+				+ "where c_id = ?";
+		System.out.println(sql);
+		
+		PreparedStatement pstmt = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getCenterPass());
+			pstmt.setString(2, dto.getCenterName());
+			pstmt.setString(3, dto.getCenterMobile());
+			pstmt.setString(4, dto.getCenterEmail());
+			pstmt.setString(5, dto.getCenterId());
+			int rows = pstmt.executeUpdate();
+			System.out.println("rows : " + rows);
+			if (rows != 1) {
+				throw new Exception();
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(pstmt);
+		}
+	}
+	
+	/**
+	 * 센터 정보 수정
+	 */
+	public void updateCenter(Connection conn, CenterInfoDto dto) throws CommonException {
+		String sql = "update center_info "
+				+ "set  c_entry_date = ?, c_zipcode = ?, c_address = ?, register_code = ?, "
+				+ "service_subject = ?, ceo_name = ?, ceo_mobile = ?"
+				+ "where c_id = ?";
+		System.out.println(sql);
+		
+		PreparedStatement pstmt = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getCenterEntryDate());
+			pstmt.setString(2, dto.getCenterZipCode());
+			pstmt.setString(3, dto.getCenterAddress());
+			pstmt.setString(4, dto.getRegisterCode());
+			pstmt.setString(5, dto.getService());
+			pstmt.setString(6, dto.getCeoName());
+			pstmt.setString(7, dto.getCeoMobile());
+			pstmt.setString(8, dto.getCenterId());
+			int rows = pstmt.executeUpdate();
+			System.out.println("rows : " + rows);
+			if (rows != 1) {
+				throw new Exception();
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(pstmt);
+		}
+	}
+	
+	/**
+	 * 센터회원 회원탈퇴
+	 */
+	public void deleteCenterMember(Connection conn, String centerId) throws CommonException {
+		String sql = "delete center_member where c_id = ?";
+		System.out.println(sql);
+		
+		PreparedStatement pstmt = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, centerId);
+			int rows = pstmt.executeUpdate();
+			System.out.println("rows : " + rows);
+			if (rows != 1) {
+				throw new Exception();
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(pstmt);
+		}
+	}
+	
+	/**
+	 * 센터정보 삭제
+	 */
+	public void deleteCenter(Connection conn, String centerId) throws CommonException {
+		String sql = "delete center_info where c_id = ?";
+		System.out.println(sql);
+		
+		PreparedStatement pstmt = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, centerId);
+			int rows = pstmt.executeUpdate();
+			System.out.println("rows : " + rows);
+			if (rows != 1) {
+				throw new Exception();
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
 			JdbcTemplate.close(pstmt);
 		}
 	}

@@ -11,6 +11,7 @@ import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.CenterVolDto;
 import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.QnADto;
+import com.nanum.dto.ServiceCategoryDto;
 import com.nanum.dto.LocalDto;
 import com.nanum.dto.VolBlockDto;
 import com.nanum.dto.VolCategoryDto;
@@ -280,11 +281,52 @@ public class CommonBiz {
 		}
 	}
 	
-	public void searchVolList(ArrayList<CenterVolDto> list) throws CommonException {
+	/**
+	 * 봉사 모집 전체 조회
+	 * @param list ArrayList<CenterVolDto>
+	 * @throws CommonException
+	 */
+	public void searchVolList(ArrayList<HashMap<String, Object>> list, String[] date) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
 		
 		try {
-			dao.searchVolList(conn, list);
+			dao.searchVolList(conn, list, date);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+	
+	/**
+	 * 봉사 모집 전체 수
+	 * @return 봉사 모집 전체 수 반환
+	 * @throws CommonException
+	 */
+	public int volListTotalCount(String[] date) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		
+		try {
+			return dao.volListTotalCount(conn, date);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+	
+	/**
+	 * 봉사 대상 전체 조회
+	 * @param list ArrayList<ServiceCategoryDto>
+	 * @throws CommonException 
+	 */
+	public void searchServiceCategory(ArrayList<ServiceCategoryDto> list) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		
+		try {
+			dao.searchServiceCategory(conn, list);
 		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;

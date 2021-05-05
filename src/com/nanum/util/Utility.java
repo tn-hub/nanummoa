@@ -41,6 +41,23 @@ public class Utility {
 	 * 현재날짜 반환 
 	 * @return 현재 기본형식(년도4-월2-일2) 날짜 
 	 */
+	public static String getCurrentDate(int month) {
+		String date = getCurrentDate("yyyy-MM-dd", Locale.KOREA);
+		String[] dateSplit = date.split("-");
+		int dateMonth = Integer.parseInt(dateSplit[1]);
+		
+		if (dateMonth + month <= 12) {
+			dateSplit[1] = (dateMonth + month) < 10 ? "0" + (dateMonth + month) : Integer.toString(dateMonth + month);
+		} else if (dateMonth + month > 12) {
+			int dateYear = Integer.parseInt(dateSplit[0]);
+			dateSplit[0] = Integer.toString(dateYear + 1);
+			int resultMonth = dateMonth + month - 12;
+			dateSplit[1] = resultMonth < 10 ? "0" + resultMonth : Integer.toString(resultMonth);
+		}
+		
+		return dateSplit[0] + "-" + dateSplit[1] + "-" + dateSplit[2];
+	}
+	
 	public static String getCurrentDate() {
 		return getCurrentDate("yyyy-MM-dd", Locale.KOREA);
 	}
