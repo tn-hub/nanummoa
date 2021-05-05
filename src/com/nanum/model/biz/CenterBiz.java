@@ -47,11 +47,12 @@ public class CenterBiz {
 	 * 
 	 * @throws CommonException
 	 */
-	public void centerVolList(String centerId, ArrayList<CenterVolDto> list) throws CommonException {
+	public void centerVolList(String centerId, ArrayList<CenterVolDto> list,CenterVolDto voDto) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
-
+			
 		try {
 			dao.centerVolList(centerId, conn, list);
+			dao.listIndex(centerId, conn, voDto);
 		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;
@@ -65,11 +66,30 @@ public class CenterBiz {
 	 * 
 	 * @throws CommonException
 	 */
-	public void recruitList(String centerId, ArrayList<CenterVolDto> list) throws CommonException {
+	public void recruitList(String centerId, ArrayList<CenterVolDto> list,CenterVolDto voDto) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.recruitList(centerId, conn, list);
+			dao.listIndex(centerId, conn, voDto);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+
+	/**
+	 * 센터회원 봉사 목록(종료)
+	 * 
+	 * @throws CommonException
+	 */
+	public void deadlineList(String centerId, ArrayList<CenterVolDto> list,CenterVolDto voDto) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
 
 		try {
-			dao.recruitList(centerId, conn, list);
+			dao.deadlineList(centerId, conn, list);
+			dao.listIndex(centerId, conn, voDto);
 		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;

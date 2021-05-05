@@ -55,6 +55,9 @@ public class CenterVolDto {
 	/** 마감일 */
 	private int deadline;
 
+	/** 목록갯수 */
+	private int listIndex;
+
 	/**
 	 * 기본 생성자
 	 */
@@ -75,10 +78,12 @@ public class CenterVolDto {
 	 * @param volDate     봉사실행일
 	 * @param recStatus   모집상태
 	 * @param deadline    마감일
+	 * @param listIndex   목록갯수
 	 */
+
 	public CenterVolDto(int volInfoNo, String centerId, String centerName, String volTitle, Date startDate,
 			Date endDate, Date volStart, Date volEnd, String categoryNo, String categoryName, int volDetailNo,
-			String volDate, String recStatus, int deadline) {
+			String volDate, String recStatus, int deadline, int listIndex) {
 		super();
 		this.volInfoNo = volInfoNo;
 		this.centerId = centerId;
@@ -94,6 +99,7 @@ public class CenterVolDto {
 		this.volDate = volDate;
 		this.recStatus = recStatus;
 		this.deadline = deadline;
+		this.listIndex = listIndex;
 	}
 
 	/**
@@ -292,6 +298,20 @@ public class CenterVolDto {
 		this.recStatus = recStatus;
 	}
 
+	/**
+	 * @return the listIndex
+	 */
+	public int getListIndex() {
+		return listIndex;
+	}
+
+	/**
+	 * @param listIndex the listIndex to set
+	 */
+	public void setListIndex(int listIndex) {
+		this.listIndex = listIndex;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -322,6 +342,8 @@ public class CenterVolDto {
 		builder.append(recStatus);
 		builder.append(", ");
 		builder.append(deadline);
+		builder.append(", ");
+		builder.append(listIndex);
 		return builder.toString();
 	}
 

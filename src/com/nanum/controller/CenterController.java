@@ -59,9 +59,12 @@ public class CenterController extends HttpServlet {
 		case "centerVolListForm" :
 			centerVolListForm(request, response);
 			break;
-//		case "":
-//			(request, response);
-//			break;
+		case "recruitList":
+			recruitList(request, response);
+			break;
+		case "deadlineList":
+			deadlineList(request, response);
+			break;
 		}
 	}
 	
@@ -326,9 +329,13 @@ public class CenterController extends HttpServlet {
 		
 		CenterBiz biz = new CenterBiz();
 		ArrayList<CenterVolDto> list = new ArrayList<CenterVolDto>();
+		CenterVolDto voDto = new CenterVolDto();
+		
+		
 		
 		try {
-			biz.centerVolList(centerId,list);
+			biz.centerVolList(centerId,list,voDto);
+			request.setAttribute("voDto",voDto);
 			request.setAttribute("list",list);
 			request.getRequestDispatcher("/center/centerInfo.jsp").forward(request, response);	
 		} catch (CommonException e) {
@@ -351,13 +358,45 @@ public class CenterController extends HttpServlet {
 		
 		CenterBiz biz = new CenterBiz();
 		ArrayList<CenterVolDto> list = new ArrayList<CenterVolDto>();
+		CenterVolDto voDto = new CenterVolDto();		
 		
 		try {
-			biz.recruitList(centerId,list);
+			biz.recruitList(centerId,list,voDto);
+			request.setAttribute("voDto",voDto);
 			request.setAttribute("list",list);
 			request.getRequestDispatcher("/center/centerInfo.jsp").forward(request, response);	
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * 센터회원 봉사 목록(종료)
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void deadlineList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		CenterMemberDto dto = (CenterMemberDto)session.getAttribute("dto");
+		String centerId = dto.getCenterId();
+		
+		CenterBiz biz = new CenterBiz();
+		ArrayList<CenterVolDto> list = new ArrayList<CenterVolDto>();
+		CenterVolDto voDto = new CenterVolDto();		
+		
+		try {
+			biz.deadlineList(centerId,list,voDto);
+			request.setAttribute("voDto",voDto);
+			request.setAttribute("list",list);
+			request.getRequestDispatcher("/center/centerInfo.jsp").forward(request, response);	
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
 }
