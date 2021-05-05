@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 
 import com.nanum.dto.CenterVolDto;
+import com.nanum.dto.VolApplyListDto;
 import com.nanum.dto.VolInfoDto;
 import com.nanum.model.dao.CenterDao;
 import com.nanum.util.CommonException;
@@ -94,6 +95,26 @@ public class CenterBiz {
 			e.printStackTrace();
 			throw e;
 		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+	
+	/**
+	 * 봉사 신청자 목록 조회
+	 * 
+	 * @param centerId
+	 * @param list
+	 * @throws CommonException 
+	 */
+	public void applyList(String centerId,int volInfoNo, ArrayList<VolApplyListDto> list) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		
+		try {
+			dao.applyList(conn,centerId,volInfoNo,list);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		}finally {
 			JdbcTemplate.close(conn);
 		}
 	}

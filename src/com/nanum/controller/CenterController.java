@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 
 import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.CenterVolDto;
+import com.nanum.dto.VolApplyListDto;
 import com.nanum.dto.VolInfoDto;
 import com.nanum.model.biz.CenterBiz;
 import com.nanum.util.CommonException;
@@ -36,18 +37,19 @@ public class CenterController extends HttpServlet {
 
 	public ServletContext application;
 	public String CONTEXT_PATH;
-	
+
 	public void init() {
 		application = getServletContext();
-		CONTEXT_PATH = (String)application.getAttribute("CONTEXT_PATH");
+		CONTEXT_PATH = (String) application.getAttribute("CONTEXT_PATH");
 	}
 
-	protected void process(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void process(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		String action = request.getParameter("action");
 		System.out.println("action : " + action);
 		switch (action) {
-		case "centerInputForm" :
+		case "centerInputForm":
 			centerInputForm(request, response);
 			break;
 		case "centerInput":
@@ -56,7 +58,7 @@ public class CenterController extends HttpServlet {
 		case "idCheck":
 			idCheck(request, response);
 			break;
-		case "centerVolListForm" :
+		case "centerVolListForm":
 			centerVolListForm(request, response);
 			break;
 		case "recruitList":
@@ -65,41 +67,48 @@ public class CenterController extends HttpServlet {
 		case "deadlineList":
 			deadlineList(request, response);
 			break;
+		case "applyList":
+			applyList(request, response);
+			break;
 		}
 	}
-	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		process(request, response);
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		process(request, response);
 	}
-	
+
 	/**
 	 * 센터회원 회원가입 폼 요청
 	 */
-	protected void centerInputForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void centerInputForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		response.sendRedirect(CONTEXT_PATH + "/signUp/centerInput.jsp");
 	}
-	
+
 	/**
 	 * 센터회원 아이디 중복 확인
 	 */
-	protected void idCheck(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void idCheck(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		response.setContentType("text/html; charset=utf-8");
-		
+
 		String id = request.getParameter("id");
 		System.out.println("id : " + id);
 		PrintWriter out = response.getWriter();
-		
+
 		if (id == null || id.trim().length() == 0) {
 			out.print("none");
 			out.flush();
 			out.close();
 			return;
 		}
-		
+
 		id = id.trim();
 		CenterBiz biz = new CenterBiz();
 		try {
@@ -117,14 +126,15 @@ public class CenterController extends HttpServlet {
 			out.close();
 		}
 	}
-	
+
 	/**
 	 * 센터회원 회원가입 서비스
 	 */
-	protected void centerInput(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void centerInput(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		response.setContentType("text/html; charset=utf-8");
 		PrintWriter out = response.getWriter();
-		
+
 		String centerMemberName = request.getParameter("name");
 		String centerMemberId = request.getParameter("id");
 		String centerMemberPw = request.getParameter("pw");
@@ -145,7 +155,7 @@ public class CenterController extends HttpServlet {
 		String ceoMobile2 = request.getParameter("ceoMobile2");
 		String ceoMobile3 = request.getParameter("ceoMobile3");
 		String service = request.getParameter("service");
-		
+
 		if (centerMemberName == null || centerMemberName.trim().length() == 0) {
 			out.print("이름을 입력해 주세요");
 			out.flush();
@@ -236,7 +246,7 @@ public class CenterController extends HttpServlet {
 			out.close();
 			return;
 		}
-		
+
 		centerMemberName = centerMemberName.trim();
 		centerMemberId = centerMemberId.trim();
 		centerMemberPw = centerMemberPw.trim();
@@ -249,68 +259,68 @@ public class CenterController extends HttpServlet {
 			address = address + " " + detailAddress;
 		}
 		String ceoMobile = ceoMobile1 + "-" + ceoMobile2.trim() + "-" + ceoMobile3.trim();
-		
+
 		CenterMemberDto cMemberDto = new CenterMemberDto();
 		CenterInfoDto centerDto = new CenterInfoDto();
-		
+
 		String appStatus = "N";
-		 try {
-	            String urlStr = "http://openapi.seoul.go.kr:8088/4f5874664c7268783837774a656e55/json/VOpenGroup/1/2477/";
-	            
-	            URL url = new URL(urlStr);
-	            
-	            String line = "";
-	            String result = "";
-	            
-	            BufferedReader br;
-	            br = new BufferedReader(new InputStreamReader(url.openStream()));
-	            while ((line = br.readLine()) != null) {
-	            	System.out.println(line);
-	                result = result.concat(line);
-	                System.out.println(result);
-	                //System.out.println(line);                
-	            }            
-	            
-	            // JSON parser 만들어 문자열 데이터를 객체화한다.
-	            JSONParser parser = new JSONParser();
-	            JSONObject obj = (JSONObject)parser.parse(result);
-	           
-	            JSONObject data = (JSONObject)obj.get("VOpenGroup");
-	            
-	            JSONArray data2 = (JSONArray)data.get("row");
-	            System.out.println("obj : " + obj);
-	            System.out.println("data : " + data);
-	            System.out.println("data2 : " + data2.size());
-	            
-	            // 객체형태로
-	            for (int i=0;i< data2.size();i++) {
-	                JSONObject row = (JSONObject) data2.get(i);
-	                String centerNameData = (String) row.get("KORNAME");
-	                if (centerName.equals(centerNameData)) {
-	                	appStatus = "Y";
-	                }
-	            }
-	            br.close();
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-		 
-		 System.out.println("appStatus : " + appStatus);
-		 cMemberDto.setCenterName(centerMemberName);
-		 cMemberDto.setCenterId(centerMemberId);
-		 cMemberDto.setCenterPass(centerMemberPw);
-		 cMemberDto.setCenterMobile(mobile);
-		 cMemberDto.setCenterEmail(email);
-		 cMemberDto.setAppStatus(appStatus);
-		 
-		 centerDto.setCenterId(centerMemberId);
-		 centerDto.setRegisterCode(registerCode);
-		 centerDto.setCenterName(centerName);
-		 centerDto.setCenterEntryDate(centerEntryDate);
-		 centerDto.setCenterZipCode(zipCode);
-		 centerDto.setCenterAddress(address);
-		 centerDto.setCeoName(ceoName);
-		 centerDto.setCeoMobile(ceoMobile);
+		try {
+			String urlStr = "http://openapi.seoul.go.kr:8088/4f5874664c7268783837774a656e55/json/VOpenGroup/1/2477/";
+
+			URL url = new URL(urlStr);
+
+			String line = "";
+			String result = "";
+
+			BufferedReader br;
+			br = new BufferedReader(new InputStreamReader(url.openStream()));
+			while ((line = br.readLine()) != null) {
+				System.out.println(line);
+				result = result.concat(line);
+				System.out.println(result);
+				// System.out.println(line);
+			}
+
+			// JSON parser 만들어 문자열 데이터를 객체화한다.
+			JSONParser parser = new JSONParser();
+			JSONObject obj = (JSONObject) parser.parse(result);
+
+			JSONObject data = (JSONObject) obj.get("VOpenGroup");
+
+			JSONArray data2 = (JSONArray) data.get("row");
+			System.out.println("obj : " + obj);
+			System.out.println("data : " + data);
+			System.out.println("data2 : " + data2.size());
+
+			// 객체형태로
+			for (int i = 0; i < data2.size(); i++) {
+				JSONObject row = (JSONObject) data2.get(i);
+				String centerNameData = (String) row.get("KORNAME");
+				if (centerName.equals(centerNameData)) {
+					appStatus = "Y";
+				}
+			}
+			br.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("appStatus : " + appStatus);
+		cMemberDto.setCenterName(centerMemberName);
+		cMemberDto.setCenterId(centerMemberId);
+		cMemberDto.setCenterPass(centerMemberPw);
+		cMemberDto.setCenterMobile(mobile);
+		cMemberDto.setCenterEmail(email);
+		cMemberDto.setAppStatus(appStatus);
+
+		centerDto.setCenterId(centerMemberId);
+		centerDto.setRegisterCode(registerCode);
+		centerDto.setCenterName(centerName);
+		centerDto.setCenterEntryDate(centerEntryDate);
+		centerDto.setCenterZipCode(zipCode);
+		centerDto.setCenterAddress(address);
+		centerDto.setCeoName(ceoName);
+		centerDto.setCeoMobile(ceoMobile);
 
 	}
 
@@ -322,27 +332,26 @@ public class CenterController extends HttpServlet {
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	protected void centerVolListForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void centerVolListForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		CenterMemberDto dto = (CenterMemberDto)session.getAttribute("dto");
+		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
 		String centerId = dto.getCenterId();
-		
+
 		CenterBiz biz = new CenterBiz();
 		ArrayList<CenterVolDto> list = new ArrayList<CenterVolDto>();
 		CenterVolDto voDto = new CenterVolDto();
-		
-		
-		
+
 		try {
-			biz.centerVolList(centerId,list,voDto);
-			request.setAttribute("voDto",voDto);
-			request.setAttribute("list",list);
-			request.getRequestDispatcher("/center/centerInfo.jsp").forward(request, response);	
+			biz.centerVolList(centerId, list, voDto);
+			request.setAttribute("voDto", voDto);
+			request.setAttribute("list", list);
+			request.getRequestDispatcher("/center/centerInfo.jsp").forward(request, response);
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 센터회원 봉사 목록(모집중)
 	 * 
@@ -351,25 +360,26 @@ public class CenterController extends HttpServlet {
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	protected void recruitList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void recruitList(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		CenterMemberDto dto = (CenterMemberDto)session.getAttribute("dto");
+		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
 		String centerId = dto.getCenterId();
-		
+
 		CenterBiz biz = new CenterBiz();
 		ArrayList<CenterVolDto> list = new ArrayList<CenterVolDto>();
-		CenterVolDto voDto = new CenterVolDto();		
-		
+		CenterVolDto voDto = new CenterVolDto();
+
 		try {
-			biz.recruitList(centerId,list,voDto);
-			request.setAttribute("voDto",voDto);
-			request.setAttribute("list",list);
-			request.getRequestDispatcher("/center/centerInfo.jsp").forward(request, response);	
+			biz.recruitList(centerId, list, voDto);
+			request.setAttribute("voDto", voDto);
+			request.setAttribute("list", list);
+			request.getRequestDispatcher("/center/centerInfo.jsp").forward(request, response);
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 센터회원 봉사 목록(종료)
 	 * 
@@ -378,25 +388,52 @@ public class CenterController extends HttpServlet {
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	protected void deadlineList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void deadlineList(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		CenterMemberDto dto = (CenterMemberDto)session.getAttribute("dto");
+		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
 		String centerId = dto.getCenterId();
-		
+
 		CenterBiz biz = new CenterBiz();
 		ArrayList<CenterVolDto> list = new ArrayList<CenterVolDto>();
-		CenterVolDto voDto = new CenterVolDto();		
-		
+		CenterVolDto voDto = new CenterVolDto();
+
 		try {
-			biz.deadlineList(centerId,list,voDto);
-			request.setAttribute("voDto",voDto);
-			request.setAttribute("list",list);
-			request.getRequestDispatcher("/center/centerInfo.jsp").forward(request, response);	
+			biz.deadlineList(centerId, list, voDto);
+			request.setAttribute("voDto", voDto);
+			request.setAttribute("list", list);
+			request.getRequestDispatcher("/center/centerInfo.jsp").forward(request, response);
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
+
+	/**
+	 * 봉사 신청자 목록 조회
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void applyList(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
+		int volInfoNo = Integer.parseInt(request.getParameter("volInfoNo")); 
+		
+		String centerId = dto.getCenterId();
+		
+		CenterBiz biz = new CenterBiz();
+		ArrayList<VolApplyListDto> list = new ArrayList<VolApplyListDto>();
+
+		try {
+			biz.applyList(centerId,volInfoNo, list);
+			request.setAttribute("list", list);
+			request.getRequestDispatcher("/center/applyList.jsp").forward(request, response);
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

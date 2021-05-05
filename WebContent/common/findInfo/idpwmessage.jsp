@@ -31,6 +31,7 @@ margin:  auto;
 				<c:when test="${dto.generalId != null}">
 					<h2>일반회원 : ${dto.generalId }</h2>
 				</c:when>
+				
 				<c:when test="${center.centerId != null}">
 					<h2>센터회원 : ${dto.centerId }</h2>
 				</c:when>

@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import com.nanum.dto.CenterVolDto;
+import com.nanum.dto.VolApplyListDto;
 import com.nanum.dto.VolInfoDto;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
@@ -336,5 +337,49 @@ public class CenterDao {
 //			JdbcTemplate.close(pstmt);
 //		}
 //	}
+	
+	/**
+	 * 봉사 신청자 목록 조회
+	 * 
+	 * @param conn
+	 * @param centerId
+	 * @param list
+	 * @throws CommonException 
+	 */
+	public void applyList(Connection conn, String centerId,int volInfoNo, ArrayList<VolApplyListDto> list) throws CommonException {
+		String sql = "select vi.v_title,gm.g_name,va.apply_date,va.g_id,vi.vol_info_no\n" + 
+				"from vol_apply_list va, general_member gm, vol_detail vd, vol_info vi\n" + 
+				"where va.g_id = gm.g_id and va.vol_detail_no = vd.vol_detail_no \n" + 
+				"and vd.vol_info_no = vi.vol_info_no and vi.c_id = ? and vi.vol_info_no = ?\n" + 
+				"group by vi.v_title,gm.g_name,va.apply_date,va.g_id,vi.vol_info_no";
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, centerId);
+			pstmt.setInt(2, volInfoNo);
+			rs = pstmt.executeQuery();
+			
+			
+			while(rs.next()) {
+				VolApplyListDto dto =  new VolApplyListDto();
+				
+				dto.setVolTitle(rs.getString("v_title"));
+				dto.setGeneralName(rs.getString("g_name"));
+				dto.setApplyDate(rs.getDate("apply_date"));
+				dto.setGeneralId(rs.getString("g_id"));
+				
+				list.add(dto);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(pstmt);
+		}
+	}
 	
 }
