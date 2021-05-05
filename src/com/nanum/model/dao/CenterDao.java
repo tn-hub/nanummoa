@@ -63,24 +63,25 @@ public class CenterDao {
 	 * @throws CommonException 
 	 */
 	public void centerVolList(String centerId,Connection conn,ArrayList<CenterVolDto> list) throws CommonException {
-		String sql = "select \n" + 
+		String sql = "select  \n" + 
 				"vi.vol_info_no\n" + 
-				", vi.v_title\n" + 
+				", vi.v_title \n" + 
 				", vi.start_date\n" + 
 				", vi.end_date\n" + 
-				", min(vd.vol_date) as vol_start\n" + 
-				", max(vd.vol_date) as vol_end\n" + 
-				", vd.rec_status\n" + 
+				", min(vd.vol_date) as 봉사시작일\n" + 
+				", max(vd.vol_date) as 봉사종료일\n" + 
+				", min(vd.rec_status) as 모집중\n" + 
+				", max(vd.rec_status) as 마감\n" + 
 				", ci.c_name\n" + 
 				", vc.category_name\n" + 
 				", round(vi.end_date - sysdate,0) as deadline\n" + 
 				"from vol_info vi,vol_detail vd, center_member cm, center_info ci,vol_category vc\n" + 
-				"where vi.vol_info_no = vd.vol_info_no \n" + 
-				"and vi.c_id = cm.c_id \n" + 
+				"where vi.vol_info_no = vd.vol_info_no\n" + 
+				"and vi.c_id = cm.c_id\n" + 
 				"and cm.c_id = ci.c_id\n" + 
 				"and vi.category_no = vc.category_no\n" + 
 				"and cm.c_id= ?\n" + 
-				"group by vi.vol_info_no, vi.v_title, vi.start_date, vi.end_date, vd.rec_status,ci.c_name,vc.category_name";
+				"group by vi.vol_info_no, vi.v_title, vi.start_date, vi.end_date,ci.c_name,vc.category_name";
 		
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -99,10 +100,10 @@ public class CenterDao {
 				dto.setVolTitle(rs.getString("v_title"));
 				dto.setStartDate(rs.getDate("start_date"));
 				dto.setEndDate(rs.getDate("end_date"));
-				dto.setVolStart(rs.getDate("vol_start"));
-				dto.setVolEnd(rs.getDate("vol_end"));
+				dto.setVolStart(rs.getDate("봉사시작일"));
+				dto.setVolEnd(rs.getDate("봉사종료일"));
 				dto.setCategoryName(rs.getString("category_name"));
-				dto.setRecStatus(rs.getString("rec_status"));
+				dto.setRecStatus(rs.getString("모집중"));
 				dto.setDeadline(rs.getInt("deadline"));
 				
 				list.add(dto);
@@ -123,24 +124,26 @@ public class CenterDao {
 	 * @throws CommonException 
 	 */
 	public void recruitList(String centerId, Connection conn, ArrayList<CenterVolDto> list) throws CommonException {
-		String sql = "select \n" + 
+		String sql = "select  \n" + 
 				"vi.vol_info_no\n" + 
-				", vi.v_title\n" + 
+				", vi.v_title \n" + 
 				", vi.start_date\n" + 
 				", vi.end_date\n" + 
-				", min(vd.vol_date) as vol_start\n" + 
-				", max(vd.vol_date) as vol_end\n" + 
-				", vd.rec_status\n" + 
+				", min(vd.vol_date) as 봉사시작일\n" + 
+				", max(vd.vol_date) as 봉사종료일\n" + 
+				", min(vd.rec_status) as 모집중\n" + 
+				", max(vd.rec_status) as 마감\n" + 
 				", ci.c_name\n" + 
 				", vc.category_name\n" + 
 				", round(vi.end_date - sysdate,0) as deadline\n" + 
 				"from vol_info vi,vol_detail vd, center_member cm, center_info ci,vol_category vc\n" + 
-				"where vi.vol_info_no = vd.vol_info_no \n" + 
-				"and vi.c_id = cm.c_id \n" + 
+				"where vi.vol_info_no = vd.vol_info_no\n" + 
+				"and vi.c_id = cm.c_id\n" + 
 				"and cm.c_id = ci.c_id\n" + 
 				"and vi.category_no = vc.category_no\n" + 
-				"and cm.c_id= ? and rec_status in (0)\n"+ 
-				"group by vi.vol_info_no, vi.v_title, vi.start_date, vi.end_date, vd.rec_status,ci.c_name,vc.category_name";
+				"and cm.c_id= ?\n" + 
+				"group by vi.vol_info_no, vi.v_title, vi.start_date, vi.end_date,ci.c_name,vc.category_name\n" +
+				"having min(vd.rec_status) = 0";
 		
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -157,10 +160,10 @@ public class CenterDao {
 				dto.setVolTitle(rs.getString("v_title"));
 				dto.setStartDate(rs.getDate("start_date"));
 				dto.setEndDate(rs.getDate("end_date"));
-				dto.setVolStart(rs.getDate("vol_start"));
-				dto.setVolEnd(rs.getDate("vol_end"));
+				dto.setVolStart(rs.getDate("봉사시작일"));
+				dto.setVolEnd(rs.getDate("봉사종료일"));
 				dto.setCategoryName(rs.getString("category_name"));
-				dto.setRecStatus(rs.getString("rec_status"));
+				dto.setRecStatus(rs.getString("모집중"));
 				dto.setDeadline(rs.getInt("deadline"));
 				
 				list.add(dto);
@@ -182,9 +185,9 @@ public class CenterDao {
 	 * @throws CommonException 
 	 */
 	public void deadlineList(String centerId, Connection conn, ArrayList<CenterVolDto> list) throws CommonException {
-		String sql = "select \n" + 
+		String sql = "select  \n" + 
 				"vi.vol_info_no\n" + 
-				", vi.v_title\n" + 
+				", vi.v_title \n" + 
 				", vi.start_date\n" + 
 				", vi.end_date\n" + 
 				", min(vd.vol_date) as 봉사시작일\n" + 
@@ -195,12 +198,13 @@ public class CenterDao {
 				", vc.category_name\n" + 
 				", round(vi.end_date - sysdate,0) as deadline\n" + 
 				"from vol_info vi,vol_detail vd, center_member cm, center_info ci,vol_category vc\n" + 
-				"where vi.vol_info_no = vd.vol_info_no \n" + 
-				"and vi.c_id = cm.c_id \n" + 
+				"where vi.vol_info_no = vd.vol_info_no\n" + 
+				"and vi.c_id = cm.c_id\n" + 
 				"and cm.c_id = ci.c_id\n" + 
 				"and vi.category_no = vc.category_no\n" + 
 				"and cm.c_id= ?\n" + 
-				"group by vi.vol_info_no, vi.v_title, vi.start_date, vi.end_date,ci.c_name,vc.category_name\n";
+				"group by vi.vol_info_no, vi.v_title, vi.start_date, vi.end_date,ci.c_name,vc.category_name\n" +
+				"having min(vd.rec_status) = 1";
 		
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -217,8 +221,8 @@ public class CenterDao {
 				dto.setVolTitle(rs.getString("v_title"));
 				dto.setStartDate(rs.getDate("start_date"));
 				dto.setEndDate(rs.getDate("end_date"));
-				dto.setVolStart(rs.getDate("vol_start"));
-				dto.setVolEnd(rs.getDate("vol_end"));
+				dto.setVolStart(rs.getDate("봉사시작일"));
+				dto.setVolEnd(rs.getDate("봉사종료일"));
 				dto.setCategoryName(rs.getString("category_name"));
 				dto.setRecStatus(rs.getString("모집중"));
 				dto.setDeadline(rs.getInt("deadline"));
