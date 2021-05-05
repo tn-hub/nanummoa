@@ -18,6 +18,8 @@ import com.nanum.dto.QnADto;
 import com.nanum.dto.LocalDto;
 import com.nanum.dto.VolBlockDto;
 import com.nanum.dto.VolCategoryDto;
+import com.nanum.dto.VolDetailDto;
+import com.nanum.dto.VolInfoDto;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
 
@@ -231,9 +233,6 @@ public class CommonDao {
 		System.out.println();
 	
 		try {
-			System.out.println(dto.getGeneralId());
-			System.out.println(dto.getQnaTitle());
-			System.out.println(dto.getQnaContents());
 			 stmt = conn.prepareStatement(sql); // 실행 sql 넣기
 			 stmt.setString(1, dto.getGeneralId());
 		     stmt.setString(2, dto.getQnaTitle());
@@ -285,7 +284,7 @@ public class CommonDao {
 	}
 
 	/**
-	 * 문의글 검색 조회
+	 * 문의글 목록 조회
 	 * @param conn
 	 * @param qnaList
 	 * @param searchOpt
@@ -302,7 +301,7 @@ public class CommonDao {
 		sql.append("  , case when q.g_id is not null then (select g.g_name from general_member g where g.g_id = q.g_id)  ");
 		sql.append("    else (select c.c_name from center_member c where c.c_id = q.c_id) end as qnaWriter  "); 
 		sql.append("  , q.q_write_date  ");
-		sql.append("  , 'N' as answerYn  ");
+		sql.append("  , (select case when count(1) > 0 then 'Y' else 'N' end  from qna_reply r where r.q_no = q.q_no) as answerYn  ");
 		sql.append(" from qna q ");
 		
 		if ("T".equals(searchOpt)) {
@@ -341,7 +340,7 @@ public class CommonDao {
 				dto.setQnaWriter(rs.getString("qnaWriter"));
 				dto.setQnaWriteDate(rs.getDate("q_write_date"));
 				dto.setAnswerYn(rs.getString("answerYn"));	
-				
+
 				qnaList.add(dto); // list 담기 
 			}
 			
@@ -366,15 +365,16 @@ public class CommonDao {
 	 * @throws CommonException
 	 */
 	public void qnaDetail(Connection conn, QnADto dto, String qnaNo) throws CommonException{
+		
 		StringBuilder sql = new StringBuilder();
 		
 		sql.append(" select  ");
-		sql.append("  q.q_no  ");
-		sql.append("  , q.q_title  ");
-		sql.append("  , case when q.g_id is not null then (select g.g_name from general_member g where g.g_id = q.g_id)  ");
-		sql.append("    else (select c.c_name from center_member c where c.c_id = q.c_id) end as qnaWriter  "); 
-		sql.append("  , q.q_write_date  ");
-		sql.append("  , q.q_contents ");
+		sql.append(" q.q_no  ");
+		sql.append(" , q.q_title  ");
+		sql.append(" , case when q.g_id is not null then (select g.g_name from general_member g where g.g_id = q.g_id)  ");
+		sql.append(" else (select c.c_name from center_member c where c.c_id = q.c_id) end as qnaWriter  "); 
+		sql.append(" , q.q_write_date  ");
+		sql.append(" , q.q_contents ");
 		sql.append(" from qna q ");
 		sql.append(" where q_no = ? ");
 		
@@ -417,7 +417,7 @@ public class CommonDao {
 	 * @throws CommonException
 	 */
 	public void qnaUpdate(Connection conn, QnADto dto) throws CommonException{
-		System.out.println("수정 ======");
+		
 		StringBuilder sql = new StringBuilder();
 		
 		sql.append(" update qna  ");
@@ -456,7 +456,6 @@ public class CommonDao {
 	 * @throws CommonException
 	 */
 	public void qnaDelete(Connection conn, String qnaNo) throws CommonException{
-		System.out.println("삭제 ======");
 		String sql = "delete from qna where q_no = ?"; //PK
 		
 		PreparedStatement stmt = null; //초기화 
@@ -585,6 +584,127 @@ public class CommonDao {
 			JdbcTemplate.close(rs);
 			JdbcTemplate.close(stmt);
 		}
+	}
+
+	/**
+	 * 자원봉사 상세조회
+	 * @param conn
+	 * @param dto
+	 * @param volInfoNo
+	 * @throws CommonException
+	 */
+	public void selectVolDetail(Connection conn, VolInfoDto dto, int volInfoNo) throws CommonException{
+		
+		StringBuilder sql = new StringBuilder();
+		
+		sql.append(" select  ");
+		sql.append("   v.vol_info_no  ");
+		sql.append("   , v.c_id ");
+		sql.append("   , v.v_title ");
+		sql.append("   , (select sum(d.apply_count) from vol_detail d where d.vol_info_no = v.vol_info_no group by d.vol_info_no) apply_count ");
+		sql.append("   , (select max(d.total_count) from vol_detail d where d.vol_info_no = v.vol_info_no group by d.vol_info_no) total_count ");
+		sql.append("   , (select case when count(1) > 0 then '모집중' else '모집마감' end from vol_detail d where d.vol_info_no = v.vol_info_no and d.rec_status = 0) rec_status ");
+		sql.append("   , v.v_content ");
+		sql.append("   , v.vol_write_date  ");
+		sql.append("   , to_char(v.start_time,'YYYY-MM-DD') as vol_start_date ");
+		sql.append("   , to_char(v.end_time,'YYYY-MM-DD') as vol_end_date  ");
+		sql.append("   , to_char(v.start_time,'HH24:MI') as start_time ");
+		sql.append("   , to_char(v.end_time,'HH24:MI') as end_time  ");
+		sql.append("   , v.start_date ");
+		sql.append("   , v.end_date ");
+		sql.append("   , v.v_type ");
+		sql.append("   , v.v_place ");
+		sql.append("   , v.latitude ");
+		sql.append("   , v.longitude ");
+		sql.append("   , v.v_subject ");
+		sql.append("   , v.category_no ");
+		sql.append("   , m.c_name ");
+		sql.append("   , m.c_mobile ");
+		sql.append("   , c.c_address ");
+		sql.append(" from vol_info v, center_member m, center_info c  ");
+		sql.append(" where v.vol_info_no = ? ");
+		sql.append("   and v.c_id = m.c_id ");
+		sql.append("   and v.c_id = c.c_id ");
+		  
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+
+			stmt = conn.prepareStatement(sql.toString()); 
+			
+			stmt.setInt(1, volInfoNo);
+				
+			rs = stmt.executeQuery();
+			
+			if(rs.next()) { 
+				dto.setVolInfoNo(rs.getInt("vol_info_no")); // 글번호 
+				dto.setCenterId(rs.getString("c_id")); // 센터회원아이디
+				dto.setVolTitle(rs.getString("v_title")); // 제목
+				dto.setApplyCount(rs.getInt("apply_count")); // 신청인원
+				dto.setTotalCount(rs.getInt("total_count")); // 모집인원
+				dto.setRecStatuse(rs.getString("rec_status")); // 모집상태
+				dto.setVolContents(rs.getString("v_content")); // 내용
+				dto.setStartTime(rs.getDate("vol_start_date")); // 봉사 시작일
+				dto.setEndTime(rs.getDate("vol_end_date"));  // 봉사 마감일
+				dto.setVolStartTime(rs.getString("start_time"));  // 봉사 시작 시간
+				dto.setVolEndTime(rs.getString("end_time"));  // 봉사 마감 시간
+				dto.setStartDate(rs.getDate("start_date")); //  모집시작일
+				dto.setEndDate(rs.getDate("end_date"));    // 모집마감일
+				dto.setVolType(rs.getString("v_type")); // 봉사자 유형
+				dto.setVolPlace(rs.getString("v_place")); // 봉사장소
+				dto.setLatitude(rs.getString("latitude")); // 위도
+				dto.setLongitude(rs.getString("longitude")); // 경도
+				dto.setVolSubject(rs.getString("v_subject")); // 
+				dto.setName(rs.getString("c_name"));    // 담당자명
+				dto.setMobile(rs.getString("c_mobile")); // 전화번호 
+				dto.setAddress(rs.getString("c_address")); // 주소 
+				dto.setCategoryNo(rs.getString("category_no")); // 봉사분야 
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(stmt);
+		}
+	}
+
+	/**
+	 * 문의글 전체조회 건수
+	 * @param conn
+	 * @param cdto
+	 * @throws CommonException
+	 */
+	public void selectQnaListTotCnt(Connection conn, QnADto cdto) throws CommonException{
+		StringBuilder sql = new StringBuilder();
+		
+		sql.append(" select count(1) as tot_cnt ");
+		sql.append("  from qna  ");
+		  
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+
+			stmt = conn.prepareStatement(sql.toString()); 
+			rs = stmt.executeQuery();
+			
+			if(rs.next()) { 
+				cdto.setTotCnt(rs.getInt("tot_cnt"));  
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(stmt);
+		}
+		
 	}
 }
 

@@ -10,13 +10,12 @@
 <title>게시글 상세</title>
 <style type="text/css">
 #section_contents{
-	width: 900px; 
+	width: 1000px; 
 	margin: 0 auto;
-	border: 1px solid #333;
 }
 
 #qna_detail{
-	width: 890px;
+	width: 990px;
 	padding: 5px;
 }
 
@@ -27,11 +26,12 @@ h4{
 	padding : 5px;
 }
 
-#up_qnaTitle{
-	border-style: none;
-	padding: 10px;
-	background-color: #F6F6F6;
-	width: 790px;
+#qnaTitle{
+	width: 900px; 
+	margin-top:20px; 
+	margin-bottom: 20px; 
+	padding: 5px; 
+	font-size: 17px;
 }
 
 #qna_det_info{
@@ -39,10 +39,11 @@ h4{
 }
 
 #qna_det_contexts textarea{
-	width:880px; 
-	height: 350px; 
-	margin-top: 10px;
-	margin-left: 5px;
+	width: 985px;
+	height: 300px;
+	padding: 10px; 
+	margin-bottom: 20px;
+	font-size: 17px;
 	background-color: #F6F6F6;
 }
 
@@ -72,13 +73,13 @@ ul li{
 }
 
 #r_det_contexts{
-	width:880px; 
+	width:985px; 
 	height: 200px; 
 	margin-top: 10px;
 }
 
 #r_input_contexts{
-	width:880px; 
+	width:985px; 
 	height: 100px; 
 	background-color: #F6F6F6;
 	margin-left: 5px;
@@ -91,39 +92,47 @@ ul li{
 </style>
 </head>
 <script type="text/javascript">
-function upt_qna(){
-	alert("수정하기");
-}
 
-function del_qna() {
-	alert("삭제하기");
-}
+$(document).ready(function() {
+	$('#r_text_input').hide(); // 댓글등록 
+	
+	// 댓글등록 이벤트 
+	$("#btn_rAdd").click(function () {
+		if($('#r_text_input').css('display') == 'none'){
+            $('#r_text_input').show();
+        }else{
+            $('#r_text_input').hide();
+        }			
+	});
+	
+});
 
 </script>
 <body>
 <%@ include file="/common/header.jsp"%>
 <div id="section_contents">
 <form name="qnaDetailForm" action="${CONTEXT_PATH}/common/commonController?action=qnaUpt" method="post">
-<h3>게시글 상세</h3>
+<h3>문의글 상세</h3>
 <hr>
 <div id="qna_detail">
-	  <h4>제목 : <input type="text"  id="qnaTitle" name="qnaTitle" value="${sdto.qnaTitle}"></h4>
-		<div id="qna_det_info">
-		<ul>
-			<li id="qnaNo" >글번호 : ${sdto.qnaNo}</li>
-		</ul>
-		<ul>
-			<li>작성자 : ${sdto.qnaWriter}</li>
-		</ul>
-		<ul>	
-			<li>작성일 : ${sdto.qnaWriteDate}</li>
-			<li id="uptQna_btn">
-				<a href="#" onclick="javascript:document.qnaDetailForm.submit();">수정</a>
-				<a href="${CONTEXT_PATH}/common/commonController?action=qnaDel&qnaNo=${sdto.qnaNo}" >삭제</a>
-			</li>
-		</ul>	
-		</div>
-		<hr>
+	
+	<div id="qna_det_info">
+	<ul>
+		<li id="qnaNo" >글번호 : ${sdto.qnaNo}</li>
+	</ul>
+	<ul>
+		<li>작성자 : ${sdto.qnaWriter}</li>
+	</ul>
+	<ul>	
+		<li>작성일 : ${sdto.qnaWriteDate}</li>
+		<li id="uptQna_btn">
+			<a href="#" onclick="javascript:document.qnaDetailForm.submit();">수정</a> || 
+			<a href="${CONTEXT_PATH}/common/commonController?action=qnaDel&qnaNo=${sdto.qnaNo}" >삭제</a>
+		</li>
+	</ul>	
+	</div>
+	<h4>제목 : <input type="text" id="qnaTitle" name="qnaTitle" value="${sdto.qnaTitle}"></h4>
+	<hr>
 	<div id="qna_det_contexts"><textarea id="qnaContents" name="qnaContents">${sdto.qnaContents}</textarea> </div>	
 	<hr>
 	</div>

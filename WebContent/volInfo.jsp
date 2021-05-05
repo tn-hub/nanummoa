@@ -21,7 +21,6 @@
 
 #vol_info_title{
 	width: 990px; 
-
 	margin-top:20px; 
 	margin-bottom: 20px; 
 	padding: 5px; 

@@ -24,7 +24,7 @@
 			<ul>
 				<li id= "" class=""><a href="#" class="">봉사신청</a></li>
 				<li id= "" class="" ><a href="#" class="">인증서발급</a></li>
-				<li id= "" class=""><a href="#" class="">문의하기</a></li>
+				<li id= "" class=""><a href="${CONTEXT_PATH}/common/commonController?action=qnaInput" class="">문의하기</a></li>
 				<li id= "" class=""><a href="#" class="">나의 봉사내역</a></li>
 				<li id= "" class=""><a href="#" class=""><i class="fas fa-search search_btn"></i></a></li>
 			</ul>

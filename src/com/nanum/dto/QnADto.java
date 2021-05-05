@@ -39,6 +39,9 @@ public class QnADto {
 	/** 답변여부 */
 	private String answerYn;
 	
+	/** 전체건수  */
+	private int totCnt;
+	
 	
 	/**
 	 * 기본생성자
@@ -55,9 +58,12 @@ public class QnADto {
 	 * @param qnaTitle     제목
 	 * @param qnaContents  내용
 	 * @param qnaWriteDate 작성일
+	 * @param answerYn 답변여부
+	 * @param totCnt 전체건수
 	 */
-	public QnADto(int qnaNo, String generalId, String centerId, String qnaTitle, String qnaContents,
-			Date qnaWriteDate, String qnaWriter, String answerYn) {
+	public QnADto(int qnaNo, String generalId, String centerId, String qnaTitle, String qnaContents, Date qnaWriteDate,
+			String qnaWriter, String answerYn, int totCnt) {
+		super();
 		this.qnaNo = qnaNo;
 		this.generalId = generalId;
 		this.centerId = centerId;
@@ -66,6 +72,7 @@ public class QnADto {
 		this.qnaWriteDate = qnaWriteDate;
 		this.qnaWriter = qnaWriter;
 		this.answerYn = answerYn;
+		this.totCnt = totCnt;
 	}
 
 	/**
@@ -74,7 +81,7 @@ public class QnADto {
 	public int getQnaNo() {
 		return qnaNo;
 	}
-
+	
 	/**
 	 * @param qnaNo the qnaNo to set
 	 */
@@ -183,6 +190,21 @@ public class QnADto {
 		this.answerYn = answerYn;
 	}
 
+	/**
+	 * @return the totCnt
+	 */
+	public int getTotCnt() {
+		return totCnt;
+	}
+
+	/**
+	 * @param totCnt the totCnt to set
+	 */
+	public void setTotCnt(int totCnt) {
+		this.totCnt = totCnt;
+	}
+	
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -199,6 +221,10 @@ public class QnADto {
 		builder.append(qnaWriteDate);
 		builder.append(", ");
 		builder.append(qnaWriter);
+		builder.append(", ");
+		builder.append(answerYn);
+		builder.append(", ");
+		builder.append(totCnt);
 		return builder.toString();
 	}
 

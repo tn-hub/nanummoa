@@ -13,6 +13,8 @@ import com.nanum.dto.QnADto;
 import com.nanum.dto.LocalDto;
 import com.nanum.dto.VolBlockDto;
 import com.nanum.dto.VolCategoryDto;
+import com.nanum.dto.VolDetailDto;
+import com.nanum.dto.VolInfoDto;
 import com.nanum.model.dao.CommonDao;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
@@ -271,6 +273,36 @@ public class CommonBiz {
 		Connection conn = JdbcTemplate.getConnection();
 		try {
 			dao.searchLocal(conn, localMap);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+		
+	}
+
+	/**
+	 * 자원봉사 상세보기
+	 * @param VolInfoDto
+	 * @throws CommonException
+	 */
+	public void volDetailInfo(VolInfoDto dto, int volInfoNo) throws CommonException{
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.selectVolDetail(conn, dto, volInfoNo);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+
+	public void qnaListTotCnt(QnADto cdto) throws CommonException{
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.selectQnaListTotCnt(conn, cdto);
 		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;

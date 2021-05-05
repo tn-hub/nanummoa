@@ -2,10 +2,12 @@ package com.nanum.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Properties;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Properties;
 
-import javax.mail.*;
+import javax.mail.Address;
+import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Transport;
@@ -23,7 +25,10 @@ import com.nanum.dto.AdminMemberDto;
 import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.QnADto;
+import com.nanum.dto.VolCategoryDto;
+import com.nanum.dto.VolInfoDto;
 import com.nanum.model.biz.CommonBiz;
+import com.nanum.model.biz.GeneralBiz;
 import com.nanum.util.CommonException;
 import com.nanum.util.Gmail;
 import com.nanum.util.SHA256;
@@ -83,8 +88,12 @@ public class CommonController extends HttpServlet {
 		case "qnaDel":
 			qnaDel(request, response);
 			break;			
+		case "volDetatilForm":
+			volDetatilForm(request, response);
+			break;			
 		}
 	}
+
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
@@ -407,10 +416,9 @@ public class CommonController extends HttpServlet {
 		      
 		      // 작성자는 로그인에서
 		      if (grade.equals("G")) { 
-		         //GeneralMemberDto gdto = (GeneralMemberDto) session.getAttribute("dto");
-		         //System.out.println("gdto.getGeneralId()" + gdto.getGeneralId());
-		         //dto.setGeneralId(gdto.getGeneralId());
-		         dto.setGeneralId("user02");
+		         GeneralMemberDto gdto = (GeneralMemberDto) session.getAttribute("dto");
+		         System.out.println("gdto.getGeneralId()" + gdto.getGeneralId());
+		         dto.setGeneralId(gdto.getGeneralId());
 
 		         System.out.println("dto.getGeneralId() = "+dto.getGeneralId());
 		         try {
@@ -421,13 +429,11 @@ public class CommonController extends HttpServlet {
 		         }
 		         
 		      }else if  (grade.equals("C")) {
-		         //CenterMemberDto cdto = (CenterMemberDto) session.getAttribute("dto");
-		         //dto.setCenterId(cdto.getCenterId());
-		         dto.setCenterId("user02");
+		         CenterMemberDto cdto = (CenterMemberDto) session.getAttribute("dto");
+		         dto.setCenterId(cdto.getCenterId());
 
 		         try {
 		            biz.addQna_cen(dto);
-		            //request.getRequestDispatcher("/qna/qnaList.jsp").forward(request, response);
 		            response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=qnaList");
 		         } catch (CommonException e) {
 		            e.printStackTrace();
@@ -445,8 +451,11 @@ public class CommonController extends HttpServlet {
 		String searchText = request.getParameter("search_text");
 		CommonBiz biz = new CommonBiz();
 		ArrayList<QnADto> qnaList = new ArrayList<QnADto>();
-		
+		QnADto cdto = new QnADto(); 
 		try {
+			biz.qnaListTotCnt(cdto);
+			request.setAttribute("cdto", cdto);
+			
 			biz.qnaList(qnaList, searchOpt, searchText);
 			request.setAttribute("qnaList", qnaList);
 			request.getRequestDispatcher("/qna/qnaList.jsp").forward(request, response);
@@ -510,5 +519,36 @@ public class CommonController extends HttpServlet {
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	
+	/**
+	 * 봉사 상세보기
+	 * @param request
+	 * @param response
+	 */
+	private void volDetatilForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		CommonBiz biz = new CommonBiz();
+		GeneralBiz gBiz = new GeneralBiz();
+		String volInfoNo = request.getParameter("volInfoNo");
+		
+		// 카테고리 가져오기
+		ArrayList<VolCategoryDto> categoryList = new ArrayList<VolCategoryDto>();
+		
+		try {
+			gBiz.getVolCategoryList(categoryList);
+			request.setAttribute("volCategory", categoryList);
+			// 상세조회
+			VolInfoDto dto = new VolInfoDto();
+			biz.volDetailInfo(dto, Integer.parseInt(volInfoNo));
+			request.setAttribute("vDto", dto);
+			request.getRequestDispatcher("/volDetail.jsp").forward(request, response);
+			
+		} catch (CommonException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		
 	}
 }

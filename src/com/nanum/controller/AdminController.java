@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.nanum.dto.CenterInfo;
+import com.nanum.dto.QnADto;
 import com.nanum.model.biz.AdminBiz;
 
 /**
@@ -33,19 +34,18 @@ public class AdminController extends HttpServlet {
 		String action = request.getParameter("action");
 		System.out.println("action : " + action);
 		switch (action) {
-		case "centerAcceptListForm" :
-			centerAcceptListForm(request, response);
+		case "centerAcceptList" :
+			centerAcceptList(request, response);
 			break;
-		case "centerInputAcceptForm":
-			centerInputAcceptForm(request, response);
+		case "centerAccept" :
+			centerAccept(request, response);
 			break;
-		case "centerList":
-			centerList(request, response);
+		case "centerRefuse" :
+			centerRefuse(request, response);
 			break;
 		}
 	}
 	
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		process(request, response);
 	}
@@ -55,21 +55,47 @@ public class AdminController extends HttpServlet {
 	}
 
 	
-	private void centerAcceptListForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		request.getRequestDispatcher("/admin/centerList.jsp").forward(request, response);
-	}
-	
-	
-	private void centerInputAcceptForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		request.getRequestDispatcher("/admin/centerInputAccept.jsp").forward(request, response);
-	}
-	
-	private void centerList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		
+	private void centerAcceptList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		AdminBiz biz = new AdminBiz();
-		ArrayList<CenterInfo> list = new ArrayList<CenterInfo>();
+		CenterInfo cDto = new CenterInfo(); 
+		ArrayList<CenterInfo> centerActList = new ArrayList<CenterInfo>();
+		
 		try {
+			
+			biz.getCenterAcceptListToCnt(cDto);
+			request.setAttribute("cDto", cDto);
+			
+			biz.getCenterAcceptList(centerActList);
+			request.setAttribute("centerActList", centerActList);
+			
+			request.getRequestDispatcher("/admin/centerInputAccept.jsp").forward(request, response);
 		}catch (Exception e) {
+			e.printStackTrace();
 		}
+	}
+	
+	private void centerAccept(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		String centerId = request.getParameter("centerId");
+		AdminBiz aBiz = new AdminBiz();
+		
+		try {
+			aBiz.acceptCenter(centerId);
+			response.sendRedirect(CONTEXT_PATH + "/admin/adminController?action=centerAcceptList");
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void centerRefuse(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		String centerId = request.getParameter("centerId");
+		AdminBiz aBiz = new AdminBiz();
+
+		try {
+			aBiz.refuseCenter(centerId);
+			response.sendRedirect(CONTEXT_PATH + "/admin/adminController?action=centerAcceptList");
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 }

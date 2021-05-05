@@ -16,25 +16,40 @@
 
 #qnaTitle{
 	width: 990px; 
-	height: 20px; 
-	margin-bottom: 20px;
+	margin-top:20px; 
+	margin-bottom: 20px; 
+	padding: 5px; 
+	font-size: 17px;
 }
 
 #qnaContents{
-	width: 975px;
+	width: 985px;
 	height: 500px;
 	padding: 10px; 
 	margin-bottom: 20px;
+	font-size: 17px;
 }
 
-.btn_list{}
+.btn_list{
+	padding: 10px; 
+	width: 70px;
+	border-style: none;
+	font-size: 17px;
+}
 
 #btn_addQna{
 	float: right;
 }
 
-#add_qna{
+#add_qnaArea{
 	text-align: center;
+}
+
+.btn_add_qnaArea{
+	padding: 10px; 
+	width: 150px;
+	border-style: none;
+	font-size: 17px;
 }
 
 </style>
@@ -43,36 +58,24 @@
 
 $(document).ready(function() {
 	$("#add_qna").click(function () {
-		var qnaTitleEl = $("#qnaTitle").val();
-		var title = $("#qnaTitle").val();
 		
-		if (title == "" || title == null){
-			alert("제목을 입력해주세요");
-			qnaTitleEl.focus();
-			return;
-		}
-			// 제목 빈값 확인 
-			if (title == "" || title == null){
-				alert("제목을 입력해주세요");
-				qnaTitleEl.focus();
-				return;
-			}
-		
-		var qnaContentsEl = $("#qnaContents"); 
-		var qnaContents = qnaContentsEl.val();
-
 		// 제목 빈값 확인 
-		if (qnaContents == "" || qnaContents == null){
-			alert("내용을 입력해주세요");
-			qnaContentsEl.focus();
-			return;
+		if ($("#qnaTitle").val() == null || $("#qnaTitle").val() == "") {
+			alert("제목을 입력해주세요");
+			$("#qnaTitle").focus();
+			return false;
 		}
-		
-		// 저장 submit 
-		document.qnaAddForm.submit();
-		alert("저장되었습니다.");
-	});
 
+		// 내용 빈값 확인 
+		if ($("#qnaContents").val() == null || $("#qnaContents").val() == "") {
+			alert("내용을 입력해주세요");
+			$("#qnaContents").focus();
+			return false;
+		}
+			
+	});
+	
+});
 
 </script>
 <body>
@@ -81,7 +84,7 @@ $(document).ready(function() {
 <h2>질문 하기</h2>
 <hr>
 <form name="qnaAddForm" action="${CONTEXT_PATH}/common/commonController?action=qnaInput" method="post">
-<input class="btn_list" type="button" value="목록">
+<input class="btn_list" type="button" value="목록" style="cursor:hand;">
 <hr>
 <table id="input_qna">
 	<tr>
@@ -91,9 +94,9 @@ $(document).ready(function() {
 		<td><textarea id="qnaContents" name="qnaContents" placeholder="내용을 입력하세요."></textarea></td>
 	</tr>
 </table>
-<div id="add_qna">
-<input type="button" value="이전 페이지">
-<input type="button" value="등록 하기" onclick="add_qna()">
+<div id="add_qnaArea">
+<input type="reset" value="초기화" id="btn_cancel" name="btn_cancel" class="btn_add_qnaArea" style="cursor:hand;">
+<input type="submit" id="add_qna" name="add_qna" value="등록 하기" class="btn_add_qnaArea" style="cursor:hand;">
 </div>
 </form>
 <div id="footer" class="footer">

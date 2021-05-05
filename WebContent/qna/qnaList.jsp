@@ -18,7 +18,7 @@ a.bold { font-weight: bold; }
 
 
 #section_contents{
-	width: 900px; 
+	width: 1000px; 
 	border: 1px gray; 
 	margin: 0 auto;
 }
@@ -28,7 +28,7 @@ a.bold { font-weight: bold; }
 }
 
 #addQna{
-	width: 900px;
+	width: 1000px;
 	height: 30px;
 	float: right;  
 	width: 20px; 
@@ -39,39 +39,32 @@ a.bold { font-weight: bold; }
 #btn_addQna{
 	width: 100px;
 	height: 30px;
+	border-style: none;
+	font-size: 17px;
 }
 
-#sec_qTable{
-	height: 500px; 
-	width: 900px; 
+#sec_vol_list{
+	margin-top: 70px;
+	border-top: 2px solid black;
+	border-bottom: 2px solid black;	
 }
 
-#qna_table{
-	margin-top: 70px; 
-	text-align: center; 
-	border-collapse: collapse;
-}
 
-#qna_table tr, th, td{
-	border: 1px solid gray; 
-	padding: 5px;
-}
-
-.qna_no{
-	width: 50px;
-}
-
-.qna_ti{
-	width: 512px;
-}
-
-.qna_wr{
-	width: 105px;
-}
-
-.qna_dt{
-	width: 105px;
-}
+.vol_list_ul {
+		list-style:none;
+		color: #5F5F5F;	
+		padding-inline-start: 0px;
+	}
+	
+.vol_list_ul li {
+		text-indent: 20px;
+	}	
+	
+	
+.qna_list_span{
+	float: right;
+}	
+	
 
 #page_btn{
 	text-align: center; 
@@ -112,7 +105,7 @@ function search_qna(){
 <div id="section_contents">
 <h2>QNA</h2>
 <hr>
-[전체 <em>0</em> 건, 현재 페이지 <em>1</em> /1]
+[전체 <em> ${cdto.totCnt}</em> 건, 현재 페이지 <em>1</em> /1]
 <div id="search_qna">
 	<select  id="search_opt" name ="search_opt">
 		<option>== 검색 조건 ==</option>
@@ -121,31 +114,34 @@ function search_qna(){
 		<option value="W" >작성자</option>
 	</select>
 	<input type="text" id="search_text" name ="search_text">
-	<input type="button" value="검색" onclick="search_qna()">
+	<input type="button" value="검색" onclick="search_qna()" style="cursor:hand;">
 </div>
 <hr>
-<div id="addQna"><a href="${CONTEXT_PATH}/common/commonController?action=qnaInputForm"><input type="button" value="글 쓰기" id="btn_addQna"></a></div>
-<div id="sec_qTable">
+<div id="addQna"><a href="${CONTEXT_PATH}/common/commonController?action=qnaInputForm"><input type="button" value="글 쓰기" id="btn_addQna" style="cursor:hand;"></a></div>
 <form name="qnaListForm" action="${CONTEXT_PATH}/common/commonController?action=qnaList" method="post">
-<table id="qna_table">
-	<tr>
-		<th class="qna_no">글번호</th>
-		<th class="qna_ti">제목</th>
-		<th class="qna_wr">작성자</th>
-		<th class="qna_dt">작성일</th>
-		<th class="qna_yn">답변 여부</th>
-	</tr>
-	<!-- QNA 반복행 -->
-	<c:forEach var="dto" items="${qnaList}">
-		<tr>
-			<td>${dto.qnaNo}</td>
-			<td><a href="${CONTEXT_PATH}/common/commonController?action=qnaDtl&qnaNo=${dto.qnaNo}" >${dto.qnaTitle}</a></td>
-			<td>${dto.qnaWriter}</td>
-			<td>${dto.qnaWriteDate}</td>
-			<td>${dto.answerYn}</td>
-		</tr>
-	</c:forEach>
-</table>
+<div id="sec_vol_list">
+<ul class="vol_list_ul">
+<c:forEach var="dto" items="${qnaList}">
+<li>
+	<div class="list_box">
+		<div>
+			<span class="title_span">글번호 : </span>
+			<span>${dto.qnaNo}</span>
+				<span class="qna_list_span">답변 여부 : ${dto.answerYn}</span>
+				<span class="qna_list_span">작성자 : ${dto.qnaWriter}</span>
+				<span class="qna_list_span">작성일 : ${dto.qnaWriteDate}</span>
+			
+		</div>
+		
+		<h3>제목 : <a href="${CONTEXT_PATH}/common/commonController?action=qnaDtl&qnaNo=${dto.qnaNo}" >${dto.qnaTitle}</a></h3>
+		
+	</div>
+	
+	<hr class="list_hr">
+</li>
+</c:forEach>	
+</ul>
+</div>
 </form>
 </div>
 <div id=page_btn>
