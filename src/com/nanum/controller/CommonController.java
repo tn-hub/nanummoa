@@ -97,7 +97,7 @@ public class CommonController extends HttpServlet {
 			break;
 		case "inputForm":
 			inputForm(request, response);
-
+			break;
 		case "findPwForm":
 			findPwForm(request, response);
 			break;
