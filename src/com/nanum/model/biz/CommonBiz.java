@@ -285,12 +285,13 @@ public class CommonBiz {
 	 * 봉사 모집 전체 조회
 	 * @param list ArrayList<CenterVolDto>
 	 * @throws CommonException
+	 * @return 봉사모집 전체 수 조회를 위한 sql문
 	 */
-	public void searchVolList(ArrayList<HashMap<String, Object>> list, String[] date) throws CommonException {
+	public String searchVolList(ArrayList<HashMap<String, Object>> list,  HashMap<String, String> searchMap) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
 		
 		try {
-			dao.searchVolList(conn, list, date);
+			return dao.searchVolList(conn, list, searchMap);
 		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;
@@ -304,11 +305,11 @@ public class CommonBiz {
 	 * @return 봉사 모집 전체 수 반환
 	 * @throws CommonException
 	 */
-	public int volListTotalCount(String[] date) throws CommonException {
+	public int volListTotalCount(HashMap<String, String> searchMap, String sql) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
 		
 		try {
-			return dao.volListTotalCount(conn, date);
+			return dao.volListTotalCount(conn, searchMap, sql);
 		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;

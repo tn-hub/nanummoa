@@ -6,6 +6,8 @@
 <meta charset="UTF-8">
 <title>봉사 조회</title>
 <link type="text/css" rel="stylesheet" href="${initParam.CONTEXT_PATH}/resources/css/common.css">
+<script src="${initParam.CONTEXT_PATH}/resources/js/jquery-3.6.0.min.js"></script>
+<script src="${initParam.CONTEXT_PATH}/resources/js/utility.js"></script>
 <style type="text/css">
 	#vol_list_div {
 		width: 1000px;
@@ -160,6 +162,38 @@
 		text-align: right;
 	}
 </style>
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	// 검색목록 초기화
+	$("input[type='button']").click(function(){
+		$("#local option:eq(0)").attr("selected", "selected");
+		$("#category option:eq(0)").attr("selected", "selected");
+		$("#service option:eq(0)").attr("selected", "selected");
+		$("#status option:eq(1)").attr("selected", "selected");
+		$("#volStart").val(getCurrentDate());
+		$("#volEnd").val(getAddDate(3));
+		$("input[name='volType']").attr("checked", "checked");
+		$("#volTitle").val("");
+		$("#centerName").val("");
+	});
+	
+	// 검색항목 검증
+	$("#searchBtn").click(function(e){
+		e.preventDefault()
+		if ( $("#volStart").val() > $("#volEnd").val() ) {
+			alert("봉사 시작일을 봉사 마감일 이전으로 지정해 주세요");
+			return;
+		}
+		if ( $("input[name='volType']").is(":checked") == false) {
+			alert("봉사유형을 선택해 주세요");
+			return;
+		}
+		$("#searchForm").submit();
+	});
+	
+});
+</script>
 </head>
 <body>
 <%@ include file="/common/header.jsp"%>
@@ -169,7 +203,7 @@
 	
 	<!-- 검색창 -------------------------------------------------------------------------------------------->
 	<div id="vol_search">
-		<form action="#" method="post">
+		<form action="${CONTEXT_PATH}/common/commonController?action=volListForm" method="post" id="searchForm">
 			<table id="vol_search_table">
 				<tr>
 					<th class="search_table_large_th">봉사지역</th>
@@ -179,34 +213,54 @@
 				</tr>
 				<tr>
 					<td>
-						<select class="search_large_select">
+						<select class="search_large_select" id="local" name="local">
 							<option value="0">전체</option>
 							<c:forEach var="dto" items="${localList}">
-								<option value="${dto.localNo}">${dto.localName}</option>
+								<option value="${dto.localNo}"
+								<c:if test="${searchMap.local == dto.localName}">
+									selected="selected"
+								</c:if>
+								>${dto.localName}</option>
 							</c:forEach>
 						</select>
 					</td>
 					<td>
-						<select class="search_large_select">
+						<select class="search_large_select" id="category" name="category">
 							<option value="0">전체</option>
 							<c:forEach var="dto" items="${volCategoryList}">
-								<option value="${dto.categoryNo}">${dto.categoryName}</option>
+								<option value="${dto.categoryNo}"
+								<c:if test="${searchMap.category == dto.categoryNo}">
+									selected="selected"
+								</c:if>
+								>${dto.categoryName}</option>
 							</c:forEach>
 						</select>
 					</td>
 					<td>
-						<select class="search_small_select">
+						<select class="search_small_select" id="service" name="service">
 							<option value="0">전체</option>
 							<c:forEach var="dto" items="${serviceList}">
-								<option value="${dto.serviceNo}">${dto.serviceName}</option>
+								<option value="${dto.serviceNo}"
+								<c:if test="${searchMap.service == dto.serviceNo}">
+									selected="selected"
+								</c:if>
+								>${dto.serviceName}</option>
 							</c:forEach>
 						</select>
 					</td>
 					<td>
-						<select class="search_small_select">
-							<option value="0">전체</option>
-							<option value="1" selected="selected">모집중</option>
-							<option value="2">모집완료</option>
+						<select class="search_small_select" id="status" name="status">
+							<option value="2">전체</option>
+							<option value="0" 
+							<c:if test="${searchMap.status == '0'}">
+									selected="selected"
+							</c:if>
+							>모집중</option>
+							<option value="1"
+							<c:if test="${searchMap.status == '1'}">
+									selected="selected"
+							</c:if>
+							>모집완료</option>
 						</select>
 					</td>
 				</tr>
@@ -215,29 +269,46 @@
 			<div id="vol_search_box">
 				<div>
 					<span>봉사기간</span>
-					<input type="date" value="${date[0]}"> ~ 
-					<input type="date" value="${date[1]}">
+					
+					<input type="date" name="volStart" id="volStart" value="${searchMap.volStart}"> ~ 
+					<input type="date" name="volEnd" id="volEnd" value="${searchMap.volEnd}">
 				</div>
 				
 				<div>
 					<span>봉사자유형</span>
-					<input type="checkbox" value="성인" checked="checked"> 성인
-					<input type="checkbox" value="청소년" checked="checked"> 청소년
+					<input type="checkbox" name="volType" value="성인" 
+					<c:if test="${empty searchMap.volType || searchMap.volType == '성인'}">
+									checked="checked"
+					</c:if>
+					> 성인
+					<input type="checkbox" name="volType" value="청소년" 
+					<c:if test="${empty searchMap.volType || searchMap.volType == '청소년'}">
+									checked="checked"
+					</c:if>
+					> 청소년
 				</div>
 				
 				<div>
 					<span>봉사명</span>
-					<input type="text">
+					<input type="text" name="volTitle" id="volTitle"
+					<c:if test="${!empty searchMap.volTitle}">
+						value="${searchMap.volTitle}";
+					</c:if>
+					>
 				</div>
 				
 				<div>
 					<span>봉사단체명</span>
-					<input type="text">
+					<input type="text" name="centerName" id="centerName"
+					<c:if test="${!empty searchMap.centerName}">
+						value="${searchMap.centerName}";
+					</c:if>
+					>
 				</div>
 				
 				<div id="search_button_box">
-					<input type="submit" value="검색">
-					<input type="reset" value="초기화">
+					<input type="submit" id="searchBtn" value="검색">
+					<input type="button" value="초기화">
 				</div>
 			</div>
 		</form>

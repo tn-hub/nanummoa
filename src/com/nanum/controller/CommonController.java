@@ -552,14 +552,82 @@ public class CommonController extends HttpServlet {
 		ArrayList<LocalDto> localList = new ArrayList<LocalDto>();
 		ArrayList<VolCategoryDto> volCategoryList = new ArrayList<VolCategoryDto>();
 		ArrayList<ServiceCategoryDto> serviceList = new ArrayList<ServiceCategoryDto>();
+		HashMap<String, String> searchMap = new HashMap<String, String>();
+		
+		String local = request.getParameter("local");
+		String category = request.getParameter("category");
+		String service = request.getParameter("service");
+		String status = request.getParameter("status");
+		String volStart = request.getParameter("volStart");
+		String volEnd = request.getParameter("volEnd");
+		String[] volType = request.getParameterValues("volType");
+		String volTitle = request.getParameter("volTitle");
+		String centerName = request.getParameter("centerName");
+		
+		if (local == null) {
+			local = "0";
+		}
+		if (category == null) {
+			category = "0";
+		}
+		if (service == null) {
+			service = "0";
+		}
+		if (status == null) {
+			status = "0";
+		} else if (status.equals("2")) {
+			status = null;
+		}
+		if (volStart == null) {
+			volStart = Utility.getCurrentDate();
+		}
+		if (volEnd == null) {
+			volEnd = Utility.getCurrentDate(3);
+		}
+		if (volTitle != null) {
+			if (volTitle.trim().length() == 0) {
+				volTitle = null;
+			} else {
+				volTitle = volTitle.trim();
+			}
+		}
+		if (centerName != null) {
+			if (centerName.trim().length() == 0) {
+				centerName = null;
+			} else {
+				centerName = centerName.trim();
+			}
+		}
+		
+		searchMap.put("local", local);
+		searchMap.put("category", category);
+		searchMap.put("service", service);
+		searchMap.put("status", status);
+		searchMap.put("volStart", volStart);
+		searchMap.put("volEnd", volEnd);
+		if (volType == null || volType.length == 2) {
+			searchMap.put("volType", null);
+		} else {
+			searchMap.put("volType", volType[0]);
+		}
+		searchMap.put("volTitle", volTitle);
+		searchMap.put("centerName", centerName);
+		
 		
 		try {
+			if (!local.equals("0")) {
+				HashMap<String, LocalDto> localMap = new HashMap<String, LocalDto>();
+				biz.searchLocal(localMap);
+				LocalDto dto = localMap.get(local);
+				searchMap.put("local", dto.getLocalName());
+			}
+			
 			gBiz.getLocalList(localList);
 			gBiz.getVolCategoryList(volCategoryList);
 			biz.searchServiceCategory(serviceList);
 			String[] date = {Utility.getCurrentDate(), Utility.getCurrentDate(3)};
-			biz.searchVolList(list, date);
-			int total = biz.volListTotalCount(date);
+			String sql = biz.searchVolList(list, searchMap);
+			int total = biz.volListTotalCount(searchMap, sql);
 			System.out.println("total : " + total);
 			
 			request.setAttribute("date", date);
@@ -568,7 +636,7 @@ public class CommonController extends HttpServlet {
 			request.setAttribute("serviceList", serviceList);
 			request.setAttribute("volList", list);
 			request.setAttribute("total", total);
-			System.out.println("volList : " + list.size());
+			request.setAttribute("searchMap", searchMap);
 			request.getRequestDispatcher("/common/vol_list.jsp").forward(request, response);
 		} catch (CommonException e) {
 			e.printStackTrace();
