@@ -53,8 +53,7 @@ public class GeneralDao {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			MessageEntity messageEntity = new MessageEntity("error", 2);
-			throw new CommonException(messageEntity);
+			throw new CommonException();
 		} finally {
 			JdbcTemplate.close(rs);
 			JdbcTemplate.close(pstmt);
@@ -86,8 +85,7 @@ public class GeneralDao {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			MessageEntity messageEntity = new MessageEntity("error", 2);
-			throw new CommonException(messageEntity);
+			throw new CommonException();
 		} finally {
 			JdbcTemplate.close(rs);
 			JdbcTemplate.close(pstmt);
@@ -114,8 +112,7 @@ public class GeneralDao {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			MessageEntity messageEntity = new MessageEntity("error", 2);
-			throw new CommonException(messageEntity);
+			throw new CommonException();
 		} finally {
 			JdbcTemplate.close(rs);
 			JdbcTemplate.close(pstmt);
@@ -142,11 +139,11 @@ public class GeneralDao {
 			pstmt.setString(4, dto.getGender());
 			pstmt.setString(5, dto.getBirthday());
 			pstmt.setString(6, dto.getGeneralZipCode());
-			pstmt.setString(7, dto.getGeneralAdress());
+			pstmt.setString(7, dto.getGeneralAddress());
 			pstmt.setString(8, dto.getGeneralMobile());
 			pstmt.setString(9, dto.getGeneralEmail());
-			pstmt.setString(10, "1");
-			pstmt.setString(11, "1");
+			pstmt.setString(10, dto.getCategoryNo());
+			pstmt.setString(11, dto.getLocalNo());
 			int rows = pstmt.executeUpdate();
 			System.out.println("rows : " + rows);
 			if (rows != 1) {
@@ -155,8 +152,112 @@ public class GeneralDao {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			MessageEntity messageEntity = new MessageEntity("error", 2);
-			throw new CommonException(messageEntity);
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(pstmt);
+		}
+	}
+	
+	/**
+	 * 일반회원 정보 조회
+	 * @param conn
+	 * @param dto GeneralMemberDto
+	 * @throws CommonException
+	 */
+	public void selectGeneralInfo(Connection conn, GeneralMemberDto dto) throws CommonException {
+		String sql = "select * from general_member where g_id = ?";
+		System.out.println(sql);
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getGeneralId());
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				System.out.println("쿼리 들어옴");
+				dto.setGeneralName(rs.getString("g_name"));
+				dto.setGender(rs.getString("gender"));
+				dto.setBirthday(rs.getString("birthday"));
+				dto.setGeneralZipCode(rs.getString("g_zipcode"));
+				dto.setGeneralAddress(rs.getString("g_address"));
+				dto.setGeneralMobile(rs.getString("g_mobile"));
+				dto.setGeneralEmail(rs.getString("g_email"));
+				dto.setCategoryNo(rs.getString("category_no"));
+				dto.setLocalNo(rs.getString("local_no"));
+			} else {
+				throw new Exception();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(pstmt);
+		}
+	}
+	
+	/**
+	 * 일반회원 회원 정보 수정
+	 */
+	public void updateGeneralMember(Connection conn, GeneralMemberDto dto) throws CommonException {
+		String sql = "update general_member "
+				+ "set g_pass = ?, g_name = ?, gender = ?, birthday = ?, g_zipcode = ?, g_address = ?, "
+				+ "g_mobile = ?, g_email = ?, category_no = ?, local_no = ? "
+				+ "where g_id = ?";
+		System.out.println(sql);
+		
+		PreparedStatement pstmt = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getGeneralPass());
+			pstmt.setString(2, dto.getGeneralName());
+			pstmt.setString(3, dto.getGender());
+			pstmt.setString(4, dto.getBirthday());
+			pstmt.setString(5, dto.getGeneralZipCode());
+			pstmt.setString(6, dto.getGeneralAddress());
+			pstmt.setString(7, dto.getGeneralMobile());
+			pstmt.setString(8, dto.getGeneralEmail());
+			pstmt.setString(9, dto.getCategoryNo());
+			pstmt.setString(10, dto.getLocalNo());
+			pstmt.setString(11, dto.getGeneralId());
+			int rows = pstmt.executeUpdate();
+			System.out.println("rows : " + rows);
+			if (rows != 1) {
+				throw new Exception();
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(pstmt);
+		}
+	}
+	
+	/**
+	 * 일반회원 회원탈퇴
+	 */
+	public void deleteGeneralMember(Connection conn, String generalId) throws CommonException {
+		String sql = "delete general_member where g_id = ?";
+		System.out.println(sql);
+		
+		PreparedStatement pstmt = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, generalId);
+			int rows = pstmt.executeUpdate();
+			System.out.println("rows : " + rows);
+			if (rows != 1) {
+				throw new Exception();
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
 		} finally {
 			JdbcTemplate.close(pstmt);
 		}

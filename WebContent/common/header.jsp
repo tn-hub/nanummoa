@@ -9,7 +9,7 @@
 		<div class="login_menu">
 			<ul>
 				<li id= "" class=""><a href="${CONTEXT_PATH}/common/commonController?action=loginForm" class="">로그인</a></li>
-				<li id= "" class="" ><a href="${CONTEXT_PATH}/general/generalController?action=generalInputForm" class="">회원가입</a></li>
+				<li id= "" class="" ><a href="${CONTEXT_PATH}/common/commonController?action=inputForm" class="">회원가입</a></li>
 			</ul>
 		</div>
 	</div>

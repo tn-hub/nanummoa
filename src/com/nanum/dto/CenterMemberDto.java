@@ -29,6 +29,9 @@ public class CenterMemberDto {
 
 	/** 승인상태 */
 	private String appStatus;
+	
+	/** 가입일 */
+	private String entryDate;
 
 	/**
 	 * 기본 생성자
@@ -45,15 +48,17 @@ public class CenterMemberDto {
 	 * @param centerMobile 연락처
 	 * @param centerEmail  이메일
 	 * @param appStatus    승인상태
+	 * @param entryDate	     가입일
 	 */
 	public CenterMemberDto(String centerId, String centerPass, String centerName, String centerMobile, String centerEmail,
-			String appStatus) {
+			String appStatus, String entryDate) {
 		this.centerId = centerId;
 		this.centerPass = centerPass;
 		this.centerName = centerName;
 		this.centerMobile = centerMobile;
 		this.centerEmail = centerEmail;
 		this.appStatus = appStatus;
+		this.entryDate = entryDate;
 	}
 
 	/**
@@ -139,6 +144,20 @@ public class CenterMemberDto {
 	public void setAppStatus(String appStatus) {
 		this.appStatus = appStatus;
 	}
+	
+	/**
+	 * @return the entryDate
+	 */
+	public String getEntryDate() {
+		return entryDate;
+	}
+
+	/**
+	 * @param entryDate the entryDate to set
+	 */
+	public void setEntryDate(String entryDate) {
+		this.entryDate = entryDate;
+	}
 
 	@Override
 	public String toString() {
@@ -154,6 +173,8 @@ public class CenterMemberDto {
 		builder.append(centerEmail);
 		builder.append(", ");
 		builder.append(appStatus);
+		builder.append(", ");
+		builder.append(entryDate);
 		return builder.toString();
 	}
 

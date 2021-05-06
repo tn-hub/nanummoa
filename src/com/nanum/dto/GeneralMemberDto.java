@@ -46,6 +46,12 @@ public class GeneralMemberDto {
 
 	/** 지역번호 */
 	private String localNo;
+	
+	/** 카테고리 */
+	private String categoryName;
+
+	private String localName;
+	
 
 	/**
 	 * 기본 생성자
@@ -66,10 +72,14 @@ public class GeneralMemberDto {
 	 * @param generalEmail   이메일
 	 * @param categoryNo     봉사분야번호
 	 * @param localNo        지역번호
+	 * @param categoryName
+	 * @param localName
 	 */
+	
 	public GeneralMemberDto(String generalId, String generalPass, String generalName, String gender, String birthday,
 			String generalZipCode, String generalAddress, String generalMobile, String generalEmail, String categoryNo,
-			String localNo) {
+			String localNo, String categoryName, String localName) {
+		super();
 		this.generalId = generalId;
 		this.generalPass = generalPass;
 		this.generalName = generalName;
@@ -81,15 +91,18 @@ public class GeneralMemberDto {
 		this.generalEmail = generalEmail;
 		this.categoryNo = categoryNo;
 		this.localNo = localNo;
+		this.categoryName = categoryName;
+		this.localName = localName;
 	}
 
+	
 	/**
 	 * @return the generalId
 	 */
 	public String getGeneralId() {
 		return generalId;
 	}
-
+	
 	/**
 	 * @param generalId the generalId to set
 	 */
@@ -170,7 +183,7 @@ public class GeneralMemberDto {
 	/**
 	 * @return the generalAddress
 	 */
-	public String getGeneralAdress() {
+	public String getGeneralAddress() {
 		return generalAddress;
 	}
 
@@ -236,6 +249,36 @@ public class GeneralMemberDto {
 	public void setLocalNo(String localNo) {
 		this.localNo = localNo;
 	}
+
+	/**
+	 * @return the categoryName
+	 */
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	/**
+	 * @param categoryName the categoryName to set
+	 */
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
+
+	/**
+	 * @return the localName
+	 */
+	public String getLocalName() {
+		return localName;
+	}
+
+	/**
+	 * @param localName the localName to set
+	 */
+	public void setLocalName(String localName) {
+		this.localName = localName;
+	}
+
+
 
 	@Override
 	public String toString() {
