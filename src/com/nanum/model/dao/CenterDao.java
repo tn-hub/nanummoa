@@ -35,7 +35,7 @@ public class CenterDao {
 	public static CenterDao getInstance() {
 		return instance;
 	}
-	
+
 	/**
 	 * 아이디 중복 체크
 	 */
@@ -72,14 +72,14 @@ public class CenterDao {
 	 * @throws CommonException
 	 */
 	public void centerVolList(String centerId, Connection conn, ArrayList<CenterVolDto> list) throws CommonException {
-		String sql = "select  \n" + "vi.vol_info_no\n" + ", vi.v_title \n" + ", vi.start_date\n" + ", vi.end_date\n"
-				+ ", min(vd.vol_date) as 봉사시작일\n" + ", max(vd.vol_date) as 봉사종료일\n" + ", min(vd.rec_status) as 모집중\n"
-				+ ", max(vd.rec_status) as 마감\n" + ", ci.c_name\n" + ", vc.category_name\n"
-				+ ", round(vi.end_date - sysdate,0) as deadline\n"
-				+ "from vol_info vi,vol_detail vd, center_member cm, center_info ci,vol_category vc\n"
-				+ "where vi.vol_info_no = vd.vol_info_no\n" + "and vi.c_id = cm.c_id\n" + "and cm.c_id = ci.c_id\n"
-				+ "and vi.category_no = vc.category_no\n" + "and cm.c_id= ?\n"
-				+ "group by vi.vol_info_no, vi.v_title, vi.start_date, vi.end_date,ci.c_name,vc.category_name order by end_date desc";
+		String sql = "select  vi.vol_info_no, vi.v_title, vi.start_date, vi.end_date,\n"
+				+ "				min(vd.vol_date) as 봉사시작일, max(vd.vol_date) as 봉사종료일, min(vd.rec_status) as 모집중,\n"
+				+ "				max(vd.rec_status) as 마감, ci.c_name, vc.category_name,\n"
+				+ "				round(vi.end_date - sysdate,0) as deadline\n"
+				+ "				from vol_info vi,vol_detail vd, center_member cm, center_info ci,vol_category vc\n"
+				+ "				where vi.vol_info_no = vd.vol_info_no and vi.c_id = cm.c_id and cm.c_id = ci.c_id\n"
+				+ "				and vi.category_no = vc.category_no and cm.c_id= ?\n"
+				+ "				group by vi.vol_info_no, vi.v_title, vi.start_date, vi.end_date,ci.c_name,vc.category_name order by end_date desc";
 
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -214,102 +214,6 @@ public class CenterDao {
 	}
 
 	/**
-	 * 센터 봉사활동 개수
-	 * 
-	 * @param centerId
-	 * @param conn
-	 * @param list
-	 * @throws CommonException
-	 */
-	public void listIndex(String centerId, Connection conn, CenterVolDto voDto) throws CommonException {
-		String sql = "select count(vi.vol_info_no) - sum(to_number(vd.rec_status)) as list_index from vol_info vi,vol_detail vd\n"
-				+ "where vi.vol_info_no = vd.vol_info_no and\n" + "vi.c_id = ?\n" + "GROUP by vi.vol_info_no order by end_date desc ";
-
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		try {
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, centerId);
-			rs = pstmt.executeQuery();
-
-			if (rs.next()) {
-				voDto.setListIndex(rs.getInt("list_index"));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CommonException();
-		} finally {
-			JdbcTemplate.close(rs);
-			JdbcTemplate.close(pstmt);
-		}
-	}
-
-//	/**
-//	 * 센터 봉사활동 개수(모집중)
-//	 * 
-//	 * @param centerId
-//	 * @param conn
-//	 * @param list
-//	 * @throws CommonException
-//	 */
-//	public void recruitIndex(String centerId, Connection conn, CenterVolDto voDto) throws CommonException {
-//		String sql = "select count(vi.vol_info_no) - sum(to_number(vd.rec_status)) from vol_info vi,vol_detail vd\n" + 
-//				"where vi.vol_info_no = vd.vol_info_no and\n" + 
-//				"vi.c_id = 'center01'\n" + 
-//				"GROUP by vi.vol_info_no";
-//		
-//		PreparedStatement pstmt = null;
-//		ResultSet rs = null;
-//		try {
-//			pstmt = conn.prepareStatement(sql);
-//			pstmt.setString(1, centerId);
-//			rs = pstmt.executeQuery();
-//			
-//			if(rs.next()) {
-//				voDto.setListIndex(rs.getInt("list_index"));
-//				
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			throw new CommonException();
-//		} finally {
-//			JdbcTemplate.close(rs);
-//			JdbcTemplate.close(pstmt);
-//		}
-//	}
-
-//	/**
-//	 * 센터 봉사활동 개수(종료)
-//	 * 
-//	 * @param centerId
-//	 * @param conn
-//	 * @param list
-//	 * @throws CommonException
-//	 */
-//	public void deadlineIndex(String centerId, Connection conn, CenterVolDto voDto) throws CommonException {
-//		String sql = "select count(*) as list_index  from vol_info where c_id = ? rec_status not in(0)";
-//		
-//		PreparedStatement pstmt = null;
-//		ResultSet rs = null;
-//		try {
-//			pstmt = conn.prepareStatement(sql);
-//			pstmt.setString(1, centerId);
-//			rs = pstmt.executeQuery();
-//			
-//			if(rs.next()) {
-//				voDto.setListIndex(rs.getInt("list_index"));
-//				
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			throw new CommonException();
-//		} finally {
-//			JdbcTemplate.close(rs);
-//			JdbcTemplate.close(pstmt);
-//		}
-//	}
-
-	/**
 	 * 봉사 신청자 목록 조회
 	 * 
 	 * @param conn
@@ -364,13 +268,13 @@ public class CenterDao {
 	 */
 	public void applicantInfo(Connection conn, String centerId, int volInfoNo, GeneralMemberDto general,
 			ArrayList<VolApplyListDto> list) throws CommonException {
-		String sql = "select vi.v_title,gm.g_name,va.apply_date,va.g_id,vi.vol_info_no,\n" + 
-				"va.vol_apply_no,va.vol_detail_no,va.vol_status,vd.vol_date,vd.apply_count,vd.total_count,vd.rec_status\n" + 
-				"from vol_apply_list va, general_member gm, vol_detail vd, vol_info vi\n" + 
-				"where va.g_id = gm.g_id and va.vol_detail_no = vd.vol_detail_no\n" + 
-				"and vd.vol_info_no = vi.vol_info_no and vi.c_id = ? and vi.vol_info_no = ? and va.g_id = ?\n" + 
-				"group by vi.v_title,gm.g_name,va.apply_date,va.g_id,vi.vol_info_no,\n" + 
-				"va.vol_apply_no,va.vol_detail_no,va.vol_status,vd.vol_date,vd.apply_count,vd.total_count,vd.rec_status order by vol_date";
+		String sql = "select vi.v_title,gm.g_name,va.apply_date,va.g_id,vi.vol_info_no,\n"
+				+ "va.vol_apply_no,va.vol_detail_no,va.vol_status,vd.vol_date,vd.apply_count,vd.total_count,vd.rec_status\n"
+				+ "from vol_apply_list va, general_member gm, vol_detail vd, vol_info vi\n"
+				+ "where va.g_id = gm.g_id and va.vol_detail_no = vd.vol_detail_no\n"
+				+ "and vd.vol_info_no = vi.vol_info_no and vi.c_id = ? and vi.vol_info_no = ? and va.g_id = ?\n"
+				+ "group by vi.v_title,gm.g_name,va.apply_date,va.g_id,vi.vol_info_no,\n"
+				+ "va.vol_apply_no,va.vol_detail_no,va.vol_status,vd.vol_date,vd.apply_count,vd.total_count,vd.rec_status order by vol_date";
 
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -396,7 +300,7 @@ public class CenterDao {
 				dto.setApplyCount(rs.getInt("apply_count"));
 				dto.setTotalCount(rs.getInt("total_count"));
 				dto.setRecStatus(rs.getString("rec_status"));
-				
+
 				list.add(dto);
 			}
 		} catch (Exception e) {
@@ -407,20 +311,18 @@ public class CenterDao {
 			JdbcTemplate.close(pstmt);
 		}
 	}
-	
+
 	/**
 	 * 봉사 신청자 정보 조회
 	 * 
 	 * @param conn
 	 * @param general
-	 * @throws CommonException 
+	 * @throws CommonException
 	 */
 	public void generalInfo(Connection conn, GeneralMemberDto general) throws CommonException {
-		String sql = "select gm.g_id,gm.g_name,gm.gender,gm.birthday,gm.g_address,gm.g_mobile\n" + 
-				",gm.g_email,vc.category_name,l.local_name\n" + 
-				"from general_member gm, vol_category vc,local l\n" + 
-				"where gm.category_no = vc.category_no and gm.local_no = l.local_no\n" + 
-				"and g_id=?";
+		String sql = "select gm.g_id,gm.g_name,gm.gender,gm.birthday,gm.g_address,gm.g_mobile\n"
+				+ ",gm.g_email,vc.category_name,l.local_name\n" + "from general_member gm, vol_category vc,local l\n"
+				+ "where gm.category_no = vc.category_no and gm.local_no = l.local_no\n" + "and g_id=?";
 
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -430,7 +332,7 @@ public class CenterDao {
 			rs = pstmt.executeQuery();
 
 			if (rs.next()) {
-				
+
 				general.setGeneralId(rs.getString("g_id"));
 				general.setGeneralName(rs.getString("g_name"));
 				general.setGender(rs.getString("gender"));
@@ -440,7 +342,7 @@ public class CenterDao {
 				general.setGeneralEmail(rs.getString("g_email"));
 				general.setCategoryName(rs.getString("category_name"));
 				general.setLocalName(rs.getString("local_name"));
-				
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -456,10 +358,10 @@ public class CenterDao {
 	 * 
 	 * @param conn
 	 * @param checkDate
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void applyGeneral(Connection conn, String checkDate) throws Exception {
-		String sql = "update vol_apply_list set vol_status = 1 where vol_apply_no = ?"; 
+		String sql = "update vol_apply_list set vol_status = 1 where vol_apply_no = ?";
 		PreparedStatement stmt = null;
 
 		try {
@@ -467,27 +369,27 @@ public class CenterDao {
 			stmt.setInt(1, Integer.parseInt(checkDate));
 
 			int rows = stmt.executeUpdate();
-			
+
 			if (rows == 0) {
 				throw new Exception();
 			}
-		} catch (SQLException e) { 
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
 			JdbcTemplate.close(stmt);
 		}
 	}
-	
+
 	/**
 	 * 봉사활동 승인취소
 	 * 
 	 * @param conn
 	 * @param volApplyNo
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void closeApply(Connection conn, int volApplyNo) throws Exception {
-		String sql = "update vol_apply_list set vol_status = 0 where vol_apply_no = ?"; 
+		String sql = "update vol_apply_list set vol_status = 0 where vol_apply_no = ?";
 		PreparedStatement stmt = null;
 
 		try {
@@ -495,27 +397,27 @@ public class CenterDao {
 			stmt.setInt(1, volApplyNo);
 
 			int rows = stmt.executeUpdate();
-			
+
 			if (rows == 0) {
 				throw new Exception();
 			}
-		} catch (SQLException e) { 
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
 			JdbcTemplate.close(stmt);
 		}
 	}
-	
+
 	/**
 	 * 센터회원 회원가입
 	 */
 	public void insertCenterMember(Connection conn, CenterMemberDto dto) throws CommonException {
 		String sql = "insert into center_member (c_id, c_pass, c_name, c_mobile, c_email, app_status) values(?,?,?,?,?,?)";
 		System.out.println(sql);
-		
+
 		PreparedStatement pstmt = null;
-		
+
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getCenterId());
@@ -529,7 +431,7 @@ public class CenterDao {
 			if (rows != 1) {
 				throw new Exception();
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CommonException();
@@ -537,16 +439,16 @@ public class CenterDao {
 			JdbcTemplate.close(pstmt);
 		}
 	}
-	
+
 	/**
 	 * 센터정보 등록
 	 */
 	public void insertCenterInfo(Connection conn, CenterInfoDto dto) throws CommonException {
 		String sql = "insert into center_info values(?,?,?,?,?,?,?,?,?)";
 		System.out.println(sql);
-		
+
 		PreparedStatement pstmt = null;
-		
+
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getCenterId());
@@ -562,28 +464,29 @@ public class CenterDao {
 			System.out.println("rows : " + rows);
 			if (rows != 1) {
 				throw new Exception();
-			}  
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
-				JdbcTemplate.close(pstmt);
+			JdbcTemplate.close(pstmt);
 		}
 	}
-	
+
 	/**
 	 * 센터회원 정보 조회
+	 * 
 	 * @param conn
-	 * @param dto CenterMemberDto
+	 * @param dto  CenterMemberDto
 	 * @throws CommonException
 	 */
 	public void selectCenterMemberInfo(Connection conn, CenterMemberDto dto) throws CommonException {
 		String sql = "select * from center_member where c_id = ?";
 		System.out.println(sql);
-		
+
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		
+
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getCenterId());
@@ -605,20 +508,21 @@ public class CenterDao {
 			JdbcTemplate.close(pstmt);
 		}
 	}
-	
+
 	/**
 	 * 센터 정보 조회
+	 * 
 	 * @param conn
-	 * @param dto CenterMemberDto
+	 * @param dto  CenterMemberDto
 	 * @throws CommonException
 	 */
 	public void selectCenterInfo(Connection conn, CenterInfoDto dto) throws CommonException {
 		String sql = "select * from center_info where c_id = ?";
 		System.out.println(sql);
-		
+
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		
+
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getCenterId());
@@ -643,18 +547,17 @@ public class CenterDao {
 			JdbcTemplate.close(pstmt);
 		}
 	}
-	
+
 	/**
 	 * 센터회원 회원 정보 수정
 	 */
 	public void updateCenterMember(Connection conn, CenterMemberDto dto) throws CommonException {
-		String sql = "update center_member "
-				+ "set c_pass = ?, c_name = ?, c_mobile = ?, c_email = ? "
+		String sql = "update center_member " + "set c_pass = ?, c_name = ?, c_mobile = ?, c_email = ? "
 				+ "where c_id = ?";
 		System.out.println(sql);
-		
+
 		PreparedStatement pstmt = null;
-		
+
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getCenterPass());
@@ -667,7 +570,7 @@ public class CenterDao {
 			if (rows != 1) {
 				throw new Exception();
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CommonException();
@@ -675,19 +578,17 @@ public class CenterDao {
 			JdbcTemplate.close(pstmt);
 		}
 	}
-	
+
 	/**
 	 * 센터 정보 수정
 	 */
 	public void updateCenter(Connection conn, CenterInfoDto dto) throws CommonException {
-		String sql = "update center_info "
-				+ "set  c_entry_date = ?, c_zipcode = ?, c_address = ?, register_code = ?, "
-				+ "service_subject = ?, ceo_name = ?, ceo_mobile = ?"
-				+ "where c_id = ?";
+		String sql = "update center_info " + "set  c_entry_date = ?, c_zipcode = ?, c_address = ?, register_code = ?, "
+				+ "service_subject = ?, ceo_name = ?, ceo_mobile = ?" + "where c_id = ?";
 		System.out.println(sql);
-		
+
 		PreparedStatement pstmt = null;
-		
+
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getCenterEntryDate());
@@ -703,7 +604,7 @@ public class CenterDao {
 			if (rows != 1) {
 				throw new Exception();
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CommonException();
@@ -711,16 +612,16 @@ public class CenterDao {
 			JdbcTemplate.close(pstmt);
 		}
 	}
-	
+
 	/**
 	 * 센터회원 회원탈퇴
 	 */
 	public void deleteCenterMember(Connection conn, String centerId) throws CommonException {
 		String sql = "delete center_member where c_id = ?";
 		System.out.println(sql);
-		
+
 		PreparedStatement pstmt = null;
-		
+
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, centerId);
@@ -729,7 +630,7 @@ public class CenterDao {
 			if (rows != 1) {
 				throw new Exception();
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CommonException();
@@ -737,16 +638,16 @@ public class CenterDao {
 			JdbcTemplate.close(pstmt);
 		}
 	}
-	
+
 	/**
 	 * 센터정보 삭제
 	 */
 	public void deleteCenter(Connection conn, String centerId) throws CommonException {
 		String sql = "delete center_info where c_id = ?";
 		System.out.println(sql);
-		
+
 		PreparedStatement pstmt = null;
-		
+
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, centerId);
@@ -755,7 +656,7 @@ public class CenterDao {
 			if (rows != 1) {
 				throw new Exception();
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CommonException();
@@ -763,27 +664,27 @@ public class CenterDao {
 			JdbcTemplate.close(pstmt);
 		}
 	}
-	
+
 	/**
 	 * 봉사글등록(map)
 	 */
 	public void addVolInfo(Connection conn, HashMap<String, Object> map) throws CommonException {
 		String sql = "insert into vol_info values (vol_info_seq.nextval,?,?,?,sysdate,to_date(?,'HH24:MI'),to_date(?,'HH24:MI'),?,?,?,?,?,?,?,?,?)";
 		System.out.println(sql);
-		
+
 		PreparedStatement pstmt = null;
-		
+
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, String.valueOf( map.get("centerId")));
+			pstmt.setString(1, String.valueOf(map.get("centerId")));
 			pstmt.setString(2, (String) map.get("volTitle"));
 			pstmt.setString(3, (String) map.get("volContents"));
-			
+
 			pstmt.setString(4, (String) map.get("startTime"));
 			pstmt.setString(5, (String) map.get("endTime"));
 			pstmt.setString(6, (String) map.get("startDate"));
 			pstmt.setString(7, (String) map.get("endDate"));
-			
+
 			pstmt.setString(8, (String) map.get("categoryNo"));
 			pstmt.setString(9, (String) map.get("localNo"));
 			pstmt.setString(10, (String) map.get("volType"));
@@ -791,31 +692,31 @@ public class CenterDao {
 			pstmt.setString(12, (String) map.get("latitude"));
 			pstmt.setString(13, (String) map.get("longitude"));
 			pstmt.setString(14, (String) map.get("volSubject"));
-			
+
 			int rows = pstmt.executeUpdate();
 			System.out.println("rows : " + rows);
 			if (rows != 1) {
 				throw new Exception();
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
 			JdbcTemplate.close(pstmt);
 		}
-		
+
 	}
-	
+
 	/**
 	 * 봉사 상세등록(날짜별)
 	 */
 	public void addVolDetail(Connection conn, VolDetailDto dto) throws CommonException {
 		String sql = "insert into vol_detail values(vol_detail_seq.nextval,?,?,0,?,'0')";
 		System.out.println(sql);
-		
+
 		PreparedStatement pstmt = null;
-		
+
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, dto.getVolInfoNo());
@@ -826,14 +727,14 @@ public class CenterDao {
 			if (rows != 1) {
 				throw new Exception();
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
 			JdbcTemplate.close(pstmt);
 		}
-		
+
 	}
 
 	/**
@@ -841,15 +742,15 @@ public class CenterDao {
 	 */
 	public int getVolInfoNoCurrentSeq(Connection conn) throws CommonException {
 		String sql = "SELECT vol_info_seq.nextval, vol_info_seq.CURRVAL FROM DUAL";
-		
+
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		
+
 		try {
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
+
+			if (rs.next()) {
 				System.out.println("시퀀스조회  : " + rs.getInt(1) + ", " + rs.getInt(2));
 				return rs.getInt(1);
 			}

@@ -201,13 +201,7 @@ text-align: center;
 		<hr>
 		
 		
-<%-- 	<c:if test="${empty fn:length(list) }">
 		<p>[전체 <em>0</em>건, 현재페이지 <em>0</em>/0]</p>
-	</c:if> --%>
-	
-	<c:if test="${voDto.listIndex >= 0}">
-		<p>[전체 <em>${voDto.listIndex }</em>건, 현재페이지 <em>0</em>/0]</p>
-	</c:if>
 	<hr class="list_head_hr">
 	<c:forEach var="dto" items="${list }">
 	<ul class="vol_list_ul">

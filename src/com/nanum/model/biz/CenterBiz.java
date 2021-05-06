@@ -58,7 +58,6 @@ public class CenterBiz {
 
 		try {
 			dao.centerVolList(centerId, conn, list);
-			dao.listIndex(centerId, conn, voDto);
 		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;
@@ -76,7 +75,6 @@ public class CenterBiz {
 		Connection conn = JdbcTemplate.getConnection();
 		try {
 			dao.recruitList(centerId, conn, list);
-			dao.listIndex(centerId, conn, voDto);
 		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;
@@ -95,7 +93,6 @@ public class CenterBiz {
 
 		try {
 			dao.deadlineList(centerId, conn, list);
-			dao.listIndex(centerId, conn, voDto);
 		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;
@@ -177,7 +174,7 @@ public class CenterBiz {
 
 	public void closeApply(int volApplyNo) throws Exception {
 		Connection conn = JdbcTemplate.getConnection();
-		
+
 		try {
 			dao.closeApply(conn, volApplyNo);
 			JdbcTemplate.commit(conn);
@@ -192,13 +189,14 @@ public class CenterBiz {
 
 	/**
 	 * 센터회원 회원가입
+	 * 
 	 * @param cMemberDto CenterMemberDto
-	 * @param centerDto CenterInfo
+	 * @param centerDto  CenterInfo
 	 * @throws CommonException
 	 */
 	public void addCenterMember(CenterMemberDto cMemberDto, CenterInfoDto centerDto) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
-		
+
 		try {
 			cDao.insertCenterMember(conn, cMemberDto);
 			cDao.insertCenterInfo(conn, centerDto);
@@ -211,7 +209,7 @@ public class CenterBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
-	
+
 	/**
 	 * 센터회원 및 센터정보 조회
 	 * 
@@ -230,15 +228,17 @@ public class CenterBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
+
 	/**
 	 * 센터회원 및 센터정보 수정
+	 * 
 	 * @param cMemberDto CenterMemberDto
-	 * @param centerDto CenterInfo
+	 * @param centerDto  CenterInfo
 	 * @throws CommonException
 	 */
 	public void updateCenterMember(CenterMemberDto cMemberDto, CenterInfoDto centerDto) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
-		
+
 		try {
 			cDao.updateCenterMember(conn, cMemberDto);
 			cDao.updateCenter(conn, centerDto);
@@ -257,7 +257,7 @@ public class CenterBiz {
 	 */
 	public void addVolInfo(HashMap<String, Object> map) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
-		
+
 		try {
 			dao.addVolInfo(conn, map);
 			JdbcTemplate.commit(conn);
@@ -270,30 +270,31 @@ public class CenterBiz {
 		} finally {
 			JdbcTemplate.close(conn);
 		}
-		
+
 	}
+
 	/**
 	 * 봉사글 등록 후 현재시퀀스값가져오기(volInfoNo)
 	 */
 	public int getVolInfoNoCurrentSeq() throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
-		
+
 		try {
 			return dao.getVolInfoNoCurrentSeq(conn);
 		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;
-		}finally {
+		} finally {
 			JdbcTemplate.close(conn);
 		}
 	}
-	
+
 	/**
 	 * 봉사 상세등록(날짜별)
 	 */
 	public void addVolDetail(VolDetailDto dto) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
-		
+
 		try {
 			dao.addVolDetail(conn, dto);
 			JdbcTemplate.commit(conn);
@@ -306,17 +307,15 @@ public class CenterBiz {
 		}
 	}
 
-	
-	
-	
 	/**
 	 * 센터회원 및 센터정보 삭제
+	 * 
 	 * @param centerId 센터회원 아이디
 	 * @throws CommonException
 	 */
 	public void deleteCenterMember(String centerId) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
-		
+
 		try {
 			cDao.deleteCenter(conn, centerId);
 			cDao.deleteCenterMember(conn, centerId);
@@ -329,6 +328,5 @@ public class CenterBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
-	
-	
+
 }

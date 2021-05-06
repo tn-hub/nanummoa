@@ -36,8 +36,6 @@ import com.nanum.model.biz.CenterBiz;
 import com.nanum.model.biz.GeneralBiz;
 import com.nanum.util.CommonException;
 
-
-
 /**
  * 센터회원 컨트롤러
  */
@@ -116,12 +114,14 @@ public class CenterController extends HttpServlet {
 		}
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		response.setContentType("text/html; charset=utf-8");
 		process(request, response);
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		response.setContentType("text/html; charset=utf-8");
 		process(request, response);
 	}
@@ -130,7 +130,8 @@ public class CenterController extends HttpServlet {
 	 * 센터회원 회원가입 폼 요청
 	 */
 
-	protected void centerInputForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void centerInputForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		response.sendRedirect(CONTEXT_PATH + "/center/centerInput.jsp");
 	}
 
@@ -306,14 +307,13 @@ public class CenterController extends HttpServlet {
 		CenterMemberDto cMemberDto = new CenterMemberDto();
 		CenterInfoDto centerDto = new CenterInfoDto();
 
-		
 		String appStatus = "0";
-		 try {
+		try {
 			String urlStr1 = "http://openapi.seoul.go.kr:8088/4f5874664c7268783837774a656e55/json/VOpenGroup/1/1000/";
 			String urlStr2 = "http://openapi.seoul.go.kr:8088/4f5874664c7268783837774a656e55/json/VOpenGroup/1001/2000/";
 			String urlStr3 = "http://openapi.seoul.go.kr:8088/4f5874664c7268783837774a656e55/json/VOpenGroup/2001/2477/";
-			String[] urlStrArr = {urlStr1, urlStr2, urlStr3};
-			
+			String[] urlStrArr = { urlStr1, urlStr2, urlStr3 };
+
 			for (String urlStr : urlStrArr) {
 				URL url = new URL(urlStr);
 
@@ -342,34 +342,33 @@ public class CenterController extends HttpServlet {
 				}
 				br.close();
 			}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-		 
-		 System.out.println("appStatus : " + appStatus);
-		 cMemberDto.setCenterName(centerMemberName);
-		 cMemberDto.setCenterId(centerMemberId);
-		 cMemberDto.setCenterPass(centerMemberPw);
-		 cMemberDto.setCenterMobile(mobile);
-		 cMemberDto.setCenterEmail(email);
-		 cMemberDto.setAppStatus(appStatus);
-		 
-		 centerDto.setCenterId(centerMemberId);
-		 centerDto.setRegisterCode(registerCode);
-		 centerDto.setCenterName(centerName);
-		 centerDto.setCenterEntryDate(centerEntryDate);
-		 centerDto.setCenterZipCode(zipCode);
-		 centerDto.setCenterAddress(address);
-		 centerDto.setCeoName(ceoName);
-		 centerDto.setCeoMobile(ceoMobile);
-		 if (service != null || service.trim().length() != 0) {
-			 centerDto.setService(service);
-		 }
-		 
-		 CenterBiz biz = new CenterBiz();
-		 
-		 try {
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("appStatus : " + appStatus);
+		cMemberDto.setCenterName(centerMemberName);
+		cMemberDto.setCenterId(centerMemberId);
+		cMemberDto.setCenterPass(centerMemberPw);
+		cMemberDto.setCenterMobile(mobile);
+		cMemberDto.setCenterEmail(email);
+		cMemberDto.setAppStatus(appStatus);
+
+		centerDto.setCenterId(centerMemberId);
+		centerDto.setRegisterCode(registerCode);
+		centerDto.setCenterName(centerName);
+		centerDto.setCenterEntryDate(centerEntryDate);
+		centerDto.setCenterZipCode(zipCode);
+		centerDto.setCenterAddress(address);
+		centerDto.setCeoName(ceoName);
+		centerDto.setCeoMobile(ceoMobile);
+		if (service != null || service.trim().length() != 0) {
+			centerDto.setService(service);
+		}
+
+		CenterBiz biz = new CenterBiz();
+
+		try {
 			biz.addCenterMember(cMemberDto, centerDto);
 			String url = CONTEXT_PATH + "/common/commonController?action=loginForm";
 			if (appStatus.equals("1")) {
@@ -471,29 +470,29 @@ public class CenterController extends HttpServlet {
 		}
 	}
 
-	
 	/**
 	 * 센터회원 내 정보 조회 페이지 요청 서비스
 	 */
-	protected void centerMyInfoForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void centerMyInfoForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
 		response.setContentType("text/html; charset=utf-8");
 		PrintWriter out = response.getWriter();
 		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
 		String centerId = dto.getCenterId();
-		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null ) {
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null) {
 			String url = CONTEXT_PATH + "/common/commonController?action=loginForm";
 			out.println("<script>alert('로그인 후 이용해 주시기 바랍니다');location.href='" + url + "'; </script>");
 			out.flush();
 			out.close();
 			return;
-		} 
-		
-		CenterMemberDto centerMemberDto = (CenterMemberDto)session.getAttribute("dto");
+		}
+
+		CenterMemberDto centerMemberDto = (CenterMemberDto) session.getAttribute("dto");
 		CenterInfoDto centerDto = new CenterInfoDto();
 		centerDto.setCenterId(centerMemberDto.getCenterId());
 		CenterBiz biz = new CenterBiz();
-		
+
 		try {
 			biz.getCenterMemberInfo(centerMemberDto, centerDto);
 			request.setAttribute("centerMemberDto", centerMemberDto);
@@ -530,14 +529,15 @@ public class CenterController extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 센터회원 내 정보 수정 서비스
 	 */
-	protected void centerUpdate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void centerUpdate(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		response.setContentType("text/html; charset=utf-8");
 		PrintWriter out = response.getWriter();
-		
+
 		String centerMemberName = request.getParameter("name");
 		String centerMemberPw = request.getParameter("pw");
 		String centerMemberPw2 = request.getParameter("pw2");
@@ -556,7 +556,7 @@ public class CenterController extends HttpServlet {
 		String ceoMobile2 = request.getParameter("ceoMobile2");
 		String ceoMobile3 = request.getParameter("ceoMobile3");
 		String service = request.getParameter("service");
-		
+
 		if (centerMemberName == null || centerMemberName.trim().length() == 0) {
 			out.println("<script>alert('이름을 입력해 주세요');history.go(-1); </script>");
 			out.flush();
@@ -639,11 +639,11 @@ public class CenterController extends HttpServlet {
 			out.close();
 			return;
 		}
-		
+
 		HttpSession session = request.getSession();
-		CenterMemberDto centerMemberDto = (CenterMemberDto)session.getAttribute("dto");
+		CenterMemberDto centerMemberDto = (CenterMemberDto) session.getAttribute("dto");
 		CenterInfoDto centerDto = new CenterInfoDto();
-		
+
 		centerMemberName = centerMemberName.trim();
 		centerMemberPw = centerMemberPw.trim();
 		String mobile = mobile1 + "-" + mobile2.trim() + "-" + mobile3.trim();
@@ -655,28 +655,28 @@ public class CenterController extends HttpServlet {
 		}
 		String ceoMobile = ceoMobile1 + "-" + ceoMobile2.trim() + "-" + ceoMobile3.trim();
 		System.out.println("ceoMobile : " + ceoMobile + ", " + ceoMobile.length());
-		
+
 		centerMemberDto.setCenterName(centerMemberName);
 		if (centerMemberPw != "") {
 			centerMemberDto.setCenterPass(centerMemberPw);
 		}
 		centerMemberDto.setCenterMobile(mobile);
 		centerMemberDto.setCenterEmail(email);
-		 
-		 centerDto.setCenterId(centerMemberDto.getCenterId());
-		 centerDto.setRegisterCode(registerCode);
-		 centerDto.setCenterEntryDate(centerEntryDate);
-		 centerDto.setCenterZipCode(zipCode);
-		 centerDto.setCenterAddress(address);
-		 centerDto.setCeoName(ceoName);
-		 centerDto.setCeoMobile(ceoMobile);
-		 if (service != null || service.trim().length() != 0) {
-			 centerDto.setService(service);
-		 }
-		 
-		 CenterBiz biz = new CenterBiz();
-		 
-		 try {
+
+		centerDto.setCenterId(centerMemberDto.getCenterId());
+		centerDto.setRegisterCode(registerCode);
+		centerDto.setCenterEntryDate(centerEntryDate);
+		centerDto.setCenterZipCode(zipCode);
+		centerDto.setCenterAddress(address);
+		centerDto.setCeoName(ceoName);
+		centerDto.setCeoMobile(ceoMobile);
+		if (service != null || service.trim().length() != 0) {
+			centerDto.setService(service);
+		}
+
+		CenterBiz biz = new CenterBiz();
+
+		try {
 			biz.updateCenterMember(centerMemberDto, centerDto);
 			String url = CONTEXT_PATH + "/center/centerController?action=centerMyInfoForm";
 			out.println("<script>alert('내 정보 수정 완료');location.href='" + url + "'; </script>");
@@ -688,22 +688,23 @@ public class CenterController extends HttpServlet {
 			out.close();
 		}
 	}
-	
+
 	/**
 	 * 센터회원 회원탈퇴 서비스
 	 */
-	protected void centerDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void centerDelete(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		response.setContentType("text/html; charset=utf-8");
 		PrintWriter out = response.getWriter();
-		
+
 		HttpSession session = request.getSession(false);
-		CenterMemberDto dto = (CenterMemberDto)session.getAttribute("dto");
+		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
 		String centerId = dto.getCenterId();
 		CenterBiz biz = new CenterBiz();
-		
+
 		try {
 			biz.deleteCenterMember(centerId);
-			
+
 			if (session != null) {
 				if (session.getAttribute("dto") != null) {
 					session.removeAttribute("dto");
@@ -713,7 +714,7 @@ public class CenterController extends HttpServlet {
 				}
 				session.invalidate();
 			}
-			
+
 			String url = CONTEXT_PATH + "/home";
 			out.println("<script>alert('회원탈퇴가 완료되었습니다');location.href='" + url + "'; </script>");
 		} catch (CommonException e) {
@@ -756,114 +757,110 @@ public class CenterController extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 봉사 게시글 등록 화면 요청
 	 */
-	protected void volInputForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void volInputForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
-		
-		if (session == null || 
-				session.getAttribute("dto") == null ||
-				session.getAttribute("grade") == null) {
-			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");	
+
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
 			return;
 		}
-		
-		ArrayList<VolCategoryDto> categoryList  = new ArrayList<VolCategoryDto>();
-		ArrayList<ServiceCategoryDto> serviceCategoryList  = new ArrayList<ServiceCategoryDto>();
-		
+
+		ArrayList<VolCategoryDto> categoryList = new ArrayList<VolCategoryDto>();
+		ArrayList<ServiceCategoryDto> serviceCategoryList = new ArrayList<ServiceCategoryDto>();
+
 		GeneralBiz biz = new GeneralBiz();
 		try {
-			
+
 			biz.getVolCategoryList(categoryList);
 			biz.getServiceCategoryList(serviceCategoryList);
-			
-			request.setAttribute("volCategory", categoryList);	
-			request.setAttribute("volSubject", serviceCategoryList);	
+
+			request.setAttribute("volCategory", categoryList);
+			request.setAttribute("volSubject", serviceCategoryList);
 			request.getRequestDispatcher("/center/volInput.jsp").forward(request, response);
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	/**
 	 * 봉사 게시글 등록
 	 */
-	protected void volInput(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void volInput(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
 		PrintWriter out = response.getWriter();
-		if (session == null || 
-				session.getAttribute("dto") == null ||
-				session.getAttribute("grade") == null) {
-			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");	
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
 			return;
 		}
 		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
 		String centerId = dto.getCenterId();
 		String volTitle = request.getParameter("volTitle");
 		String volContents = request.getParameter("volContents");
-		
+
 		String startDateStr = request.getParameter("startDate");
 		String endDateStr = request.getParameter("endDate");
 		String startTimeStr = request.getParameter("startTime");
 		String endTimeStr = request.getParameter("endTime");
 		String startVolDateStr = request.getParameter("startVolDate");
 		String endVolDateStr = request.getParameter("endVolDate");
-		
+
 		String categoryNo = request.getParameter("categoryNo");
-		String volSubject = request.getParameter("volSubject"); 
-		String volType = request.getParameter("volType"); 
-		
+		String volSubject = request.getParameter("volSubject");
+		String volType = request.getParameter("volType");
+
 		String local = request.getParameter("local");
 		String address = request.getParameter("address");
 		String detailAddress = request.getParameter("detailAddress");
 		String volPlace = address + " " + detailAddress;
-		
+
 		String latitude = request.getParameter("latitude");
 		String longitude = request.getParameter("longitude");
-		
+
 		String totalCountStr = request.getParameter("totalCount");
 		int totalCount = Integer.parseInt(totalCountStr);
-		
+
 		if (volTitle == null || volTitle.trim().length() == 0) {
 			out.print("제목을 입력해 주세요");
 			out.flush();
 			out.close();
 			return;
 		}
-		
+
 		if (volContents == null || volContents.trim().length() == 0) {
 			out.print("내용을 입력해 주세요");
 			out.flush();
 			out.close();
 			return;
 		}
-		
-		if (startDateStr == null || startDateStr.trim().length() == 0 ||
-				endDateStr == null || endDateStr.trim().length() == 0 ||
-				startTimeStr == null || startTimeStr.trim().length() == 0 ||
-				endTimeStr == null || endTimeStr.trim().length() == 0 ||
-				startVolDateStr == null || startVolDateStr.trim().length() == 0 ||
-				endVolDateStr == null || endVolDateStr.trim().length() == 0) {
+
+		if (startDateStr == null || startDateStr.trim().length() == 0 || endDateStr == null
+				|| endDateStr.trim().length() == 0 || startTimeStr == null || startTimeStr.trim().length() == 0
+				|| endTimeStr == null || endTimeStr.trim().length() == 0 || startVolDateStr == null
+				|| startVolDateStr.trim().length() == 0 || endVolDateStr == null
+				|| endVolDateStr.trim().length() == 0) {
 			out.print("날짜를 입력해 주세요");
 			out.flush();
 			out.close();
 			return;
 		}
-		
-		if (startTimeStr == null || startTimeStr.trim().length() == 0 ||
-				endTimeStr == null || endTimeStr.trim().length() == 0 ) {
+
+		if (startTimeStr == null || startTimeStr.trim().length() == 0 || endTimeStr == null
+				|| endTimeStr.trim().length() == 0) {
 			out.print("시간을 입력해 주세요");
 			out.flush();
 			out.close();
 			return;
 		}
-		   System.out.println("con 시간 str");
+		System.out.println("con 시간 str");
 		System.out.println(startTimeStr);
 		SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
-		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");		
+		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
 		Date startTime = null;
 		Date endTime = null;
 		Date startDate = null;
@@ -880,38 +877,37 @@ public class CenterController extends HttpServlet {
 			endVolDate = sdfDate.parse(endVolDateStr);
 			System.out.println("봉사시작일 " + startVolDate);
 			System.out.println("봉사종료일 " + endVolDate);
-			diffDay = ( endVolDate.getTime() - startVolDate.getTime()) / (24*60*60*1000) +1 ;
-            System.out.println(diffDay+"일");
-            System.out.println("con 시간");
-            System.out.println(startTime);
+			diffDay = (endVolDate.getTime() - startVolDate.getTime()) / (24 * 60 * 60 * 1000) + 1;
+			System.out.println(diffDay + "일");
+			System.out.println("con 시간");
+			System.out.println(startTime);
 
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		
+
 		if (totalCountStr == null || totalCountStr.trim().length() == 0) {
 			out.print("모집인원을 입력해 주세요");
 			out.flush();
 			out.close();
 			return;
 		}
-		
-		if (categoryNo == null || categoryNo.equals("none") ||
-				volSubject == null || volSubject.equals("none") ||
-				volTitle == null || volTitle.equals("none") ) {
+
+		if (categoryNo == null || categoryNo.equals("none") || volSubject == null || volSubject.equals("none")
+				|| volTitle == null || volTitle.equals("none")) {
 			out.print("값을 선택해 주세요");
 			out.flush();
 			out.close();
 			return;
 		}
-		
+
 		if (address == null || address.trim().length() == 0) {
 			out.print("주소을 입력해 주세요");
 			out.flush();
 			out.close();
 			return;
 		}
-		
+
 		ArrayList<LocalDto> localList = new ArrayList<LocalDto>();
 		GeneralBiz biz = new GeneralBiz();
 		CenterBiz cBiz = new CenterBiz();
@@ -934,7 +930,7 @@ public class CenterController extends HttpServlet {
 		try {
 			biz.getLocalList(localList);
 			for (LocalDto localDto : localList) {
-				if(localDto.getLocalName().equals(local)) {
+				if (localDto.getLocalName().equals(local)) {
 					localNo = localDto.getLocalNo();
 					System.out.println("지역번호 : " + localNo);
 					System.out.println("구 : " + local);
@@ -943,53 +939,55 @@ public class CenterController extends HttpServlet {
 			map.put("localNo", localNo);
 			// 1. vol Info 등록
 			cBiz.addVolInfo(map);
-			
+
 			// 2. vol detail 등록
 			int volInfoNo = (int) map.get("volInfoNo");
 			System.out.println("[detail 등록 start] volInfoNo : " + volInfoNo);
-			
-			
+
 		} catch (CommonException e) {
 			e.printStackTrace();
-		}		
+		}
 	}
-	
+
 	/**
 	 * 봉사게시글 수정 화면요청
 	 */
-	private void updateVolForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ArrayList<VolCategoryDto> categoryList  = new ArrayList<VolCategoryDto>();
-		ArrayList<ServiceCategoryDto> serviceCategoryList  = new ArrayList<ServiceCategoryDto>();
-		
+	private void updateVolForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		ArrayList<VolCategoryDto> categoryList = new ArrayList<VolCategoryDto>();
+		ArrayList<ServiceCategoryDto> serviceCategoryList = new ArrayList<ServiceCategoryDto>();
+
 		GeneralBiz biz = new GeneralBiz();
 		try {
-			
+
 			biz.getVolCategoryList(categoryList);
 			biz.getServiceCategoryList(serviceCategoryList);
-			
-			request.setAttribute("volCategory", categoryList);	
-			request.setAttribute("serviceCategoryList", serviceCategoryList);	
+
+			request.setAttribute("volCategory", categoryList);
+			request.setAttribute("serviceCategoryList", serviceCategoryList);
 			request.getRequestDispatcher("/center/updatevol.jsp").forward(request, response);
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
-		
-	}	
-	
+
+	}
+
 	/**
 	 * 봉사게시글 수정
 	 */
-	private void updateVol(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void updateVol(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	/**
 	 * 봉사게시글 삭제
 	 */
-	private void deleteVol(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void deleteVol(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/**
@@ -1038,11 +1036,11 @@ public class CenterController extends HttpServlet {
 		String centerId = dto.getCenterId();
 		String generalId = request.getParameter("generalId");
 		int volInfoNo = Integer.parseInt(request.getParameter("volInfoNo"));
-		
+
 		int volApplyNo = Integer.parseInt(request.getParameter("volApplyNo"));
-		
+
 		CenterBiz biz = new CenterBiz();
-		
+
 		try {
 			biz.closeApply(volApplyNo);
 		} catch (Exception e) {
