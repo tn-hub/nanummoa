@@ -295,3 +295,54 @@ a {
 .separator{
 	margin: 0 10px;
 }
+
+/** button */
+.y_btn{
+	border: none;
+	background-color: #FBD157;
+	width: 100px;
+	height: 40px;
+	border-radius: 5px;
+	text-align: center;
+	padding: 5px;
+	margin-bottom: 10px;
+}
+.g_btn{
+	border: none;
+	background-color: #cecece;
+	width: 100px;
+	height: 40px;
+	border-radius: 5px;
+	text-align: center;
+	padding: 5px;
+}
+
+/** layout float etc */
+.float_r{
+	float: right;
+}
+.clear_b{
+	clear: both;
+}
+.minus_mg_t{
+	margin-top: -40px;
+}
+.vol_list_ul {
+	list-style:none;
+	color: #5F5F5F;	
+	padding-inline-start: 0px;
+}
+
+.vol_list_ul li {
+	text-indent: 20px;
+}
+
+ .title_span {
+ 	color: #3F3F3F !important;
+	font-weight: bold;
+}
+
+.vol_list_ul .span_box {
+	display: inline-block;
+	width: 300px;
+}

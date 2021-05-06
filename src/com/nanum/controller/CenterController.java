@@ -5,7 +5,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -21,10 +25,15 @@ import org.json.simple.parser.JSONParser;
 
 import com.nanum.dto.CenterInfoDto;
 import com.nanum.dto.CenterMemberDto;
+import com.nanum.dto.LocalDto;
+import com.nanum.dto.ServiceCategoryDto;
+import com.nanum.dto.VolCategoryDto;
+import com.nanum.dto.VolInfoDto;
 import com.nanum.dto.CenterVolDto;
 import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.VolApplyListDto;
 import com.nanum.model.biz.CenterBiz;
+import com.nanum.model.biz.GeneralBiz;
 import com.nanum.util.CommonException;
 
 
@@ -63,6 +72,20 @@ public class CenterController extends HttpServlet {
 		case "centerVolListForm":
 			centerVolListForm(request, response);
 			break;
+		case "volInputForm":
+			volInputForm(request, response);
+			break;
+		case "volInput":
+			volInput(request, response);
+			break;
+		case "updateVolForm":
+			updateVolForm(request, response);
+			break;
+		case "updateVol":
+			updateVol(request, response);
+			break;
+		case "deleteVol":
+			deleteVol(request, response);
 		case "centerMyInfoForm":
 			centerMyInfoForm(request, response);
 			break;
@@ -92,13 +115,13 @@ public class CenterController extends HttpServlet {
 		}
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html; charset=utf-8");
 		process(request, response);
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html; charset=utf-8");
 		process(request, response);
 	}
 
@@ -452,10 +475,11 @@ public class CenterController extends HttpServlet {
 	 * 센터회원 내 정보 조회 페이지 요청 서비스
 	 */
 	protected void centerMyInfoForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession(false);
 		response.setContentType("text/html; charset=utf-8");
 		PrintWriter out = response.getWriter();
-		
-		HttpSession session = request.getSession(false);
+		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
+		String centerId = dto.getCenterId();
 		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null ) {
 			String url = CONTEXT_PATH + "/common/commonController?action=loginForm";
 			out.println("<script>alert('로그인 후 이용해 주시기 바랍니다');location.href='" + url + "'; </script>");
@@ -477,7 +501,7 @@ public class CenterController extends HttpServlet {
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
-}
+	}
 
 	/**
 	 * 봉사 신청자 목록 조회
@@ -730,6 +754,241 @@ public class CenterController extends HttpServlet {
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * 봉사 게시글 등록 화면 요청
+	 */
+	protected void volInputForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || 
+				session.getAttribute("dto") == null ||
+				session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");	
+			return;
+		}
+		
+		ArrayList<VolCategoryDto> categoryList  = new ArrayList<VolCategoryDto>();
+		ArrayList<ServiceCategoryDto> serviceCategoryList  = new ArrayList<ServiceCategoryDto>();
+		
+		GeneralBiz biz = new GeneralBiz();
+		try {
+			
+			biz.getVolCategoryList(categoryList);
+			biz.getServiceCategoryList(serviceCategoryList);
+			
+			request.setAttribute("volCategory", categoryList);	
+			request.setAttribute("volSubject", serviceCategoryList);	
+			request.getRequestDispatcher("/center/volInput.jsp").forward(request, response);
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	/**
+	 * 봉사 게시글 등록
+	 */
+	protected void volInput(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession(false);
+		PrintWriter out = response.getWriter();
+		if (session == null || 
+				session.getAttribute("dto") == null ||
+				session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");	
+			return;
+		}
+		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
+		String centerId = dto.getCenterId();
+		String volTitle = request.getParameter("volTitle");
+		String volContents = request.getParameter("volContents");
+		
+		String startDateStr = request.getParameter("startDate");
+		String endDateStr = request.getParameter("endDate");
+		String startTimeStr = request.getParameter("startTime");
+		String endTimeStr = request.getParameter("endTime");
+		String startVolDateStr = request.getParameter("startVolDate");
+		String endVolDateStr = request.getParameter("endVolDate");
+		
+		String categoryNo = request.getParameter("categoryNo");
+		String volSubject = request.getParameter("volSubject"); 
+		String volType = request.getParameter("volType"); 
+		
+		String local = request.getParameter("local");
+		String address = request.getParameter("address");
+		String detailAddress = request.getParameter("detailAddress");
+		String volPlace = address + " " + detailAddress;
+		
+		String latitude = request.getParameter("latitude");
+		String longitude = request.getParameter("longitude");
+		
+		String totalCountStr = request.getParameter("totalCount");
+		int totalCount = Integer.parseInt(totalCountStr);
+		
+		if (volTitle == null || volTitle.trim().length() == 0) {
+			out.print("제목을 입력해 주세요");
+			out.flush();
+			out.close();
+			return;
+		}
+		
+		if (volContents == null || volContents.trim().length() == 0) {
+			out.print("내용을 입력해 주세요");
+			out.flush();
+			out.close();
+			return;
+		}
+		
+		if (startDateStr == null || startDateStr.trim().length() == 0 ||
+				endDateStr == null || endDateStr.trim().length() == 0 ||
+				startTimeStr == null || startTimeStr.trim().length() == 0 ||
+				endTimeStr == null || endTimeStr.trim().length() == 0 ||
+				startVolDateStr == null || startVolDateStr.trim().length() == 0 ||
+				endVolDateStr == null || endVolDateStr.trim().length() == 0) {
+			out.print("날짜를 입력해 주세요");
+			out.flush();
+			out.close();
+			return;
+		}
+		
+		if (startTimeStr == null || startTimeStr.trim().length() == 0 ||
+				endTimeStr == null || endTimeStr.trim().length() == 0 ) {
+			out.print("시간을 입력해 주세요");
+			out.flush();
+			out.close();
+			return;
+		}
+		   System.out.println("con 시간 str");
+		System.out.println(startTimeStr);
+		SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
+		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");		
+		Date startTime = null;
+		Date endTime = null;
+		Date startDate = null;
+		Date endDate = null;
+		Date startVolDate = null;
+		Date endVolDate = null;
+		long diffDay = 0;
+		try {
+			startTime = sdfTime.parse(startTimeStr);
+			endTime = sdfTime.parse(endTimeStr);
+			startDate = sdfDate.parse(startDateStr);
+			endDate = sdfDate.parse(endDateStr);
+			startVolDate = sdfDate.parse(startVolDateStr);
+			endVolDate = sdfDate.parse(endVolDateStr);
+			System.out.println("봉사시작일 " + startVolDate);
+			System.out.println("봉사종료일 " + endVolDate);
+			diffDay = ( endVolDate.getTime() - startVolDate.getTime()) / (24*60*60*1000) +1 ;
+            System.out.println(diffDay+"일");
+            System.out.println("con 시간");
+            System.out.println(startTime);
+
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		if (totalCountStr == null || totalCountStr.trim().length() == 0) {
+			out.print("모집인원을 입력해 주세요");
+			out.flush();
+			out.close();
+			return;
+		}
+		
+		if (categoryNo == null || categoryNo.equals("none") ||
+				volSubject == null || volSubject.equals("none") ||
+				volTitle == null || volTitle.equals("none") ) {
+			out.print("값을 선택해 주세요");
+			out.flush();
+			out.close();
+			return;
+		}
+		
+		if (address == null || address.trim().length() == 0) {
+			out.print("주소을 입력해 주세요");
+			out.flush();
+			out.close();
+			return;
+		}
+		
+		ArrayList<LocalDto> localList = new ArrayList<LocalDto>();
+		GeneralBiz biz = new GeneralBiz();
+		CenterBiz cBiz = new CenterBiz();
+		String localNo = "1"; // 서울이외 지역 기본 1
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("centerId", centerId);
+		map.put("volTitle", volTitle);
+		map.put("volContents", volContents);
+		map.put("startDate", startDateStr);
+		map.put("endDate", endDateStr);
+		map.put("startTime", startTimeStr);
+		map.put("endTime", endTimeStr);
+		map.put("categoryNo", categoryNo);
+		map.put("volType", volType);
+		map.put("volPlace", volPlace);
+		map.put("latitude", latitude);
+		map.put("longitude", longitude);
+		map.put("volSubject", volSubject);
+
+		try {
+			biz.getLocalList(localList);
+			for (LocalDto localDto : localList) {
+				if(localDto.getLocalName().equals(local)) {
+					localNo = localDto.getLocalNo();
+					System.out.println("지역번호 : " + localNo);
+					System.out.println("구 : " + local);
+				}
+			}
+			map.put("localNo", localNo);
+			// 1. vol Info 등록
+			cBiz.addVolInfo(map);
+			
+			// 2. vol detail 등록
+			int volInfoNo = (int) map.get("volInfoNo");
+			System.out.println("[detail 등록 start] volInfoNo : " + volInfoNo);
+			
+			
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}		
+	}
+	
+	/**
+	 * 봉사게시글 수정 화면요청
+	 */
+	private void updateVolForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		ArrayList<VolCategoryDto> categoryList  = new ArrayList<VolCategoryDto>();
+		ArrayList<ServiceCategoryDto> serviceCategoryList  = new ArrayList<ServiceCategoryDto>();
+		
+		GeneralBiz biz = new GeneralBiz();
+		try {
+			
+			biz.getVolCategoryList(categoryList);
+			biz.getServiceCategoryList(serviceCategoryList);
+			
+			request.setAttribute("volCategory", categoryList);	
+			request.setAttribute("serviceCategoryList", serviceCategoryList);	
+			request.getRequestDispatcher("/center/updatevol.jsp").forward(request, response);
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
+		
+	}	
+	
+	/**
+	 * 봉사게시글 수정
+	 */
+	private void updateVol(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	/**
+	 * 봉사게시글 삭제
+	 */
+	private void deleteVol(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		
 	}
 
 	/**

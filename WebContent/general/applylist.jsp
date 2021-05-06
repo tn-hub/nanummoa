@@ -4,26 +4,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>자원봉사 승인</title>
+<title>봉사 신청내역</title>
 <link type="text/css" rel="stylesheet" href="${initParam.CONTEXT_PATH}/resources/css/common.css">
-
 <style type="text/css">
-.wrapper{
-width: 100%;
-}
-
-.title{
-width: 1000px;
-margin:  auto;
-}
-
-.link{
-text-align: center;
-
-}
-
-#vol_list_div {
+	#vol_list_div {
 		width: 1000px;
+		/* background-color: blue; */
 		margin: auto;
 	}
 	
@@ -144,6 +130,10 @@ text-align: center;
 		border: 1px solid black;
 		margin-bottom: 20px;
 	}
+	.list_end_hr {
+		border: 1px solid black;
+		margin-top: -21px;
+	}
 	
 	.list_hr {
 		margin-top: 20px;
@@ -167,92 +157,73 @@ text-align: center;
 	
 	.vol_list_ul .span_box {
 		display: inline-block;
-		width: 215px;
+		width: 300px;
 	}
 	
 	.vol_list_ul .deadline_box {
 		text-align: right;
 	}
-	
-	.link_div{
-	text-align: right;
-    height: 30px;
-    width: 900px;
+	.apply_status{
+		background-color: #FBD157;
+		width: 70px;
+		height: 25px;
+		border-radius: 25px;
+		margin-left: 20px;
+		text-align: center;
+		text-indent: 0px;
+		padding: 5px;
 	}
-	
-	.link_box{
-	display: inline-block;
-    font-weight: bold;
-    width: 490px;
-    margin: 0 auto;
-    text-align: center;
-	}
-	
-	.link{
-	margin: 120px;
-    padding: 7px 0;
-    border: 2px solid #666;
-    font-size: 16px;
-    text-align: center;
-	
-	}
-	
-	h2{
-	text-align: center;
-	}	
-	
 </style>
 </head>
 <body>
 <%@ include file="/common/header.jsp"%>
-
 <div class="contents">
-	<div class="wrapper">
-		<div class="title">
-			<h1>자원봉사 승인</h1>
-		<hr>
-		<div class="link_box">
-			<a href="${CONTEXT_PATH }/center/centerController?action=#">봉사자 신청 승인</a>
-		</div>
+	<div id="vol_list_div">
+		<h1>봉사 신청내역</h1>
+		<hr class="head_hr" style="margin-bottom:20px;">
+		<!-- 봉사모집글 목록----------------------------------------------------------------------->
+		<p style="margin-bottom:-5px;">[전체 
+			<em>${totalCnt}</em>
+			건, 현재페이지 
+			<em>1</em>
+			/1]
+		</p>
+		<p style="float: right;">
+		※ 신청상태가 '접수'인 경우에 취소 가능합니다. '승인'인 경우 봉사센터로 문의해주세요.
+		</p>
+		<hr class="list_head_hr" style="clear: right;">
 		
-		<div class="link_box">
-			<a href="${CONTEXT_PATH }/center/centerController?action=#">실적확인서 신청 봉사자</a>
-		</div>
-		<hr>
-		
-	<h2>${list[0].volTitle }</h2>
-	<p>[전체 <em>0</em>건, 현재페이지 <em>0</em>/0]</p>
-	<hr class="list_head_hr">
-	<c:forEach var="dto" items="${list}">
-	<ul class="vol_list_ul">
-		<li>
-			<div class="list_box">
-				
-				
-				
-				<div class="span_box">
-					<span class="title_span">[신청인 이름]</span>
-					<span>${dto.generalName }</span>
+		<ul class="vol_list_ul">
+		<c:forEach var="dto" items="${list}">
+			<li>
+				<div class="list_box">
+					<div>
+						<div class="apply_status">${dto.recStatus == "1" ? "승인" : "접수"}</div>
+						<input type="button" value="취소하기" class="float_r g_btn" onclick="location.href='${CONTEXT_PATH}/general/generalController?action=cancelVol&volApplyNo=${dto.volApplyNo}&volDetailNo=${dto.volDetailNo}'">
+					</div>
+					<h3><a href="#">${dto.volTitle}</a></h3>
+					<div class="span_box">
+						<span class="title_span">[신청일자]</span>
+						<span>${dto.applyDate}</span>
+					</div>
+					
+					<div class="span_box">
+						<span class="title_span">[봉사일자]</span>
+						<span>${dto.volDate}</span>
+					</div>
+					
+					<div class="span_box">
+						<span class="title_span">[진행시간]</span>
+						<span>${dto.startTime}</span> ~
+						<span>${dto.endTime}</span>
+					</div>
 				</div>
-				
-				<div class="span_box">
-					<span class="title_span">[신청날짜]</span>
-					<span>${dto.applyDate }</span>
-				</div>
-				
-				<div class="span_box">
-					<span class="title_span">[신청회원 아이디]</span>
-					<span>${dto.generalId }</span>
-				</div>
-				<span class="link">
-					<a href="${CONTEXT_PATH }/center/centerController?action=applicantInfoForm&volInfoNo=${dto.volInfoNo}&generalId=${dto.generalId }">상세보기</a>
-				</span>
-			</div>
-			<hr class="list_hr">
-		</li>
-	</ul>
-	</c:forEach>
-		</div>
+				<hr class="list_hr">
+			</li>
+		</c:forEach>	
+		</ul>
+		<hr class="list_end_hr">
+		<!-- 봉사모집글 목록 -->
 	</div>
 </div>
 <%@ include file="/common/footer.jsp"%>

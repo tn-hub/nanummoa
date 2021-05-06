@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import com.nanum.dto.AdminMemberDto;
 import com.nanum.dto.CenterMemberDto;
-import com.nanum.dto.CenterVolDto;
 import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.QnADto;
 import com.nanum.dto.ServiceCategoryDto;
@@ -457,5 +456,21 @@ public class CommonBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
-
+	
+	/**
+	 * 자원봉사 목록 조회(메인)
+	 * @param list
+	 * @throws CommonException
+	 */
+	public void searchVolMapList(ArrayList<HashMap<String, Object>> list) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.searchVolMapList(conn, list);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}	
 }

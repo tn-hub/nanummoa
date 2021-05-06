@@ -3,6 +3,7 @@ package com.nanum.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -14,10 +15,12 @@ import javax.servlet.http.HttpSession;
 
 import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.LocalDto;
+import com.nanum.dto.VolApplyListDto;
 import com.nanum.dto.VolCategoryDto;
+import com.nanum.dto.VolDetailDto;
+import com.nanum.dto.VolInfoDto;
 import com.nanum.model.biz.GeneralBiz;
 import com.nanum.util.CommonException;
-
 
 /**
  * 일반회원 컨트롤러
@@ -49,6 +52,20 @@ public class GeneralController extends HttpServlet {
 		case "generalInput" :
 			generalInput(request, response);
 			break;
+		case "volInfo" :
+			volInfo(request, response);
+			break;	
+		case "enrollVolForm" :
+			enrollVolForm(request, response);
+			break;	
+		case "enrollVol" :
+			enrollVol(request, response);
+			break;	
+		case "volApplyList" :
+			volApplyList(request, response);
+			break;
+		case "cancelVol" :
+			cancelVol(request, response);
 		case "generalMyInfoForm" :
 			generalMyInfoForm(request, response);
 			break;
@@ -60,12 +77,14 @@ public class GeneralController extends HttpServlet {
 			break;
 		}
 	}
-	
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html; charset=utf-8");
 		process(request, response);
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html; charset=utf-8");
 		process(request, response);
 	}
 	
@@ -434,6 +453,189 @@ public class GeneralController extends HttpServlet {
 		} finally {
 			out.flush();
 			out.close();
+		}
+	}
+	
+	/**
+	 * 봉사신청하기 화면요청 : 회원정보(세션), 봉사정보(날짜별)
+	 */
+	protected void enrollVolForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || 
+				session.getAttribute("dto") == null ||
+				session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");	
+			return;
+		}
+		GeneralMemberDto dto = (GeneralMemberDto) session.getAttribute("dto");
+		String generalId = dto.getGeneralId();
+		
+		String volInfoNo = request.getParameter("volInfoNo");
+		GeneralBiz biz = new GeneralBiz();
+		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String,Object>>();
+		try {
+			biz.volInfoByDate(generalId, volInfoNo, list);
+			for (HashMap<String, Object> hashMap : list) {
+				System.out.println("===");
+				for(String key : hashMap.keySet()){
+					System.out.println(key+" : "+hashMap.get(key));
+				}
+			}
+			request.setAttribute("list", list);
+			request.getRequestDispatcher("/general/enrollVolForm.jsp").forward(request, response);
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 봉사신청
+	 */
+	private void enrollVol(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || 
+				session.getAttribute("dto") == null ||
+				session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");	
+			return;
+		}
+		GeneralMemberDto dto = (GeneralMemberDto) session.getAttribute("dto");
+		String generalId = dto.getGeneralId();
+		String[] volDetailNos = request.getParameterValues("volDetailNo");
+		GeneralBiz biz = new GeneralBiz();
+		try{
+			for (String volDetailNo : volDetailNos) {
+				System.out.println("[con] 봉사신청  volDetailNo : " +volDetailNo);
+				biz.enrollVol(generalId, volDetailNo);
+			}	
+			response.sendRedirect(CONTEXT_PATH+"/general/generalController?action=volApplyList");
+			
+		} catch(CommonException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 봉사신청 취소
+	 */
+	private void cancelVol(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || 
+				session.getAttribute("dto") == null ||
+				session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");	
+			return;
+		}
+		GeneralMemberDto dto = (GeneralMemberDto) session.getAttribute("dto");
+		String generalId = dto.getGeneralId();
+		String volApplyNo = request.getParameter("volApplyNo");
+		String volDetailNo = request.getParameter("volDetailNo");
+		GeneralBiz biz = new GeneralBiz();
+		System.out.println("g_id : " + generalId);
+		System.out.println("volApplyNo : " + volApplyNo);
+		System.out.println("volDetailNo : " + volDetailNo);
+		try{
+			biz.cancelVol(generalId, volApplyNo, volDetailNo);
+			response.sendRedirect(CONTEXT_PATH+"/general/generalController?action=volApplyList");
+		} catch(CommonException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 봉사신청목록 조회
+	 */
+	private void volApplyList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || 
+				session.getAttribute("dto") == null ||
+				session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");	
+			return;
+		}
+		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String,Object>>();
+		GeneralBiz biz = new GeneralBiz();
+		GeneralMemberDto dto = (GeneralMemberDto) session.getAttribute("dto");
+		String generalId = dto.getGeneralId();
+		
+		try {
+			biz.searchVolApplyList(generalId, list);
+			
+			if(list != null) {
+				int totalCnt = list.size();
+				System.out.println("총"+ totalCnt+"건");
+				for (HashMap<String, Object> hashMap : list) {
+					System.out.println("===");
+					for(String key : hashMap.keySet()){
+						System.out.println(key+" : "+hashMap.get(key));
+					}
+				}
+				request.setAttribute("totalCnt", totalCnt);
+				request.setAttribute("list", list);
+			}
+			request.getRequestDispatcher("/general/applylist.jsp").forward(request, response);
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 봉사상세정보 조회(통합)
+	 */
+	private void volInfo(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		String volInfoNo = request.getParameter("volInfoNo");
+		GeneralBiz biz = new GeneralBiz();
+		
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		
+		try{
+			biz.getVolInfo(volInfoNo, resultMap);
+			
+			for(String key : resultMap.keySet()){
+				System.out.println(key+" : "+resultMap.get(key));
+			}
+			
+			request.getRequestDispatcher("/vol_list.jsp").forward(request, response);
+			
+		} catch(CommonException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 봉사정보 조회(날짜별)-신청시
+	 */
+	private void volInfoByDate(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || 
+				session.getAttribute("dto") == null ||
+				session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");	
+			return;
+		}
+		String volInfoNo = request.getParameter("volInfoNo");
+		GeneralBiz biz = new GeneralBiz();
+		
+		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String,Object>>();
+		GeneralMemberDto dto = (GeneralMemberDto) session.getAttribute("dto");
+		String generalId = dto.getGeneralId();
+		try{
+			biz.volInfoByDate(generalId, volInfoNo, list);
+			for (HashMap<String, Object> hashMap : list) {
+				for(String key : hashMap.keySet()){
+					System.out.println(key+" : "+hashMap.get(key));
+				}
+			}
+			request.setAttribute("list", list);
+			request.getRequestDispatcher("/vol_list.jsp").forward(request, response);
+			
+		} catch(CommonException e) {
+			e.printStackTrace();
 		}
 	}
 }

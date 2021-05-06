@@ -4,26 +4,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>자원봉사 승인</title>
+<title>자원봉사 신청</title>
 <link type="text/css" rel="stylesheet" href="${initParam.CONTEXT_PATH}/resources/css/common.css">
-
 <style type="text/css">
-.wrapper{
-width: 100%;
-}
-
-.title{
-width: 1000px;
-margin:  auto;
-}
-
-.link{
-text-align: center;
-
-}
-
-#vol_list_div {
+	#vol_list_div {
 		width: 1000px;
+		/* background-color: blue; */
 		margin: auto;
 	}
 	
@@ -144,6 +130,10 @@ text-align: center;
 		border: 1px solid black;
 		margin-bottom: 20px;
 	}
+	.list_end_hr {
+		border: 1px solid black;
+		margin-top: -21px;
+	}
 	
 	.list_hr {
 		margin-top: 20px;
@@ -167,94 +157,86 @@ text-align: center;
 	
 	.vol_list_ul .span_box {
 		display: inline-block;
-		width: 215px;
+		width: 300px;
 	}
 	
 	.vol_list_ul .deadline_box {
 		text-align: right;
 	}
-	
-	.link_div{
-	text-align: right;
-    height: 30px;
-    width: 900px;
+	.apply_status{
+		background-color: #FBD157;
+		width: 70px;
+		height: 25px;
+		border-radius: 25px;
+		margin-left: 20px;
+		text-align: center;
+		text-indent: 0px;
+		padding: 5px;
 	}
-	
-	.link_box{
-	display: inline-block;
-    font-weight: bold;
-    width: 490px;
-    margin: 0 auto;
-    text-align: center;
-	}
-	
-	.link{
-	margin: 120px;
-    padding: 7px 0;
-    border: 2px solid #666;
-    font-size: 16px;
-    text-align: center;
-	
-	}
-	
-	h2{
-	text-align: center;
-	}	
-	
+
 </style>
+<script type="text/javascript">
+	function selectAll(selectAll)  {
+	  const checkboxes  = document.getElementsByName('volDetailNo');
+	  checkboxes.forEach((checkbox) => {
+	    checkbox.checked = selectAll.checked;
+	  })
+	};
+</script>
 </head>
 <body>
 <%@ include file="/common/header.jsp"%>
-
-<div class="contents">
-	<div class="wrapper">
-		<div class="title">
-			<h1>자원봉사 승인</h1>
-		<hr>
-		<div class="link_box">
-			<a href="${CONTEXT_PATH }/center/centerController?action=#">봉사자 신청 승인</a>
-		</div>
-		
-		<div class="link_box">
-			<a href="${CONTEXT_PATH }/center/centerController?action=#">실적확인서 신청 봉사자</a>
-		</div>
-		<hr>
-		
-	<h2>${list[0].volTitle }</h2>
-	<p>[전체 <em>0</em>건, 현재페이지 <em>0</em>/0]</p>
-	<hr class="list_head_hr">
+<form action="${CONTEXT_PATH}/general/generalController?action=enrollVol" method="post">
+<div id="vol_list_div" style="margin-bottom: 150px;">
+	<h1>자원봉사 신청</h1>
+	<hr class="head_hr" style="margin-bottom:20px;">
+	<h2>${list[0].volTitle}</h2>
+	
+	<h3>◎ 봉사일자 선택</h3>
+	<ul>
+	<input type="checkbox" id="checkAll" name="checkAll" onclick="selectAll(this)"/> <b>전체선택</b>
 	<c:forEach var="dto" items="${list}">
+		<li>
+			<input type="checkbox" id="checked" name="volDetailNo" value="${dto.volDetailNo}">
+			${dto.volDate}<span class="separator">|</span>
+			${dto.recStatus eq "0" ? "모집중" : "마감"}<span class="separator">|</span>
+			신청인원 : ${dto.applyCount < 1  ? 0 : dto.applyCount}/${dto.totalCount}명
+		</li>	
+	</c:forEach>
+	</ul>
+	
+	<h3>◎ 신청자 정보</h3>
+	<input type="button" value="내정보수정" class="float_r y_btn" onclick="location.href=''">
+	<hr class="clear_b">
 	<ul class="vol_list_ul">
 		<li>
-			<div class="list_box">
-				
-				
-				
-				<div class="span_box">
-					<span class="title_span">[신청인 이름]</span>
-					<span>${dto.generalName }</span>
-				</div>
-				
-				<div class="span_box">
-					<span class="title_span">[신청날짜]</span>
-					<span>${dto.applyDate }</span>
-				</div>
-				
-				<div class="span_box">
-					<span class="title_span">[신청회원 아이디]</span>
-					<span>${dto.generalId }</span>
-				</div>
-				<span class="link">
-					<a href="${CONTEXT_PATH }/center/centerController?action=applicantInfoForm&volInfoNo=${dto.volInfoNo}&generalId=${dto.generalId }">상세보기</a>
-				</span>
+			<div class="span_box">
+				<span class="title_span">[이름]</span>
+				<span>${dto.generalName}</span>
 			</div>
-			<hr class="list_hr">
+			<div class="span_box">
+				<span class="title_span">[연락처]</span>
+				<span>${dto.generalMobile}</span>
+			</div>
+			<div class="span_box">
+				<span class="title_span">[이메일]</span>
+				<span>${dto.generalEmail}</span>
+			</div>
 		</li>
 	</ul>
-	</c:forEach>
-		</div>
+	<hr>
+	<ul style="margin: 50px;">
+		<li>회원님이 등록하신 정보가 표시됩니다. 등록된 정보가 정확한지 확인해주세요.</li>
+		<li>연락처가 미등록된 경우 봉사활동 정보를 받으실 수 없습니다.</li>
+		<li>휴대폰번호 및 이메일로 봉사활동 정보를 제공 받으시겠습니까?</li>
+	</ul>
+	<p style="text-align: center;"><input type="checkbox" name="agree" id="agree" required="required"> (필수) 정보제공 및 수신동의</p>
+	<div style="text-align: center;">
+		<input type="submit" class="y_btn" value="신청하기">
+		<input type="reset" class="g_btn" value="취소">		
 	</div>
 </div>
+</form>
 <%@ include file="/common/footer.jsp"%>
 </body>
 </html>
