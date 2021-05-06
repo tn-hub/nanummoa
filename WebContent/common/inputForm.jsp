@@ -18,7 +18,6 @@
 	width: 1000px;
 	height: 600px;
 	text-align: center;
-	/* background-color: red; */
 }
 
 #inputBoxWrap p{
@@ -27,7 +26,9 @@
 }
 
 #generalInputbox, #centerInputbox {
-	position: absolute;
+	/* position: absolute; */
+	display: inline-block;
+	margin-top: 25px;
 	border-radius: 30px;
 	width: 400px;
 	height: 500px;
@@ -36,8 +37,7 @@
 
 #generalInputbox {
 	background-color: #93CAAB;
-	left: 480px;
-	top: 300px;
+	margin-right: 80px;
 }
 
 #generalInputbox h2, #centerInputbox h2 {
@@ -47,8 +47,6 @@
 
 #centerInputbox {
 	background-color: #FF6670;
-	right: 480px;
-	top: 300px;
 }
 
 .fa-user, .fa-users {
