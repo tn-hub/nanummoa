@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>센터회원 마이페이지</title>
+<title>자원봉사 승인</title>
 <link type="text/css" rel="stylesheet" href="${initParam.CONTEXT_PATH}/resources/css/common.css">
 
 <style type="text/css">
@@ -24,7 +24,6 @@ text-align: center;
 
 #vol_list_div {
 		width: 1000px;
-		/* background-color: blue; */
 		margin: auto;
 	}
 	
@@ -168,11 +167,17 @@ text-align: center;
 	
 	.vol_list_ul .span_box {
 		display: inline-block;
-		width: 300px;
+		width: 215px;
 	}
 	
 	.vol_list_ul .deadline_box {
 		text-align: right;
+	}
+	
+	.link_div{
+	text-align: right;
+    height: 30px;
+    width: 900px;
 	}
 	
 	.link_box{
@@ -182,6 +187,20 @@ text-align: center;
     margin: 0 auto;
     text-align: center;
 	}
+	
+	.link{
+	margin: 120px;
+    padding: 7px 0;
+    border: 2px solid #666;
+    font-size: 16px;
+    text-align: center;
+	
+	}
+	
+	h2{
+	text-align: center;
+	}	
+	
 </style>
 </head>
 <body>
@@ -190,73 +209,44 @@ text-align: center;
 <div class="contents">
 	<div class="wrapper">
 		<div class="title">
-			<h1>자원 봉사 목록</h1>
+			<h1>자원봉사 승인</h1>
 		<hr>
 		<div class="link_box">
-			<a href="${CONTEXT_PATH }/center/centerController?action=recruitList">모집중 봉사</a>
+			<a href="${CONTEXT_PATH }/center/centerController?action=#">봉사자 신청 승인</a>
 		</div>
+		
 		<div class="link_box">
-			<a href="${CONTEXT_PATH }/center/centerController?action=deadlineList">종료된 봉사</a>
+			<a href="${CONTEXT_PATH }/center/centerController?action=#">실적확인서 신청 봉사자</a>
 		</div>
 		<hr>
 		
-		
-<%-- 	<c:if test="${empty fn:length(list) }">
-		<p>[전체 <em>0</em>건, 현재페이지 <em>0</em>/0]</p>
-	</c:if> --%>
-	
-	<c:if test="${voDto.listIndex >= 0}">
-		<p>[전체 <em>${voDto.listIndex }</em>건, 현재페이지 <em>0</em>/0]</p>
-	</c:if>
+	<h2>${list[0].volTitle }</h2>
+	<p>[전체 <em>0</em>건, 현재페이지 <em>0</em>/0]</p>
 	<hr class="list_head_hr">
-	<c:forEach var="dto" items="${list }">
+	<c:forEach var="dto" items="${list}">
 	<ul class="vol_list_ul">
 		<li>
 			<div class="list_box">
-				<div>
-					<c:choose>
-						<c:when test="${dto.recStatus == '0'}">
-							<span class="title_span">모집중</span>
-						</c:when>
-						<c:when test="${dto.recStatus == '1'}">
-							<span class="title_span">모집마감</span>
-						</c:when>
-						<c:when test="${dto.recStatus == '2'}">
-							<span class="title_span">활동종료</span>
-						</c:when>
-					</c:choose>
-					<span>${dto.categoryName}</span>
-				</div>
 				
-				<h3><a href="#">${dto.volTitle }</a></h3>
+				
 				
 				<div class="span_box">
-					<span class="title_span">[모집기관]</span>
-					<span>${dto.centerName }</span>
+					<span class="title_span">[신청인 이름]</span>
+					<span>${dto.generalName }</span>
 				</div>
 				
 				<div class="span_box">
-					<span class="title_span">[모집기간]</span>
-					<span>${dto.startDate }</span> ~
-					<span>${dto.endDate }</span>
+					<span class="title_span">[신청날짜]</span>
+					<span>${dto.applyDate }</span>
 				</div>
 				
 				<div class="span_box">
-					<span class="title_span">[봉사기간]</span>
-					<span>${dto.volStart }</span> ~
-					<span>${dto.volEnd }</span>
+					<span class="title_span">[신청회원 아이디]</span>
+					<span>${dto.generalId }</span>
 				</div>
-			</div>
-			<p><a href="${CONTEXT_PATH }/center/centerController?action=applyList&volInfoNo=${dto.volInfoNo}">신청자 보기</a></p>
-			<div class="deadline_box">
-			<c:choose>	
-				<c:when test="${dto.deadline >= 0}">
-					<p>마감 <em>${dto.deadline }</em> 일전</p>
-				</c:when>
-				<c:otherwise>
-					<p>마감 종료</p>
-				</c:otherwise>
-			</c:choose>
+				<span class="link">
+					<a href="${CONTEXT_PATH }/center/centerController?action=applicantInfoForm&volInfoNo=${dto.volInfoNo}&generalId=${dto.generalId }">상세보기</a>
+				</span>
 			</div>
 			<hr class="list_hr">
 		</li>

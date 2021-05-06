@@ -86,7 +86,7 @@ input[type='radio'] {
 			<br>
 			  <a href="${CONTEXT_PATH}/general/generalController?action=generalInputForm">회원가입</a>
 			| <a href="${CONTEXT_PATH }/common/commonController?action=findIdForm">아이디 찾기</a>
-			| <a href="#">비밀번호 찾기</a>
+			| <a href="${CONTEXT_PATH }/common/commonController?action=findPwForm"">비밀번호 찾기</a>
 		</form>
 		</div>
 	</div>
