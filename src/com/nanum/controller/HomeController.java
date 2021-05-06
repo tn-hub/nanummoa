@@ -68,9 +68,9 @@ public class HomeController extends HttpServlet {
 			
 			biz.searchVolMapList(list);
 			for (HashMap<String, Object> hashMap : list) {
-				//System.out.println(">>");
+				System.out.println(">>");
 				for(String key : hashMap.keySet()){
-					//System.out.println(key+" : "+hashMap.get(key));
+					System.out.println(key+" : "+hashMap.get(key));
 				}
 			}
 		} catch (CommonException e) {

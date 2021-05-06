@@ -4,12 +4,10 @@
 package com.nanum.model.biz;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.nanum.dto.VolDetailDto;
-import com.nanum.dto.VolInfoDto;
 import com.nanum.dto.CenterInfoDto;
 import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.CenterVolDto;

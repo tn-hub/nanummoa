@@ -86,6 +86,7 @@ public class CenterController extends HttpServlet {
 			break;
 		case "deleteVol":
 			deleteVol(request, response);
+			break;
 		case "centerMyInfoForm":
 			centerMyInfoForm(request, response);
 			break;
