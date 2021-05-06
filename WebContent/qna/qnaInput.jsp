@@ -6,6 +6,8 @@
 <head>
 <meta charset="UTF-8">
 <title>QNA 등록</title>
+<!-- jquery-3.6.0.min.js -->
+<script type="text/javascript" src="${CONTEXT_PATH }/resources/js/jquery-3.6.0.min.js"></script>
 <style type="text/css">
 #section_contents{
 	width: 1000px; 
@@ -39,11 +41,44 @@
 </style>
 </head>
 <script type="text/javascript">
-function add_qna(){
+
+$(document).ready(function() {
+$("#add_qna").click(function () {
+	var qnaTitleEl = $("#qnaTitle").val();
+	var title = $("#qnaTitle").val();
+	
+	if (title == "" || title == null){
+		alert("제목을 입력해주세요");
+		qnaTitleEl.focus();
+		return;
+	}
+		// 제목 빈값 확인 
+		if (title == "" || title == null){
+			alert("제목을 입력해주세요");
+			qnaTitleEl.focus();
+			return;
+		}
+	
+	var qnaContentsEl = $("#qnaContents"); 
+	var qnaContents = qnaContentsEl.val();
+
+	// 제목 빈값 확인 
+	if (qnaContents == "" || qnaContents == null){
+		alert("내용을 입력해주세요");
+		qnaContentsEl.focus();
+		return;
+	}
+	
+	// 저장 submit 
+	document.qnaAddForm.submit();
+	alert("저장되었습니다.");
+});
+	
+/* function add_qna(){
 	
 	var qnaTitleEl = ${"qnaTitle"};
-	var title = qnaTitleEl.value;
-
+	var title = $("#qnaTitle").val()
+	
 	// 제목 빈값 확인 
 	if (title == "" || title == null){
 		alert("제목을 입력해주세요");
@@ -64,8 +99,9 @@ function add_qna(){
 	// 저장 submit 
 	document.qnaAddForm.submit();
 	alert("저장되었습니다.");
-	
-}
+} */
+
+});
 
 </script>
 <body>
@@ -86,7 +122,7 @@ function add_qna(){
 </table>
 <div id="add_qna">
 <input type="button" value="이전 페이지">
-<input type="button" value="등록 하기" onclick="add_qna()">
+<input type="button" value="등록 하기" id="add_qna" >
 </div>
 </form>
 <div id="footer" class="footer">

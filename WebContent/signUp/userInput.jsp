@@ -288,6 +288,7 @@ function visiblePw() {
 	}
 }
 
+
 /* 이메일 선택 및 입력 여부 설정 */
 function lockEmail() {
 	var takeData = $("#emailSelect option:selected").val();

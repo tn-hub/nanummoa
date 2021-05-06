@@ -4,30 +4,23 @@
 package com.nanum.dto;
 
 /**
- * <pre>
- * 봉사대상 
- * 
- * </pre>
- * @author 메타쓰리
+ * 봉사 대상
  *
  */
 public class ServiceCategoryDto {
-	/** 지역번호 */
+	/** 봉사 대상 카테고리 번호*/
 	private String serviceNo;
-
-	/** 지역이름 */
+	
+	/** 봉사 대상 이름*/
 	private String serviceName;
+	
+	/** 기본 생성자*/
+	public ServiceCategoryDto() {}
 
 	/**
-	 * 기본생성자
-	 */
-	public ServiceCategoryDto() {
-	}
-
-	/**
-	 * 전체생성자
-	 * @param serviceNo
-	 * @param serviceName
+	 * 전체 데이터 초기화 생성자
+	 * @param serviceNo 카테고리 번호
+	 * @param serviceName 봉사대상이름
 	 */
 	public ServiceCategoryDto(String serviceNo, String serviceName) {
 		this.serviceNo = serviceNo;
@@ -63,7 +56,7 @@ public class ServiceCategoryDto {
 	}
 
 	@Override
-	public String toString() { 
+	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(serviceNo);
 		builder.append(", ");

@@ -11,7 +11,7 @@
 			<c:choose>
 				<c:when test="${empty dto or empty grade}">
 					<li><a href="${CONTEXT_PATH}/common/commonController?action=loginForm">로그인</a></li>
-					<li><a href="${CONTEXT_PATH}/general/generalController?action=generalInputForm">회원가입</a></li>
+					<li><a href="${CONTEXT_PATH}/common/commonController?action=inputForm">회원가입</a></li>
 				</c:when>
 				<c:when test="${grade == 'G' }">
 					<li><a href="${CONTEXT_PATH}/common/commonController?action=logout">로그아웃</a></li>
@@ -28,8 +28,6 @@
 					<li><a href="${CONTEXT_PATH}/admin/adminController?action=">관리자페이지</a></li>
 				</c:when>
 			</c:choose>
-				
-			
 			</ul>
 		</div>
 	</div>
@@ -45,7 +43,17 @@
 				<li><a href="${CONTEXT_PATH}/general/generalController?action=">봉사신청</a></li>
 				<li><a href="${CONTEXT_PATH}/general/generalController?action=">인증서발급</a></li>
 				<li><a href="${CONTEXT_PATH}/common/commonController?action=qnaList">문의하기</a></li>
-				<li><a href="${CONTEXT_PATH}/general/generalController?action=">나의 봉사내역</a></li>
+				<c:choose>
+					<c:when test="${empty grade}">
+						<li id= "" class=""><a href="${CONTEXT_PATH}/common/commonController?action=loginForm" class="">나의 봉사내역</a></li>
+					</c:when>
+					<c:when test="${grade == 'G'}">
+						<li id= "" class=""><a href="#" class="">나의 봉사내역</a></li>
+					</c:when>
+					<c:when test="${grade == 'C'}">
+						<li id= "" class=""><a href="${CONTEXT_PATH}/center/centerController?action=centerVolListForm" class="">나의 봉사내역</a></li>
+					</c:when>
+				</c:choose>
 				<li><a href="#"><i class="fas fa-search search_btn"></i></a></li>
 			</ul>
 		</div>

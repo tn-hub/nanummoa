@@ -66,6 +66,14 @@ public class GeneralController extends HttpServlet {
 			break;
 		case "cancelVol" :
 			cancelVol(request, response);
+		case "generalMyInfoForm" :
+			generalMyInfoForm(request, response);
+			break;
+		case "generalUpdate" :
+			generalUpdate(request, response);
+			break;
+		case "generalDelete" :
+			generalDelete(request, response);
 			break;
 		}
 	}
@@ -95,7 +103,7 @@ public class GeneralController extends HttpServlet {
 			System.out.println("categoryList size" + categoryList.size());
 			request.setAttribute("local", localList);
 			request.setAttribute("volCategory", categoryList);
-			request.getRequestDispatcher("/signUp/userInput.jsp").forward(request, response);
+			request.getRequestDispatcher("/general/generalInput.jsp").forward(request, response);
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
@@ -162,55 +170,55 @@ public class GeneralController extends HttpServlet {
 		
 		System.out.println(gender + localNo + categoryNo);
 		if (generalName == null || generalName.trim().length() == 0) {
-			out.print("이름을 입력해 주세요");
+			out.println("<script>alert('이름을 입력해 주세요');history.go(-1); </script>");
 			out.flush();
 			out.close();
 			return;
 		}
 		if (generalId == null || generalId.trim().length() == 0) {
-			out.print("아이디를 입력해 주세요");
+			out.println("<script>alert('아이디를 입력해 주세요');history.go(-1); </script>");
 			out.flush();
 			out.close();
 			return;
 		}
 		if (generalPw == null || generalPw.trim().length() == 0) {
-			out.print("비밀번호를 입력해 주세요");
+			out.println("<script>alert('비밀번호를 입력해 주세요');history.go(-1); </script>");
 			out.flush();
 			out.close();
 			return;
 		}
 		if (generalPw2 == null || generalPw2.trim().length() == 0) {
-			out.print("비밀번호를 입력해 주세요");
+			out.println("<script>alert('비밀번호를 입력해 주세요');history.go(-1); </script>");
 			out.flush();
 			out.close();
 			return;
 		}
 		if (zipCode == null) {
-			out.print("주소를 입력해 주세요");
+			out.println("<script>alert('주소를 입력해 주세요');history.go(-1); </script>");
 			out.flush();
 			out.close();
 			return;
 		}
 		if (mobile2 == null || mobile2.trim().length() == 0) {
-			out.print("휴대폰 번호를 입력해 주세요");
+			out.println("<script>alert('휴대폰 번호를 입력해 주세요');history.go(-1); </script>");
 			out.flush();
 			out.close();
 			return;
 		}
 		if (mobile3 == null || mobile3.trim().length() == 0) {
-			out.print("휴대폰 번호를 입력해 주세요");
+			out.println("<script>alert('휴대폰 번호를 입력해 주세요');history.go(-1); </script>");
 			out.flush();
 			out.close();
 			return;
 		}
 		if (email1 == null || email1.trim().length() == 0) {
-			out.print("이메일을 입력해 주세요");
+			out.println("<script>alert('이메일을 입력해 주세요');history.go(-1); </script>");
 			out.flush();
 			out.close();
 			return;
 		}
 		if (email2 == null || email2.trim().length() == 0) {
-			out.print("이메일을 입력해 주세요");
+			out.println("<script>alert('이메일을 입력해 주세요');history.go(-1); </script>");
 			out.flush();
 			out.close();
 			return;
@@ -255,8 +263,197 @@ public class GeneralController extends HttpServlet {
 			out.flush();
 			out.close();
 		}
+	}
+	
+	/**
+	 * 일반회원 내 정보 조회 페이지 요청 서비스
+	 */
+	protected void generalMyInfoForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		
+		HttpSession session = request.getSession(false);
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null ) {
+			String url = CONTEXT_PATH + "/common/commonController?action=loginForm";
+			out.println("<script>alert('로그인 후 이용해 주시기 바랍니다');location.href='" + url + "'; </script>");
+			out.flush();
+			out.close();
+			return;
+		}
+		
+		GeneralMemberDto dto = (GeneralMemberDto)session.getAttribute("dto");
+		ArrayList<LocalDto> localList = new ArrayList<LocalDto>();
+		ArrayList<VolCategoryDto> categoryList = new ArrayList<VolCategoryDto>();
+		GeneralBiz biz = new GeneralBiz();
+		
+		try {
+			biz.getLocalList(localList);
+			biz.getVolCategoryList(categoryList);
+			biz.getGeneralInfo(dto);
+			request.setAttribute("local", localList);
+			request.setAttribute("volCategory", categoryList);
+			request.setAttribute("GeneralDto", dto);
+			request.getRequestDispatcher("/general/generalMyInfo.jsp").forward(request, response);
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 일반회원 내 정보 수정 요청 서비스
+	 */
+	protected void generalUpdate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		
+		String generalName = request.getParameter("name");
+		String gender = request.getParameter("gender");
+		String birthday = request.getParameter("birthday"); 
+		String generalPw = request.getParameter("pw");
+		String generalPw2 = request.getParameter("pw2");
+		String zipCode = request.getParameter("zipCode");
+		String address = request.getParameter("address");
+		String detailAddress = request.getParameter("detailAddress");
+		String mobile1 = request.getParameter("mobile1");
+		String mobile2 = request.getParameter("mobile2");
+		String mobile3 = request.getParameter("mobile3");
+		String email1 = request.getParameter("email1");
+		String email2 = request.getParameter("email2");
+		String localNo = request.getParameter("localNo");
+		String categoryNo = request.getParameter("categoryNo");
+		
+		if (generalName == null || generalName.trim().length() == 0) {
+			out.println("<script>alert('이름을 입력해 주세요');history.go(-1); </script>");
+			out.flush();
+			out.close();
+			return;
+		}
+		
+		if (generalPw != "") {
+			if (generalPw == null || generalPw.trim().length() == 0) {
+				out.println("<script>alert('비밀번호를 입력해 주세요');history.go(-1); </script>");
+				out.flush();
+				out.close();
+				return;
+			}
+			if (generalPw2 == null || generalPw2.trim().length() == 0) {
+				out.println("<script>alert('비밀번호를 입력해 주세요');history.go(-1); </script>");
+				out.flush();
+				out.close();
+				return;
+			}
+		}
 		
 		
+		if (zipCode == null) {
+			out.println("<script>alert('주소를 입력해 주세요');history.go(-1); </script>");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (mobile2 == null || mobile2.trim().length() == 0) {
+			out.println("<script>alert('휴대폰 번호를 입력해 주세요');history.go(-1); </script>");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (mobile3 == null || mobile3.trim().length() == 0) {
+			out.println("<script>alert('휴대폰 번호를 입력해 주세요');history.go(-1); </script>");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (email1 == null || email1.trim().length() == 0) {
+			out.println("<script>alert('이메일을 입력해 주세요');history.go(-1); </script>");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (email2 == null || email2.trim().length() == 0) {
+			out.println("<script>alert('이메일을 입력해 주세요');history.go(-1); </script>");
+			out.flush();
+			out.close();
+			return;
+		}
+		
+		HttpSession session = request.getSession();
+		GeneralMemberDto dto = (GeneralMemberDto)session.getAttribute("dto");
+		
+		String generalId = dto.getGeneralId();
+		generalName = generalName.trim();
+		generalPw = generalPw.trim();
+		if (detailAddress != null && detailAddress.trim().length() != 0) {
+			address = address + " " + detailAddress;
+		}
+		String mobile = mobile1 + "-" + mobile2.trim() + "-" + mobile3.trim();
+		String email = email1.trim() + "@" + email2.trim();
+		
+		dto.setGeneralName(generalName);
+		dto.setGender(gender);
+		dto.setBirthday(birthday);
+		dto.setGeneralId(generalId);
+		if (generalPw != "") {
+			dto.setGeneralPass(generalPw);
+		}
+		dto.setGeneralZipCode(zipCode);
+		dto.setGeneralAddress(address);
+		dto.setGeneralMobile(mobile);
+		dto.setGeneralEmail(email);
+		if (!localNo.equals("none")) {
+			dto.setLocalNo(localNo);
+		}
+		if (!categoryNo.equals("none")) {
+			dto.setCategoryNo(categoryNo);
+		}
+		
+		GeneralBiz biz = new GeneralBiz();
+		
+		try {
+			biz.updateGeneralMember(dto);
+			String url = CONTEXT_PATH + "/general/generalController?action=generalMyInfoForm";
+			out.println("<script>alert('내 정보 수정 완료');location.href='" + url + "'; </script>");
+		} catch (CommonException e) {
+			e.printStackTrace();
+			out.println("<script>alert('입력 정보가 올바르지 않습니다');history.go(-1); </script>");
+		} finally {
+			out.flush();
+			out.close();
+		}
+	}
+	
+	/**
+	 * 일반회원 회원탈퇴 서비스
+	 */
+	protected void generalDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		
+		HttpSession session = request.getSession(false);
+		GeneralMemberDto dto = (GeneralMemberDto)session.getAttribute("dto");
+		String generalId = dto.getGeneralId();
+		GeneralBiz biz = new GeneralBiz();
+		
+		try {
+			biz.deleteGeneralMember(generalId);
+			
+			if (session != null) {
+				if (session.getAttribute("dto") != null) {
+					session.removeAttribute("dto");
+				}
+				if (session.getAttribute("grade") != null) {
+					session.removeAttribute("grade");
+				}
+				session.invalidate();
+			}
+			
+			String url = CONTEXT_PATH + "/home";
+			out.println("<script>alert('회원탈퇴가 완료되었습니다');location.href='" + url + "'; </script>");
+		} catch (CommonException e) {
+			e.printStackTrace();
+		} finally {
+			out.flush();
+			out.close();
+		}
 	}
 	
 	/**

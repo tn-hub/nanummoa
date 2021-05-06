@@ -158,7 +158,26 @@ public class GeneralBiz {
 		} finally {
 			JdbcTemplate.close(conn);
 		}
+	}
+	
+	/**
+	 * 일반회원 상세 조회
+	 * @param dto GeneralMemberDto
+	 * @throws CommonException
+	 */
+	public void getGeneralInfo(GeneralMemberDto dto) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
 		
+		try {
+			gDao.selectGeneralInfo(conn, dto);
+			JdbcTemplate.commit(conn);
+		} catch (CommonException e) {
+			JdbcTemplate.rollback(conn);
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
 	}
 
 	/**
@@ -203,6 +222,26 @@ public class GeneralBiz {
 		} finally {
 			JdbcTemplate.close(conn);
 		}
+	}
+	
+	/**
+	 * 일반회원 내 정보 수정
+	 * @param dto GeneralMemberDto
+	 * @throws CommonException
+	 */
+	public void updateGeneralMember(GeneralMemberDto dto) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		
+		try {
+			gDao.updateGeneralMember(conn, dto);
+			JdbcTemplate.commit(conn);
+		} catch (CommonException e) {
+			JdbcTemplate.rollback(conn);
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
 		
 	}
 	
@@ -235,8 +274,26 @@ public class GeneralBiz {
 		} finally {
 			JdbcTemplate.close(conn);
 		}
-		
 	}
-
 	
+	/**
+	 * 일반회원 회원탈퇴
+	 * @param generalId 일반회원 아이디
+	 * @throws CommonException
+	 */
+	public void deleteGeneralMember(String generalId) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		
+		try {
+			gDao.deleteGeneralMember(conn, generalId);
+			JdbcTemplate.commit(conn);
+		} catch (CommonException e) {
+			JdbcTemplate.rollback(conn);
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	
+	}
 }

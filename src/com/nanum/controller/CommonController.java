@@ -2,10 +2,12 @@ package com.nanum.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Properties;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Properties;
 
-import javax.mail.*;
+import javax.mail.Address;
+import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Transport;
@@ -21,11 +23,17 @@ import javax.servlet.http.HttpSession;
 
 import com.nanum.dto.AdminMemberDto;
 import com.nanum.dto.CenterMemberDto;
+import com.nanum.dto.CenterVolDto;
 import com.nanum.dto.GeneralMemberDto;
+import com.nanum.dto.LocalDto;
 import com.nanum.dto.QnADto;
+import com.nanum.dto.ServiceCategoryDto;
+import com.nanum.dto.VolCategoryDto;
 import com.nanum.model.biz.CommonBiz;
+import com.nanum.model.biz.GeneralBiz;
 import com.nanum.util.CommonException;
 import com.nanum.util.Gmail;
+import com.nanum.util.MessageEntity;
 import com.nanum.util.SHA256;
 import com.nanum.util.Utility;
 
@@ -48,6 +56,7 @@ public class CommonController extends HttpServlet {
 	protected void process(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
+		response.setContentType("text/html; charset=utf-8");
 		String action = request.getParameter("action");
 		switch (action) {
 		case "loginForm":
@@ -58,9 +67,6 @@ public class CommonController extends HttpServlet {
 			break;
 		case "logout":
 			logout(request, response);
-			break;
-		case "mail":
-			mail(request, response);
 			break;
 		case "addSecureCode":
 			addSecureCode(request, response);
@@ -76,16 +82,43 @@ public class CommonController extends HttpServlet {
 			break;
 		case "qnaList":
 			qnaList(request, response);
-			break;	
+			break;
 		case "qnaDtl":
 			qnaDtl(request, response);
-			break;	
+			break;
 		case "qnaUpt":
 			qnaUpt(request, response);
-			break;		
+			break;
 		case "qnaDel":
 			qnaDel(request, response);
-			break;		
+			break;
+		case "volListForm":
+			volListForm(request, response);
+			break;
+		case "findIdForm":
+			findIdForm(request, response);
+			break;
+		case "inputForm":
+			inputForm(request, response);
+			break;
+		case "findPwForm":
+			findPwForm(request, response);
+			break;
+		case "findPw":
+			findPw(request, response);
+			break;
+		case "checkEmailForm":
+			checkEmailForm(request, response);
+			break;
+		case "checkEmail":
+			checkEmail(request, response);
+			break;
+		case "newPwForm":
+			newPwForm(request, response);
+			break;
+		case "newPw":
+			newPw(request, response);
+			break;
 		}
 	}
 
@@ -95,7 +128,6 @@ public class CommonController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		response.setContentType("text/html; charset=utf-8");
 		process(request, response);
 	}
 
@@ -105,7 +137,6 @@ public class CommonController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		response.setContentType("text/html; charset=utf-8");
 		process(request, response);
 	}
 
@@ -127,20 +158,18 @@ public class CommonController extends HttpServlet {
 	 */
 	protected void login(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		PrintWriter out = response.getWriter();
+		
 		String memberId = request.getParameter("memberId");
 		String memberPw = request.getParameter("memberPw");
 		String grade = request.getParameter("grade");
 
 		if (memberId == null || memberId.trim().length() == 0 || memberId == "") {
-			response.setContentType("text/html; charset=utf-8");
-			PrintWriter out = response.getWriter();
 			out.println("<script>alert('[오류] 아이디를 입력하세요');history.go(-1); </script>");
 			out.flush();
 			return;
 		}
 		if (memberPw == null || memberPw.trim().length() == 0 || memberPw == "") {
-			response.setContentType("text/html; charset=utf-8");
-			PrintWriter out = response.getWriter();
 			out.println("<script>alert('[오류] 비밀번호를 입력하세요');history.go(-1); </script>");
 			out.flush();
 			return;
@@ -162,18 +191,14 @@ public class CommonController extends HttpServlet {
 				if (dto.getGeneralName() != null) {
 					session.setAttribute("dto", dto);
 					session.setAttribute("grade", grade);
-					
+
 					response.sendRedirect(CONTEXT_PATH + "/home");
 				} else {
-					response.setContentType("text/html; charset=utf-8");
-					PrintWriter out = response.getWriter();
 					out.println("<script>alert('[오류] 로그인 정보가 맞지 않습니다.');history.go(-1); </script>");
 					out.flush();
 					return;
 				}
 			} catch (CommonException e) {
-				response.setContentType("text/html; charset=utf-8");
-				PrintWriter out = response.getWriter();
 				out.println("<script>alert('[오류]');history.go(-1); </script>");
 				out.flush();
 				return;
@@ -187,17 +212,13 @@ public class CommonController extends HttpServlet {
 				if (dto.getCenterName() != null) {
 					session.setAttribute("dto", dto);
 					session.setAttribute("grade", grade);
-					response.sendRedirect(CONTEXT_PATH +"/home");
+					response.sendRedirect(CONTEXT_PATH + "/home");
 				} else {
-					response.setContentType("text/html; charset=utf-8");
-					PrintWriter out = response.getWriter();
 					out.println("<script>alert('[오류] 로그인 정보가 맞지 않습니다.');history.go(-1); </script>");
 					out.flush();
 					return;
 				}
 			} catch (CommonException e) {
-				response.setContentType("text/html; charset=utf-8");
-				PrintWriter out = response.getWriter();
 				out.println("<script>alert('[오류]');history.go(-1); </script>");
 				out.flush();
 			}
@@ -210,28 +231,37 @@ public class CommonController extends HttpServlet {
 				if (dto.getAdminName() != null) {
 					session.setAttribute("dto", dto);
 					session.setAttribute("grade", grade);
-					response.sendRedirect(CONTEXT_PATH +"/home");
+					response.sendRedirect(CONTEXT_PATH + "/home");
 				} else {
-					response.setContentType("text/html; charset=utf-8");
-					PrintWriter out = response.getWriter();
 					out.println("<script>alert('[오류] 로그인 정보가 맞지 않습니다.');history.go(-1); </script>");
 					out.flush();
 					return;
 				}
 			} catch (CommonException e) {
-				response.setContentType("text/html; charset=utf-8");
-				PrintWriter out = response.getWriter();
 				out.println("<script>alert('[오류]');history.go(-1); </script>");
 				out.flush();
 			}
 		}
 
 	}
-
-	String secureCode = null;
 	
 	/**
-	 * 이메일 임시번호 발급
+	 * 아이디찾기 페이지
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void findIdForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		request.getRequestDispatcher("/common/findInfo/findId.jsp").forward(request, response);
+	}
+
+	String secureCode = null;
+
+	/**
+	 * 이메일로 임시번호 발급
 	 * 
 	 * @param request
 	 * @param response
@@ -240,93 +270,131 @@ public class CommonController extends HttpServlet {
 	 */
 	protected void addSecureCode(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String name = request.getParameter("name");
-		String email1 = request.getParameter("email1");
-		String email2 = request.getParameter("email2");
-		String email = email1 + "@" + email2;
-		
-		
-		// DB 저장 했다고 가정 (DB에는 emailAuth 필드가 있어야 하고 최초에는 0이 저장되어 있음) 1 인증 0 미인증
-		// DB에 저장했으니 google email 인증 페이지로 이동
+		PrintWriter out = response.getWriter();
 
+		String grade = request.getParameter("grade");
+		String name = request.getParameter("name");
+		String email = request.getParameter("email");
 		String host = "http://localhost:8090/nanummoa/";
 		String from = "gusqls904@gmail.com";
-		String to = request.getParameter("email");
 		String code = SHA256.getEncrypt(email, "cos");
-
-		// 사용자에게 보낼 메시지
-		String subject = "나눔모아(아이디찾기) 이메일 인증 메일입니다.";
-
-		// 임시번호 발급
-		secureCode = Utility.getSecureString(10, true);
-
-		Properties p = new Properties();
-		p.put("mail.smtp.user", from);
-		p.put("mail.smtp.host", "smtp.gmail.com");
-		p.put("mail.smtp.port", "465"); // TLS 587, SSL 465
-		p.put("mail.smtp.starttls.enable", "true");
-		p.put("mail.smtp.auth", "true");
-		p.put("mail.smtp.debug", "true");
-		p.put("mail.smtp.socketFactory.port", "465");
-		p.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-		p.put("mail.smtp.sockerFactory.fallback", "false");
-
-		try {
-			Authenticator auth = new Gmail();
-			Session ses = Session.getInstance(p, auth);
-			ses.setDebug(true);
-			MimeMessage msg = new MimeMessage(ses);
-			msg.setSubject(subject);
-			Address fromAddr = new InternetAddress(from);
-			msg.setFrom(fromAddr);
-			Address toAddr = new InternetAddress(email);
-			msg.addRecipient(Message.RecipientType.TO, toAddr);
-			msg.setContent(secureCode, "text/html; charset=UTF8");
-			Transport.send(msg);
-
-			HttpSession session = request.getSession();
-			session.setAttribute("name", name);
-			session.setAttribute("email", email);
-
-			response.setContentType("text/html; charset=utf-8");
-			PrintWriter out = response.getWriter();
-			out.println("<script>alert('메일확인해주세요');history.go(-1); </script>");
-			out.flush();
-			
-		} catch (Exception e) {
-			response.setContentType("text/html; charset=utf-8");
-			PrintWriter script = response.getWriter();
-			script.println("<script>");
-			script.println("alert('이메일 인증 오류')");
-			script.println("history.back();");
-			script.println("</script>");
-		}
-	}
-
-	/**
-	 * 이메일 임시번호 인증
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws ServletException
-	 * @throws IOException
-	 */
-	protected void mail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String code = request.getParameter("code");
 		
-		response.setContentType("text/html; charset=utf-8");
-		PrintWriter script = response.getWriter();
-		 if(code.equals(secureCode)){	
-			script.println("<script>");
-			script.println("alert('이메일 인증에 성공하였습니다.')");
-			script.println("location.href='/nanummoa/common/commonController?action=findId'");
-			script.println("</script>");
-		} else{
-			script.println("<script>");
-			script.println("alert('이메일 인증을 실패하였습니다.')");
-			script.println("location.href='/nanummoa/common/error.jsp'");
-			script.println("</script>");
-		}  
+		System.out.println("이름 : " + name);
+		System.out.println("등급 : " + grade);
+		System.out.println("이메일 : " + email);
+
+		if (email == null || email.trim().length() == 0 || email == "") {
+			out.print("none_email");
+			out.flush();
+			out.close();
+			return;
+		}
+		if (name == null || name.trim().length() == 0 || name == "") {
+			out.print("none_name");
+			out.flush();
+			out.close();
+			return;
+		}
+		email.trim();
+		name.trim();
+
+		String subject = "나눔모아 이메일 인증 메일입니다.";
+		secureCode = Utility.getSecureString(8, true);
+
+		CommonBiz biz = new CommonBiz();
+		if (grade.equals("G")) {
+			GeneralMemberDto dto = new GeneralMemberDto();
+			dto.setGeneralName(name);
+			dto.setGeneralEmail(email);
+			try {
+				biz.checkEmail(dto);
+				if (dto.getGeneralId() != null) {
+					Properties p = new Properties();
+					p.put("mail.smtp.user", from);
+					p.put("mail.smtp.host", "smtp.gmail.com");
+					p.put("mail.smtp.port", "465"); // TLS 587, SSL 465
+					p.put("mail.smtp.starttls.enable", "true");
+					p.put("mail.smtp.auth", "true");
+					p.put("mail.smtp.debug", "true");
+					p.put("mail.smtp.socketFactory.port", "465");
+					p.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+					p.put("mail.smtp.sockerFactory.fallback", "false");
+					try {
+						Authenticator auth = new Gmail();
+						Session ses = Session.getInstance(p, auth);
+						ses.setDebug(true);
+						MimeMessage msg = new MimeMessage(ses);
+						msg.setSubject(subject);
+						Address fromAddr = new InternetAddress(from);
+						msg.setFrom(fromAddr);
+						Address toAddr = new InternetAddress(email);
+						msg.addRecipient(Message.RecipientType.TO, toAddr);
+						msg.setContent(secureCode, "text/html; charset=UTF8");
+						Transport.send(msg);
+
+						out.print("send_email");
+						out.flush();
+					} catch (Exception e) {
+						out.print("not_email");
+						out.flush();
+					}
+				} else {
+					out.print("not_info");
+					out.flush();
+				}
+			} catch (CommonException e) {
+				out.print("error");
+				out.flush();
+			} finally {
+				out.close();
+			}
+		} else if (grade.equals("C")) {
+			CenterMemberDto dto = new CenterMemberDto();
+			dto.setCenterName(name);
+			dto.setCenterEmail(email);
+			try {
+				biz.checkEmail(dto);
+				if (dto.getCenterId() != null) {
+					Properties p = new Properties();
+					p.put("mail.smtp.user", from);
+					p.put("mail.smtp.host", "smtp.gmail.com");
+					p.put("mail.smtp.port", "465"); // TLS 587, SSL 465
+					p.put("mail.smtp.starttls.enable", "true");
+					p.put("mail.smtp.auth", "true");
+					p.put("mail.smtp.debug", "true");
+					p.put("mail.smtp.socketFactory.port", "465");
+					p.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+					p.put("mail.smtp.sockerFactory.fallback", "false");
+					try {
+						Authenticator auth = new Gmail();
+						Session ses = Session.getInstance(p, auth);
+						ses.setDebug(true);
+						MimeMessage msg = new MimeMessage(ses);
+						msg.setSubject(subject);
+						Address fromAddr = new InternetAddress(from);
+						msg.setFrom(fromAddr);
+						Address toAddr = new InternetAddress(email);
+						msg.addRecipient(Message.RecipientType.TO, toAddr);
+						msg.setContent(secureCode, "text/html; charset=UTF8");
+						Transport.send(msg);
+
+						out.print("send_email");
+						out.flush();
+					} catch (Exception e) {
+						out.print("not_email");
+						out.flush();
+					}
+				} else {
+					out.println("not_info");
+					out.flush();
+				}
+			} catch (CommonException e) {
+				out.println("error");
+				out.flush();
+			} finally {
+				out.close();
+			}
+		}
 	}
 
 	/**
@@ -337,139 +405,410 @@ public class CommonController extends HttpServlet {
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	protected void findId(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		String email = (String)session.getAttribute("email");
-		String name = (String)session.getAttribute("name");
+	protected void findId(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		PrintWriter out = response.getWriter();
 		
+		String code = request.getParameter("code");
+		String name = request.getParameter("name");
+		String email = request.getParameter("email");
+		String grade = request.getParameter("grade");
+
 		CommonBiz biz = new CommonBiz();
-		
-		GeneralMemberDto dto = new GeneralMemberDto();
-		dto.setGeneralEmail(email);
-		dto.setGeneralName(name);
-		
-		try {
-			biz.findId(dto);
-			if (dto.getGeneralId() != null) {
-				System.out.println("일반회원 아이디 : " + dto.getGeneralId());
-				
-				request.setAttribute("dto", dto);
-				request.getRequestDispatcher("/common/idpwmessage.jsp").forward(request, response);
-			}else {
-				CenterMemberDto center = new CenterMemberDto();
-				center.setCenterEmail(email);
-				center.setCenterName(name);
+
+		if (code.equals(secureCode)) {
+			if (grade.equals("G")) {
+				GeneralMemberDto dto = new GeneralMemberDto();
+				dto.setGeneralName(name);
+				dto.setGeneralEmail(email);
 				try {
-					biz.findId(center);	
-					if (center.getCenterId() != null) {
-						System.out.println("센터 아이디 : " + center.getCenterId());
-						request.setAttribute("dto", center);
-						request.getRequestDispatcher("/common/idpwmessage.jsp").forward(request, response);		
-					}else {
-						System.out.println(dto.getGeneralId());
-						System.out.println(center.getCenterId());
-						System.out.println("정보 틀림");
-						return;
-					}
-				} catch (Exception e) {
-					System.out.println("아이디 찾기 오류");
-					return;
+					biz.findId(dto);
+					request.setAttribute("dto", dto);
+					MessageEntity message = new MessageEntity("success", 0);
+					message.setLinkTitle("로그인");
+					message.setUrl(CONTEXT_PATH + "/common/commonController?action=loginForm");
+					request.setAttribute("message", message);
+					request.setAttribute("id", dto.getGeneralId());	
+					request.getRequestDispatcher("/common/findInfo/idpwmessage.jsp").forward(request, response);
+				} catch (CommonException e) {
+					out.println("<script>alert('[오류]');history.go(-1); </script>");
+					out.flush();
+				}
+			} else if (grade.equals("C")) {
+				CenterMemberDto dto = new CenterMemberDto();
+				dto.setCenterName(name);
+				dto.setCenterEmail(email);
+				try {
+					biz.findId(dto);
+					MessageEntity message = new MessageEntity("success", 0);
+					message.setLinkTitle("로그인");
+					message.setUrl(CONTEXT_PATH + "/common/commonController?action=loginForm");
+					request.setAttribute("message", message);
+					request.setAttribute("dto", dto);
+					request.setAttribute("id", dto.getCenterId());
+					request.getRequestDispatcher("/common/findInfo/idpwmessage.jsp").forward(request, response);
+				} catch (CommonException e) {
+					out.println("<script>alert('[오류]');history.go(-1); </script>");
+					out.flush();
 				}
 			}
-		} catch (Exception e) {
-			System.out.println("아이디 찾기 오류");
-			return;
+		} else {
+			out.println("<script>alert('[오류] 인증번호가 맞지 않습니다.');history.go(-1); </script>");
+			out.flush();
 		}
 	}
-	
-	
+
 	/**
-	 * 전체 문의글에서 글쓰기 연동
+	 * 비밀번호찾기 페이지
+	 * 
 	 * @param request
 	 * @param response
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	private void qnaInputForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	protected void findPwForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		request.getRequestDispatcher("/common/findInfo/findPw.jsp").forward(request, response);
+	}
+
+	/**
+	 * 비밀번호찾기(이메일 검색)
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void findPw(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		PrintWriter out = response.getWriter();
+		
+		String memberId = request.getParameter("memberId");
+		String grade = request.getParameter("grade");
+		
+		if (memberId == null || memberId.trim().length() == 0 || memberId == "") {
+			out.println("<script>alert('[오류] 아이디를 입력하세요');history.go(-1); </script>");
+			out.flush();
+			return;
+		}
+		memberId = memberId.trim();
+		CommonBiz biz = new CommonBiz();
+
+		if (grade.equals("G")) {
+			GeneralMemberDto dto = new GeneralMemberDto();
+			dto.setGeneralId(memberId);
+			try {
+				biz.findPw(dto);
+				if (dto.getGeneralEmail() != null) {
+					request.setAttribute("grade", grade);
+					request.setAttribute("dto", dto);
+					request.getRequestDispatcher("/common/commonController?action=checkEmailForm").forward(request,
+							response);
+				} else {
+					out.println("<script>alert('[오류] 존재하지 않는 아이디 입니다.');history.go(-1); </script>");
+					out.flush();
+					return;
+				}
+			} catch (CommonException e) {
+				out.println("<script>alert('[오류]');history.go(-1); </script>");
+				out.flush();
+				return;
+			}
+		} else if (grade.equals("C")) {
+			CenterMemberDto dto = new CenterMemberDto();
+			dto.setCenterId(memberId);
+			try {
+				biz.findPw(dto);
+				if (dto.getCenterEmail() != null) {
+					request.setAttribute("grade", grade);
+					request.setAttribute("dto", dto);
+					request.getRequestDispatcher("/common/findInfo/checkEmail.jsp").forward(request, response);
+				} else {
+					
+					out.println("<script>alert('[오류] 존재하지 않는 아이디 입니다.');history.go(-1); </script>");
+					out.flush();
+					return;
+				}
+			} catch (CommonException e) {
+				out.println("<script>alert('[오류]');history.go(-1); </script>");
+				out.flush();
+				return;
+			}
+		}
+	}
+
+	/**
+	 * 비밀번호찾기(이메일 인증) 페이지
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void checkEmailForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		request.getRequestDispatcher("/common/findInfo/checkEmail.jsp").forward(request, response);
+	}
+
+	/**
+	 * 비밀번호찾기(이메일 인증)
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void checkEmail(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		PrintWriter out = response.getWriter();
+
+		String name = request.getParameter("name");
+		String code = request.getParameter("code");
+		String email = request.getParameter("email");
+		String grade = request.getParameter("grade");
+
+		System.out.println("이름 : " + name);
+		System.out.println("코드 : " + code);
+		System.out.println("메일 : " + email);
+		System.out.println("등급 : " + grade);
+
+		if (name == null || name.trim().length() == 0 || name == "") {
+			out.println("<script>alert('[오류] 이름을 입력하세요');history.go(-1); </script>");
+			out.flush();
+			return;
+		}
+		if (code == null || code.trim().length() == 0 || code == "") {
+			out.println("<script>alert('[오류] 인증번호를 입력하세요');history.go(-1); </script>");
+			out.flush();
+			return;
+		}
+
+		name = name.trim();
+		code = code.trim();
+
+		CommonBiz biz = new CommonBiz();
+		if (code.equals(secureCode)) {
+			if (grade.equals("G")) {
+				GeneralMemberDto dto = new GeneralMemberDto();
+				dto.setGeneralName(name);
+				dto.setGeneralEmail(email);
+				try {
+					biz.checkEmail(dto);
+					System.out.println("비밀번호 : " +dto.getGeneralPass());
+					if (dto.getGeneralPass() != null) {
+						request.setAttribute("grade", grade);
+						request.setAttribute("dto", dto);
+						request.getRequestDispatcher("/common/commonController?action=newPwForm").forward(request,
+								response);
+					} else {
+						out.println("<script>alert('[오류] 정보가 맞지 않습니다');history.go(-1); </script>");
+						out.flush();
+						return;
+					}
+				} catch (CommonException e) {
+					out.println("<script>alert('[오류]');history.go(-1); </script>");
+					out.flush();
+					return;
+				}
+			} else if (grade.equals("C")) {
+				CenterMemberDto dto = new CenterMemberDto();
+				dto.setCenterName(name);
+				dto.setCenterEmail(email);
+				try {
+					biz.checkEmail(dto);
+					if (dto.getCenterPass() != null) {
+						request.setAttribute("grade", grade);
+						request.setAttribute("dto", dto);
+						request.getRequestDispatcher("/common/commonController?action=newPwForm").forward(request,
+								response);
+					} else {
+						out.println("<script>alert('[오류] 정보가 맞지 않습니다');history.go(-1); </script>");
+						out.flush();
+						return;
+					}
+				} catch (CommonException e) {
+					out.println("<script>alert('[오류]');history.go(-1); </script>");
+					out.flush();
+					return;
+				}
+			}
+		} else {
+			out.println("<script>alert('[오류] 인증번호가 맞지 않습니다.');history.go(-1); </script>");
+			out.flush();
+			return;
+		}
+	}
+
+	/**
+	 * 새비밀번호 페이지
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void newPwForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		request.getRequestDispatcher("/common/findInfo/newPw.jsp").forward(request, response);
+	}
+
+	/**
+	 * 새비밀번호 설정
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void newPw(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		PrintWriter out = response.getWriter();
+		
+		String memberPw = request.getParameter("memberPw");
+		String email = request.getParameter("email");
+		String grade = request.getParameter("grade");
+
+		System.out.println(memberPw);
+		System.out.println(email);
+		System.out.println(grade);
+
+		if (memberPw == null || memberPw.trim().length() == 0 || memberPw == "") {
+			out.println("<script>alert('[오류] 이름을 입력하세요');history.go(-1); </script>");
+			out.flush();
+			return;
+		}
+		if (email == null || email.trim().length() == 0 || email == "") {
+			out.println("<script>alert('[오류] 인증번호를 입력하세요');history.go(-1); </script>");
+			out.flush();
+			return;
+		}
+
+		memberPw = memberPw.trim();
+		email = email.trim();
+		CommonBiz biz = new CommonBiz();
+
+		if (grade.equals("G")) {
+			GeneralMemberDto dto = new GeneralMemberDto();
+			dto.setGeneralPass(memberPw);
+			dto.setGeneralEmail(email);
+			try {
+				biz.newPw(dto);
+				MessageEntity message = new MessageEntity("success", 1);
+				message.setLinkTitle("로그인");
+				message.setUrl(CONTEXT_PATH + "/common/commonController?action=loginForm");
+				request.setAttribute("message", message);
+				request.getRequestDispatcher("/common/findInfo/idpwmessage.jsp").forward(request, response);
+			} catch (Exception e) {
+				out.println("<script>alert('[오류] 인증번호를 입력하세요');history.go(-1); </script>");
+				out.flush();
+			}
+		} else if (grade.equals("C")) {
+			CenterMemberDto dto = new CenterMemberDto();
+			dto.setCenterPass(memberPw);
+			dto.setCenterEmail(email);
+			try {
+				biz.newPw(dto);
+				MessageEntity message = new MessageEntity("success", 1);
+				message.setLinkTitle("로그인");
+				message.setUrl(CONTEXT_PATH + "/common/commonController?action=loginForm");
+				request.setAttribute("message", message);
+				request.getRequestDispatcher("/common/findInfo/idpwmessage.jsp").forward(request, response);
+			} catch (Exception e) {
+				out.println("<script>alert('[오류] 인증번호를 입력하세요');history.go(-1); </script>");
+				out.flush();
+			}
+		}
+	}
+
+	/**
+	 * 전체 문의글에서 글쓰기 연동
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void qnaInputForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		request.getRequestDispatcher("/qna/qnaInput.jsp").forward(request, response);
 	}
 
-	
 	/**
 	 * QNA 등록
 	 */
-	private void qnaInput(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	private void qnaInput(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		String grade = (String) session.getAttribute("grade");
 		String qnaTitle = request.getParameter("qnaTitle");
 		String qnaContents = request.getParameter("qnaContents");
-		
+
 		QnADto dto = new QnADto();
 		dto.setQnaTitle(qnaTitle);
 		dto.setQnaContents(qnaContents);
-		
+
 		CommonBiz biz = new CommonBiz();
-		
+
 		// 작성자는 로그인에서
-		if (grade.equals("G")) { 
-			//GeneralMemberDto gdto = (GeneralMemberDto) session.getAttribute("dto");
-			//System.out.println("gdto.getGeneralId()" + gdto.getGeneralId());
-			//dto.setGeneralId(gdto.getGeneralId());
+		if (grade.equals("G")) {
+			// GeneralMemberDto gdto = (GeneralMemberDto) session.getAttribute("dto");
+			// System.out.println("gdto.getGeneralId()" + gdto.getGeneralId());
+			// dto.setGeneralId(gdto.getGeneralId());
 			dto.setGeneralId("user02");
 
-			System.out.println("dto.getGeneralId() = "+dto.getGeneralId());
+			System.out.println("dto.getGeneralId() = " + dto.getGeneralId());
 			try {
 				biz.addQna_gen(dto);
-				request.getRequestDispatcher("/qna/qnaList.jsp").forward(request, response);
+				response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=qnaList");
 			} catch (CommonException e) {
 				e.printStackTrace();
 			}
-			
-			
-		}else if  (grade.equals("C")) {
-			//CenterMemberDto cdto = (CenterMemberDto) session.getAttribute("dto");
-			//dto.setCenterId(cdto.getCenterId());
+
+		} else if (grade.equals("C")) {
+			// CenterMemberDto cdto = (CenterMemberDto) session.getAttribute("dto");
+			// dto.setCenterId(cdto.getCenterId());
 			dto.setCenterId("user02");
 
 			try {
 				biz.addQna_cen(dto);
-				request.getRequestDispatcher("/qna/qnaList.jsp").forward(request, response);
+				// request.getRequestDispatcher("/qna/qnaList.jsp").forward(request, response);
+				response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=qnaList");
 			} catch (CommonException e) {
 				e.printStackTrace();
 			}
-		}else if  (grade.equals("A")) {// 어드민
-			//AdminMemberDto adto = (AdminMemberDto) session.getAttribute("dto");
+		} else if (grade.equals("A")) {// 어드민
+			// AdminMemberDto adto = (AdminMemberDto) session.getAttribute("dto");
 		}
 	}
-	
+
 	/**
-	 * QNA 목록조회 
+	 * QNA 목록조회
 	 */
-	private void qnaList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	private void qnaList(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		String searchOpt = request.getParameter("search_opt");
 		String searchText = request.getParameter("search_text");
 		CommonBiz biz = new CommonBiz();
 		ArrayList<QnADto> qnaList = new ArrayList<QnADto>();
-		
+
 		try {
 			biz.qnaList(qnaList, searchOpt, searchText);
 			request.setAttribute("qnaList", qnaList);
-			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=qnaList");
+			request.getRequestDispatcher("/qna/qnaList.jsp").forward(request, response);
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
-			
+
 	}
-	
-	
+
 	/**
-	 * QNA 상세조회 
+	 * QNA 상세조회
 	 */
-	private void qnaDtl(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	private void qnaDtl(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String qnaNo = request.getParameter("qnaNo");
 		CommonBiz biz = new CommonBiz();
 		QnADto dto = new QnADto();
-		
+
 		try {
 			biz.qnaDetail(dto, qnaNo);
 			request.setAttribute("sdto", dto);
@@ -478,21 +817,20 @@ public class CommonController extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	/**
 	 * QNA 수정
 	 */
-	private void qnaUpt(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	private void qnaUpt(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String qnaTitle = request.getParameter("qnaTitle");
 		String qnaContents = request.getParameter("qnaContents");
 		String qnaNo = request.getParameter("qnaNo");
-		
+
 		QnADto dto = new QnADto();
 		dto.setQnaNo(Integer.parseInt(qnaNo));
 		dto.setQnaContents(qnaContents);
 		dto.setQnaTitle(qnaTitle);
-		
+
 		try {
 			CommonBiz biz = new CommonBiz();
 			biz.qnaUpdate(dto);
@@ -501,13 +839,13 @@ public class CommonController extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * QNA 삭제
 	 */
-	private void qnaDel(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	private void qnaDel(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String qnaNo = request.getParameter("qnaNo");
-		
+
 		try {
 			CommonBiz biz = new CommonBiz();
 			biz.qnaDelete(qnaNo);
@@ -515,6 +853,116 @@ public class CommonController extends HttpServlet {
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
+	}
+
+	
+	/**
+	 * 봉사조회 페이지 요청 서비스
+	 */
+	private void volListForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		CommonBiz biz = new CommonBiz();
+		GeneralBiz gBiz = new GeneralBiz();
+		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
+		ArrayList<LocalDto> localList = new ArrayList<LocalDto>();
+		ArrayList<VolCategoryDto> volCategoryList = new ArrayList<VolCategoryDto>();
+		ArrayList<ServiceCategoryDto> serviceList = new ArrayList<ServiceCategoryDto>();
+		HashMap<String, String> searchMap = new HashMap<String, String>();
+		
+		String local = request.getParameter("local");
+		String category = request.getParameter("category");
+		String service = request.getParameter("service");
+		String status = request.getParameter("status");
+		String volStart = request.getParameter("volStart");
+		String volEnd = request.getParameter("volEnd");
+		String[] volType = request.getParameterValues("volType");
+		String volTitle = request.getParameter("volTitle");
+		String centerName = request.getParameter("centerName");
+		
+		if (local == null) {
+			local = "0";
+		}
+		if (category == null) {
+			category = "0";
+		}
+		if (service == null) {
+			service = "0";
+		}
+		if (status == null) {
+			status = "0";
+		} else if (status.equals("2")) {
+			status = null;
+		}
+		if (volStart == null) {
+			volStart = Utility.getCurrentDate();
+		}
+		if (volEnd == null) {
+			volEnd = Utility.getCurrentDate(3);
+		}
+		if (volTitle != null) {
+			if (volTitle.trim().length() == 0) {
+				volTitle = null;
+			} else {
+				volTitle = volTitle.trim();
+			}
+		}
+		if (centerName != null) {
+			if (centerName.trim().length() == 0) {
+				centerName = null;
+			} else {
+				centerName = centerName.trim();
+			}
+		}
+		
+		searchMap.put("local", local);
+		searchMap.put("category", category);
+		searchMap.put("service", service);
+		searchMap.put("status", status);
+		searchMap.put("volStart", volStart);
+		searchMap.put("volEnd", volEnd);
+		if (volType == null || volType.length == 2) {
+			searchMap.put("volType", null);
+		} else {
+			searchMap.put("volType", volType[0]);
+		}
+		searchMap.put("volTitle", volTitle);
+		searchMap.put("centerName", centerName);
+		
+		
+		try {
+			if (!local.equals("0")) {
+				HashMap<String, LocalDto> localMap = new HashMap<String, LocalDto>();
+				biz.searchLocal(localMap);
+				LocalDto dto = localMap.get(local);
+				searchMap.put("local", dto.getLocalName());
+			}
+			
+			gBiz.getLocalList(localList);
+			gBiz.getVolCategoryList(volCategoryList);
+			biz.searchServiceCategory(serviceList);
+			String[] date = {Utility.getCurrentDate(), Utility.getCurrentDate(3)};
+			String sql = biz.searchVolList(list, searchMap);
+			int total = biz.volListTotalCount(searchMap, sql);
+			System.out.println("total : " + total);
+			
+			request.setAttribute("date", date);
+			request.setAttribute("localList", localList);
+			request.setAttribute("volCategoryList", volCategoryList);
+			request.setAttribute("serviceList", serviceList);
+			request.setAttribute("volList", list);
+			request.setAttribute("total", total);
+			request.setAttribute("searchMap", searchMap);
+			request.getRequestDispatcher("/common/vol_list.jsp").forward(request, response);
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 회원가입 페이지 요청
+	 */
+	protected void inputForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		request.getRequestDispatcher("/common/inputForm.jsp").forward(request, response);
 	}
 	
 	/**
@@ -537,5 +985,4 @@ public class CommonController extends HttpServlet {
 		
 		response.sendRedirect(CONTEXT_PATH + "/home"); 
 	}
-	
 }
