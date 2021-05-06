@@ -49,6 +49,7 @@ public class CommonController extends HttpServlet {
 	protected void process(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
+		response.setContentType("text/html; charset=utf-8");
 		String action = request.getParameter("action");
 		switch (action) {
 		case "loginForm":
@@ -141,20 +142,18 @@ public class CommonController extends HttpServlet {
 	 */
 	protected void login(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		PrintWriter out = response.getWriter();
+		
 		String memberId = request.getParameter("memberId");
 		String memberPw = request.getParameter("memberPw");
 		String grade = request.getParameter("grade");
 
 		if (memberId == null || memberId.trim().length() == 0 || memberId == "") {
-			response.setContentType("text/html; charset=utf-8");
-			PrintWriter out = response.getWriter();
 			out.println("<script>alert('[오류] 아이디를 입력하세요');history.go(-1); </script>");
 			out.flush();
 			return;
 		}
 		if (memberPw == null || memberPw.trim().length() == 0 || memberPw == "") {
-			response.setContentType("text/html; charset=utf-8");
-			PrintWriter out = response.getWriter();
 			out.println("<script>alert('[오류] 비밀번호를 입력하세요');history.go(-1); </script>");
 			out.flush();
 			return;
@@ -179,15 +178,11 @@ public class CommonController extends HttpServlet {
 
 					response.sendRedirect(CONTEXT_PATH + "/home");
 				} else {
-					response.setContentType("text/html; charset=utf-8");
-					PrintWriter out = response.getWriter();
 					out.println("<script>alert('[오류] 로그인 정보가 맞지 않습니다.');history.go(-1); </script>");
 					out.flush();
 					return;
 				}
 			} catch (CommonException e) {
-				response.setContentType("text/html; charset=utf-8");
-				PrintWriter out = response.getWriter();
 				out.println("<script>alert('[오류]');history.go(-1); </script>");
 				out.flush();
 				return;
@@ -203,15 +198,11 @@ public class CommonController extends HttpServlet {
 					session.setAttribute("grade", grade);
 					response.sendRedirect(CONTEXT_PATH + "/home");
 				} else {
-					response.setContentType("text/html; charset=utf-8");
-					PrintWriter out = response.getWriter();
 					out.println("<script>alert('[오류] 로그인 정보가 맞지 않습니다.');history.go(-1); </script>");
 					out.flush();
 					return;
 				}
 			} catch (CommonException e) {
-				response.setContentType("text/html; charset=utf-8");
-				PrintWriter out = response.getWriter();
 				out.println("<script>alert('[오류]');history.go(-1); </script>");
 				out.flush();
 			}
@@ -226,15 +217,11 @@ public class CommonController extends HttpServlet {
 					session.setAttribute("grade", grade);
 					response.sendRedirect(CONTEXT_PATH + "/home");
 				} else {
-					response.setContentType("text/html; charset=utf-8");
-					PrintWriter out = response.getWriter();
 					out.println("<script>alert('[오류] 로그인 정보가 맞지 않습니다.');history.go(-1); </script>");
 					out.flush();
 					return;
 				}
 			} catch (CommonException e) {
-				response.setContentType("text/html; charset=utf-8");
-				PrintWriter out = response.getWriter();
 				out.println("<script>alert('[오류]');history.go(-1); </script>");
 				out.flush();
 			}
@@ -267,7 +254,6 @@ public class CommonController extends HttpServlet {
 	 */
 	protected void addSecureCode(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		response.setContentType("text/html; charset=utf-8");
 		PrintWriter out = response.getWriter();
 
 		String grade = request.getParameter("grade");
@@ -293,7 +279,6 @@ public class CommonController extends HttpServlet {
 			out.close();
 			return;
 		}
-
 		email.trim();
 		name.trim();
 
@@ -336,18 +321,17 @@ public class CommonController extends HttpServlet {
 					} catch (Exception e) {
 						out.print("not_email");
 						out.flush();
-					} finally {
-						out.close();
 					}
 				} else {
-					out.println("<script>alert('[오류] 아이디가 존재하지 않습니다');history.go(-1); </script>");
+					out.print("not_info");
 					out.flush();
 				}
 			} catch (CommonException e) {
-				out.println("<script>alert('[오류]');history.go(-1); </script>");
+				out.print("error");
 				out.flush();
+			} finally {
+				out.close();
 			}
-
 		} else if (grade.equals("C")) {
 			CenterMemberDto dto = new CenterMemberDto();
 			dto.setCenterName(name);
@@ -383,16 +367,16 @@ public class CommonController extends HttpServlet {
 					} catch (Exception e) {
 						out.print("not_email");
 						out.flush();
-					} finally {
-						out.close();
 					}
 				} else {
-					out.println("<script>alert('[오류] 아이디가 존재하지 않습니다');history.go(-1); </script>");
+					out.println("not_info");
 					out.flush();
 				}
 			} catch (CommonException e) {
-				out.println("<script>alert('[오류]');history.go(-1); </script>");
+				out.println("error");
 				out.flush();
+			} finally {
+				out.close();
 			}
 		}
 	}
@@ -407,13 +391,13 @@ public class CommonController extends HttpServlet {
 	 */
 	protected void findId(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		PrintWriter out = response.getWriter();
+		
 		String code = request.getParameter("code");
 		String name = request.getParameter("name");
 		String email = request.getParameter("email");
 		String grade = request.getParameter("grade");
 
-		response.setContentType("text/html; charset=utf-8");
-		PrintWriter out = response.getWriter();
 		CommonBiz biz = new CommonBiz();
 
 		if (code.equals(secureCode)) {
@@ -428,6 +412,7 @@ public class CommonController extends HttpServlet {
 					message.setLinkTitle("로그인");
 					message.setUrl(CONTEXT_PATH + "/common/commonController?action=loginForm");
 					request.setAttribute("message", message);
+					request.setAttribute("id", dto.getGeneralId());	
 					request.getRequestDispatcher("/common/findInfo/idpwmessage.jsp").forward(request, response);
 				} catch (CommonException e) {
 					out.println("<script>alert('[오류]');history.go(-1); </script>");
@@ -444,6 +429,7 @@ public class CommonController extends HttpServlet {
 					message.setUrl(CONTEXT_PATH + "/common/commonController?action=loginForm");
 					request.setAttribute("message", message);
 					request.setAttribute("dto", dto);
+					request.setAttribute("id", dto.getCenterId());
 					request.getRequestDispatcher("/common/findInfo/idpwmessage.jsp").forward(request, response);
 				} catch (CommonException e) {
 					out.println("<script>alert('[오류]');history.go(-1); </script>");
@@ -479,21 +465,18 @@ public class CommonController extends HttpServlet {
 	 */
 	protected void findPw(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		PrintWriter out = response.getWriter();
+		
 		String memberId = request.getParameter("memberId");
 		String grade = request.getParameter("grade");
-
+		
 		if (memberId == null || memberId.trim().length() == 0 || memberId == "") {
-			response.setContentType("text/html; charset=utf-8");
-			PrintWriter out = response.getWriter();
 			out.println("<script>alert('[오류] 아이디를 입력하세요');history.go(-1); </script>");
 			out.flush();
 			return;
 		}
-
 		memberId = memberId.trim();
-
 		CommonBiz biz = new CommonBiz();
-		response.setContentType("text/html; charset=utf-8");
 
 		if (grade.equals("G")) {
 			GeneralMemberDto dto = new GeneralMemberDto();
@@ -506,13 +489,11 @@ public class CommonController extends HttpServlet {
 					request.getRequestDispatcher("/common/commonController?action=checkEmailForm").forward(request,
 							response);
 				} else {
-					PrintWriter out = response.getWriter();
 					out.println("<script>alert('[오류] 존재하지 않는 아이디 입니다.');history.go(-1); </script>");
 					out.flush();
 					return;
 				}
 			} catch (CommonException e) {
-				PrintWriter out = response.getWriter();
 				out.println("<script>alert('[오류]');history.go(-1); </script>");
 				out.flush();
 				return;
@@ -527,14 +508,12 @@ public class CommonController extends HttpServlet {
 					request.setAttribute("dto", dto);
 					request.getRequestDispatcher("/common/findInfo/checkEmail.jsp").forward(request, response);
 				} else {
-
-					PrintWriter out = response.getWriter();
+					
 					out.println("<script>alert('[오류] 존재하지 않는 아이디 입니다.');history.go(-1); </script>");
 					out.flush();
 					return;
 				}
 			} catch (CommonException e) {
-				PrintWriter out = response.getWriter();
 				out.println("<script>alert('[오류]');history.go(-1); </script>");
 				out.flush();
 				return;
@@ -565,6 +544,7 @@ public class CommonController extends HttpServlet {
 	 */
 	protected void checkEmail(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		PrintWriter out = response.getWriter();
 
 		String name = request.getParameter("name");
 		String code = request.getParameter("code");
@@ -577,15 +557,11 @@ public class CommonController extends HttpServlet {
 		System.out.println("등급 : " + grade);
 
 		if (name == null || name.trim().length() == 0 || name == "") {
-			response.setContentType("text/html; charset=utf-8");
-			PrintWriter out = response.getWriter();
 			out.println("<script>alert('[오류] 이름을 입력하세요');history.go(-1); </script>");
 			out.flush();
 			return;
 		}
 		if (code == null || code.trim().length() == 0 || code == "") {
-			response.setContentType("text/html; charset=utf-8");
-			PrintWriter out = response.getWriter();
 			out.println("<script>alert('[오류] 인증번호를 입력하세요');history.go(-1); </script>");
 			out.flush();
 			return;
@@ -602,21 +578,18 @@ public class CommonController extends HttpServlet {
 				dto.setGeneralEmail(email);
 				try {
 					biz.checkEmail(dto);
+					System.out.println("비밀번호 : " +dto.getGeneralPass());
 					if (dto.getGeneralPass() != null) {
 						request.setAttribute("grade", grade);
 						request.setAttribute("dto", dto);
 						request.getRequestDispatcher("/common/commonController?action=newPwForm").forward(request,
 								response);
 					} else {
-						response.setContentType("text/html; charset=utf-8");
-						PrintWriter out = response.getWriter();
 						out.println("<script>alert('[오류] 정보가 맞지 않습니다');history.go(-1); </script>");
 						out.flush();
 						return;
 					}
 				} catch (CommonException e) {
-					response.setContentType("text/html; charset=utf-8");
-					PrintWriter out = response.getWriter();
 					out.println("<script>alert('[오류]');history.go(-1); </script>");
 					out.flush();
 					return;
@@ -633,23 +606,17 @@ public class CommonController extends HttpServlet {
 						request.getRequestDispatcher("/common/commonController?action=newPwForm").forward(request,
 								response);
 					} else {
-						response.setContentType("text/html; charset=utf-8");
-						PrintWriter out = response.getWriter();
 						out.println("<script>alert('[오류] 정보가 맞지 않습니다');history.go(-1); </script>");
 						out.flush();
 						return;
 					}
 				} catch (CommonException e) {
-					response.setContentType("text/html; charset=utf-8");
-					PrintWriter out = response.getWriter();
 					out.println("<script>alert('[오류]');history.go(-1); </script>");
 					out.flush();
 					return;
 				}
 			}
 		} else {
-			response.setContentType("text/html; charset=utf-8");
-			PrintWriter out = response.getWriter();
 			out.println("<script>alert('[오류] 인증번호가 맞지 않습니다.');history.go(-1); </script>");
 			out.flush();
 			return;
@@ -679,6 +646,8 @@ public class CommonController extends HttpServlet {
 	 */
 	protected void newPw(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		PrintWriter out = response.getWriter();
+		
 		String memberPw = request.getParameter("memberPw");
 		String email = request.getParameter("email");
 		String grade = request.getParameter("grade");
@@ -688,15 +657,11 @@ public class CommonController extends HttpServlet {
 		System.out.println(grade);
 
 		if (memberPw == null || memberPw.trim().length() == 0 || memberPw == "") {
-			response.setContentType("text/html; charset=utf-8");
-			PrintWriter out = response.getWriter();
 			out.println("<script>alert('[오류] 이름을 입력하세요');history.go(-1); </script>");
 			out.flush();
 			return;
 		}
 		if (email == null || email.trim().length() == 0 || email == "") {
-			response.setContentType("text/html; charset=utf-8");
-			PrintWriter out = response.getWriter();
 			out.println("<script>alert('[오류] 인증번호를 입력하세요');history.go(-1); </script>");
 			out.flush();
 			return;
@@ -704,7 +669,6 @@ public class CommonController extends HttpServlet {
 
 		memberPw = memberPw.trim();
 		email = email.trim();
-
 		CommonBiz biz = new CommonBiz();
 
 		if (grade.equals("G")) {
@@ -719,9 +683,6 @@ public class CommonController extends HttpServlet {
 				request.setAttribute("message", message);
 				request.getRequestDispatcher("/common/findInfo/idpwmessage.jsp").forward(request, response);
 			} catch (Exception e) {
-				e.printStackTrace();
-				response.setContentType("text/html; charset=utf-8");
-				PrintWriter out = response.getWriter();
 				out.println("<script>alert('[오류] 인증번호를 입력하세요');history.go(-1); </script>");
 				out.flush();
 			}
@@ -737,9 +698,6 @@ public class CommonController extends HttpServlet {
 				request.setAttribute("message", message);
 				request.getRequestDispatcher("/common/findInfo/idpwmessage.jsp").forward(request, response);
 			} catch (Exception e) {
-				e.printStackTrace();
-				response.setContentType("text/html; charset=utf-8");
-				PrintWriter out = response.getWriter();
 				out.println("<script>alert('[오류] 인증번호를 입력하세요');history.go(-1); </script>");
 				out.flush();
 			}

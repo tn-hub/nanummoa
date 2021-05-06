@@ -17,10 +17,12 @@ import javax.servlet.http.HttpSession;
 
 import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.CenterVolDto;
+import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.VolApplyListDto;
 import com.nanum.dto.VolInfoDto;
 import com.nanum.model.biz.CenterBiz;
 import com.nanum.util.CommonException;
+import com.sun.javafx.collections.MappingChange.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -46,6 +48,7 @@ public class CenterController extends HttpServlet {
 	protected void process(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
+		response.setContentType("text/html; charset=utf-8");
 		String action = request.getParameter("action");
 		System.out.println("action : " + action);
 		switch (action) {
@@ -69,6 +72,15 @@ public class CenterController extends HttpServlet {
 			break;
 		case "applyList":
 			applyList(request, response);
+			break;
+		case "applicantInfoForm":
+			applicantInfoForm(request, response);
+			break;
+		case "applyGeneral":
+			applyGeneral(request, response);
+			break;
+		case "closeApply":
+			closeApply(request, response);
 			break;
 		}
 	}
@@ -96,7 +108,6 @@ public class CenterController extends HttpServlet {
 	 */
 	protected void idCheck(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		response.setContentType("text/html; charset=utf-8");
 
 		String id = request.getParameter("id");
 		System.out.println("id : " + id);
@@ -132,7 +143,6 @@ public class CenterController extends HttpServlet {
 	 */
 	protected void centerInput(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		response.setContentType("text/html; charset=utf-8");
 		PrintWriter out = response.getWriter();
 
 		String centerMemberName = request.getParameter("name");
@@ -420,15 +430,14 @@ public class CenterController extends HttpServlet {
 			throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
-		int volInfoNo = Integer.parseInt(request.getParameter("volInfoNo")); 
-		
 		String centerId = dto.getCenterId();
-		
-		CenterBiz biz = new CenterBiz();
-		ArrayList<VolApplyListDto> list = new ArrayList<VolApplyListDto>();
 
+		int volInfoNo = Integer.parseInt(request.getParameter("volInfoNo"));
+
+		ArrayList<VolApplyListDto> list = new ArrayList<VolApplyListDto>();
+		CenterBiz biz = new CenterBiz();
 		try {
-			biz.applyList(centerId,volInfoNo, list);
+			biz.applyList(centerId, volInfoNo, list);
 			request.setAttribute("list", list);
 			request.getRequestDispatcher("/center/applyList.jsp").forward(request, response);
 		} catch (CommonException e) {
@@ -436,4 +445,97 @@ public class CenterController extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 봉사활동 신청자 승인
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void applicantInfoForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
+		String centerId = dto.getCenterId();
+		String generalId = request.getParameter("generalId");
+		int volInfoNo = Integer.parseInt(request.getParameter("volInfoNo"));
+
+		GeneralMemberDto general = new GeneralMemberDto();
+		general.setGeneralId(generalId);
+
+		ArrayList<VolApplyListDto> list = new ArrayList<VolApplyListDto>();
+
+		CenterBiz biz = new CenterBiz();
+		try {
+			biz.applicantInfo(centerId, volInfoNo, general, list);
+
+			request.setAttribute("general", general);
+			request.setAttribute("list", list);
+			request.getRequestDispatcher("/center/applicantInfoForm.jsp").forward(request, response);
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 봉사활동 신청승인
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void applyGeneral(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
+		String centerId = dto.getCenterId();
+		String generalId = request.getParameter("generalId");
+		int volInfoNo = Integer.parseInt(request.getParameter("volInfoNo"));
+
+		String[] checkDates = request.getParameterValues("checkDate");
+		CenterBiz biz = new CenterBiz();
+		for (int i = 0; i < checkDates.length; i++) {
+			try {
+				biz.applyGeneral(checkDates[i]);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		request.setAttribute("generalId", generalId);
+		request.setAttribute("volInfoNo", volInfoNo);
+		request.getRequestDispatcher("/center/centerController?action=applicantInfoForm").forward(request, response);
+	}
+
+	/**
+	 * 봉사활동 승인취소
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void closeApply(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
+		String centerId = dto.getCenterId();
+		String generalId = request.getParameter("generalId");
+		int volInfoNo = Integer.parseInt(request.getParameter("volInfoNo"));
+		
+		int volApplyNo = Integer.parseInt(request.getParameter("volApplyNo"));
+		
+		CenterBiz biz = new CenterBiz();
+		
+		try {
+			biz.closeApply(volApplyNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		request.setAttribute("generalId", generalId);
+		request.setAttribute("volInfoNo", volInfoNo);
+		request.getRequestDispatcher("/center/centerController?action=applicantInfoForm").forward(request, response);
+	}
 }

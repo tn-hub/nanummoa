@@ -10,6 +10,7 @@ import java.util.Date;
  * 일반회원
  * 
  * </pre>
+ * 
  * @author 메타쓰리
  *
  */
@@ -47,10 +48,17 @@ public class GeneralMemberDto {
 	/** 지역번호 */
 	private String localNo;
 
+	/** 봉사분야이름 */
+	private String categoryName;
+
+	/** 지역이름 */
+	private String localName;
+
 	/**
 	 * 기본 생성자
 	 */
-	public GeneralMemberDto() {}
+	public GeneralMemberDto() {
+	}
 
 	/**
 	 * 전체 생성자
@@ -61,7 +69,7 @@ public class GeneralMemberDto {
 	 * @param gender         성별
 	 * @param birthday       생년월일
 	 * @param generalZipCode 우편번호
-	 * @param generalAddress  기본주소
+	 * @param generalAddress 기본주소
 	 * @param generalMobile  연락처
 	 * @param generalEmail   이메일
 	 * @param categoryNo     봉사분야번호
@@ -81,6 +89,40 @@ public class GeneralMemberDto {
 		this.generalEmail = generalEmail;
 		this.categoryNo = categoryNo;
 		this.localNo = localNo;
+	}
+
+	/**
+	 * @param generalId
+	 * @param generalPass
+	 * @param generalName
+	 * @param gender
+	 * @param birthday
+	 * @param generalZipCode
+	 * @param generalAddress
+	 * @param generalMobile
+	 * @param generalEmail
+	 * @param categoryNo
+	 * @param localNo
+	 * @param categoryName
+	 * @param localName
+	 */
+	public GeneralMemberDto(String generalId, String generalPass, String generalName, String gender, String birthday,
+			String generalZipCode, String generalAddress, String generalMobile, String generalEmail, String categoryNo,
+			String localNo, String categoryName, String localName) {
+		super();
+		this.generalId = generalId;
+		this.generalPass = generalPass;
+		this.generalName = generalName;
+		this.gender = gender;
+		this.birthday = birthday;
+		this.generalZipCode = generalZipCode;
+		this.generalAddress = generalAddress;
+		this.generalMobile = generalMobile;
+		this.generalEmail = generalEmail;
+		this.categoryNo = categoryNo;
+		this.localNo = localNo;
+		this.categoryName = categoryName;
+		this.localName = localName;
 	}
 
 	/**
@@ -237,6 +279,41 @@ public class GeneralMemberDto {
 		this.localNo = localNo;
 	}
 
+	/**
+	 * @return the categoryName
+	 */
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	/**
+	 * @param categoryName the categoryName to set
+	 */
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
+
+	/**
+	 * @return the localName
+	 */
+	public String getLocalName() {
+		return localName;
+	}
+
+	/**
+	 * @param localName the localName to set
+	 */
+	public void setLocalName(String localName) {
+		this.localName = localName;
+	}
+
+	/**
+	 * @return the generalAddress
+	 */
+	public String getGeneralAddress() {
+		return generalAddress;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -261,6 +338,10 @@ public class GeneralMemberDto {
 		builder.append(categoryNo);
 		builder.append(", ");
 		builder.append(localNo);
+		builder.append(", ");
+		builder.append(categoryName);
+		builder.append(", ");
+		builder.append(localName);
 		return builder.toString();
 	}
 

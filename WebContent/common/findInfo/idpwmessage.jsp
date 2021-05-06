@@ -13,7 +13,7 @@ margin:  auto;
 }
 
 #wrap .box{ 
-    width:300px;
+    width:400px;
     height:300px;
     margin:0 auto;
 }
@@ -26,16 +26,8 @@ margin:  auto;
 	<div id="wrap">	
 		<div class="box">
 		<h1><font color="red">${message.message }</font></h1>
-
-			<c:choose>
-				<c:when test="${dto.generalId != null}">
-					<h2>일반회원 : ${dto.generalId }</h2>
-				</c:when>
-				
-				<c:when test="${center.centerId != null}">
-					<h2>센터회원 : ${dto.centerId }</h2>
-				</c:when>
-			</c:choose>
+		
+		<h3>${id }</h3>
 		
 		<a href="${message.url }">${message.linkTitle }</a>
 		</div>

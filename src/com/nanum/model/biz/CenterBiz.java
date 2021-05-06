@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 
 import com.nanum.dto.CenterVolDto;
+import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.VolApplyListDto;
 import com.nanum.dto.VolInfoDto;
 import com.nanum.model.dao.CenterDao;
@@ -48,9 +49,10 @@ public class CenterBiz {
 	 * 
 	 * @throws CommonException
 	 */
-	public void centerVolList(String centerId, ArrayList<CenterVolDto> list,CenterVolDto voDto) throws CommonException {
+	public void centerVolList(String centerId, ArrayList<CenterVolDto> list, CenterVolDto voDto)
+			throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
-			
+
 		try {
 			dao.centerVolList(centerId, conn, list);
 			dao.listIndex(centerId, conn, voDto);
@@ -67,7 +69,7 @@ public class CenterBiz {
 	 * 
 	 * @throws CommonException
 	 */
-	public void recruitList(String centerId, ArrayList<CenterVolDto> list,CenterVolDto voDto) throws CommonException {
+	public void recruitList(String centerId, ArrayList<CenterVolDto> list, CenterVolDto voDto) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
 		try {
 			dao.recruitList(centerId, conn, list);
@@ -85,7 +87,7 @@ public class CenterBiz {
 	 * 
 	 * @throws CommonException
 	 */
-	public void deadlineList(String centerId, ArrayList<CenterVolDto> list,CenterVolDto voDto) throws CommonException {
+	public void deadlineList(String centerId, ArrayList<CenterVolDto> list, CenterVolDto voDto) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
 
 		try {
@@ -98,23 +100,89 @@ public class CenterBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
-	
+
 	/**
 	 * 봉사 신청자 목록 조회
 	 * 
 	 * @param centerId
 	 * @param list
-	 * @throws CommonException 
+	 * @throws CommonException
 	 */
-	public void applyList(String centerId,int volInfoNo, ArrayList<VolApplyListDto> list) throws CommonException {
+	public void applyList(String centerId, int volInfoNo, ArrayList<VolApplyListDto> list) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
-		
+
 		try {
-			dao.applyList(conn,centerId,volInfoNo,list);
+			dao.applyList(conn, centerId, volInfoNo, list);
 		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;
-		}finally {
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+
+	/**
+	 * 봉사 신청자 정보 조회
+	 * 
+	 * @param centerId
+	 * @param general
+	 * @param list
+	 * @throws CommonException
+	 */
+	public void applicantInfo(String centerId, int volInfoNo, GeneralMemberDto general, ArrayList<VolApplyListDto> list)
+			throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+
+		try {
+			dao.applicantInfo(conn, centerId, volInfoNo, general, list);
+			dao.generalInfo(conn, general);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+
+	}
+
+	/**
+	 * 봉사활동 신청승인
+	 * 
+	 * @param string
+	 * @throws Exception
+	 */
+	public void applyGeneral(String checkDate) throws Exception {
+		Connection conn = JdbcTemplate.getConnection();
+
+		try {
+			dao.applyGeneral(conn, checkDate);
+			JdbcTemplate.commit(conn);
+		} catch (Exception e) {
+			JdbcTemplate.rollback(conn);
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+
+	/**
+	 * 봉사활동 승인취소
+	 * 
+	 * @param volApplyNo
+	 * @throws Exception
+	 */
+
+	public void closeApply(int volApplyNo) throws Exception {
+		Connection conn = JdbcTemplate.getConnection();
+		
+		try {
+			dao.closeApply(conn, volApplyNo);
+			JdbcTemplate.commit(conn);
+		} catch (Exception e) {
+			e.printStackTrace();
+			JdbcTemplate.rollback(conn);
+			throw e;
+		} finally {
 			JdbcTemplate.close(conn);
 		}
 	}

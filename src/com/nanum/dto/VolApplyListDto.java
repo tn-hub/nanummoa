@@ -39,6 +39,18 @@ public class VolApplyListDto {
 	/** 일반회원이름 */
 	private String generalName;
 
+	/** 봉사일 */
+	private String volDate;
+
+	/** 신청인원 */
+	private int applyCount;
+
+	/** 마갑인원 */
+	private int totalCount;
+
+	/** 모집상태 */
+	private String recStatus;
+
 	/**
 	 * 기본 생성자
 	 */
@@ -75,7 +87,8 @@ public class VolApplyListDto {
 	 * @param generalName 일반회원 이름
 	 */
 	public VolApplyListDto(int volApplyNo, Date applyDate, String generalId, int volDetailNo, int volStatus,
-			int volInfoNo, String volTitle, String generalName) {
+			int volInfoNo, String volTitle, String generalName, String volDate, int applyCount, int totalCount,
+			String recStatus) {
 		super();
 		this.volApplyNo = volApplyNo;
 		this.applyDate = applyDate;
@@ -85,6 +98,10 @@ public class VolApplyListDto {
 		this.volInfoNo = volInfoNo;
 		this.volTitle = volTitle;
 		this.generalName = generalName;
+		this.volDate = volDate;
+		this.applyCount = applyCount;
+		this.totalCount = totalCount;
+		this.recStatus = recStatus;
 	}
 
 	/**
@@ -199,6 +216,62 @@ public class VolApplyListDto {
 		this.generalName = generalName;
 	}
 
+	/**
+	 * @return the volDate
+	 */
+	public String getVolDate() {
+		return volDate;
+	}
+
+	/**
+	 * @param volDate the volDate to set
+	 */
+	public void setVolDate(String volDate) {
+		this.volDate = volDate;
+	}
+
+	/**
+	 * @return the applyCount
+	 */
+	public int getApplyCount() {
+		return applyCount;
+	}
+
+	/**
+	 * @param applyCount the applyCount to set
+	 */
+	public void setApplyCount(int applyCount) {
+		this.applyCount = applyCount;
+	}
+
+	/**
+	 * @return the totalCount
+	 */
+	public int getTotalCount() {
+		return totalCount;
+	}
+
+	/**
+	 * @param totalCount the totalCount to set
+	 */
+	public void setTotalCount(int totalCount) {
+		this.totalCount = totalCount;
+	}
+
+	/**
+	 * @return the recStatus
+	 */
+	public String getRecStatus() {
+		return recStatus;
+	}
+
+	/**
+	 * @param recStatus the recStatus to set
+	 */
+	public void setRecStatus(String recStatus) {
+		this.recStatus = recStatus;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -217,6 +290,14 @@ public class VolApplyListDto {
 		builder.append(volTitle);
 		builder.append(", ");
 		builder.append(generalName);
+		builder.append(", ");
+		builder.append(volDate);
+		builder.append(", ");
+		builder.append(applyCount);
+		builder.append(", ");
+		builder.append(totalCount);
+		builder.append(", ");
+		builder.append(recStatus);
 		return builder.toString();
 	}
 

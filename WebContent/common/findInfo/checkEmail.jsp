@@ -34,12 +34,16 @@ $(document).ready(function() {
 						  
 						  $("#code").attr("readonly",false);
 						  $("#checkCode").attr("disabled",false);
-					  } else if (data == "not-email") {
+					  } else if (data == "not_email") {
 						  alert("이메일이 맞지 않습니다");
 					  } else if (data == "none_email") {
 						  alert("이메일을 입력해 주세요.");
 					  }else if (data == "none_name") {
 						  alert("이름을 입력해 주세요.");
+					  }else if (data == "not_info") {
+						  alert("정보가 일치하지 않습니다.");
+					  }else if (data == "not_info") {
+						  alert("[오류].");
 					  }
 				  },
 				  error : function(xhr,status,error) {
@@ -78,7 +82,7 @@ table{
 }
 
 #wrap .box{ 
-    width:300px;
+    width: 300px;
     height:300px;
     margin:0 auto;
 }
@@ -127,15 +131,6 @@ text-align: center;
 						<td>
 							<input type="text" id="code" name="code" size="30" required="required">
 							<input type="button" id="checkEmail" value="인증번호 받기">
-							<%-- <c:choose>
-								<c:when test="${grade eq 'G'}">
-									<input type="button" value="인증번호 받기" onclick="location.href='${CONTEXT_PATH }/common/commonController?action=addSecureCode&email=${dto.generalEmail }&grade=${grade }'">		
-								</c:when>
-								<c:when test="${grade eq 'C'}">
-									<input type="button" value="인증번호 받기" onclick="location.href='${CONTEXT_PATH }/common/commonController?action=addSecureCode&email=${dto.centerEmail }&grade=${grade }'">
-								</c:when>
-							</c:choose> --%>
-							
 						</td>
 					</tr>
 				</table>
