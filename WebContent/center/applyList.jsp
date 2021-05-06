@@ -189,7 +189,7 @@ text-align: center;
 	}
 	
 	.link{
-	margin: 120px;
+	margin: 100px;
     padding: 7px 0;
     border: 2px solid #666;
     font-size: 16px;
@@ -221,7 +221,9 @@ text-align: center;
 		<hr>
 		
 	<h2>${list[0].volTitle }</h2>
-	<p>[전체 <em>0</em>건, 현재페이지 <em>0</em>/0]</p>
+	<p>[전체 <em>
+	${fn:length(list)}
+	</em>건, 현재페이지 <em>0</em>/0]</p>
 	<hr class="list_head_hr">
 	<c:forEach var="dto" items="${list}">
 	<ul class="vol_list_ul">

@@ -201,7 +201,9 @@ text-align: center;
 		<hr>
 		
 		
-		<p>[전체 <em>0</em>건, 현재페이지 <em>0</em>/0]</p>
+		<p>[전체 <em>
+		${fn:length(list)}
+		</em>건, 현재페이지 <em>0</em>/0]</p>
 	<hr class="list_head_hr">
 	<c:forEach var="dto" items="${list }">
 	<ul class="vol_list_ul">
