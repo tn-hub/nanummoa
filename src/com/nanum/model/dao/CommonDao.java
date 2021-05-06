@@ -583,5 +583,45 @@ public class CommonDao {
 			JdbcTemplate.close(stmt);
 		}
 	}
+
+	/**
+	 * 자원봉사 목록 조회(메인)
+	 */
+	public void searchVolMapList(Connection conn, ArrayList<HashMap<String, Object>> list) throws CommonException {
+		String sql = "select i.vol_info_no as 글번호, i.v_title as 제목, i.category_no as 카테고리번호, i.local_no as 지역번호, "
+				+ "to_char(i.start_date,'yyyy-mm-dd') as 모집시작일, to_char(i.end_date,'yyyy-mm-dd') as 모집마감일,"
+				+ " min(d.vol_date) as 봉사시작일, max(d.vol_date) as 봉사종료일  " 
+				+ "from vol_info i, vol_detail d " 
+				+ "where i.vol_info_no = d.vol_info_no and d.rec_status = 0 "
+				+ "group by i.vol_info_no, i.v_title, i.category_no, i.local_no, i.start_date, i.end_date "
+				+ "order by 6";
+		HashMap<String, Object> map = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			stmt = conn.prepareStatement(sql);
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				map = new HashMap<String, Object>();
+				map.put("volInfoNo", rs.getInt(1));
+				map.put("volTitle", rs.getString(2));
+				map.put("categoryNo", rs.getString(3));
+				map.put("localNo", rs.getString(4));
+				map.put("startDate", rs.getString(5));
+				map.put("endDate", rs.getString(6));
+				map.put("startVolDate", rs.getString(7));
+				map.put("endVolDate", rs.getString(8));
+				list.add(map);
+			} 
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(stmt);
+		}
+	}
+		
 }
 

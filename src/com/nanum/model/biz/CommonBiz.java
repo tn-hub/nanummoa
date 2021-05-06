@@ -264,8 +264,6 @@ public class CommonBiz {
 	
 	/**
 	 * 지역 목록 조회(메인)
-	 * @param localMap
-	 * @throws CommonException
 	 */
 	public void searchLocal(HashMap<String, LocalDto> localMap) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
@@ -279,4 +277,21 @@ public class CommonBiz {
 		}
 		
 	}
+
+	/**
+	 * 자원봉사 목록 조회(메인)
+	 * @param list
+	 * @throws CommonException
+	 */
+	public void searchVolMapList(ArrayList<HashMap<String, Object>> list) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.searchVolMapList(conn, list);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}	
 }
