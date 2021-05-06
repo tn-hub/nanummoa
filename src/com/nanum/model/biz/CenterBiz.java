@@ -4,15 +4,14 @@
 package com.nanum.model.biz;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
-
 
 import com.nanum.dto.CenterInfoDto;
 import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.CenterVolDto;
 import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.VolApplyListDto;
-import com.nanum.dto.VolInfoDto;
 import com.nanum.model.dao.CenterDao;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
@@ -272,4 +271,6 @@ public class CenterBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
+	
+	
 }
