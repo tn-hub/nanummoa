@@ -7,7 +7,6 @@ import java.sql.Connection;
 import java.util.ArrayList;
 
 
-import com.nanum.dto.CenterInfoDto;
 import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.CenterVolDto;
 import com.nanum.dto.GeneralMemberDto;
