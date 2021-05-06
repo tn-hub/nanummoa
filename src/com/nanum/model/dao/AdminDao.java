@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import com.nanum.dto.CenterInfo;
+import com.nanum.dto.CenterInfoDto;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
 
@@ -26,7 +26,7 @@ public class AdminDao {
 		return instance;
 	}
 
-	public void selCenterInfo(Connection conn, ArrayList<CenterInfo> list) throws CommonException{
+	public void selCenterInfo(Connection conn, ArrayList<CenterInfoDto> list) throws CommonException{
 		String sql = "select c_name, c_id, service_subject from center_info";
 
 		
@@ -37,10 +37,10 @@ public class AdminDao {
 			stmt = conn.prepareStatement(sql);
 			rs = stmt.executeQuery();
 			
-			CenterInfo dto = null;
+			CenterInfoDto dto = null;
 			
 			while(rs.next()) {
-				dto = new CenterInfo();
+				dto = new CenterInfoDto();
 				dto.setCenterName(rs.getString("c_name"));
 				dto.setCenterId(rs.getString("c_id"));
 				dto.setService(rs.getString("service_subject"));
@@ -60,7 +60,7 @@ public class AdminDao {
 		}
 	}
 
-	public void selCenterAcceptListToCnt(Connection conn, CenterInfo cDto) throws CommonException{
+	public void selCenterAcceptListToCnt(Connection conn, CenterInfoDto cDto) throws CommonException{
 		StringBuilder sql = new StringBuilder();
 		sql.append(" select count(1) as tot_cnt ");
 		sql.append("  from center_member c, center_info i ");
@@ -95,7 +95,7 @@ public class AdminDao {
 	 * @param centerActList
 	 * @throws CommonException
 	 */
-	public void selCenterAcceptList(Connection conn, ArrayList<CenterInfo> centerActList) throws CommonException{
+	public void selCenterAcceptList(Connection conn, ArrayList<CenterInfoDto> centerActList) throws CommonException{
 		StringBuilder sql = new StringBuilder();
 		
 		sql.append(" select ");
@@ -114,11 +114,11 @@ public class AdminDao {
 			stmt = conn.prepareStatement(sql.toString()); 
 			rs = stmt.executeQuery();
 			
-			CenterInfo dto = null;
+			CenterInfoDto dto = null;
 			
 			while(rs.next()) { 
 				
-				dto = new CenterInfo();
+				dto = new CenterInfoDto();
 				dto.setCenterId(rs.getString("c_id"));
 				dto.setCenterName(rs.getString("c_name"));
 				dto.setCenterEntryDate(rs.getString("entry_date"));

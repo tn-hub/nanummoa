@@ -14,6 +14,7 @@ import com.nanum.dto.ServiceCategoryDto;
 import com.nanum.dto.LocalDto;
 import com.nanum.dto.VolBlockDto;
 import com.nanum.dto.VolCategoryDto;
+import com.nanum.dto.VolInfoDto;
 import com.nanum.model.dao.CommonDao;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
@@ -230,13 +231,12 @@ public class CommonBiz {
 
 	/**
 	 * 문의글 등록 일반회원
-	 * 
 	 * @param dto
 	 * @throws CommonException
 	 */
-	public void addQna_gen(QnADto dto) throws CommonException {
+	public void addQna_gen(QnADto dto) throws CommonException{
 		Connection conn = JdbcTemplate.getConnection();// 비즈에서 커넥션 생성해서 dao전달
-
+		
 		try {
 			dao.insertQna_gen(conn, dto);
 			JdbcTemplate.commit(conn); // commit;
@@ -248,16 +248,16 @@ public class CommonBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
-
+	
+	
 	/**
 	 * 문의글 등록 센터회원
-	 * 
 	 * @param dto
 	 * @throws CommonException
 	 */
-	public void addQna_cen(QnADto dto) throws CommonException {
+	public void addQna_cen(QnADto dto) throws CommonException{
 		Connection conn = JdbcTemplate.getConnection();// 비즈에서 커넥션 생성해서 dao전달
-
+		
 		try {
 			dao.insertQna_cen(conn, dto);
 			JdbcTemplate.commit(conn); // commit;
@@ -269,20 +269,20 @@ public class CommonBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
-
+	
 	/**
 	 * 문의글 전체 조회
-	 * 
 	 * @param qnaList
 	 * @param searchOpt
 	 * @param searchText
 	 * @throws CommonException
 	 */
-
-	public void qnaList(ArrayList<QnADto> qnaList, String searchOpt, String searchText) throws CommonException {
+	
+	public void qnaList(ArrayList<QnADto> qnaList, String searchOpt, String searchText) throws CommonException{
 		Connection conn = JdbcTemplate.getConnection();
 		try {
 			dao.qnaList(conn, qnaList, searchOpt, searchText);
+			System.out.println("searchOpt : " +searchOpt );
 		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;
@@ -290,15 +290,14 @@ public class CommonBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
-
+	
 	/**
 	 * 문의글 상세 보기
-	 * 
 	 * @param dto
 	 * @param qnaNo
 	 * @throws CommonException
 	 */
-	public void qnaDetail(QnADto dto, String qnaNo) throws CommonException {
+	public void qnaDetail(QnADto dto, String qnaNo) throws CommonException{
 		Connection conn = JdbcTemplate.getConnection();
 		try {
 			dao.qnaDetail(conn, dto, qnaNo);
@@ -309,16 +308,15 @@ public class CommonBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
-
+	
 	/**
 	 * 문의글 수정
-	 * 
 	 * @param dto
 	 * @throws CommonException
 	 */
-	public void qnaUpdate(QnADto dto) throws CommonException {
+	public void qnaUpdate(QnADto dto)throws CommonException{
 		Connection conn = JdbcTemplate.getConnection();// 비즈에서 커넥션 생성해서 dao전달
-
+		
 		try {
 			dao.qnaUpdate(conn, dto);
 			JdbcTemplate.commit(conn); // commit;
@@ -330,16 +328,15 @@ public class CommonBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
-
+	
 	/**
 	 * 문의글 삭제
-	 * 
 	 * @param qnaNo
 	 * @throws CommonException
 	 */
-	public void qnaDelete(String qnaNo) throws CommonException {
+	public void qnaDelete(String qnaNo) throws CommonException{
 		Connection conn = JdbcTemplate.getConnection();// 비즈에서 커넥션 생성해서 dao전달
-
+		
 		try {
 			dao.qnaDelete(conn, qnaNo);
 			JdbcTemplate.commit(conn); // commit;
@@ -349,6 +346,40 @@ public class CommonBiz {
 		}
 	}
 
+	/**
+	 * 자원봉사 상세보기
+	 * @param VolInfoDto
+	 * @throws CommonException
+	 */
+	public void volDetailInfo(VolInfoDto dto, int volInfoNo) throws CommonException{
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.selectVolInfo(conn, dto, volInfoNo);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+
+	/**
+	 * 문의하게 게시판 건수
+	 * @param cdto
+	 * @throws CommonException
+	 */
+	public void qnaListTotCnt(QnADto cdto) throws CommonException{
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.selectQnaListTotCnt(conn, cdto);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+	
 	/**
 	 * 자원봉사 목록 조회(메인)
 	 * 
@@ -472,5 +503,7 @@ public class CommonBiz {
 		} finally {
 			JdbcTemplate.close(conn);
 		}
-	}	
+	}
+
+	
 }

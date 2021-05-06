@@ -38,6 +38,9 @@ public class CenterInfoDto {
 
 	/** 대표연락처 */
 	private String ceoMobile;
+	
+	/** 가입 대기 건수 */
+	private int totAcceptCnt;
 
 	/**
 	 * 기본 생성자
@@ -45,6 +48,7 @@ public class CenterInfoDto {
 	public CenterInfoDto() {
 	}
 
+	
 	/**
 	 * 전체 생성자
 	 * 
@@ -57,9 +61,13 @@ public class CenterInfoDto {
 	 * @param service         서비스대상
 	 * @param ceoName         대표이름
 	 * @param ceoMobile       대표연락처
+	 * @param totAcceptCnt	   가입 대기 건수
 	 */
+	 
 	public CenterInfoDto(String centerId, String centerName, String centerEntryDate, String centerZipCode,
-			String centerAddress, String registerCode, String service, String ceoName, String ceoMobile) {
+			String centerAddress, String registerCode, String service, String ceoName, String ceoMobile,
+			int totAcceptCnt) {
+		super();
 		this.centerId = centerId;
 		this.centerName = centerName;
 		this.centerEntryDate = centerEntryDate;
@@ -67,16 +75,20 @@ public class CenterInfoDto {
 		this.centerAddress = centerAddress;
 		this.registerCode = registerCode;
 		this.service = service;
+		this.ceoName = ceoName;
 		this.ceoMobile = ceoMobile;
+		this.totAcceptCnt = totAcceptCnt;
 	}
 
+	
+	
 	/**
 	 * @return the centerId
 	 */
 	public String getCenterId() {
 		return centerId;
 	}
-
+	
 	/**
 	 * @param centerId the centerId to set
 	 */
@@ -195,6 +207,24 @@ public class CenterInfoDto {
 	public void setCeoMobile(String ceoMobile) {
 		this.ceoMobile = ceoMobile;
 	}
+	
+	
+
+	/**
+	 * @return the totAcceptCnt
+	 */
+	public int getTotAcceptCnt() {
+		return totAcceptCnt;
+	}
+
+
+	/**
+	 * @param totAcceptCnt the totAcceptCnt to set
+	 */
+	public void setTotAcceptCnt(int totAcceptCnt) {
+		this.totAcceptCnt = totAcceptCnt;
+	}
+
 
 	@Override
 	public String toString() {
@@ -216,7 +246,8 @@ public class CenterInfoDto {
 		builder.append(ceoName);
 		builder.append(", ");
 		builder.append(ceoMobile);
+		builder.append(", ");
+		builder.append(totAcceptCnt);
 		return builder.toString();
 	}
-
 }

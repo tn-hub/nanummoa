@@ -10,8 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.nanum.dto.CenterInfo;
-import com.nanum.dto.QnADto;
+import com.nanum.dto.CenterInfoDto;
 import com.nanum.model.biz.AdminBiz;
 
 /**
@@ -57,8 +56,8 @@ public class AdminController extends HttpServlet {
 	
 	private void centerAcceptList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		AdminBiz biz = new AdminBiz();
-		CenterInfo cDto = new CenterInfo(); 
-		ArrayList<CenterInfo> centerActList = new ArrayList<CenterInfo>();
+		CenterInfoDto cDto = new CenterInfoDto(); 
+		ArrayList<CenterInfoDto> centerActList = new ArrayList<CenterInfoDto>();
 		
 		try {
 			

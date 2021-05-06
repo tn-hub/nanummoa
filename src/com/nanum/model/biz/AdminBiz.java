@@ -6,7 +6,7 @@ package com.nanum.model.biz;
 import java.sql.Connection;
 import java.util.ArrayList;
 
-import com.nanum.dto.CenterInfo;
+import com.nanum.dto.CenterInfoDto;
 import com.nanum.model.dao.AdminDao;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
@@ -18,7 +18,7 @@ import com.nanum.util.JdbcTemplate;
 public class AdminBiz {
 	private AdminDao dao = AdminDao.getInstance();
 	
-	public void getCenterInto(ArrayList<CenterInfo> list) throws CommonException {
+	public void getCenterInto(ArrayList<CenterInfoDto> list) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
 		
 		try {
@@ -31,7 +31,7 @@ public class AdminBiz {
 		}
 	}
 
-	public void getCenterAcceptListToCnt(CenterInfo cDto) throws CommonException{
+	public void getCenterAcceptListToCnt(CenterInfoDto cDto) throws CommonException{
 		Connection conn = JdbcTemplate.getConnection();
 		
 		try {
@@ -44,7 +44,7 @@ public class AdminBiz {
 		}
 	}
 
-	public void getCenterAcceptList(ArrayList<CenterInfo> centerActList) throws CommonException{
+	public void getCenterAcceptList(ArrayList<CenterInfoDto> centerActList) throws CommonException{
 		Connection conn = JdbcTemplate.getConnection();
 		
 		try {

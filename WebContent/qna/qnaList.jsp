@@ -123,6 +123,7 @@ a.bold { font-weight: bold; }
 
 <script type="text/javascript">
 
+
 function search_qna(){
 	
 	//검색조건
