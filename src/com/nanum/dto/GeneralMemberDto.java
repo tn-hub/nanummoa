@@ -10,7 +10,6 @@ import java.util.Date;
  * 일반회원
  * 
  * </pre>
- * 
  * @author 메타쓰리
  *
  */
@@ -47,18 +46,17 @@ public class GeneralMemberDto {
 
 	/** 지역번호 */
 	private String localNo;
-
-	/** 봉사분야이름 */
+	
+	/** 카테고리 */
 	private String categoryName;
 
-	/** 지역이름 */
 	private String localName;
+	
 
 	/**
 	 * 기본 생성자
 	 */
-	public GeneralMemberDto() {
-	}
+	public GeneralMemberDto() {}
 
 	/**
 	 * 전체 생성자
@@ -69,43 +67,15 @@ public class GeneralMemberDto {
 	 * @param gender         성별
 	 * @param birthday       생년월일
 	 * @param generalZipCode 우편번호
-	 * @param generalAddress 기본주소
+	 * @param generalAddress  기본주소
 	 * @param generalMobile  연락처
 	 * @param generalEmail   이메일
 	 * @param categoryNo     봉사분야번호
 	 * @param localNo        지역번호
-	 */
-	public GeneralMemberDto(String generalId, String generalPass, String generalName, String gender, String birthday,
-			String generalZipCode, String generalAddress, String generalMobile, String generalEmail, String categoryNo,
-			String localNo) {
-		this.generalId = generalId;
-		this.generalPass = generalPass;
-		this.generalName = generalName;
-		this.gender = gender;
-		this.birthday = birthday;
-		this.generalZipCode = generalZipCode;
-		this.generalAddress = generalAddress;
-		this.generalMobile = generalMobile;
-		this.generalEmail = generalEmail;
-		this.categoryNo = categoryNo;
-		this.localNo = localNo;
-	}
-
-	/**
-	 * @param generalId
-	 * @param generalPass
-	 * @param generalName
-	 * @param gender
-	 * @param birthday
-	 * @param generalZipCode
-	 * @param generalAddress
-	 * @param generalMobile
-	 * @param generalEmail
-	 * @param categoryNo
-	 * @param localNo
 	 * @param categoryName
 	 * @param localName
 	 */
+	
 	public GeneralMemberDto(String generalId, String generalPass, String generalName, String gender, String birthday,
 			String generalZipCode, String generalAddress, String generalMobile, String generalEmail, String categoryNo,
 			String localNo, String categoryName, String localName) {
@@ -125,13 +95,14 @@ public class GeneralMemberDto {
 		this.localName = localName;
 	}
 
+	
 	/**
 	 * @return the generalId
 	 */
 	public String getGeneralId() {
 		return generalId;
 	}
-
+	
 	/**
 	 * @param generalId the generalId to set
 	 */
@@ -333,10 +304,6 @@ public class GeneralMemberDto {
 		builder.append(categoryNo);
 		builder.append(", ");
 		builder.append(localNo);
-		builder.append(", ");
-		builder.append(categoryName);
-		builder.append(", ");
-		builder.append(localName);
 		return builder.toString();
 	}
 

@@ -34,8 +34,8 @@ public class MessageEntity {
 		validation.add("[주소 정보 오류]");		// 3
 		
 		ArrayList<String> success = new ArrayList<String>();
-		success.add("[아이디 찾기 성공]");	// 0
-		success.add("[비밀번호 변경 성공]");		// 1
+		success.add("[교수정보 등록 성공]");	// 0
+		success.add("[교수 로그인 성공]");		// 1
 		success.add("[교수정보 수정 성공]");	// 2
 		success.add("[성적 수정 성공]");		// 3
 		success.add("[로그아웃 성공]");		// 4
