@@ -191,7 +191,7 @@ public class CommonController extends HttpServlet {
 				if (dto.getCenterName() != null) {
 					session.setAttribute("dto", dto);
 					session.setAttribute("grade", grade);
-					response.sendRedirect("/home");
+					response.sendRedirect(CONTEXT_PATH + "/home");
 				} else {
 					response.setContentType("text/html; charset=utf-8");
 					PrintWriter out = response.getWriter();
@@ -214,7 +214,7 @@ public class CommonController extends HttpServlet {
 				if (dto.getAdminName() != null) {
 					session.setAttribute("dto", dto);
 					session.setAttribute("grade", grade);
-					response.sendRedirect("/home");
+					response.sendRedirect(CONTEXT_PATH + "/home");
 				} else {
 					response.setContentType("text/html; charset=utf-8");
 					PrintWriter out = response.getWriter();
@@ -417,7 +417,6 @@ public class CommonController extends HttpServlet {
 		      // 작성자는 로그인에서
 		      if (grade.equals("G")) { 
 		         GeneralMemberDto gdto = (GeneralMemberDto) session.getAttribute("dto");
-		         System.out.println("gdto.getGeneralId()" + gdto.getGeneralId());
 		         dto.setGeneralId(gdto.getGeneralId());
 
 		         System.out.println("dto.getGeneralId() = "+dto.getGeneralId());
@@ -428,7 +427,7 @@ public class CommonController extends HttpServlet {
 		            e.printStackTrace();
 		         }
 		         
-		      }else if  (grade.equals("C")) {
+		      }else if (grade.equals("C")) {
 		         CenterMemberDto cdto = (CenterMemberDto) session.getAttribute("dto");
 		         dto.setCenterId(cdto.getCenterId());
 
@@ -443,6 +442,7 @@ public class CommonController extends HttpServlet {
 		      }
 		   }
 	
+   
 	/**
 	 * QNA 목록조회 
 	 */
@@ -470,6 +470,7 @@ public class CommonController extends HttpServlet {
 	 * QNA 상세조회 
 	 */
 	private void qnaDtl(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		
 		String qnaNo = request.getParameter("qnaNo");
 		CommonBiz biz = new CommonBiz();
 		QnADto dto = new QnADto();
@@ -542,10 +543,9 @@ public class CommonController extends HttpServlet {
 			VolInfoDto dto = new VolInfoDto();
 			biz.volDetailInfo(dto, Integer.parseInt(volInfoNo));
 			request.setAttribute("vDto", dto);
-			request.getRequestDispatcher("/volDetail.jsp").forward(request, response);
+			request.getRequestDispatcher("/volInfo.jsp").forward(request, response);
 			
 		} catch (CommonException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		

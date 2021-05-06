@@ -22,16 +22,14 @@
 h4{
 	border-top: 1px solid #333;
 	border-bottom: 1px solid #333;	
-	background-color: #F6F6F6;
 	padding : 5px;
 }
 
 #qnaTitle{
 	width: 900px; 
-	margin-top:20px; 
-	margin-bottom: 20px; 
 	padding: 5px; 
 	font-size: 17px;
+	border-style: none;
 }
 
 #qna_det_info{
@@ -44,22 +42,31 @@ h4{
 	padding: 10px; 
 	margin-bottom: 20px;
 	font-size: 17px;
-	background-color: #F6F6F6;
+	border-color: 1px solid gray;
 }
 
-ul li{
+
+.qna_detail_ul, .qna_detail_ul li{
 	list-style-type: none;
 	float: left;
 	margin-right: 30px;
 	padding: 0px;
 }
 
+
 #uptQna_btn{
 	float: right;
 }
 
-#rAdd{
+.btn_qna{
+	width: 100px;
 	height: 30px;
+	border-style: none;
+	font-size: 17px;
+}
+
+#rAdd{
+	height: 40px;
 }
 
 #btn_rAdd{
@@ -89,6 +96,11 @@ ul li{
 	float: right;
 	margin-top: 5px;
 }
+
+#r_resp{
+	float: right;
+	margin-top: 20px;
+}
 </style>
 </head>
 <script type="text/javascript">
@@ -117,39 +129,48 @@ $(document).ready(function() {
 <div id="qna_detail">
 	
 	<div id="qna_det_info">
-	<ul>
+	<ul class="qna_detail_ul">
 		<li id="qnaNo" >글번호 : ${sdto.qnaNo}</li>
 	</ul>
-	<ul>
-		<li>작성자 : ${sdto.qnaWriter}</li>
+	<ul class="qna_detail_ul">	
+		<li>작성자 : ${sdto.qnaWriter} [${sdto.generalId}${sdto.centerId}]</li>
 	</ul>
-	<ul>	
-		<li>작성일 : ${sdto.qnaWriteDate}</li>
-		<li id="uptQna_btn">
-			<a href="#" onclick="javascript:document.qnaDetailForm.submit();">수정</a> || 
-			<a href="${CONTEXT_PATH}/common/commonController?action=qnaDel&qnaNo=${sdto.qnaNo}" >삭제</a>
-		</li>
-	</ul>	
+	<c:if test="${(grade eq 'G' and dto.generalId eq sdto.generalId) or (grade eq 'C' and dto.centerId eq sdto.centerId)}">
+		<ul class="qna_detail_ul">	
+			<li>작성일 : ${sdto.qnaWriteDate}</li>
+			<li id="uptQna_btn">
+				<input type="button" onclick="javascript:document.qnaDetailForm.submit();" class="btn_qna" value="수정">  
+				<a href="${CONTEXT_PATH}/common/commonController?action=qnaDel&qnaNo=${sdto.qnaNo}"><input type="button" class="btn_qna" value="삭제"></a>
+			</li>
+		</ul>
+	</c:if>	
+	<c:if test="${grade eq 'A'}">
+		<ul class="qna_detail_ul">		
+			<li>작성일 : ${sdto.qnaWriteDate}</li>
+			<li id="uptQna_btn">
+				<a href="${CONTEXT_PATH}/common/commonController?action=qnaDel&qnaNo=${sdto.qnaNo}"><input type="button" class="btn_qna" value="삭제"></a>
+			</li>
+		</ul>
+	</c:if>	
 	</div>
 	<h4>제목 : <input type="text" id="qnaTitle" name="qnaTitle" value="${sdto.qnaTitle}"></h4>
 	<hr>
 	<div id="qna_det_contexts"><textarea id="qnaContents" name="qnaContents">${sdto.qnaContents}</textarea> </div>	
 	<hr>
 	</div>
-	<div id="rAdd"><input id="btn_rAdd" type="button" value="댓글달기"></div>
+	<div id="rAdd"><input id="btn_rAdd" class="btn_qna" type="button" value="댓글달기"></div>
 	<hr>
 	<div id="r_text_input">	
 		<div id="r_det_contexts"><textarea id="r_input_contexts"></textarea>
-		<div id="r_resp"><input id="btn_r_resp" type="button" value="댓글 등록"></div>
+		<div id="r_resp"><input class="btn_qna" id="btn_r_resp" type="button" value="댓글 등록"></div>
 		</div>
 	</div>	
 	<hr>
 	<div id="r_text_input">	
 		<div id="r_det_contexts"><textarea id="r_input_contexts"></textarea>
 		<div id="r_resp">
-		
-			<input id="btn_r_resp" type="button" value="수정하기">
-			<input id="btn_r_resp" type="button" value="삭제하기">
+			<input class="btn_qna" type="button" value="수정하기">
+			<input class="btn_qna" type="button" value="삭제하기">
 		</div>
 		</div>
 	</div>	

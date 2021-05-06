@@ -89,6 +89,12 @@ public class AdminDao {
 		}
 	}
 
+	/**
+	 * 가입대기 승인 목록
+	 * @param conn
+	 * @param centerActList
+	 * @throws CommonException
+	 */
 	public void selCenterAcceptList(Connection conn, ArrayList<CenterInfo> centerActList) throws CommonException{
 		StringBuilder sql = new StringBuilder();
 		
@@ -99,6 +105,7 @@ public class AdminDao {
 		sql.append(" from center_member c, center_info i ");
 		sql.append(" where c.c_id = i.c_id ");
 		sql.append(" and  c.app_status = 0 ");
+		sql.append(" order by c.entry_date ");
 		
 		PreparedStatement stmt = null;
 		ResultSet rs = null;

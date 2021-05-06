@@ -8,7 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 import com.nanum.dto.AdminMemberDto;
@@ -18,7 +17,6 @@ import com.nanum.dto.QnADto;
 import com.nanum.dto.LocalDto;
 import com.nanum.dto.VolBlockDto;
 import com.nanum.dto.VolCategoryDto;
-import com.nanum.dto.VolDetailDto;
 import com.nanum.dto.VolInfoDto;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
@@ -299,26 +297,27 @@ public class CommonDao {
 		sql.append("  q.q_no  ");
 		sql.append("  , q.q_title  ");
 		sql.append("  , case when q.g_id is not null then (select g.g_name from general_member g where g.g_id = q.g_id)  ");
-		sql.append("    else (select c.c_name from center_member c where c.c_id = q.c_id) end as qnaWriter  "); 
+		sql.append("    else (select c.c_name from center_member c where c.c_id = q.c_id) end as qnaWriter "); 
 		sql.append("  , q.q_write_date  ");
 		sql.append("  , (select case when count(1) > 0 then 'Y' else 'N' end  from qna_reply r where r.q_no = q.q_no) as answerYn  ");
 		sql.append(" from qna q ");
 		
 		if ("T".equals(searchOpt)) {
+			System.out.println("====== 제목 검색");
 			sql.append(" where q.q_title like '%'|| ? ||'%' ");
 		}else if ("C".equals(searchOpt)) {
 			sql.append(" where q.q_contents like '%'|| ? ||'%' ");
 		}else if  ("W".equals(searchOpt)) {
 			sql.append(" where q.g_id in (select g.g_id from general_member g where g.g_name like '%'||?||'%') ");
-			sql.append("    or q.c_id in (select c.c_id from center_member c where c.c_name like '%'||?||'%')  ");
+			sql.append(" or q.c_id in (select c.c_id from center_member c where c.c_name like '%'||?||'%')  ");
 		}
-		sql.append(" order by q_no desc   ");
+		sql.append(" order by q_no desc ");
 		
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		
 		try {
-
+			System.out.println("다오 searchOpt : " +searchOpt);
 			stmt = conn.prepareStatement(sql.toString());// 쿼리 담기
 			
 			if ("T".equals(searchOpt) || "C".equals(searchOpt) ) {
@@ -375,6 +374,8 @@ public class CommonDao {
 		sql.append(" else (select c.c_name from center_member c where c.c_id = q.c_id) end as qnaWriter  "); 
 		sql.append(" , q.q_write_date  ");
 		sql.append(" , q.q_contents ");
+		sql.append(" , q.g_id ");
+		sql.append(" , q.c_id ");
 		sql.append(" from qna q ");
 		sql.append(" where q_no = ? ");
 		
@@ -396,6 +397,8 @@ public class CommonDao {
 				dto.setQnaWriter(rs.getString("qnaWriter"));
 				dto.setQnaWriteDate(rs.getDate("q_write_date"));
 				dto.setQnaContents(rs.getString("q_contents"));
+				dto.setGeneralId(rs.getString("g_id"));
+				dto.setCenterId(rs.getString("c_id"));
 			}
 			
 		} catch (SQLException e) {
@@ -593,7 +596,7 @@ public class CommonDao {
 	 * @param volInfoNo
 	 * @throws CommonException
 	 */
-	public void selectVolDetail(Connection conn, VolInfoDto dto, int volInfoNo) throws CommonException{
+	public void selectVolInfo(Connection conn, VolInfoDto dto, int volInfoNo) throws CommonException{
 		
 		StringBuilder sql = new StringBuilder();
 		
@@ -618,6 +621,7 @@ public class CommonDao {
 		sql.append("   , v.longitude ");
 		sql.append("   , v.v_subject ");
 		sql.append("   , v.category_no ");
+		sql.append("   , (select category_name from vol_category c where c.category_no = v.category_no) as category_name");
 		sql.append("   , m.c_name ");
 		sql.append("   , m.c_mobile ");
 		sql.append("   , c.c_address ");
@@ -659,7 +663,8 @@ public class CommonDao {
 				dto.setName(rs.getString("c_name"));    // 담당자명
 				dto.setMobile(rs.getString("c_mobile")); // 전화번호 
 				dto.setAddress(rs.getString("c_address")); // 주소 
-				dto.setCategoryNo(rs.getString("category_no")); // 봉사분야 
+				dto.setCategoryNo(rs.getString("category_no")); // 봉사분야 번호
+				dto.setCategoryName(rs.getString("category_name"));	// 봉사 분야 
 			}
 			
 		} catch (SQLException e) {

@@ -8,6 +8,7 @@
 <head>
 <meta charset="UTF-8">
 <title>QNA</title>
+<script type="text/javascript" src="${CONTEXT_PATH }/resources/js/jquery-3.6.0.min.js"></script>
 <style type="text/css">
 a{text-decoration:none;}
 a:link{color: black;}
@@ -23,9 +24,6 @@ a.bold { font-weight: bold; }
 	margin: 0 auto;
 }
 
-#search_qna{
-	float: right;
-}
 
 #addQna{
 	width: 1000px;
@@ -39,6 +37,11 @@ a.bold { font-weight: bold; }
 #btn_addQna{
 	width: 100px;
 	height: 30px;
+	border-style: none;
+	font-size: 17px;
+}
+
+#search_opt{
 	border-style: none;
 	font-size: 17px;
 }
@@ -71,6 +74,49 @@ a.bold { font-weight: bold; }
 	margin: 20px 0px 20px 0px;
 }
 
+
+#search_qna_table{
+	border-top: 2px solid black;
+	border-bottom: 2px solid black;	
+	font-size: 17px;
+	width: 1000px;
+}
+
+#search_qna_table tr, td{
+	padding: 7px;
+}
+
+
+
+#search_qna_tdcnt{
+	width: 400px;
+	text-align: left;
+}
+
+#search_qna_tdSelect{
+	width: 150px;
+}
+
+#search_qna_tdText{
+	width: 250px;
+}
+
+#search_text{
+	width: 230px;
+	font-size: 17px;
+}
+
+#btn_searchQna{
+	width: 60px;
+	height: 30px;
+	border-style: none;
+	font-size: 17px;
+}
+
+
+
+
+
 </style>
 </head>
 
@@ -87,16 +133,17 @@ function search_qna(){
 	var searchTextEl = ${"search_text"}; 	
 	var searchText = searchTextEl.value;
 	
-		
 	if (searchOpt == "T" || searchOpt == "C" || searchOpt == "W"){
 		if (searchText == null || searchText == ""){
 			alert("검색내용을 입력하세요");
-			searchTextEl.focus();
+			searchText.focus();
+			return;
 		}		
 	}
 	// 검색 submit 
 	document.qnaListForm.submit();
 }
+
 
 </script>
 
@@ -104,21 +151,31 @@ function search_qna(){
 <%@ include file="/common/header.jsp"%>
 <div id="section_contents">
 <h2>QNA</h2>
-<hr>
-[전체 <em> ${cdto.totCnt}</em> 건, 현재 페이지 <em>1</em> /1]
+<form name="qnaListForm" id="qnaListForm" action="${CONTEXT_PATH}/common/commonController?action=qnaList" method="post">
 <div id="search_qna">
-	<select  id="search_opt" name ="search_opt">
-		<option>== 검색 조건 ==</option>
-		<option value="T" >제목</option>
-		<option value="C" >내용</option>
-		<option value="W" >작성자</option>
-	</select>
-	<input type="text" id="search_text" name ="search_text">
-	<input type="button" value="검색" onclick="search_qna()" style="cursor:hand;">
+	<table id="search_qna_table">
+	<tr>
+		<td id="search_qna_tdcnt">
+			[전체 <em> ${cdto.totCnt}</em> 건, 현재 페이지 <em>1</em> /1]
+		
+		</td>
+		<td id="search_qna_tdSelect">
+			<select  id="search_opt" name ="search_opt">
+				<option>전체</option>
+				<option value="T" >제목 </option>
+				<option value="C" >내용</option>
+				<option value="W" >작성자</option>
+			</select>
+		</td>
+		<td id="search_qna_tdText">
+			<input type="text" id="search_text" name ="search_text">
+			<input type="button" value="검색" onclick="search_qna()" style="cursor:hand;">
+		</td>
+	</tr>
+	</table>
 </div>
 <hr>
 <div id="addQna"><a href="${CONTEXT_PATH}/common/commonController?action=qnaInputForm"><input type="button" value="글 쓰기" id="btn_addQna" style="cursor:hand;"></a></div>
-<form name="qnaListForm" action="${CONTEXT_PATH}/common/commonController?action=qnaList" method="post">
 <div id="sec_vol_list">
 <ul class="vol_list_ul">
 <c:forEach var="dto" items="${qnaList}">
@@ -152,7 +209,6 @@ function search_qna(){
 <hr>
 <div id="footer" class="footer">
 		<%@ include file="/common/footer.jsp"%>
-</div>
 </div>
 </body>
 </html>

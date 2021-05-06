@@ -44,6 +44,9 @@ public class VolInfoDto {
 
 	/** 봉사분야번호 */
 	private String categoryNo;
+	
+	/** 봉사 분야*/
+	private String categoryName;
 
 	/** 지역번호 */
 	private String localNo;
@@ -109,6 +112,7 @@ public class VolInfoDto {
 	 * @param startDate    모집시작일
 	 * @param endDate      모집마감일
 	 * @param categoryNo   봉사분야번호
+	 * @param categoryName 봉사 분야
 	 * @param localNo      지역번호
 	 * @param volType      봉사자유형
 	 * @param volPlace     봉사장소
@@ -123,12 +127,11 @@ public class VolInfoDto {
 	 * @param mobile   전화번호 
 	 * @param address   주소 
 	 */
-	
 	public VolInfoDto(int volInfoNo, String centerId, String volTitle, String volContents, Date volWriteDate,
-			Date startTime, Date endTime, Date startDate, Date endDate, String categoryNo, String localNo,
-			String volType, String volPlace, String latitude, String longitude, String volSubject, int applyCount,
-			int totalCount, String recStatuse, String volStartTime, String volEndTime, String name, String mobile,
-			String address) {
+			Date startTime, Date endTime, Date startDate, Date endDate, String categoryNo, String categoryName,
+			String localNo, String volType, String volPlace, String latitude, String longitude, String volSubject,
+			int applyCount, int totalCount, String recStatuse, String volStartTime, String volEndTime, String name,
+			String mobile, String address) {
 		super();
 		this.volInfoNo = volInfoNo;
 		this.centerId = centerId;
@@ -140,6 +143,7 @@ public class VolInfoDto {
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.categoryNo = categoryNo;
+		this.categoryName = categoryName;
 		this.localNo = localNo;
 		this.volType = volType;
 		this.volPlace = volPlace;
@@ -156,9 +160,7 @@ public class VolInfoDto {
 		this.address = address;
 	}
 
-
-
-
+	
 	/**
 	 * @return the volInfoNo
 	 */
@@ -499,6 +501,22 @@ public class VolInfoDto {
 
 	
 
+	/**
+	 * @return the categoryName
+	 */
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+
+	/**
+	 * @param categoryName the categoryName to set
+	 */
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
+
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -521,6 +539,8 @@ public class VolInfoDto {
 		builder.append(endDate);
 		builder.append(", ");
 		builder.append(categoryNo);
+		builder.append(", ");
+		builder.append(categoryName);
 		builder.append(", ");
 		builder.append(localNo);
 		builder.append(", ");
@@ -551,5 +571,4 @@ public class VolInfoDto {
 		builder.append(address);
 		return builder.toString();
 	}
-
 }

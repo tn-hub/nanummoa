@@ -167,6 +167,7 @@ public class CommonBiz {
 		Connection conn = JdbcTemplate.getConnection();
 		try {
 			dao.qnaList(conn, qnaList, searchOpt, searchText);
+			System.out.println("searchOpt : " +searchOpt );
 		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;
@@ -290,7 +291,7 @@ public class CommonBiz {
 	public void volDetailInfo(VolInfoDto dto, int volInfoNo) throws CommonException{
 		Connection conn = JdbcTemplate.getConnection();
 		try {
-			dao.selectVolDetail(conn, dto, volInfoNo);
+			dao.selectVolInfo(conn, dto, volInfoNo);
 		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;
@@ -299,6 +300,11 @@ public class CommonBiz {
 		}
 	}
 
+	/**
+	 * 문의하게 게시판 건수
+	 * @param cdto
+	 * @throws CommonException
+	 */
 	public void qnaListTotCnt(QnADto cdto) throws CommonException{
 		Connection conn = JdbcTemplate.getConnection();
 		try {

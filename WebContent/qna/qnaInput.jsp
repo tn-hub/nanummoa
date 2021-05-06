@@ -84,7 +84,7 @@ $(document).ready(function() {
 <h2>질문 하기</h2>
 <hr>
 <form name="qnaAddForm" action="${CONTEXT_PATH}/common/commonController?action=qnaInput" method="post">
-<input class="btn_list" type="button" value="목록" style="cursor:hand;">
+<a href="${CONTEXT_PATH}/common/commonController?action=qnaList"><input class="btn_list" type="button" value="목록" style="cursor:hand;"></a>
 <hr>
 <table id="input_qna">
 	<tr>
