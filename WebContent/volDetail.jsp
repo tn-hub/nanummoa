@@ -142,40 +142,40 @@ pageContext.setAttribute("newLineChar", "\n");
 <hr>
 
 <a href="${CONTEXT_PATH}/common/commonController?action=volDetatilForm&volInfoNo=1">조회</a>
-<input id="vol_info_title" type="text" value="${vDto.volTitle}" required="required"> 
+<h3>${vDto.volTitle}</h3>
 <form action="">
 	<table id="volAdd">
 		<tr>
 			<th>봉사 시작일</th>
 			<td>
-				<input type="date" value="${vDto.startTime}">
+				${vDto.startTime}
 			</td>
 			<th>봉사 마감일</th>
 			<td>
-				<input type="date" value="${vDto.endTime}">
+				${vDto.endTime}
 			</td>
 		</tr>
 		<tr>
 			<th>봉사 시작 시간</th>
-			<td><input type="text" value="${vDto.volStartTime}"></td>
+			<td>${vDto.volStartTime}
 			<th>봉사 마감 시간</th>
-			<td><input type="text" value="${vDto.volEndTime}"></td>
+			<td>${vDto.volEndTime}</td>
 		</tr>
 		<tr>
 			<th>모집 시작일</th>
 			<td>
-				<input type="date" value="${vDto.startDate}">
+				${vDto.startDate}
 			</td>
 			<th>모집 마감일</th>
 			<td>
-				<input type="date" value="${vDto.endDate}">
+				${vDto.endDate}
 			</td>
 		</tr>
 		<tr>
 			<th>모집 인원</th>
-			<td><input type="text" value="${vDto.totalCount}"></td>
+			<td>${vDto.totalCount} 명</td>
 			<th>신청 인원</th>
-			<td><input type="text" value="${vDto.applyCount}"></td>
+			<td>${vDto.applyCount}</td>
 		</tr>
 		<tr>
 			<th>봉사 분야</th>
@@ -188,24 +188,19 @@ pageContext.setAttribute("newLineChar", "\n");
 					</select>
 			</td>
 			<th>봉사자 유형 </th>
-			<td><select>
-				<option>== 유형 선택 ==</option>
-				<option value="성인" ${vDto.volType == "성인" ? 'selected="selected"' : '' }>성인</option>
-				<option value="청소년" ${vDto.volType == "청소년" ? 'selected="selected"' : '' }>청소년</option>
-				<option value="성인,청소년" ${vDto.volType == "성인,청소년" ? 'selected="selected"' : '' }>성인,청소년</option>
-			</select></td>
+			<td>${vDto.volType}</td>
 		</tr>
 		<tr>
 			<th>봉사 장소</th>
 			<td id="place_td" colspan="3">
-				<input id="vol_adrr3" type="text" placeholder="상세 주소" value="${vDto.volPlace}">
+				${vDto.volPlace}
 			</td>
 		</tr>
 	</table>
 	<div id="area_text"><textarea>${fn:replace(vDto.volContents,newLineChar,"<br/>")}</textarea></div>
 	<div id="add_map" >
 	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8d66e864b87e987208f8177b0a743d9e&libraries=services,clusterer,drawing"></script>
-<script> 
+	<script> 
 	var container = document.getElementById('add_map');
 	var options = { //지도를 생성할 때 필요한 기본 옵션
 			center: new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
