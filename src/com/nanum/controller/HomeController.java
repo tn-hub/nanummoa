@@ -38,13 +38,14 @@ public class HomeController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("[debug]나눔모아 메인");
+		System.out.println("[debug] 나눔모아 메인");
 		HttpSession session = request.getSession(true);
 		
 		HashMap<String, LocalDto> localMap = new HashMap<>();
 		HashMap<String, VolCategoryDto> volCategoryMap = new HashMap<>();
 		ArrayList<VolBlockDto> volList =  new ArrayList<VolBlockDto>();
-		
+		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String,Object>>();
+
 		CommonBiz biz = new CommonBiz();
 		try {
 			biz.searchLocal(localMap);
@@ -63,6 +64,14 @@ public class HomeController extends HttpServlet {
 					System.out.println("[con] vol : " + dto);
 				}
 				request.setAttribute("volList", volList);
+			}
+			
+			biz.searchVolMapList(list);
+			for (HashMap<String, Object> hashMap : list) {
+				System.out.println(">>");
+				for(String key : hashMap.keySet()){
+					System.out.println(key+" : "+hashMap.get(key));
+				}
 			}
 		} catch (CommonException e) {
 			e.printStackTrace();

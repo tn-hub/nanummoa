@@ -4,7 +4,7 @@ import java.sql.Date;
 
 /**
  * <pre>
- * 메인 - 자원봉사 엔티티
+ * 자원봉사 엔티티(info, detail)
  * </pre>
  * @author 메타쓰리
  *

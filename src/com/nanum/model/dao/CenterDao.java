@@ -4,11 +4,15 @@
 package com.nanum.model.dao;
 
 import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.sql.Date;
+import java.util.HashMap;
 
+import com.nanum.dto.VolDetailDto;
 import com.nanum.dto.CenterInfoDto;
 import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.VolInfoDto;
@@ -413,5 +417,104 @@ public class CenterDao {
 		} finally {
 			JdbcTemplate.close(pstmt);
 		}
+	}
+	
+	/**
+	 * 봉사글등록(map)
+	 */
+	public void addVolInfo(Connection conn, HashMap<String, Object> map) throws CommonException {
+		String sql = "insert into vol_info values (vol_info_seq.nextval,?,?,?,sysdate,to_date(?,'HH24:MI'),to_date(?,'HH24:MI'),?,?,?,?,?,?,?,?,?)";
+		System.out.println(sql);
+		
+		PreparedStatement pstmt = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, String.valueOf( map.get("centerId")));
+			pstmt.setString(2, (String) map.get("volTitle"));
+			pstmt.setString(3, (String) map.get("volContents"));
+			
+			pstmt.setString(4, (String) map.get("startTime"));
+			pstmt.setString(5, (String) map.get("endTime"));
+			pstmt.setString(6, (String) map.get("startDate"));
+			pstmt.setString(7, (String) map.get("endDate"));
+			
+			pstmt.setString(8, (String) map.get("categoryNo"));
+			pstmt.setString(9, (String) map.get("localNo"));
+			pstmt.setString(10, (String) map.get("volType"));
+			pstmt.setString(11, (String) map.get("volPlace"));
+			pstmt.setString(12, (String) map.get("latitude"));
+			pstmt.setString(13, (String) map.get("longitude"));
+			pstmt.setString(14, (String) map.get("volSubject"));
+			
+			int rows = pstmt.executeUpdate();
+			System.out.println("rows : " + rows);
+			if (rows != 1) {
+				throw new Exception();
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(pstmt);
+		}
+		
+	}
+	
+	/**
+	 * 봉사 상세등록(날짜별)
+	 */
+	public void addVolDetail(Connection conn, VolDetailDto dto) throws CommonException {
+		String sql = "insert into vol_detail values(vol_detail_seq.nextval,?,?,0,?,'0')";
+		System.out.println(sql);
+		
+		PreparedStatement pstmt = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, dto.getVolInfoNo());
+			pstmt.setString(2, dto.getVolDate());
+			pstmt.setInt(3, dto.getTotalCount());
+			int rows = pstmt.executeUpdate();
+			System.out.println("rows : " + rows);
+			if (rows != 1) {
+				throw new Exception();
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(pstmt);
+		}
+		
+	}
+
+	/**
+	 * 봉사 현재시퀀스 가져오기
+	 */
+	public int getVolInfoNoCurrentSeq(Connection conn) throws CommonException {
+		String sql = "SELECT vol_info_seq.nextval, vol_info_seq.CURRVAL FROM DUAL";
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				System.out.println("시퀀스조회  : " + rs.getInt(1) + ", " + rs.getInt(2));
+				return rs.getInt(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(pstmt);
+		}
+		return 0;
 	}
 }

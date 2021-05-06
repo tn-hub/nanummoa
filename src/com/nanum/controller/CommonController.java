@@ -65,6 +65,9 @@ public class CommonController extends HttpServlet {
 		case "login":
 			login(request, response);
 			break;
+		case "logout":
+			logout(request, response);
+			break;
 		case "addSecureCode":
 			addSecureCode(request, response);
 			break;
@@ -97,7 +100,7 @@ public class CommonController extends HttpServlet {
 			break;
 		case "inputForm":
 			inputForm(request, response);
-
+			break;
 		case "findPwForm":
 			findPwForm(request, response);
 			break;
@@ -961,5 +964,25 @@ public class CommonController extends HttpServlet {
 			throws ServletException, IOException {
 		request.getRequestDispatcher("/common/inputForm.jsp").forward(request, response);
 	}
-
+	
+	/**
+	 * 로그아웃  서비스
+	 */
+	protected void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession(false);
+		System.out.println("[debug] 로그아웃 요청");
+		if (session != null) {
+			if (session.getAttribute("dto") != null) {
+				session.removeAttribute("dto");
+			}
+			
+			if (session.getAttribute("grade") != null) {
+				session.removeAttribute("grade");
+			}
+			
+			session.invalidate();
+		}
+		
+		response.sendRedirect(CONTEXT_PATH + "/home"); 
+	}
 }
