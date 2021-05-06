@@ -307,12 +307,7 @@ public class GeneralMemberDto {
 		this.localName = localName;
 	}
 
-	/**
-	 * @return the generalAddress
-	 */
-	public String getGeneralAddress() {
-		return generalAddress;
-	}
+
 
 	@Override
 	public String toString() {
