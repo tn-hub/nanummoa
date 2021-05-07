@@ -56,6 +56,7 @@ h4{
 
 #uptQna_btn{
 	float: right;
+	margin-left: 140px;
 }
 
 .btn_qna{
@@ -63,6 +64,7 @@ h4{
 	height: 30px;
 	border-style: none;
 	font-size: 17px;
+	margin-right: 10px;
 }
 
 #rAdd{
