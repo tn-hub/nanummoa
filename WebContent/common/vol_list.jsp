@@ -322,7 +322,10 @@ $(document).ready(function(){
 		<em>0</em>
 		/0]
 	</p>
-	<hr class="list_head_hr">
+	<c:if test="${grade == 'C' }">
+		<button class="y_btn float_r minus_mg_t" onclick="location.href='${CONTEXT_PATH}/center/centerController?action=volInputForm'">글작성</button>
+	</c:if>	
+	<hr class="list_head_hr clear_b">
 	
 	<ul class="vol_list_ul">
 	<c:forEach var="list" items="${volList}">
