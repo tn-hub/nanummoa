@@ -288,7 +288,7 @@ pageContext.setAttribute("newLineChar", "\n");
 		</li>
 	</ul>
 	<!-- 어드민 만보이겠금 -->
-	<c:if test = "${grade == 'C'}">
+	<c:if test = "${grade == 'C' and dto.centerId eq vDto.centerId}">
 	<div id="add_btn">
 		<input class="btn_add" type="button" value="수정하기"  style="cursor:hand;" onclick="location.href='${CONTEXT_PATH}/center/centerController?action=updateVolForm&volInfoNo=${vDto.volInfoNo}'">
 		<input class="btn_add" type="button" value="삭제하기"  style="cursor:hand;" onclick="location.href='${CONTEXT_PATH}/center/centerController?action=deleteVol&volInfoNo=${vDto.volInfoNo}'">
