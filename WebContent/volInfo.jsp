@@ -147,36 +147,36 @@ $(document).ready(function(){
         level: 3 // 지도의 확대 레벨
     };
 
-var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
-
-// 지도를 클릭한 위치에 표출할 마커입니다
-var marker = new kakao.maps.Marker({ 
-    // 지도 중심좌표에 마커를 생성합니다 
-    position: map.getCenter() 
-}); 
-// 지도에 마커를 표시합니다
-marker.setMap(map);
-
-// 지도에 클릭 이벤트를 등록합니다
-// 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
-   kakao.maps.event.addListener(map, 'click', function(mouseEvent) {        
-    
-    // 클릭한 위도, 경도 정보를 가져옵니다 
-    var latlng = mouseEvent.latLng; 
-    
-    // 마커 위치를 클릭한 위치로 옮깁니다
-   /*  marker.setPosition(latlng); */
-    
-
-    
-    var resultDiv = document.getElementById('clickLatlng'); 
-    resultDiv.innerHTML = message;
-    
-    var lt=latlng.getLat();
-    var lg=latlng.getLng(); 
-    
+	var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+	
+	// 지도를 클릭한 위치에 표출할 마커입니다
+	var marker = new kakao.maps.Marker({ 
+	    // 지도 중심좌표에 마커를 생성합니다 
+	    position: map.getCenter() 
+	}); 
+	// 지도에 마커를 표시합니다
+	marker.setMap(map);
+	
+	// 지도에 클릭 이벤트를 등록합니다
+	// 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
+	   kakao.maps.event.addListener(map, 'click', function(mouseEvent) {        
+	    
+	    // 클릭한 위도, 경도 정보를 가져옵니다 
+	    var latlng = mouseEvent.latLng; 
+	    
+	    // 마커 위치를 클릭한 위치로 옮깁니다
+	   /*  marker.setPosition(latlng); */
+	    
+	    
+	    var resultDiv = document.getElementById('clickLatlng'); 
+	    resultDiv.innerHTML = message;
+	    
+	    var lt=latlng.getLat();
+	    var lg=latlng.getLng(); 
+	    
 	}); 	
-});
+}); 	
+
 
 </script>
 </head>
@@ -190,8 +190,10 @@ pageContext.setAttribute("newLineChar", "\n");
 <div id="section_contents">
 <h2>자원봉사 상세</h2>
 <hr>
-<input class="btn_list" type="button" value="목록"  style="cursor:hand;">
-<input id="btn_apply" type="button" value="신청하기" style="cursor:hand;">
+<input class="btn_list" type="button" value="목록"  style="cursor:hand;" onclick="location.href='${CONTEXT_PATH}/common/commonController?action=volListForm'">
+<c:if test="${grade == 'G' }">
+<input id="btn_apply" type="button" value="신청하기" style="cursor:hand;" onclick="location.href='${CONTEXT_PATH}/general/generalController?action=enrollVolForm&volInfoNo=${vDto.volInfoNo}'">
+</c:if>
 <hr>
 
 <h3>${vDto.volTitle} <span id="recSt">${vDto.recStatuse}</span></h3>   
@@ -259,8 +261,8 @@ pageContext.setAttribute("newLineChar", "\n");
 	<!-- 어드민 만보이겠금 -->
 	<c:if test = "${grade == 'C'}">
 	<div id="add_btn">
-		<input class="btn_add" type="button" value="삭제하기"  style="cursor:hand;">
-		<input class="btn_add" type="button" value="수정하기"  style="cursor:hand;">
+		<input class="btn_add" type="button" value="삭제하기"  style="cursor:hand;" onclick="location.href='${CONTEXT_PATH}/center/centerController?action=updateVolForm&volInfoNo=${vDto.volInfoNo}'">
+		<input class="btn_add" type="button" value="수정하기"  style="cursor:hand;" onclick="location.href='${CONTEXT_PATH}/center/centerController?action=deleteVol&volInfoNo=${vDto.volInfoNo}'">
 	</div>
 	</c:if>
 </form>
