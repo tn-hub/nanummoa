@@ -21,6 +21,7 @@
 					<li><a href="${CONTEXT_PATH}/common/commonController?action=logout">로그아웃</a></li>
 					<li><a href="${CONTEXT_PATH}/center/centerController?action=centerMyInfoForm">센터페이지</a></li>
 				</c:when>
+
 				<c:when test="${grade == 'A' }">
 					<li><a href="${CONTEXT_PATH}/common/commonController?action=logout">로그아웃</a></li>
 					<li><a href="${CONTEXT_PATH}/admin/adminController?action=">관리자페이지</a></li>
