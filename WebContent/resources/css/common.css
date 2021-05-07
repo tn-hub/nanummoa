@@ -316,6 +316,15 @@ a {
 	text-align: center;
 	padding: 5px;
 }
+.r_btn{
+	border: none;
+	background-color: #FF9090;
+	width: 100px;
+	height: 40px;
+	border-radius: 5px;
+	text-align: center;
+	padding: 5px;
+}
 
 /** layout float etc */
 .float_r{
