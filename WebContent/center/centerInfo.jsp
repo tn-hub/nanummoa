@@ -189,17 +189,14 @@ text-align: center;
 			<h1>자원 봉사 목록</h1>
 		<hr>
 		<div class="link_box">
-			<a href="${CONTEXT_PATH }/center/centerController?action=recruitList">모집중 봉사</a>
+			<a href="${CONTEXT_PATH}/center/centerController?action=centerVolListForm">모집중 봉사</a>
 		</div>
 		<div class="link_box">
 			<a href="${CONTEXT_PATH }/center/centerController?action=deadlineList">종료된 봉사</a>
 		</div>
 		<hr>
 		
-		
-		<p>[전체 <em>
-		${fn:length(list)}
-		</em>건, 현재페이지 <em>0</em>/0]</p>
+	<p>[전체 <em>${fn:length(list)}</em>건, 현재페이지 <em>0</em>/0]</p>
 	<hr class="list_head_hr">
 	<c:forEach var="dto" items="${list }">
 	<ul class="vol_list_ul">

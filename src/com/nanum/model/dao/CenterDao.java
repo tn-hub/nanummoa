@@ -66,61 +66,12 @@ public class CenterDao {
 	}
 
 	/**
-	 * 센터회원 봉사 목록
-	 * 
-	 * @param conn
-	 * @throws CommonException
-	 */
-	public void centerVolList(String centerId, Connection conn, ArrayList<CenterVolDto> list) throws CommonException {
-		String sql = "select  vi.vol_info_no, vi.v_title, vi.start_date, vi.end_date,\n"
-				+ "				min(vd.vol_date) as 봉사시작일, max(vd.vol_date) as 봉사종료일, min(vd.rec_status) as 모집중,\n"
-				+ "				max(vd.rec_status) as 마감, ci.c_name, vc.category_name,\n"
-				+ "				round(vi.end_date - sysdate,0) as deadline\n"
-				+ "				from vol_info vi,vol_detail vd, center_member cm, center_info ci,vol_category vc\n"
-				+ "				where vi.vol_info_no = vd.vol_info_no and vi.c_id = cm.c_id and cm.c_id = ci.c_id\n"
-				+ "				and vi.category_no = vc.category_no and cm.c_id= ?\n"
-				+ "				group by vi.vol_info_no, vi.v_title, vi.start_date, vi.end_date,ci.c_name,vc.category_name order by end_date desc";
-
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-
-		try {
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, centerId);
-			rs = pstmt.executeQuery();
-
-			while (rs.next()) {
-				CenterVolDto dto = new CenterVolDto();
-
-				dto.setVolInfoNo(rs.getInt("vol_info_no"));
-				dto.setCenterName(rs.getString("c_name"));
-				dto.setVolTitle(rs.getString("v_title"));
-				dto.setStartDate(rs.getDate("start_date"));
-				dto.setEndDate(rs.getDate("end_date"));
-				dto.setVolStart(rs.getDate("봉사시작일"));
-				dto.setVolEnd(rs.getDate("봉사종료일"));
-				dto.setCategoryName(rs.getString("category_name"));
-				dto.setRecStatus(rs.getString("모집중"));
-				dto.setDeadline(rs.getInt("deadline"));
-
-				list.add(dto);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CommonException();
-		} finally {
-			JdbcTemplate.close(rs);
-			JdbcTemplate.close(pstmt);
-		}
-	}
-
-	/**
 	 * 센터회원 봉사 목록(모집중)
 	 * 
 	 * @param conn
 	 * @throws CommonException
 	 */
-	public void recruitList(String centerId, Connection conn, ArrayList<CenterVolDto> list) throws CommonException {
+	public void centerVolList(String centerId, Connection conn, ArrayList<CenterVolDto> list) throws CommonException {
 		String sql = "select  \n" + "vi.vol_info_no\n" + ", vi.v_title \n" + ", vi.start_date\n" + ", vi.end_date\n"
 				+ ", min(vd.vol_date) as 봉사시작일\n" + ", max(vd.vol_date) as 봉사종료일\n" + ", min(vd.rec_status) as 모집중\n"
 				+ ", max(vd.rec_status) as 마감\n" + ", ci.c_name\n" + ", vc.category_name\n"
@@ -129,10 +80,11 @@ public class CenterDao {
 				+ "where vi.vol_info_no = vd.vol_info_no\n" + "and vi.c_id = cm.c_id\n" + "and cm.c_id = ci.c_id\n"
 				+ "and vi.category_no = vc.category_no\n" + "and cm.c_id= ?\n"
 				+ "group by vi.vol_info_no, vi.v_title, vi.start_date, vi.end_date,ci.c_name,vc.category_name\n"
-				+ "having min(vd.rec_status) = 0 order by end_date desc";
+				+ "having min(vd.rec_status) = 0 order by round(vi.end_date - sysdate,0),vol_info_no";
 
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
+
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, centerId);
@@ -161,7 +113,6 @@ public class CenterDao {
 			JdbcTemplate.close(rs);
 			JdbcTemplate.close(pstmt);
 		}
-
 	}
 
 	/**
@@ -179,7 +130,7 @@ public class CenterDao {
 				+ "where vi.vol_info_no = vd.vol_info_no\n" + "and vi.c_id = cm.c_id\n" + "and cm.c_id = ci.c_id\n"
 				+ "and vi.category_no = vc.category_no\n" + "and cm.c_id= ?\n"
 				+ "group by vi.vol_info_no, vi.v_title, vi.start_date, vi.end_date,ci.c_name,vc.category_name\n"
-				+ "having min(vd.rec_status) = 1 order by end_date desc";
+				+ "having min(vd.rec_status) not in(0) order by end_date desc";
 
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;

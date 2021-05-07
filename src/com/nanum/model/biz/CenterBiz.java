@@ -48,7 +48,7 @@ public class CenterBiz {
 	private CenterDao dao = CenterDao.getInstance();
 
 	/**
-	 * 센터회원 봉사 목록
+	 * 센터회원 봉사 목록(모집중)
 	 * 
 	 * @throws CommonException
 	 */
@@ -58,23 +58,6 @@ public class CenterBiz {
 
 		try {
 			dao.centerVolList(centerId, conn, list);
-		} catch (CommonException e) {
-			e.printStackTrace();
-			throw e;
-		} finally {
-			JdbcTemplate.close(conn);
-		}
-	}
-
-	/**
-	 * 센터회원 봉사 목록(모집중)
-	 * 
-	 * @throws CommonException
-	 */
-	public void recruitList(String centerId, ArrayList<CenterVolDto> list, CenterVolDto voDto) throws CommonException {
-		Connection conn = JdbcTemplate.getConnection();
-		try {
-			dao.recruitList(centerId, conn, list);
 		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;
