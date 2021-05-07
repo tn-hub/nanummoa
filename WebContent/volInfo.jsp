@@ -138,6 +138,23 @@ textarea{
 	border-style: none;
 }
 
+.vol_list_ul {
+	list-style:none;
+	color: #5F5F5F;	
+	padding-inline-start: 0px;
+}
+
+.vol_list_ul .span_box {
+	display: inline-block;
+	width: 300px;
+}
+
+ .title_span {
+ 	color: #3F3F3F !important;
+	font-weight: bold;
+}
+
+
 </style>
 
 <script type="text/javascript">
@@ -247,18 +264,28 @@ pageContext.setAttribute("newLineChar", "\n");
 		
 	</table>
 	<div id="area_text">${fn:replace(vDto.volContents,newLineChar,"<br/>")}</div>
-	<div id="map" >
-	
+	<div id="map">
 	</div>
 	
-	<div id="center_info">
-		<ul>
-			<li>담당자명 : ${vDto.name}</li>
-			<li>전화번호 : ${vDto.mobile}</li>
-			<li>주소 : ${vDto.address}</li>
-		</ul>
-	</div>
 	<hr>
+	<h3>◎ 담당자 정보</h3>
+	<ul class="vol_list_ul">
+	
+		<li>
+			<div class="span_box">
+				<span class="title_span">[담당자]</span>
+				<span>${vDto.name}</span>
+			</div>
+			<div class="span_box">
+				<span class="title_span">[연락처]</span>
+				<span>${vDto.mobile}</span>
+			</div>
+			<div class="span_box">
+				<span class="title_span">[이메일]</span>
+				<span>${vDto.email}</span>
+			</div>
+		</li>
+	</ul>
 	<!-- 어드민 만보이겠금 -->
 	<c:if test = "${grade == 'C'}">
 	<div id="add_btn">

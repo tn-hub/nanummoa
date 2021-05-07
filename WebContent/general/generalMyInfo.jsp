@@ -249,9 +249,9 @@ $(document).ready(function(){
 			</tr>
 		</table>
 		<div class="input_button_div">
-			<input type="submit" value="저장">
-			<input type="reset" value="초기화">
-			<input type="button" value="회원탈퇴" id="delBtn">
+			<input class="y_btn" type="submit" value="저장">
+			<input class="g_btn" type="reset" value="초기화">
+			<input class="r_btn" type="button" value="회원탈퇴" id="delBtn">
 		</div>
 	</form>
 </div>
