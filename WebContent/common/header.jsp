@@ -48,7 +48,7 @@
 						<li id= "" class=""><a href="${CONTEXT_PATH}/common/commonController?action=loginForm" class="">나의 봉사내역</a></li>
 					</c:when>
 					<c:when test="${grade == 'G'}">
-						<li id= "" class=""><a href="#" class="">나의 봉사내역</a></li>
+						<li id= "" class=""><a href="${CONTEXT_PATH}/general/generalController?action=volApplyList" class="">나의 봉사내역</a></li>
 					</c:when>
 					<c:when test="${grade == 'C'}">
 						<li id= "" class=""><a href="${CONTEXT_PATH}/center/centerController?action=centerVolListForm" class="">나의 봉사내역</a></li>

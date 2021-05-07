@@ -22,7 +22,7 @@
 						<span class="vol_title">${vol.volTitle}</span>
 						<p class="vol_period">모집기간 : ${vol.startDate}~${vol.endDate}</p>
 						<p class="vol_period">봉사기간 : ${vol.startVolDate}~${vol.endVolDate}</p>
-						<button class="apply_btn">신청하기</button>
+						<button onclick="location.href='${CONTEXT_PATH}/common/commonController?action=volDetatilForm&volInfoNo=${vol.volInfoNo}'" class="apply_btn">신청하기</button>
 					</div>
 				</div>
 			<c:if test="${vs.count % 4 == 0 }">

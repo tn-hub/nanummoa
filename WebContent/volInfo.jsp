@@ -147,7 +147,7 @@ pageContext.setAttribute("newLineChar", "\n");
 <h2>자원봉사 상세</h2>
 <hr>
 <input class="btn_list" type="button" value="목록"  style="cursor:hand;">
-<input id="btn_apply" type="button" value="신청하기" style="cursor:hand;">
+<input id="btn_apply" type="button" value="신청하기" style="cursor:hand;" onclick="location.href='${CONTEXT_PATH}/general/generalController?action=enrollVolForm&volInfoNo=${vDto.volInfoNo}'">
 <hr>
 
 <a href="${CONTEXT_PATH}/common/commonController?action=volDetatilForm&volInfoNo=1">조회</a>
@@ -227,8 +227,8 @@ pageContext.setAttribute("newLineChar", "\n");
 	<!-- 어드민 만보이겠금 -->
 	<c:if test = "${grade == 'C'}">
 	<div id="add_btn">
-		<input class="btn_add" type="button" value="삭제하기"  style="cursor:hand;">
-		<input class="btn_add" type="button" value="수정하기"  style="cursor:hand;">
+		<input class="btn_add" type="button" value="삭제하기"  style="cursor:hand;" onclick="location.href='${CONTEXT_PATH}/center/centerController?action=deleteVol&volInfoNo=${vol.volInfoNo}'">
+		<input class="btn_add" type="button" value="수정하기"  style="cursor:hand;" onclick="location.href='${CONTEXT_PATH}/center/centerController?action=updateVolForm&volInfoNo=${vol.volInfoNo}'">
 	</div>
 	</c:if>
 </form>
