@@ -503,7 +503,7 @@ public class CommonDao {
 		}else if  ("W".equals(searchOpt)) {
 			sql.append(" where q.g_id in (select g.g_id from general_member g where g.g_name like '%'||?||'%') ");
 			sql.append(" or q.c_id in (select c.c_id from center_member c where c.c_name like '%'||?||'%')  ");
-		}else{
+		} else {
 			sql.append(" where q.q_title like '%'|| ? ||'%' ");
 			sql.append(" or q.q_contents like '%'|| ? ||'%' ");
 			sql.append(" or q.g_id in (select g.g_id from general_member g where g.g_name like '%'||?||'%') ");
