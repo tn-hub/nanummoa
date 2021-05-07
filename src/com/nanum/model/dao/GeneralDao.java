@@ -525,4 +525,50 @@ public class GeneralDao {
 			JdbcTemplate.close(pstmt);
 		}
 	}
+	
+	/**
+	 * 봉사 확인서 내역 조회
+	 */
+	public void searchConfirmationList(Connection conn, String generalId, ArrayList<HashMap<String, Object>> list) throws CommonException {
+		String sql = "select vc.vol_con_no, c.c_name, min(d.vol_date) as 봉사시작일, max(d.vol_date) as 봉사마감일,\r\n" + 
+				"to_char(i.start_time, 'HH24:MI') as 시작시간, to_char(i.end_time, 'HH24:MI') as 마감시간\r\n" + 
+				"from vol_info i, vol_detail d, center_info c, vol_confirmation vc \r\n" + 
+				"where i.vol_info_no = d.vol_info_no\r\n" + 
+				"and i.c_id = c.c_id\r\n" + 
+				"and i.c_id = vc.c_id\r\n" + 
+				"and vc.vol_detail_no = d.vol_detail_no\r\n" + 
+				"and vc.g_id = 'user01'\r\n" + 
+				"group by vc.vol_con_no, c.c_name, i.start_time, i.end_time, vc.vol_date\r\n" + 
+				"order by vc.vol_date desc";
+		
+		System.out.println(sql);
+		HashMap<String, Object> map = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, generalId);
+			rs = pstmt.executeQuery();
+			System.out.println("[dao] generalId : "+generalId);
+			while(rs.next()) {
+				map = new HashMap<String, Object>();
+				map.put("centerName", rs.getString(1));
+				map.put("startDate", rs.getString(2));
+				map.put("endDate", rs.getString(3));
+				map.put("startTime", rs.getString(4));
+				map.put("endTime", rs.getString(5));
+				
+				list.add(map);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(pstmt);
+		}
+		
+	}
 }

@@ -15,10 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.LocalDto;
-import com.nanum.dto.VolApplyListDto;
 import com.nanum.dto.VolCategoryDto;
-import com.nanum.dto.VolDetailDto;
-import com.nanum.dto.VolInfoDto;
 import com.nanum.model.biz.GeneralBiz;
 import com.nanum.util.CommonException;
 
@@ -75,6 +72,9 @@ public class GeneralController extends HttpServlet {
 			break;
 		case "generalDelete" :
 			generalDelete(request, response);
+			break;
+		case "confirmationListForm" :
+			confirmationListForm(request, response);
 			break;
 		}
 	}
@@ -629,6 +629,39 @@ public class GeneralController extends HttpServlet {
 		String generalId = dto.getGeneralId();
 		try{
 			biz.volInfoByDate(generalId, volInfoNo, list);
+			for (HashMap<String, Object> hashMap : list) {
+				for(String key : hashMap.keySet()){
+					System.out.println(key+" : "+hashMap.get(key));
+				}
+			}
+			request.setAttribute("list", list);
+			request.getRequestDispatcher("/vol_list.jsp").forward(request, response);
+			
+		} catch(CommonException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 봉사확인서 내역 조회 페이지
+	 */
+	private void confirmationListForm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || 
+				session.getAttribute("dto") == null ||
+				session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");	
+			return;
+		}
+		
+		
+		GeneralMemberDto dto = (GeneralMemberDto)session.getAttribute("dto");
+		String generalId = dto.getGeneralId();
+		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String,Object>>();
+		GeneralBiz biz = new GeneralBiz();
+		try{
+			biz.volInfoByDate(generalId, list);
 			for (HashMap<String, Object> hashMap : list) {
 				for(String key : hashMap.keySet()){
 					System.out.println(key+" : "+hashMap.get(key));
