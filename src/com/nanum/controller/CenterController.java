@@ -28,7 +28,6 @@ import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.LocalDto;
 import com.nanum.dto.ServiceCategoryDto;
 import com.nanum.dto.VolCategoryDto;
-import com.nanum.dto.VolInfoDto;
 import com.nanum.dto.CenterVolDto;
 import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.VolApplyListDto;
