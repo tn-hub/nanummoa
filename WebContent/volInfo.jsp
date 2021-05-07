@@ -194,9 +194,8 @@ pageContext.setAttribute("newLineChar", "\n");
 <input id="btn_apply" type="button" value="신청하기" style="cursor:hand;">
 <hr>
 
-<a href="${CONTEXT_PATH}/common/commonController?action=volDetatilForm&volInfoNo=1">조회</a>
 <h3>${vDto.volTitle} <span id="recSt">${vDto.recStatuse}</span></h3>   
-<form action="">
+<form action="${CONTEXT_PATH}/common/commonController?action=volDetatilForm" method="post">
 	<table id="volAdd">
 		<tr>
 			<th>봉사 시작일</th>
