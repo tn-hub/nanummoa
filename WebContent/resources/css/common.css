@@ -225,6 +225,7 @@ a {
 	border-radius: 5px;
 	font-size:16px;
 	margin-top: 10px;
+	cursor: pointer;
 }
 .apply_btn:hover{
 	background-color: grey;
