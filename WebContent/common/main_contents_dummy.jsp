@@ -20,7 +20,7 @@
 						<span class="vol_title">햇살마루 홈페이지 제작,수정 봉사활동</span>
 						<p class="vol_period">모집기간 : 2021.05.02~2021.05.02</p>
 						<p class="vol_period">봉사기간 : 2021.05.02~2021.05.02</p>
-						<button class="apply_btn">신청하기</button>
+						<a href="${CONTEXT_PATH}/common/commonController?action=volDetatilForm"><button class="apply_btn">신청하기</button></a>
 					</div>
 				</div>
 				<div class="block_col">

@@ -16,12 +16,10 @@
 				<c:when test="${grade == 'G' }">
 					<li><a href="${CONTEXT_PATH}/common/commonController?action=logout">로그아웃</a></li>
 					<li><a href="${CONTEXT_PATH}/general/generalController?action=">마이페이지</a></li>
-					<li><a href="${CONTEXT_PATH}/general/generalpage.jsp">회원개발용</a></li>
 				</c:when>
 				<c:when test="${grade == 'C' }">
 					<li><a href="${CONTEXT_PATH}/common/commonController?action=logout">로그아웃</a></li>
 					<li><a href="${CONTEXT_PATH}/center/centerController?action=centerpage">센터페이지</a></li>
-					<li><a href="${CONTEXT_PATH}/center/centerpage.jsp">센터개발용</a></li>
 				</c:when>
 				<c:when test="${grade == 'A' }">
 					<li><a href="${CONTEXT_PATH}/common/commonController?action=logout">로그아웃</a></li>
