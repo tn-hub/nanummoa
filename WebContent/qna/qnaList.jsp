@@ -129,6 +129,7 @@ $(document).ready(function() {
 		//검색조건
 		var searchOpt = $("#search_opt").val();   
 		
+		
 		// 내용 빈값 확인 
 		if (searchOpt == "T" || searchOpt == "C" || searchOpt == "W"){
 			if ($("#search_text").val() == null || $("#search_text").val() == "") {
@@ -136,14 +137,7 @@ $(document).ready(function() {
 				$("#search_text").focus();
 				return false;
 			}
-		}else{
-			if ($("#search_text").val() != null && $("#search_text").val() != "") {
-				alert("조건을 선택하세요");
-				$("#search_opt").focus();
-				return false;
-			}
-			
-		}			
+		}		
 	});
 	
 });
@@ -164,10 +158,10 @@ $(document).ready(function() {
 		</td>
 		<td id="search_qna_tdSelect">
 			<select  id="search_opt" name ="search_opt">
-				<option value="">전체</option>
-				<option value="T" <c:if test="${searchOpt eq 'T'}">selected</c:if> >제목 </option>
-				<option value="C" <c:if test="${searchOpt eq 'C'}">selected</c:if>>내용</option>
-				<option value="W" <c:if test="${searchOpt eq 'W'}">selected</c:if>>작성자</option>
+				<option>전체 </option>
+				<option value="T" <c:if test="${searchOpt eq 'T'}">selected</c:if>> 제목 </option>
+				<option value="C" <c:if test="${searchOpt eq 'C'}">selected</c:if>> 내용 </option>
+				<option value="W" <c:if test="${searchOpt eq 'W'}">selected</c:if>> 작성자 </option>
 			</select>
 		</td>
 		<td id="search_qna_tdText">

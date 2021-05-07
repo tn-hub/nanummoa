@@ -113,8 +113,15 @@ a.bold { font-weight: bold; }
 	font-size: 17px;
 }
 
-.searchAll ul, li{
-	border-style: 1px solid gray;
+.searchAll {
+	background-color: red;
+		list-style:none;
+}
+
+.searchAll li{
+	border: 1px solid gray;
+	list-style: none;
+	background-color: yellow;
 }
 
 </style>
@@ -168,6 +175,7 @@ $(document).ready(function() {
 	<li>전체</li>
 	<li>봉사</li>
 	<li>문의</li>
+	
 </ul>
 
 
