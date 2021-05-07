@@ -284,7 +284,7 @@ text-align: center;
 		font-weight: bold;
 	}
 	
-	.vol_list_ul .span_box {
+	.vol_list_ul .span_box1 {
 		display: inline-block;
 		width: 250px;
 	}
@@ -392,12 +392,12 @@ $(document).ready(function() {
 						</c:choose>
 					</span>
 					
-				<div class="span_box">
+				<div class="span_box1">
 					<span class="title_span">[봉사기간]</span>
 					<span>${dto.volDate }</span>
 				</div>
 				
-				<div class="span_box">
+				<div class="span_box1">
 					<span class="title_span">[봉사상태]</span>
 					<c:choose>
 						<c:when test="${dto.recStatus == '0'}">
@@ -409,7 +409,7 @@ $(document).ready(function() {
 					</c:choose>
 				</div>
 				
-				<div class="span_box">
+				<div class="span_box1">
 					<span class="title_span">[모집인원]</span>
 					<span>${dto.applyCount }/${dto.totalCount }명</span>
 				</div>

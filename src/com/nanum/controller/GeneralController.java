@@ -66,6 +66,7 @@ public class GeneralController extends HttpServlet {
 			break;
 		case "cancelVol" :
 			cancelVol(request, response);
+			break;
 		case "generalMyInfoForm" :
 			generalMyInfoForm(request, response);
 			break;
@@ -526,7 +527,8 @@ public class GeneralController extends HttpServlet {
 		if (session == null || 
 				session.getAttribute("dto") == null ||
 				session.getAttribute("grade") == null) {
-			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");	
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+			request.getRequestDispatcher("/common/commonController?action=loginForm");
 			return;
 		}
 		GeneralMemberDto dto = (GeneralMemberDto) session.getAttribute("dto");
@@ -551,10 +553,11 @@ public class GeneralController extends HttpServlet {
 	private void volApplyList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
 		
-		if (session == null || 
+		if (session == null ||
 				session.getAttribute("dto") == null ||
 				session.getAttribute("grade") == null) {
-			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");	
+			System.out.println("dd");
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
 			return;
 		}
 		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String,Object>>();
