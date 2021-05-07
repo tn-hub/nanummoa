@@ -20,14 +20,17 @@ margin:  auto;
 }
 
 input[type='submit']{
-    width: 403px;
+        width: 403px;
     padding: 10px 30px;
     cursor: pointer;
-    margin: auto;
-    background: linear-gradient(to right, #ff105f, #ffad06);
+    background: #FBD157;
     border: 0;
     outline: none;
     border-radius: 30px;
+    height: 60px;
+    margin-top: 17px;
+    font-size: 22px;
+    font-weight: bold;
 }
 
 .wrap_form{
@@ -52,6 +55,11 @@ input[type='radio'] {
 	width: 30px;
     height: 20px;
 }
+	.a_link{
+	text-align : center;
+	 width: 400px;
+	}
+
 </style>
 
 <title>로그인</title>
@@ -82,12 +90,14 @@ input[type='radio'] {
 		<div id="submit">
 			<input type="submit" value="로그인" >
 		</div>
-		
-			<br>
-			  <a href="${CONTEXT_PATH}/general/generalController?action=generalInputForm">회원가입</a>
-			| <a href="${CONTEXT_PATH }/common/commonController?action=findIdForm">아이디 찾기</a>
-			| <a href="${CONTEXT_PATH }/common/commonController?action=findPwForm"">비밀번호 찾기</a>
 		</form>
+			<br>
+ 			<div class="a_link">
+				  <a href="${CONTEXT_PATH}/common/commonController?action=inputForm">회원가입</a>
+				| <a href="${CONTEXT_PATH }/common/commonController?action=findIdForm">아이디 찾기</a>
+				| <a href="${CONTEXT_PATH }/common/commonController?action=findPwForm"">비밀번호 찾기</a>
+			</div>
+		
 		</div>
 	</div>
 </div>
