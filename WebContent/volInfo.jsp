@@ -38,6 +38,7 @@
 	margin-right: 10px;
 	font-size: 16px;
 	border-radius: 5px;
+    background: #FBD157;
 }
 
 #vol_info_title{
@@ -54,7 +55,7 @@
 	background-color: #FF9090;
 	margin-right: 10px;
 	margin-bottom: 10px;
-	border-radius: 5px;
+	border-radius: 25px;
 }
 
 #volAdd{
@@ -190,11 +191,11 @@ pageContext.setAttribute("newLineChar", "\n");
 <div id="section_contents">
 <h2>자원봉사 상세</h2>
 <hr>
-<input class="btn_list" type="button" value="목록"  style="cursor:hand;" onclick="location.href='${CONTEXT_PATH}/common/commonController?action=volListForm'">
+<input class="btn_list" class="g_btn" type="button" value="목록"  style="cursor:hand;" onclick="location.href='${CONTEXT_PATH}/common/commonController?action=volListForm'">
 <c:if test="${grade == 'G' }">
-<input id="btn_apply" type="button" value="신청하기" style="cursor:hand;" onclick="location.href='${CONTEXT_PATH}/general/generalController?action=enrollVolForm&volInfoNo=${vDto.volInfoNo}'">
+<input id="btn_apply" class="y_btn" type="button" value="신청하기" style="cursor:hand;" onclick="location.href='${CONTEXT_PATH}/general/generalController?action=enrollVolForm&volInfoNo=${vDto.volInfoNo}'">
 </c:if>
-<hr>
+<hr class="clear_b">
 
 <h3>${vDto.volTitle} <span id="recSt">${vDto.recStatuse}</span></h3>   
 <form action="${CONTEXT_PATH}/common/commonController?action=volDetatilForm" method="post">
