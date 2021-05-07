@@ -217,7 +217,7 @@ text-align: center;
 					<span>${dto.categoryName}</span>
 				</div>
 				
-				<h3><a href="#">${dto.volTitle }</a></h3>
+				<h3><a href="${CONTEXT_PATH}/common/commonController?action=volDetatilForm&volInfoNo=${dto.volInfoNo}">${dto.volTitle }</a></h3>
 				
 				<div class="span_box">
 					<span class="title_span">[모집기관]</span>

@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>자원봉사 승인</title>
+<title>신청자 목록</title>
 <link type="text/css" rel="stylesheet" href="${initParam.CONTEXT_PATH}/resources/css/common.css">
 
 <style type="text/css">
@@ -189,7 +189,7 @@ text-align: center;
 	}
 	
 	.link{
-	margin: 120px;
+	margin: -60px;
     padding: 7px 0;
     border: 2px solid #666;
     font-size: 16px;
@@ -209,7 +209,7 @@ text-align: center;
 <div class="contents">
 	<div class="wrapper">
 		<div class="title">
-			<h1>자원봉사 승인</h1>
+			<h1>신청자 목록</h1>
 		<hr>
 		<div class="link_box">
 			<a href="${CONTEXT_PATH }/center/centerController?action=#">봉사자 신청 승인</a>
