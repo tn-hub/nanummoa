@@ -136,13 +136,6 @@ $(document).ready(function() {
 				$("#search_text").focus();
 				return false;
 			}
-		}else{
-			if ($("#search_text").val() != null && $("#search_text").val() != "") {
-				alert("조건을 선택하세요");
-				$("#search_opt").focus();
-				return false;
-			}
-			
 		}			
 	});
 	

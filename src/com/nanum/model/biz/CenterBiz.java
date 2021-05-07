@@ -292,6 +292,24 @@ public class CenterBiz {
 	}
 
 	/**
+	 * 날짜별 봉사 등록
+	 */
+	public void addVolDetail(int volInfoNo, String volDate, int totalCount) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+
+		try {
+			dao.addVolDetail(conn, volInfoNo, volDate, totalCount);
+			JdbcTemplate.commit(conn);
+		} catch (CommonException e) {
+			JdbcTemplate.rollback(conn);
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+	
+	/**
 	 * 센터회원 및 센터정보 삭제
 	 * 
 	 * @param centerId 센터회원 아이디
@@ -376,4 +394,24 @@ public class CenterBiz {
 		}
 	}
 	
+	/**
+	 * 봉사게시글 삭제(info, 연관 detail)
+	 * @param volInfoNo
+	 */
+	public void deleteVol(int volInfoNo) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+
+		try {
+			cDao.deleteVolDetail(conn, volInfoNo);
+			cDao.deleteVolInfo(conn, volInfoNo);
+			JdbcTemplate.commit(conn);
+		} catch (CommonException e) {
+			JdbcTemplate.rollback(conn);
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+
 }
