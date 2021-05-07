@@ -41,19 +41,19 @@
 			<ul>
 				<c:choose>
 					<c:when test="${empty grade}">
-						<li><a href="${CONTEXT_PATH}/common/commonController?action=volListForm">봉사신청</a></li>
+						<li><a href="${CONTEXT_PATH}/common/commonController?action=volListForm">봉사조회</a></li>
 						<li><a href="${CONTEXT_PATH}/general/generalController?action=">인증서발급</a></li>
 						<li><a href="${CONTEXT_PATH}/common/commonController?action=qnaList">문의하기</a></li>
 						<li><a href="${CONTEXT_PATH}/common/commonController?action=loginForm" class="">나의 봉사내역</a></li>
 					</c:when>
 					<c:when test="${grade == 'G'}">
-						<li><a href="${CONTEXT_PATH}/common/commonController?action=volListForm">봉사신청</a></li>
+						<li><a href="${CONTEXT_PATH}/common/commonController?action=volListForm">봉사조회</a></li>
 						<li><a href="${CONTEXT_PATH}/general/generalController?action=">인증서발급</a></li>
 						<li><a href="${CONTEXT_PATH}/common/commonController?action=qnaList">문의하기</a></li>
 						<li><a href="${CONTEXT_PATH}/general/generalController?action=volApplyList" class="">나의 봉사내역</a></li>
 					</c:when>
 					<c:when test="${grade == 'C'}">
-						<li><a href="${CONTEXT_PATH}/center/centerController?action=volInputForm">봉사신청</a></li>
+						<li><a href="${CONTEXT_PATH}/center/centerController?action=volInputForm">봉사조회</a></li>
 						<li><a href="${CONTEXT_PATH}/general/generalController?action=">인증서발급</a></li>
 						<li><a href="${CONTEXT_PATH}/common/commonController?action=qnaList">문의하기</a></li>
 						<li id= "" class=""><a href="${CONTEXT_PATH}/center/centerController?action=centerVolListForm" class="">나의 봉사내역</a></li>
