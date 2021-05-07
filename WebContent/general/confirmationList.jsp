@@ -157,7 +157,7 @@
 	
 	.vol_list_ul .span_box {
 		display: inline-block;
-		width: 300px;
+		width: 295px;
 	}
 	
 	.vol_list_ul .deadline_box {
@@ -173,7 +173,24 @@
 		text-indent: 0px;
 		padding: 5px;
 	}
+	
+	.confirm_span_box {
+		display: inline-block;
+		width: 295px;
+	}
 </style>
+<script type="text/javascript">
+	function createPdf(volInfoNo, volConNo){
+		console.log("들어옴");
+		console.log(volInfoNo, volConNo);
+		var popupX = (window.screen.width / 2) - 600;
+		var popupY = (window.screen.height /2) - 200;
+		window.open('${CONTEXT_PATH}/general/generalController?action=confirmationForm&volInfoNo=' +volInfoNo + '&volConNo=' + volConNo, 
+				'window팝업', 'status=no, height=400, width=1200, left='+ popupX +
+				'top='+ popupY + ', screenX='+ popupX + ', screenY= '+ popupY);
+		
+	}
+</script>
 </head>
 <body>
 <%@ include file="/common/header.jsp"%>
@@ -183,7 +200,7 @@
 		<hr class="head_hr" style="margin-bottom:20px;">
 		<!-- 봉사모집글 목록----------------------------------------------------------------------->
 		<p style="margin-bottom:-5px;">[전체 
-			<em>${totalCnt}</em>
+			<em>${totalcount}</em>
 			건, 현재페이지 
 			<em>1</em>
 			/1]
@@ -196,23 +213,22 @@
 		<c:forEach var="dto" items="${list}">
 			<li>
 				<div class="list_box">
-					<div>
-						<input type="button" value="다운로드" class="float_r y_btn" onclick="location.href='${CONTEXT_PATH}/general/generalController?action=cancelVol&volApplyNo=${dto.volApplyNo}&volDetailNo=${dto.volDetailNo}'">
-					</div>
-					<h3><a href="#">${dto.volTitle}</a></h3>
-					<div class="span_box">
-						<span class="title_span">[신청일자]</span>
-						<span>${dto.applyDate}</span>
+					<input type="button" value="다운로드" class="float_r y_btn" onclick="createPdf('${dto.volInfoNo}', '${dto.volConNo}')">	
+					<h3><a href="${CONTEXT_PATH}/common/commonController?action=volDetatilForm&volInfoNo=${dto.volInfoNo}">${dto.volTitle}</a></h3>
+					<div class="confirm_span_box">
+						<span class="title_span">[모집기관]</span>
+						<span>${dto.centerName}</span>
 					</div>
 					
-					<div class="span_box">
-						<span class="title_span">[봉사일자]</span>
-						<span>${dto.volDate}</span>
+					<div class="confirm_span_box">
+						<span class="title_span">[봉사기간]</span>
+						<span>${dto.startDate}</span> -
+						<span>${dto.endDate}</span>
 					</div>
 					
-					<div class="span_box">
+					<div class="confirm_span_box">
 						<span class="title_span">[진행시간]</span>
-						<span>${dto.startTime}</span> ~
+						<span>${dto.startTime}</span> -
 						<span>${dto.endTime}</span>
 					</div>
 				</div>

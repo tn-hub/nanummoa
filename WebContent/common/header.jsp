@@ -48,7 +48,7 @@
 					</c:when>
 					<c:when test="${grade == 'G'}">
 						<li><a href="${CONTEXT_PATH}/common/commonController?action=volListForm">봉사조회</a></li>
-						<li><a href="${CONTEXT_PATH}/general/generalController?action=volApplyList">인증서발급</a></li>
+						<li><a href="${CONTEXT_PATH}/general/generalController?action=confirmationListForm">인증서발급</a></li>
 						<li><a href="${CONTEXT_PATH}/common/commonController?action=qnaList">문의하기</a></li>
 						<li><a href="${CONTEXT_PATH}/general/generalController?action=volApplyList" class="">나의 봉사내역</a></li>
 					</c:when>

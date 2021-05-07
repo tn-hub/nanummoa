@@ -76,6 +76,9 @@ public class GeneralController extends HttpServlet {
 		case "confirmationListForm" :
 			confirmationListForm(request, response);
 			break;
+		case "confirmationForm" :
+			confirmationForm(request, response);
+			break;
 		}
 	}
 
@@ -655,20 +658,48 @@ public class GeneralController extends HttpServlet {
 			return;
 		}
 		
-		
 		GeneralMemberDto dto = (GeneralMemberDto)session.getAttribute("dto");
 		String generalId = dto.getGeneralId();
 		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String,Object>>();
 		GeneralBiz biz = new GeneralBiz();
 		try{
-			biz.volInfoByDate(generalId, list);
-			for (HashMap<String, Object> hashMap : list) {
-				for(String key : hashMap.keySet()){
-					System.out.println(key+" : "+hashMap.get(key));
-				}
-			}
+			biz.getConfirmationList(generalId, list);
 			request.setAttribute("list", list);
-			request.getRequestDispatcher("/vol_list.jsp").forward(request, response);
+			request.setAttribute("totalcount", list.size());
+			request.getRequestDispatcher("/general/confirmationList.jsp").forward(request, response);
+			
+		} catch(CommonException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 봉사확인서 다운
+	 */
+	private void confirmationForm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || 
+				session.getAttribute("dto") == null ||
+				session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");	
+			return;
+		}
+		
+		String volConNo = request.getParameter("volConNo");
+		String volInfoNo = request.getParameter("volInfoNo");
+		GeneralMemberDto dto = (GeneralMemberDto)session.getAttribute("dto");
+		String generalId = dto.getGeneralId();
+		HashMap<String, String> selectInfo = new HashMap<String, String>();
+		selectInfo.put("volConNo", volConNo);
+		selectInfo.put("volInfoNo", volInfoNo);
+		selectInfo.put("generalId", generalId);
+		HashMap<String, String> map = new HashMap<String, String>();
+		GeneralBiz biz = new GeneralBiz();
+		try{
+			biz.getConfirmation(selectInfo, map);
+			request.setAttribute("map", map);
+			request.getRequestDispatcher("/general/confirmation.jsp").forward(request, response);
 			
 		} catch(CommonException e) {
 			e.printStackTrace();

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="/inc/taglib_menu.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -41,7 +42,9 @@
 	
 .left_wrap {
 	position: relative;
-	left: -350px;
+    left: -278px;
+    top: -24px;
+    font-weight: bold;
 }
 
 .right_wrap {
@@ -61,6 +64,12 @@
 	margin-bottom: 70px;
 }
 
+.logo_img {
+    width: 130px;
+    height: 58px;
+    margin-right: 75px;
+}
+
 </style>
 <script type = "text/javascript" src = "http://code.jquery.com/jquery-latest.min.js"></script>
 <script type = "text/javascript" src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
@@ -69,7 +78,7 @@
  $(document).ready(function(){
 	
 		
-		/*  html2canvas($('#pdf_wrap')[0]).then(function(canvas) {
+		html2canvas($('#pdf_wrap')[0]).then(function(canvas) {
 		    var doc = new jsPDF('p', 'mm', 'a4'); //jspdf객체 생성
 		    var imgData = canvas.toDataURL('image/png'); //캔버스를 이미지로 변환
 		    var imgWidth = 190; // 이미지 가로 길이(mm) / A4 기준 210mm
@@ -79,40 +88,41 @@
 		    var margin = 10; // 출력 페이지 여백설정
 		    var position = 10;
 		    doc.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight); //이미지를 기반으로 pdf생성
-		    doc.save('sample-file.pdf'); //pdf저장
-		  }); */
+		    doc.save('자원봉사활동 확인서.pdf'); //pdf저장
+		  });
 	
 });
 
 </script>
 </head>
 <body>
-<h3>pdf 변환 테스트페이지</h3>
 
 <div id="pdf_wrap">
-		<span class="left_wrap">발급번호 : 20210430_12345678</span>
-		<span class="right_wrap">나눔모아</span>
+		<span class="left_wrap">발급번호 : ${map.volConNo}</span>
+		<span class="right_wrap">
+			<img class="logo_img" src="${initParam.CONTEXT_PATH}/resources/img/logo_title.png"/>
+		</span>
 		<h1 class="title_h">자원봉사활동 확인서</h1>
 		<div class="memberInfo">
 			<h3>성명 :</h3>
-			<span>고태민</span>
+			<span>${map.generalName}</span>
 			<hr>
 			<h3>주소 :</h3>
-			<span>인천광역시 부평구</span>
+			<span>${map.generalAddress}</span>
 			<hr>
 		</div>
 		
 
 		<ul class="vol_info_ul">
-			<li>자원봉사 활동기간 : 2021-04-28</li>
-			<li>자원봉사 활동시간 : 09:00 - 16:00</li>
-			<li>봉사활동 내용 : 연탄 나눔 봉사</li>
+			<li>자원봉사 활동기간 : ${map.startDate} ~ ${map.endDate} 중 ${map.totalDate}일</li>
+			<li>자원봉사 활동시간 : ${map.startTime} ~ ${map.endTime}</li>
+			<li>봉사활동 내용 : ${map.contents}</li>
 		</ul>
 
 		<h2>위와 같이 자원봉사 활동에 참여하였음을 확인함</h2>
-		<p class="write_date">2021-04-30</p>
+		<p class="write_date">${map.volDate}</p>
 
-		<h1>사단법인 서울유스랩</h1>
+		<h1>${map.centerName}</h1>
 </div>
 </body>
 </html>

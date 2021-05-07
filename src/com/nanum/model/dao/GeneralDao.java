@@ -530,15 +530,21 @@ public class GeneralDao {
 	 * 봉사 확인서 내역 조회
 	 */
 	public void searchConfirmationList(Connection conn, String generalId, ArrayList<HashMap<String, Object>> list) throws CommonException {
-		String sql = "select vc.vol_con_no, c.c_name, min(d.vol_date) as 봉사시작일, max(d.vol_date) as 봉사마감일,\r\n" + 
-				"to_char(i.start_time, 'HH24:MI') as 시작시간, to_char(i.end_time, 'HH24:MI') as 마감시간\r\n" + 
-				"from vol_info i, vol_detail d, center_info c, vol_confirmation vc \r\n" + 
+		String sql = "select i.vol_info_no, vc.vol_con_no, i.v_title, c.c_name, \r\n" + 
+							"(select min(vol_date)\r\n" + 
+								"from vol_detail\r\n" + 
+								"where vol_info_no = 1) as 봉사시작일,\r\n" + 
+							"(select max(vol_date)\r\n" + 
+								"from vol_detail\r\n" + 
+								"where vol_info_no = 1) as 봉사마감일, \r\n" + 
+							"to_char(i.start_time, 'HH24:MI') as 시작시간, to_char(i.end_time, 'HH24:MI') as 마감시간 \r\n" + 
+				"from vol_info i, vol_detail d, center_info c, vol_confirmation vc\r\n" + 
 				"where i.vol_info_no = d.vol_info_no\r\n" + 
-				"and i.c_id = c.c_id\r\n" + 
-				"and i.c_id = vc.c_id\r\n" + 
-				"and vc.vol_detail_no = d.vol_detail_no\r\n" + 
-				"and vc.g_id = 'user01'\r\n" + 
-				"group by vc.vol_con_no, c.c_name, i.start_time, i.end_time, vc.vol_date\r\n" + 
+						"and i.c_id = c.c_id\r\n" + 
+						"and i.c_id = vc.c_id\r\n" + 
+						"and vc.vol_detail_no = d.vol_detail_no \r\n" + 
+						"and vc.g_id = ?\r\n" + 
+				"group by i.vol_info_no, vc.vol_con_no, i.v_title, c.c_name, i.start_time, i.end_time, vc.vol_date\r\n" + 
 				"order by vc.vol_date desc";
 		
 		System.out.println(sql);
@@ -553,11 +559,14 @@ public class GeneralDao {
 			System.out.println("[dao] generalId : "+generalId);
 			while(rs.next()) {
 				map = new HashMap<String, Object>();
-				map.put("centerName", rs.getString(1));
-				map.put("startDate", rs.getString(2));
-				map.put("endDate", rs.getString(3));
-				map.put("startTime", rs.getString(4));
-				map.put("endTime", rs.getString(5));
+				map.put("volInfoNo", rs.getString(1));
+				map.put("volConNo", rs.getString(2));
+				map.put("volTitle", rs.getString(3));
+				map.put("centerName", rs.getString(4));
+				map.put("startDate", rs.getString(5));
+				map.put("endDate", rs.getString(6));
+				map.put("startTime", rs.getString(7));
+				map.put("endTime", rs.getString(8));
 				
 				list.add(map);
 			}
@@ -569,6 +578,71 @@ public class GeneralDao {
 			JdbcTemplate.close(rs);
 			JdbcTemplate.close(pstmt);
 		}
+	}
+	
+	/**
+	 * 봉사 확인서 다운 정보 출력
+	 */
+	public void searchConfirmation(Connection conn, HashMap<String, String> selectInfo, HashMap<String, String> map) throws CommonException {
+		String sql = "select vc.vol_con_no, i.v_title, g.g_name, g.g_address, vc.contents, c.c_name, \r\n" + 
+							"(select min(vol_date)\r\n" + 
+									"from vol_detail\r\n" + 
+									"where vol_info_no = ?) as 봉사시작일, \r\n" + 
+							"(select max(vol_date)\r\n" + 
+									"from vol_detail\r\n" + 
+									"where vol_info_no = ?) as 봉사마감일,\r\n" + 
+				"to_char(i.start_time, 'HH24:MI') as 시작시간,\r\n" + 
+				"to_char(i.end_time, 'HH24:MI') as 마감시간,\r\n" + 
+				"to_char(vc.vol_date, 'yyyy-mm-dd') as 발급일,\r\n" + 
+							"(select count(*)\r\n" + 
+								"from vol_detail d, vol_apply_list a\r\n" + 
+								"where d.vol_detail_no = a.vol_detail_no \r\n" + 
+										"and a.g_id = ? and d.vol_info_no = ?) as cnt\r\n" + 
+				"from vol_info i, vol_detail d, center_info c, vol_confirmation vc, general_member g\r\n" + 
+				"where i.vol_info_no = d.vol_info_no\r\n" + 
+						"and i.c_id = c.c_id\r\n" + 
+						"and i.c_id = vc.c_id\r\n" + 
+						"and vc.vol_detail_no = d.vol_detail_no\r\n" + 
+						"and vc.g_id = g.g_id\r\n" + 
+						"and vc.vol_con_no = ?\r\n" + 
+				"group by  vc.vol_con_no, g.g_name, g.g_address, vc.contents, i.v_title, c.c_name,\r\n" + 
+							"i.start_time, i.end_time, vc.vol_date, vc.vol_date, i.v_title\r\n" + 
+				"order by vc.vol_date desc";
 		
+		System.out.println(sql);
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, selectInfo.get("volInfoNo"));
+			pstmt.setString(2, selectInfo.get("volInfoNo"));
+			pstmt.setString(3, selectInfo.get("generalId"));
+			pstmt.setString(4, selectInfo.get("volInfoNo"));
+			pstmt.setString(5, selectInfo.get("volConNo"));
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				map.put("volConNo", rs.getString(1));
+				map.put("volTitle", rs.getString(2));
+				map.put("generalName", rs.getString(3));
+				map.put("generalAddress", rs.getString(4));
+				map.put("contents", rs.getString(5));
+				map.put("centerName", rs.getString(6));
+				map.put("startDate", rs.getString(7));
+				map.put("endDate", rs.getString(8));
+				map.put("startTime", rs.getString(9));
+				map.put("endTime", rs.getString(10));
+				map.put("volDate", rs.getString(11));
+				map.put("totalDate", rs.getString(12));
+			} else {
+				throw new Exception();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(pstmt);
+		}
 	}
 }
