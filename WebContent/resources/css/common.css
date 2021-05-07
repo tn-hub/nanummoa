@@ -306,6 +306,7 @@ a {
 	text-align: center;
 	padding: 5px;
 	margin-bottom: 10px;
+	cursor: pointer;
 }
 .g_btn{
 	border: none;
@@ -315,6 +316,7 @@ a {
 	border-radius: 5px;
 	text-align: center;
 	padding: 5px;
+	cursor: pointer;
 }
 .r_btn{
 	border: none;
@@ -324,6 +326,7 @@ a {
 	border-radius: 5px;
 	text-align: center;
 	padding: 5px;
+	cursor: pointer;
 }
 
 /** layout float etc */
