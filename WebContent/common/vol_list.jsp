@@ -307,8 +307,8 @@ $(document).ready(function(){
 				</div>
 				
 				<div id="search_button_box">
-					<input type="submit" id="searchBtn" value="검색">
-					<input type="button" value="초기화">
+					<input class="y_btn" type="submit" id="searchBtn" value="검색">
+					<input class="g_btn" type="button" value="초기화">
 				</div>
 			</div>
 		</form>

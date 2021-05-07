@@ -185,7 +185,6 @@ $(document).ready(function(){
 	    // 마커 위치를 클릭한 위치로 옮깁니다
 	   /*  marker.setPosition(latlng); */
 	    
-	
 	    
 	    var resultDiv = document.getElementById('clickLatlng'); 
 	    resultDiv.innerHTML = message;
@@ -194,7 +193,9 @@ $(document).ready(function(){
 	    var lg=latlng.getLng(); 
 	    
 	}); 	
-}); 
+}); 	
+
+
 </script>
 </head>
 
