@@ -330,6 +330,24 @@ public class CenterBiz {
 		}
 	}
 
+	/**
+	 * 봉사게시글 삭제(info, 연관 detail)
+	 * @param volInfoNo
+	 */
+	public void deleteVol(int volInfoNo) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
 
+		try {
+			cDao.deleteVolDetail(conn, volInfoNo);
+			cDao.deleteVolInfo(conn, volInfoNo);
+			JdbcTemplate.commit(conn);
+		} catch (CommonException e) {
+			JdbcTemplate.rollback(conn);
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
 
 }

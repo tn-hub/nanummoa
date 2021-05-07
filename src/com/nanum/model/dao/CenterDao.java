@@ -742,5 +742,61 @@ public class CenterDao {
 		return 0;
 	}
 
+	/**
+	 * 봉사 날짜별 데이터 삭제
+	 * @param conn
+	 * @param volInfoNo
+	 */
+	public void deleteVolDetail(Connection conn, int volInfoNo) throws CommonException {
+		String sql = "delete from vol_detail where vol_info_no = ?";
+		System.out.println(sql);
+
+		PreparedStatement pstmt = null;
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, volInfoNo);
+			int rows = pstmt.executeUpdate();
+			System.out.println("rows : " + rows);
+			if (rows < 1) {
+				throw new Exception();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(pstmt);
+		}
+	}
+
+	/**
+	 * 봉사정보 삭제
+	 * @param conn
+	 * @param volInfoNo
+	 */
+	public void deleteVolInfo(Connection conn, int volInfoNo) throws CommonException {
+		String sql = "delete from vol_info where vol_info_no = ?";
+		System.out.println(sql);
+
+		PreparedStatement pstmt = null;
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, volInfoNo);
+			int rows = pstmt.executeUpdate();
+			System.out.println("rows : " + rows);
+			if (rows != 1) {
+				throw new Exception();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(pstmt);
+		}
+	}
+
 
 }

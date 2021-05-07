@@ -891,7 +891,7 @@ public class CenterController extends HttpServlet {
 			for (String volDate : dateList) {
 				cBiz.addVolDetail(volInfoNo, volDate, totalCount);
 			}
-
+			response.sendRedirect(CONTEXT_PATH+"/common/commonController?action=volListForm");
 		} catch (CommonException | ParseException e) {
 			e.printStackTrace();
 		}
@@ -925,7 +925,8 @@ public class CenterController extends HttpServlet {
 	 */
 	private void updateVol(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		HttpSession session = request.getSession();
+		int volInfoNo = Integer.parseInt(request.getParameter("volInfoNo"));
 
 	}
 
@@ -934,8 +935,16 @@ public class CenterController extends HttpServlet {
 	 */
 	private void deleteVol(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-
+		HttpSession session = request.getSession();
+		int volInfoNo = Integer.parseInt(request.getParameter("volInfoNo"));
+		System.out.println("[봉사게시글 삭제] volInfoNo : " + volInfoNo);
+		CenterBiz biz = new CenterBiz();
+		try {
+			biz.deleteVol(volInfoNo);
+			response.sendRedirect(CONTEXT_PATH+"/common/commonController?action=volListForm");
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
