@@ -66,6 +66,7 @@ public class GeneralController extends HttpServlet {
 			break;
 		case "cancelVol" :
 			cancelVol(request, response);
+			break;
 		case "generalMyInfoForm" :
 			generalMyInfoForm(request, response);
 			break;
