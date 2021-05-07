@@ -338,7 +338,7 @@ $(document).ready(function(){
 					<span>(${list.categoryName})</span>
 				</div>
 				
-				<h3><a href="#">${list.volTitle}</a></h3>
+				<h3><a href="${CONTEXT_PATH}/common/commonController?action=volDetatilForm&volInfoNo=${list.volInfoNo}">${list.volTitle}</a></h3>
 				
 				<div class="span_box">
 					<span class="title_span">[모집기관]</span>

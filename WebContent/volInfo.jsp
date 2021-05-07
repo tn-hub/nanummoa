@@ -8,6 +8,9 @@
 <head>
 <meta charset="UTF-8">
 <title>자원봉사 상세</title>
+<!-- 카카오맵 -->
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=bea7e22656a0be157b22405262037bb6"></script>
+<script src="${initParam.CONTEXT_PATH}/resources/js/jquery-3.6.0.min.js"></script>
 <style type="text/css">
 #section_contents{
 	width: 1000px; 
@@ -115,8 +118,8 @@ textarea{
 	padding: 10px;
 }
 
-#add_map{
-	height: 300px; 
+#map{
+	height: 400px; 
 	border:1px solid gray;
 }
 
@@ -135,6 +138,47 @@ textarea{
 }
 
 </style>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+    mapOption = { 
+       center: new kakao.maps.LatLng(${vDto.latitude},  ${vDto.longitude}), // 지도의 중심좌표
+        level: 3 // 지도의 확대 레벨
+    };
+
+var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+// 지도를 클릭한 위치에 표출할 마커입니다
+var marker = new kakao.maps.Marker({ 
+    // 지도 중심좌표에 마커를 생성합니다 
+    position: map.getCenter() 
+}); 
+// 지도에 마커를 표시합니다
+marker.setMap(map);
+
+// 지도에 클릭 이벤트를 등록합니다
+// 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
+   kakao.maps.event.addListener(map, 'click', function(mouseEvent) {        
+    
+    // 클릭한 위도, 경도 정보를 가져옵니다 
+    var latlng = mouseEvent.latLng; 
+    
+    // 마커 위치를 클릭한 위치로 옮깁니다
+   /*  marker.setPosition(latlng); */
+    
+
+    
+    var resultDiv = document.getElementById('clickLatlng'); 
+    resultDiv.innerHTML = message;
+    
+    var lt=latlng.getLat();
+    var lg=latlng.getLng(); 
+    
+}); 	
+});
+
+</script>
 </head>
 
 <body>
@@ -200,20 +244,9 @@ pageContext.setAttribute("newLineChar", "\n");
 		</tr>
 		
 	</table>
-	<div id="area_text"><textarea>${fn:replace(vDto.volContents,newLineChar,"<br/>")}</textarea></div>
-	<div id="add_map" >
-	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8d66e864b87e987208f8177b0a743d9e&libraries=services,clusterer,drawing"></script>
-	<script> 
-	var container = document.getElementById('add_map');
-	var options = { //지도를 생성할 때 필요한 기본 옵션
-			center: new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
-			level: 3 //지도의 레벨(확대, 축소 정도)
-		};
-
-	var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
+	<div id="area_text">${fn:replace(vDto.volContents,newLineChar,"<br/>")}</div>
+	<div id="map" >
 	
-	alert(map);
-</script>
 	</div>
 	
 	<div id="center_info">
