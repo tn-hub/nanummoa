@@ -113,9 +113,9 @@ a.bold { font-weight: bold; }
 	font-size: 17px;
 }
 
-
-
-
+.searchAll ul, li{
+	border-style: 1px solid gray;
+}
 
 </style>
 </head>
@@ -149,10 +149,28 @@ $(document).ready(function() {
 });
 
 </script>
-
 <body>
 <%@ include file="/common/header.jsp"%>
 <div id="section_contents">
+<h2>통합검색</h2>
+<hr>
+<div>
+	<select>
+		<option>전체</option>
+		<option>봉사 게시판</option>
+		<option>문의 게시판</option>
+	</select>
+	<input type="text">
+	<input type="button" value="검색">
+</div>
+<hr>
+<ul class="searchAll">
+	<li>전체</li>
+	<li>봉사</li>
+	<li>문의</li>
+</ul>
+
+
 <h2>QNA</h2>
 <form name="qnaListForm" id="qnaListForm" action="${CONTEXT_PATH}/common/commonController?action=qnaList" method="post">
 <div id="search_qna">
