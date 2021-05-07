@@ -497,7 +497,6 @@ public class CommonDao {
 		sql.append(" from qna q ");
 		
 		if ("T".equals(searchOpt)) {
-			System.out.println("====== 제목 검색");
 			sql.append(" where q.q_title like '%'|| ? ||'%' ");
 		}else if ("C".equals(searchOpt)) {
 			sql.append(" where q.q_contents like '%'|| ? ||'%' ");

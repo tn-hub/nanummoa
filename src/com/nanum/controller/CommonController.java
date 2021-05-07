@@ -789,11 +789,16 @@ public class CommonController extends HttpServlet {
 		ArrayList<QnADto> qnaList = new ArrayList<QnADto>();
 		QnADto cdto = new QnADto(); 
 		try {
+			
+			request.setAttribute("searchText", searchText);
+			request.setAttribute("searchOpt", searchOpt);
+			
 			biz.qnaListTotCnt(cdto);
 			request.setAttribute("cdto", cdto);
 			
 			biz.qnaList(qnaList, searchOpt, searchText);
 			request.setAttribute("qnaList", qnaList);
+			
 			request.getRequestDispatcher("/qna/qnaList.jsp").forward(request, response);
 		} catch (CommonException e) {
 			e.printStackTrace();

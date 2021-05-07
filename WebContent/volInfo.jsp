@@ -150,9 +150,9 @@ pageContext.setAttribute("newLineChar", "\n");
 <input id="btn_apply" type="button" value="신청하기" style="cursor:hand;" onclick="location.href='${CONTEXT_PATH}/general/generalController?action=enrollVolForm&volInfoNo=${vDto.volInfoNo}'">
 <hr>
 
-<a href="${CONTEXT_PATH}/common/commonController?action=volDetatilForm&volInfoNo=1">조회</a>
+
 <h3>${vDto.volTitle} <span id="recSt">${vDto.recStatuse}</span></h3>   
-<form action="">
+<form action="${CONTEXT_PATH}/common/commonController?action=volDetatilForm" method="post">
 	<table id="volAdd">
 		<tr>
 			<th>봉사 시작일</th>
@@ -200,7 +200,7 @@ pageContext.setAttribute("newLineChar", "\n");
 		</tr>
 		
 	</table>
-	<div id="area_text"><textarea>${fn:replace(vDto.volContents,newLineChar,"<br/>")}</textarea></div>
+	<div id="area_text"><textarea>${vDto.volContents}</textarea></div>
 	<div id="add_map" >
 	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8d66e864b87e987208f8177b0a743d9e&libraries=services,clusterer,drawing"></script>
 	<script> 

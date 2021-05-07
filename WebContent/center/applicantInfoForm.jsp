@@ -425,10 +425,10 @@ $(document).ready(function() {
 		</li>
 	</ul>
 	</c:forEach>
-
 		<div id="add_btn">
 			<input class="btn_add" id="btn_add" type="submit" value="신청승인"  style="cursor:hand;">
 		</div>
+	
 </form>
 		</div>
 	</div>	
