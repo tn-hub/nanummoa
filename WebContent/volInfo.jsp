@@ -269,8 +269,8 @@ pageContext.setAttribute("newLineChar", "\n");
 	
 	<hr>
 	<h3>◎ 담당자 정보</h3>
+	<hr>
 	<ul class="vol_list_ul">
-	
 		<li>
 			<div class="span_box">
 				<span class="title_span">[담당자]</span>
