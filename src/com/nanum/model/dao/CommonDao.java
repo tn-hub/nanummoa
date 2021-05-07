@@ -711,6 +711,7 @@ public class CommonDao {
 		sql.append("   , m.c_name ");
 		sql.append("   , m.c_mobile ");
 		sql.append("   , c.c_address ");
+		sql.append("   , m.c_email ");
 		sql.append(" from vol_info v, center_member m, center_info c  ");
 		sql.append(" where v.vol_info_no = ? ");
 		sql.append("   and v.c_id = m.c_id ");
@@ -751,6 +752,7 @@ public class CommonDao {
 				dto.setAddress(rs.getString("c_address")); // 주소 
 				dto.setCategoryNo(rs.getString("category_no")); // 봉사분야 번호
 				dto.setCategoryName(rs.getString("category_name"));	// 봉사 분야 
+				dto.setEmail(rs.getString("c_email"));	// 봉사 분야 
 			}
 			
 		} catch (SQLException e) {
