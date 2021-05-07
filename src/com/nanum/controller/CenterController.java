@@ -93,9 +93,6 @@ public class CenterController extends HttpServlet {
 			break;
 		case "centerDelete":
 			centerDelete(request, response);
-		case "recruitList":
-			recruitList(request, response);
-			break;
 		case "deadlineList":
 			deadlineList(request, response);
 			break;
@@ -387,7 +384,7 @@ public class CenterController extends HttpServlet {
 	}
 
 	/**
-	 * 센터회원 봉사 목록
+	 * 센터회원 봉사 목록(모집중)
 	 * 
 	 * @param request
 	 * @param response
@@ -406,34 +403,6 @@ public class CenterController extends HttpServlet {
 
 		try {
 			biz.centerVolList(centerId, list, voDto);
-			request.setAttribute("voDto", voDto);
-			request.setAttribute("list", list);
-			request.getRequestDispatcher("/center/centerInfo.jsp").forward(request, response);
-		} catch (CommonException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * 센터회원 봉사 목록(모집중)
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws ServletException
-	 * @throws IOException
-	 */
-	protected void recruitList(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
-		String centerId = dto.getCenterId();
-
-		CenterBiz biz = new CenterBiz();
-		ArrayList<CenterVolDto> list = new ArrayList<CenterVolDto>();
-		CenterVolDto voDto = new CenterVolDto();
-
-		try {
-			biz.recruitList(centerId, list, voDto);
 			request.setAttribute("voDto", voDto);
 			request.setAttribute("list", list);
 			request.getRequestDispatcher("/center/centerInfo.jsp").forward(request, response);
