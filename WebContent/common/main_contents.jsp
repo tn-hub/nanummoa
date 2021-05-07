@@ -32,7 +32,7 @@
 		</div>
 		
 		<div class="more_btn_line">
-			<button class="more_btn">더보기</button>
+			<button class="more_btn" onclick="location.href='${CONTEXT_PATH}/common/commonController?action=volListForm'">더보기</button>
 		</div>
 		
 		<h2 class="main_title">자원봉사 통계</h2>

@@ -189,10 +189,11 @@ text-align: center;
 			<a href="">종료된 봉사</a>
 		</div>
 		<hr>
-	
-	<p>
-		[전체 <em>00</em>건, 현재페이지 <em>0</em>/0]
-	</p>
+		
+		
+		<p>[전체 <em>
+		${fn:length(list)}
+		</em>건, 현재페이지 <em>0</em>/0]</p>
 	<hr class="list_head_hr">
 	<ul class="vol_list_ul">
 		<li>
