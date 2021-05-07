@@ -300,7 +300,12 @@
 		</tr>
 	</table>
 	<div id="area_text">
-		<textarea class="vol_contents" name="volContents" id="volContents" placeholder="내용을 입력하세요." required="required"></textarea>
+<textarea class="vol_contents" name="volContents" id="volContents" placeholder="내용을 입력하세요." required="required">
+ - 봉사내용 :
+ - 봉사장소 : 
+ - 봉사문의 :
+ - 주의사항 :
+</textarea>
 	</div>
 	<div id="center_info">
 	<h3>◎ 담당자 정보</h3>

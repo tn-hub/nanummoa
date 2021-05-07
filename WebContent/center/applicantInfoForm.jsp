@@ -304,6 +304,10 @@ text-align: center;
 	h2{
 	text-align: center;
 	}
+	
+	.detatil_btn{
+	margin-left: 85px; 
+	}
 </style>
 <script type="text/javascript">
 $(document).ready(function() {
@@ -415,7 +419,8 @@ $(document).ready(function() {
 				</div>
 				
 					<c:if test="${dto.volStatus == '1'}">
-						<span class="title_span"><input type="button" value="승인 취소" 
+						<span class="title_span">
+						<input type="button" value="승인 취소" class="g_btn detatil_btn" 
 						onclick="location.href='${CONTEXT_PATH}/center/centerController?action=closeApply&volApplyNo=${dto.volApplyNo }&generalId=${list[0].generalId }&volInfoNo=${list[0].volInfoNo }'"></span>
 					</c:if>
 			</div>
@@ -426,7 +431,7 @@ $(document).ready(function() {
 	</ul>
 	</c:forEach>
 		<div id="add_btn">
-			<input class="btn_add" id="btn_add" type="submit" value="신청승인"  style="cursor:hand;">
+			<input class="y_btn" id="btn_add" type="submit" value="신청승인"  style="cursor:hand;">
 		</div>
 	
 </form>

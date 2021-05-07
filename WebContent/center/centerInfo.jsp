@@ -196,7 +196,7 @@ text-align: center;
 		</div>
 		<hr>
 		
-	<p>[전체 <em>${fn:length(list)}</em>건, 현재페이지 <em>0</em>/0]</p>
+	<p>[전체 <em style="color: red;">${fn:length(list)}</em>건, 현재페이지 <em>0</em>/0]</p>
 	<hr class="list_head_hr">
 	<c:forEach var="dto" items="${list }">
 	<ul class="vol_list_ul">
@@ -216,10 +216,10 @@ text-align: center;
 					</c:choose>
 					<span>${dto.categoryName}</span>
 				</div>
-				
+				<input type="button" value="신청 내역" class="float_r g_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=applyList&volInfoNo=${dto.volInfoNo}'">
 				<h3><a href="${CONTEXT_PATH}/common/commonController?action=volDetatilForm&volInfoNo=${dto.volInfoNo}">${dto.volTitle }</a></h3>
 				
-				<div class="span_box">
+				<div class="span_box clear_b ">
 					<span class="title_span">[모집기관]</span>
 					<span>${dto.centerName }</span>
 				</div>
@@ -236,7 +236,7 @@ text-align: center;
 					<span>${dto.volEnd }</span>
 				</div>
 			</div>
-			<p><a href="${CONTEXT_PATH }/center/centerController?action=applyList&volInfoNo=${dto.volInfoNo}">신청자 보기</a></p>
+			
 			<div class="deadline_box">
 			<c:choose>	
 				<c:when test="${dto.deadline >= 0}">
