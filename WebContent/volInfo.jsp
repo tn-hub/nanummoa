@@ -38,6 +38,7 @@
 	margin-right: 10px;
 	font-size: 16px;
 	border-radius: 5px;
+    background: #FBD157;
 }
 
 #vol_info_title{
