@@ -119,7 +119,7 @@ textarea{
 }
 
 #map{
-	height: 400px; 
+	height: 800px; 
 	border:1px solid gray;
 }
 
@@ -176,7 +176,6 @@ marker.setMap(map);
     var lg=latlng.getLng(); 
     
 }); 	
-});
 
 </script>
 </head>
