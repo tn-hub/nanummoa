@@ -165,9 +165,9 @@ text-align: center;
 		font-weight: bold;
 	}
 	
-	.vol_list_ul .span_box {
+	.vol_list_ul .span_box1 {
 		display: inline-block;
-		width: 215px;
+		width: 250px;
 	}
 	
 	.vol_list_ul .deadline_box {
@@ -201,6 +201,10 @@ text-align: center;
 	text-align: center;
 	}	
 	
+	.detatil_btn{
+	margin-left: 113px; 
+	}
+	
 </style>
 </head>
 <body>
@@ -211,44 +215,32 @@ text-align: center;
 		<div class="title">
 			<h1>신청자 목록</h1>
 		<hr>
-		<div class="link_box">
-			<a href="${CONTEXT_PATH }/center/centerController?action=#">봉사자 신청 승인</a>
-		</div>
-		
-		<div class="link_box">
-			<a href="${CONTEXT_PATH }/center/centerController?action=#">실적확인서 신청 봉사자</a>
-		</div>
-		<hr>
 		
 	<h2>${list[0].volTitle }</h2>
-	<p>[전체 <em>
+	<p>[전체 <em style="color: red;">
 	</em>${fn:length(list)}건, 현재페이지 <em>0</em>/0]</p>
 	<hr class="list_head_hr">
 	<c:forEach var="dto" items="${list}">
 	<ul class="vol_list_ul">
 		<li>
 			<div class="list_box">
-				
-				
-				
-				<div class="span_box">
+				<div class="span_box1">
 					<span class="title_span">[신청인 이름]</span>
 					<span>${dto.generalName }</span>
 				</div>
 				
-				<div class="span_box">
+				<div class="span_box1">
 					<span class="title_span">[신청날짜]</span>
 					<span>${dto.applyDate }</span>
 				</div>
 				
-				<div class="span_box">
+				<div class="span_box1">
 					<span class="title_span">[신청회원 아이디]</span>
 					<span>${dto.generalId }</span>
 				</div>
-				<span class="link">
-					<a href="${CONTEXT_PATH }/center/centerController?action=applicantInfoForm&volInfoNo=${dto.volInfoNo}&generalId=${dto.generalId }">상세보기</a>
-				</span>
+					<input type="button" value="상세보기" class="g_btn detatil_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=applicantInfoForm&volInfoNo=${dto.volInfoNo}&generalId=${dto.generalId }'">					
 			</div>
+			
 			<hr class="list_hr">
 		</li>
 	</ul>
@@ -256,6 +248,7 @@ text-align: center;
 		</div>
 	</div>
 </div>
+
 <%@ include file="/common/footer.jsp"%>
 </body>
 </html>
