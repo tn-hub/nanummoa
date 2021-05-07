@@ -90,6 +90,8 @@ public class VolInfoDto {
 	/** 주소 */
 	private String address;
 	
+	/** 이메일 */
+	private String email;
 	
 
 	/**
@@ -131,7 +133,7 @@ public class VolInfoDto {
 			Date startTime, Date endTime, Date startDate, Date endDate, String categoryNo, String categoryName,
 			String localNo, String volType, String volPlace, String latitude, String longitude, String volSubject,
 			int applyCount, int totalCount, String recStatuse, String volStartTime, String volEndTime, String name,
-			String mobile, String address) {
+			String mobile, String address, String email) {
 		super();
 		this.volInfoNo = volInfoNo;
 		this.centerId = centerId;
@@ -158,6 +160,7 @@ public class VolInfoDto {
 		this.name = name;
 		this.mobile = mobile;
 		this.address = address;
+		this.email = email;
 	}
 
 	
@@ -516,6 +519,24 @@ public class VolInfoDto {
 		this.categoryName = categoryName;
 	}
 
+	
+	
+
+	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+
+	/**
+	 * @param email the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 
 	@Override
 	public String toString() {
@@ -569,6 +590,8 @@ public class VolInfoDto {
 		builder.append(mobile);
 		builder.append(", ");
 		builder.append(address);
+		builder.append(", ");
+		builder.append(email);
 		return builder.toString();
 	}
 }

@@ -225,6 +225,7 @@ a {
 	border-radius: 5px;
 	font-size:16px;
 	margin-top: 10px;
+	cursor: pointer;
 }
 .apply_btn:hover{
 	background-color: grey;
@@ -306,6 +307,7 @@ a {
 	text-align: center;
 	padding: 5px;
 	margin-bottom: 10px;
+	cursor: pointer;
 }
 .g_btn{
 	border: none;
@@ -315,6 +317,17 @@ a {
 	border-radius: 5px;
 	text-align: center;
 	padding: 5px;
+	cursor: pointer;
+}
+.r_btn{
+	border: none;
+	background-color: #FF9090;
+	width: 100px;
+	height: 40px;
+	border-radius: 5px;
+	text-align: center;
+	padding: 5px;
+	cursor: pointer;
 }
 
 /** layout float etc */
