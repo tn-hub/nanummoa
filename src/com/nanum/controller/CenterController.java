@@ -34,6 +34,7 @@ import com.nanum.dto.VolApplyListDto;
 import com.nanum.model.biz.CenterBiz;
 import com.nanum.model.biz.GeneralBiz;
 import com.nanum.util.CommonException;
+import com.nanum.util.Utility;
 
 /**
  * 센터회원 컨트롤러
@@ -827,32 +828,6 @@ public class CenterController extends HttpServlet {
 		}
 		System.out.println("con 시간 str");
 		System.out.println(startTimeStr);
-		SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
-		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
-		Date startTime = null;
-		Date endTime = null;
-		Date startDate = null;
-		Date endDate = null;
-		Date startVolDate = null;
-		Date endVolDate = null;
-		long diffDay = 0;
-		try {
-			startTime = sdfTime.parse(startTimeStr);
-			endTime = sdfTime.parse(endTimeStr);
-			startDate = sdfDate.parse(startDateStr);
-			endDate = sdfDate.parse(endDateStr);
-			startVolDate = sdfDate.parse(startVolDateStr);
-			endVolDate = sdfDate.parse(endVolDateStr);
-			System.out.println("봉사시작일 " + startVolDate);
-			System.out.println("봉사종료일 " + endVolDate);
-			diffDay = (endVolDate.getTime() - startVolDate.getTime()) / (24 * 60 * 60 * 1000) + 1;
-			System.out.println(diffDay + "일");
-			System.out.println("con 시간");
-			System.out.println(startTime);
-
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
 
 		if (totalCountStr == null || totalCountStr.trim().length() == 0) {
 			out.print("모집인원을 입력해 주세요");
@@ -909,10 +884,15 @@ public class CenterController extends HttpServlet {
 			cBiz.addVolInfo(map);
 
 			// 2. vol detail 등록
-			int volInfoNo = (int) map.get("volInfoNo");
+			int volInfoNo = (int) map.get("volInfoNo")-1;
 			System.out.println("[detail 등록 start] volInfoNo : " + volInfoNo);
-
-		} catch (CommonException e) {
+			
+			ArrayList<String> dateList = Utility.getDateList(startVolDateStr, endVolDateStr);
+			for (String volDate : dateList) {
+				cBiz.addVolDetail(volInfoNo, volDate, totalCount);
+			}
+			response.sendRedirect(CONTEXT_PATH+"/common/commonController?action=volListForm");
+		} catch (CommonException | ParseException e) {
 			e.printStackTrace();
 		}
 	}
@@ -945,7 +925,8 @@ public class CenterController extends HttpServlet {
 	 */
 	private void updateVol(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		HttpSession session = request.getSession();
+		int volInfoNo = Integer.parseInt(request.getParameter("volInfoNo"));
 
 	}
 
@@ -954,8 +935,16 @@ public class CenterController extends HttpServlet {
 	 */
 	private void deleteVol(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-
+		HttpSession session = request.getSession();
+		int volInfoNo = Integer.parseInt(request.getParameter("volInfoNo"));
+		System.out.println("[봉사게시글 삭제] volInfoNo : " + volInfoNo);
+		CenterBiz biz = new CenterBiz();
+		try {
+			biz.deleteVol(volInfoNo);
+			response.sendRedirect(CONTEXT_PATH+"/common/commonController?action=volListForm");
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

@@ -3,7 +3,9 @@
  */
 package com.nanum.util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
@@ -96,4 +98,37 @@ public class Utility {
 		return new SimpleDateFormat(pattern, locale).format(new Date());
 	}
 	
+	/**
+	 * 두 날짜 기간 사이 날짜별 배열 구하기 
+	 * @throws ParseException 
+	 */
+	public static ArrayList<String> getDateList(String startVolDateStr, String endVolDateStr) throws ParseException {
+		ArrayList<String> list = new ArrayList<String>();
+
+		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
+		Date startVolDate = sdfDate.parse(startVolDateStr);
+		Date endVolDate = sdfDate.parse(endVolDateStr);
+		System.out.println("봉사시작일 " + startVolDate);
+		System.out.println("봉사종료일 " + endVolDate);
+		
+		long diffDay =( (endVolDate.getTime() - startVolDate.getTime()) / (24 * 60 * 60 * 1000) )+ 1;
+		System.out.println("총" + diffDay + "일 간");
+		
+		Date d1 = new Date(endVolDate.getTime()+(1000*60*60*24*-1));
+		Date d2 = new Date(d1.getTime()+(1000*60*60*24*-1));
+
+		Date curDate = endVolDate;
+		list.add(sdfDate.format(curDate));
+		for (int i = 1; i < diffDay; i++) {
+			System.out.println("하루전");
+			Date d = new Date(curDate.getTime()+(1000*60*60*24*-1));
+			curDate = d;
+			System.out.println("curDate : " + sdfDate.format(d));
+			list.add(sdfDate.format(d));
+		}
+		
+		return list;
+	}
+	
 }
+
