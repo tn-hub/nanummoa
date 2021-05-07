@@ -78,6 +78,7 @@
 #volAdd td {
 	width: 320px;
 	border-top: 1px solid  #b3b3b3;
+	padding-left: 10px;
 }
 
 #volAdd select{
@@ -106,7 +107,7 @@
 
 #area_text{
 	height: 300px; 
-	padding: 5px; 
+	padding: 20px; 
 	margin-bottom: 10px; 
 	border: 1px solid gray;
 }
