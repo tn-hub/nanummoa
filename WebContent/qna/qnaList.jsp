@@ -178,7 +178,9 @@ $(document).ready(function() {
 	</table>
 </div>
 <hr>
+<c:if test="${not empty grade}">
 <div id="addQna"><a href="${CONTEXT_PATH}/common/commonController?action=qnaInputForm"><input type="button" value="글 쓰기" id="btn_addQna" style="cursor:hand;"></a></div>
+</c:if>	
 <div id="sec_vol_list">
 <ul class="vol_list_ul">
 <c:forEach var="dto" items="${qnaList}">
