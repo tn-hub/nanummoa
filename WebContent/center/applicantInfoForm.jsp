@@ -339,7 +339,7 @@ $(document).ready(function() {
 			<c:when test="${general.gender == 'M'}">
 				<td>남자</td>
 			</c:when>
-			<c:when test="${general.gender == 'W'}">
+			<c:when test="${general.gender == 'Y'}">
 				<td>여자</td>
 			</c:when>
 			</c:choose>
@@ -387,11 +387,11 @@ $(document).ready(function() {
 			<div class="list_box">
 					<span class="title_span">
 						<c:choose>
-							<c:when test="${dto.volStatus == '0'}">
-								<span><input type="checkbox" name="checkDate" id="checkDate" value="${dto.volApplyNo }"></span>
+							<c:when test="${dto.volStatus != '0' or dto.recStatus != '0'}">
+								<span><input type="checkbox" name="checkDate" id="checkDate" value="${dto.volApplyNo }" disabled="disabled"></span>
 							</c:when>
 							<c:otherwise>
-								<span><input type="checkbox" name="checkDate" id="checkDate" value="${dto.volApplyNo }" disabled="disabled" ></span>
+								<span><input type="checkbox" name="checkDate" id="checkDate" value="${dto.volApplyNo }" ></span>
 							</c:otherwise>
 						</c:choose>
 					</span>
@@ -414,15 +414,26 @@ $(document).ready(function() {
 				</div>
 				
 				<div class="span_box1">
-					<span class="title_span">[모집인원]</span>
+					<span class="title_span">[신청인원]</span>
 					<span>${dto.applyCount }/${dto.totalCount }명</span>
 				</div>
-				
-					<c:if test="${dto.volStatus == '1'}">
+				<c:choose>
+					<c:when test="${dto.volStatus == '2' and dto.recStatus == '2'}">
 						<span class="title_span">
+							<input type="button" value="활동 여부" class="g_btn detatil_btn" 
+								onclick="location.href='${CONTEXT_PATH}/center/centerController?action=#'">
+						</span>
+					</c:when>
+					<c:when test="${dto.volStatus != '0' and dto.recStatus == '0'}" >
+					<span class="title_span">
 						<input type="button" value="승인 취소" class="g_btn detatil_btn" 
-						onclick="location.href='${CONTEXT_PATH}/center/centerController?action=closeApply&volApplyNo=${dto.volApplyNo }&generalId=${list[0].generalId }&volInfoNo=${list[0].volInfoNo }'"></span>
-					</c:if>
+						onclick="location.href='${CONTEXT_PATH}/center/centerController?action=closeApply&volApplyNo=${dto.volApplyNo }&generalId=${list[0].generalId }&volInfoNo=${list[0].volInfoNo }'">
+					</span>
+					</c:when>
+					<c:otherwise>
+					</c:otherwise>
+				</c:choose>
+				
 			</div>
 			<div class="deadline_box">
 			</div>

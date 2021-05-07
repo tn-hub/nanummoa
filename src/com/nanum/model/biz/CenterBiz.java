@@ -16,6 +16,7 @@ import com.nanum.dto.VolApplyListDto;
 import com.nanum.model.dao.CenterDao;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
+import com.nanum.util.Utility;
 
 /**
  * 센터회원 관리 업무 로직을 위한 클래스
@@ -52,7 +53,7 @@ public class CenterBiz {
 	 * 
 	 * @throws CommonException
 	 */
-	public void centerVolList(String centerId, ArrayList<CenterVolDto> list, CenterVolDto voDto)
+	public void centerVolList(String centerId, ArrayList<CenterVolDto> list)
 			throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
 
@@ -67,11 +68,11 @@ public class CenterBiz {
 	}
 
 	/**
-	 * 센터회원 봉사 목록(종료)
+	 * 센터회원 봉사 목록(마감)
 	 * 
 	 * @throws CommonException
 	 */
-	public void deadlineList(String centerId, ArrayList<CenterVolDto> list, CenterVolDto voDto) throws CommonException {
+	public void deadlineList(String centerId, ArrayList<CenterVolDto> list) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
 
 		try {
@@ -91,7 +92,7 @@ public class CenterBiz {
 	 * @param list
 	 * @throws CommonException
 	 */
-	public void applyList(String centerId, int volInfoNo, ArrayList<VolApplyListDto> list) throws CommonException {
+	public void applyList(String centerId, int volInfoNo, ArrayList<HashMap<String, Object>> list) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
 
 		try {
@@ -311,5 +312,68 @@ public class CenterBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
+	
+	/**
+	 * 인증서 발급 목록
+	 *  
+	 * @param centerId
+	 * @param list
+	 * @throws CommonException
+	 */
+	public void issueList(String centerId, ArrayList<HashMap<String, Object>> list)
+			throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
 
+		try {
+			dao.issueList(conn,centerId, list);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+
+	/**
+	 * 인증서 발급
+	 * @param centerId
+	 * @param volInfoNo
+	 * @param generalId
+	 * @throws CommonException 
+	 */
+	public void volIssue(HashMap<String, Object> map) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+
+		try {
+			dao.volIssue(conn, map);
+			
+			String today = Utility.getVolCon();
+			String code = Utility.getVolConCode();
+			String volCode = today + code;
+			today = Utility.getVolCon();
+			
+			
+			code = Utility.getVolConCode();
+			map.put("volCode", volCode);
+			boolean checkCode = dao.isVolCode(conn,map);
+			
+			uniqueNoLoop: 
+			while(checkCode) {
+				code = Utility.getVolConCode();
+				volCode = today + code;
+				map.put("volCode", volCode);
+				checkCode = dao.isVolCode(conn,map);
+					continue uniqueNoLoop;
+			}
+				dao.insertIssue(conn,map);	
+				JdbcTemplate.commit(conn);
+		} catch (CommonException e) {
+			JdbcTemplate.rollback(conn);
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+	
 }

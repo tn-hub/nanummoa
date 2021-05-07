@@ -202,7 +202,7 @@ text-align: center;
 	}	
 	
 	.detatil_btn{
-	margin-left: 113px; 
+	margin-left: 3px; 
 	}
 	
 </style>
@@ -217,8 +217,8 @@ text-align: center;
 		<hr>
 		
 	<h2>${list[0].volTitle }</h2>
-	<p>[전체 <em style="color: red;">
-	</em>${fn:length(list)}건, 현재페이지 <em>0</em>/0]</p>
+	<p>[전체 <em style="color: red;">${fn:length(list)}
+	</em>건, 현재페이지 <em>0</em>/0]</p>
 	<hr class="list_head_hr">
 	<c:forEach var="dto" items="${list}">
 	<ul class="vol_list_ul">
@@ -230,15 +230,20 @@ text-align: center;
 				</div>
 				
 				<div class="span_box1">
-					<span class="title_span">[신청날짜]</span>
-					<span>${dto.applyDate }</span>
-				</div>
-				
-				<div class="span_box1">
 					<span class="title_span">[신청회원 아이디]</span>
 					<span>${dto.generalId }</span>
 				</div>
-					<input type="button" value="상세보기" class="g_btn detatil_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=applicantInfoForm&volInfoNo=${dto.volInfoNo}&generalId=${dto.generalId }'">					
+				
+				<div class="span_box1">
+					<span class="title_span">[연락처]</span>
+					<span>${dto.generalMobile }</span> 
+				</div>
+				
+				<input type="button" value="상세정보" class="g_btn detatil_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=applicantInfoForm&volInfoNo=${dto.volInfoNo}&generalId=${dto.generalId }'">
+					<c:if test="${dto.activityStatus == 2 and dto.recStatus == 2}">
+				<input type="button" value="인증서 발급" class="y_btn detatil_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=volIssue&volInfoNo=${dto.volInfoNo}&generalId=${dto.generalId }'">
+					</c:if>
+						
 			</div>
 			
 			<hr class="list_hr">

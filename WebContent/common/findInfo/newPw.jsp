@@ -117,6 +117,10 @@ table{
 text-align: center;
 }
 
+ .g_btn{
+ font-weight: bold;
+ }
+
 </style>
 
 </head>
@@ -157,7 +161,7 @@ text-align: center;
 					</tr>
 					<tr>
 						<td colspan="2" align="center">
-							<input type="submit" value="완료" >
+							<input type="submit" class="g_btn" value="완료" >
 						</td>
 					</tr>
 				</table>

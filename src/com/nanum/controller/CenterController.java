@@ -107,6 +107,12 @@ public class CenterController extends HttpServlet {
 		case "closeApply":
 			closeApply(request, response);
 			break;
+		case "issueListForm":
+			issueListForm(request, response);
+			break;
+		case "volIssue":
+			volIssue(request, response);
+			break;
 		}
 	}
 
@@ -398,11 +404,8 @@ public class CenterController extends HttpServlet {
 
 		CenterBiz biz = new CenterBiz();
 		ArrayList<CenterVolDto> list = new ArrayList<CenterVolDto>();
-		CenterVolDto voDto = new CenterVolDto();
-
 		try {
-			biz.centerVolList(centerId, list, voDto);
-			request.setAttribute("voDto", voDto);
+			biz.centerVolList(centerId, list);
 			request.setAttribute("list", list);
 			request.getRequestDispatcher("/center/centerInfo.jsp").forward(request, response);
 		} catch (CommonException e) {
@@ -411,7 +414,7 @@ public class CenterController extends HttpServlet {
 	}
 
 	/**
-	 * 센터회원 봉사 목록(종료)
+	 * 센터회원 봉사 목록(마감)
 	 * 
 	 * @param request
 	 * @param response
@@ -426,11 +429,9 @@ public class CenterController extends HttpServlet {
 
 		CenterBiz biz = new CenterBiz();
 		ArrayList<CenterVolDto> list = new ArrayList<CenterVolDto>();
-		CenterVolDto voDto = new CenterVolDto();
 
 		try {
-			biz.deadlineList(centerId, list, voDto);
-			request.setAttribute("voDto", voDto);
+			biz.deadlineList(centerId, list);
 			request.setAttribute("list", list);
 			request.getRequestDispatcher("/center/centerInfo.jsp").forward(request, response);
 		} catch (CommonException e) {
@@ -487,7 +488,7 @@ public class CenterController extends HttpServlet {
 
 		int volInfoNo = Integer.parseInt(request.getParameter("volInfoNo"));
 
-		ArrayList<VolApplyListDto> list = new ArrayList<VolApplyListDto>();
+		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
 		CenterBiz biz = new CenterBiz();
 		try {
 			biz.applyList(centerId, volInfoNo, list);
@@ -1018,4 +1019,64 @@ public class CenterController extends HttpServlet {
 		request.setAttribute("volInfoNo", volInfoNo);
 		request.getRequestDispatcher("/center/centerController?action=applicantInfoForm").forward(request, response);
 	}
+
+	/**
+	 * 인증서 발급목록페이지
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void issueListForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
+		String centerId = dto.getCenterId();
+
+		CenterBiz biz = new CenterBiz();
+		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
+
+		try {
+			biz.issueList(centerId, list);
+			request.setAttribute("list", list);
+			request.getRequestDispatcher("/center/volIssueList.jsp").forward(request, response);
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 인증서 발급
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void volIssue(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
+		String centerId = dto.getCenterId();
+		String volInfoNo = request.getParameter("volInfoNo");
+		String generalId = request.getParameter("generalId");
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("centerId", centerId);
+		map.put("volInfoNo", volInfoNo);
+		map.put("generalId", generalId);
+		
+		CenterBiz biz = new CenterBiz();
+		try {
+			biz.volIssue(map);
+			request.setAttribute("volInfoNo",volInfoNo);
+			request.getRequestDispatcher("/center/centerController?action=applyList").forward(request, response);
+			
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
+
+	}
+
 }
