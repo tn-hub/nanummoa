@@ -11,17 +11,13 @@
 .wrapper{
 width: 100%;
 }
-
 .title{
 width: 1000px;
 margin:  auto;
 }
-
 .link{
 text-align: center;
-
 }
-
 #vol_list_div {
 		width: 1000px;
 		/* background-color: blue; */
@@ -200,8 +196,6 @@ text-align: center;
 		</div>
 		<hr>
 		
-		
-	
 	<p>[전체 <em>${fn:length(list)}</em>건, 현재페이지 <em>0</em>/0]</p>
 	<hr class="list_head_hr">
 	<c:forEach var="dto" items="${list }">

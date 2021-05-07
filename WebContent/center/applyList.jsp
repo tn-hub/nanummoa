@@ -189,7 +189,7 @@ text-align: center;
 	}
 	
 	.link{
-	margin: 100px;
+	margin: 120px;
     padding: 7px 0;
     border: 2px solid #666;
     font-size: 16px;
