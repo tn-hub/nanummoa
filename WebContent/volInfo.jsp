@@ -175,7 +175,8 @@ marker.setMap(map);
     var lt=latlng.getLat();
     var lg=latlng.getLng(); 
     
-}); 	
+	}); 	
+});
 
 </script>
 </head>
