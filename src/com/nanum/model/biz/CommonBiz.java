@@ -298,11 +298,10 @@ public class CommonBiz {
 	 * @param qnaNo
 	 * @throws CommonException
 	 */
-	public void qnaDetail(QnADto dto, String qnaNo, ArrayList<QnAReplyDto> list) throws CommonException{
+	public void qnaDetail(QnADto dto, String qnaNo) throws CommonException{
 		Connection conn = JdbcTemplate.getConnection();
 		try {
 			dao.qnaDetail(conn, dto, qnaNo);
-			dao.selectQnaReply(conn, qnaNo, list);
 		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;
@@ -507,4 +506,21 @@ public class CommonBiz {
 		}
 	}
 	
+	/**
+	 * 댓글 조회
+	 * @param qnaNo 게시글 번호
+	 * @param list ArrayList<QnAReplyDto>
+	 * @throws CommonException
+	 */
+	public void getReply(String qnaNo, ArrayList<QnAReplyDto> list) throws CommonException{
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.selectQnaReply(conn, qnaNo, list);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
 }

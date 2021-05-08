@@ -816,11 +816,9 @@ public class CommonController extends HttpServlet {
 		String qnaNo = request.getParameter("qnaNo");
 		CommonBiz biz = new CommonBiz();
 		QnADto dto = new QnADto();
-		ArrayList<QnAReplyDto> list = new ArrayList<QnAReplyDto>();
 		try {
-			biz.qnaDetail(dto, qnaNo, list);
+			biz.qnaDetail(dto, qnaNo);
 			request.setAttribute("sdto", dto);
-			request.setAttribute("reply", list);
 			request.getRequestDispatcher("/qna/qnaDetail.jsp").forward(request, response);
 		} catch (CommonException e) {
 			e.printStackTrace();

@@ -1138,7 +1138,7 @@ public class CommonDao {
 	 * @throws CommonException
 	 */
 	public void selectQnaReply(Connection conn, String qnaNo, ArrayList<QnAReplyDto> list) throws CommonException {
-		String sql = "select a_id, r_contents, to_char(r_write_date, 'yyyy-mm-dd') from qna_reply where q_no = ?";
+		String sql = "select r_no, a_id, r_contents, to_char(r_write_date, 'yyyy-mm-dd') from qna_reply where q_no = ? order by 4, 1";
 
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -1149,9 +1149,10 @@ public class CommonDao {
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				QnAReplyDto dto = new QnAReplyDto();
-				dto.setAdminId(rs.getString(1));
-				dto.setReplyContents(rs.getString(2));
-				dto.setReplyWriteDate(rs.getString(3));
+				dto.setReplyNo(rs.getInt(1));
+				dto.setAdminId(rs.getString(2));
+				dto.setReplyContents(rs.getString(3));
+				dto.setReplyWriteDate(rs.getString(4));
 				
 				list.add(dto);
 			}
