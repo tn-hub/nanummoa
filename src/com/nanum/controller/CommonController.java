@@ -671,10 +671,6 @@ public class CommonController extends HttpServlet {
 		String email = request.getParameter("email");
 		String grade = request.getParameter("grade");
 
-		System.out.println(memberPw);
-		System.out.println(email);
-		System.out.println(grade);
-
 		if (memberPw == null || memberPw.trim().length() == 0 || memberPw == "") {
 			out.println("<script>alert('[오류] 이름을 입력하세요');history.go(-1); </script>");
 			out.flush();

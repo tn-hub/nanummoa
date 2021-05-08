@@ -239,8 +239,11 @@ text-align: center;
 			
 			<div class="deadline_box">
 			<c:choose>	
-				<c:when test="${dto.deadline >= 0}">
+				<c:when test="${dto.deadline > 0}">
 					<p>마감 <em>${dto.deadline }</em> 일전</p>
+				</c:when>
+				<c:when test="${dto.deadline == 0}">
+					<p>오늘 마감</p>
 				</c:when>
 				<c:otherwise>
 					<p>마감 종료</p>

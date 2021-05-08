@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -111,8 +112,20 @@ public class CenterController extends HttpServlet {
 		case "issueListForm":
 			issueListForm(request, response);
 			break;
+		case "issueDetailListForm":
+			issueDetailListForm(request, response);
+			break;
+		case "issueInfoForm":
+			issueInfoForm(request, response);
+			break;
 		case "volIssue":
 			volIssue(request, response);
+			break;
+		case "checkVolStatus":
+			checkVolStatus(request, response);
+			break;
+		case "volIssueForm":
+			volIssueForm(request, response);
 			break;
 		}
 	}
@@ -714,7 +727,7 @@ public class CenterController extends HttpServlet {
 		GeneralMemberDto general = new GeneralMemberDto();
 		general.setGeneralId(generalId);
 
-		ArrayList<VolApplyListDto> list = new ArrayList<VolApplyListDto>();
+		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
 
 		CenterBiz biz = new CenterBiz();
 		try {
@@ -885,14 +898,14 @@ public class CenterController extends HttpServlet {
 			cBiz.addVolInfo(map);
 
 			// 2. vol detail 등록
-			int volInfoNo = (int) map.get("volInfoNo")-1;
+			int volInfoNo = (int) map.get("volInfoNo") - 1;
 			System.out.println("[detail 등록 start] volInfoNo : " + volInfoNo);
-			
+
 			ArrayList<String> dateList = Utility.getDateList(startVolDateStr, endVolDateStr);
 			for (String volDate : dateList) {
 				cBiz.addVolDetail(volInfoNo, volDate, totalCount);
 			}
-			response.sendRedirect(CONTEXT_PATH+"/common/commonController?action=volListForm");
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=volListForm");
 		} catch (CommonException | ParseException e) {
 			e.printStackTrace();
 		}
@@ -942,7 +955,7 @@ public class CenterController extends HttpServlet {
 		CenterBiz biz = new CenterBiz();
 		try {
 			biz.deleteVol(volInfoNo);
-			response.sendRedirect(CONTEXT_PATH+"/common/commonController?action=volListForm");
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=volListForm");
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
@@ -1010,7 +1023,7 @@ public class CenterController extends HttpServlet {
 	}
 
 	/**
-	 * 인증서 발급목록페이지
+	 * 인증서발급 목록페이지
 	 * 
 	 * @param request
 	 * @param response
@@ -1029,14 +1042,74 @@ public class CenterController extends HttpServlet {
 		try {
 			biz.issueList(centerId, list);
 			request.setAttribute("list", list);
-			request.getRequestDispatcher("/center/volIssueList.jsp").forward(request, response);
+			request.getRequestDispatcher("/center/issue/issueList.jsp").forward(request, response);
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
 	}
 
 	/**
-	 * 인증서 발급
+	 * 인증서발급 상세페이지
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void issueDetailListForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
+		String centerId = dto.getCenterId();
+
+		int volInfoNo = Integer.parseInt(request.getParameter("volInfoNo"));
+
+		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
+		CenterBiz biz = new CenterBiz();
+		try {
+			biz.applyList(centerId, volInfoNo, list);
+			request.setAttribute("list", list);
+			request.getRequestDispatcher("/center/issue/issueDetailList.jsp").forward(request, response);
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 인증서 발급,활동여부 페이지
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void issueInfoForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
+		String centerId = dto.getCenterId();
+		String generalId = request.getParameter("generalId");
+		int volInfoNo = Integer.parseInt(request.getParameter("volInfoNo"));
+
+		GeneralMemberDto general = new GeneralMemberDto();
+		general.setGeneralId(generalId);
+
+		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
+
+		CenterBiz biz = new CenterBiz();
+		try {
+			biz.applicantInfo(centerId, volInfoNo, general, list);
+
+			request.setAttribute("general", general);
+			request.setAttribute("list", list);
+			request.getRequestDispatcher("/center/issue/issueInfo.jsp").forward(request, response);
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 인증서발급 요청
 	 * 
 	 * @param request
 	 * @param response
@@ -1050,22 +1123,57 @@ public class CenterController extends HttpServlet {
 		String centerId = dto.getCenterId();
 		String volInfoNo = request.getParameter("volInfoNo");
 		String generalId = request.getParameter("generalId");
-		
 		HashMap<String, Object> map = new HashMap<String, Object>();
+
 		map.put("centerId", centerId);
 		map.put("volInfoNo", volInfoNo);
 		map.put("generalId", generalId);
-		
+
 		CenterBiz biz = new CenterBiz();
 		try {
 			biz.volIssue(map);
-			request.setAttribute("volInfoNo",volInfoNo);
-			request.getRequestDispatcher("/center/centerController?action=applyList").forward(request, response);
-			
+			request.setAttribute("volInfoNo", volInfoNo);
+			request.getRequestDispatcher("/center/centerController?action=issueDetailListForm").forward(request,
+					response);
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
-
 	}
 
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void volIssueForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		request.getRequestDispatcher("/confirmation.jsp").forward(request,response);
+	}
+
+	/**
+	 * 활동상태 변경(활동완료)
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void checkVolStatus(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
+		String centerId = dto.getCenterId();
+		String[] checkDates = request.getParameterValues("checkDate");
+
+		CenterBiz biz = new CenterBiz();
+		try {
+			for (int i = 0; i < checkDates.length; i++) {
+				biz.checkVolStatus(checkDates[i]);
+			}
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
+	}
 }

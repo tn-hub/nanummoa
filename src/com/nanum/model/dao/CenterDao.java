@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.sql.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.nanum.dto.VolDetailDto;
 import com.nanum.dto.CenterInfoDto;
@@ -221,8 +222,7 @@ public class CenterDao {
 	 * @param list
 	 * @throws CommonException
 	 */
-	public void applicantInfo(Connection conn, String centerId, int volInfoNo, GeneralMemberDto general,
-			ArrayList<VolApplyListDto> list) throws CommonException {
+	public void applicantInfo(Connection conn, String centerId, int volInfoNo, GeneralMemberDto general,ArrayList<HashMap<String, Object>> list) throws CommonException {
 		String sql = "select vi.v_title,gm.g_name,va.apply_date,va.g_id,vi.vol_info_no,\n"
 				+ "va.vol_apply_no,va.vol_detail_no,va.vol_status,vd.vol_date,vd.apply_count,vd.total_count,vd.rec_status\n"
 				+ "from vol_apply_list va, general_member gm, vol_detail vd, vol_info vi\n"
@@ -242,21 +242,26 @@ public class CenterDao {
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
-				VolApplyListDto dto = new VolApplyListDto();
-				dto.setVolInfoNo(rs.getInt("vol_info_no"));
-				dto.setApplyDate(rs.getDate("apply_date"));
-				dto.setGeneralId(rs.getString("g_id"));
-				dto.setVolTitle(rs.getString("v_title"));
-				dto.setGeneralName(rs.getString("g_name"));
-				dto.setVolApplyNo(rs.getInt("vol_apply_no"));
-				dto.setVolDetailNo(rs.getInt("vol_detail_no"));
-				dto.setVolStatus(rs.getInt("vol_status"));
-				dto.setVolDate(rs.getString("vol_date"));
-				dto.setApplyCount(rs.getInt("apply_count"));
-				dto.setTotalCount(rs.getInt("total_count"));
-				dto.setRecStatus(rs.getString("rec_status"));
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				
+				map.put("volInfoNo", rs.getInt("vol_info_no"));
+				map.put("applyDate", rs.getDate("apply_date"));
+				map.put("generalId", rs.getString("g_id"));
+				map.put("volTitle", rs.getString("v_title"));
+				map.put("generalName", rs.getString("g_name"));
+				map.put("volApplyNo", rs.getInt("vol_apply_no"));
+				map.put("volDetailNo", rs.getInt("vol_detail_no"));
+				map.put("volStatus", rs.getInt("vol_status"));
+				map.put("volDate", rs.getString("vol_date"));
+				map.put("applyCount", rs.getInt("apply_count"));
+				map.put("totalCount", rs.getInt("total_count"));
+				map.put("recStatus", rs.getString("rec_status"));
+				
+				
+				
+				
 
-				list.add(dto);
+				list.add(map);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -807,21 +812,17 @@ public class CenterDao {
 	 * @throws CommonException 
 	 */
 	public void volIssue(Connection conn, HashMap<String, Object> map) throws CommonException {
-		String sql = "select gm.g_id,gm.g_name,gm.g_address,cm.c_id,vi.v_title,vi.start_time,vi.end_time,va.vol_status,vd.rec_status,min(vd.vol_date) as 봉사시작일,max(vd.vol_date) as 봉사종료일,sysdate as 발급일,count(vd.vol_detail_no) as 활동일,vd.vol_detail_no\n" + 
+		String sql = "select gm.g_id,gm.g_name,gm.g_address,cm.c_id,vi.start_time,vi.end_time,va.vol_status,vd.rec_status,min(vd.vol_date) as 봉사시작일,max(vd.vol_date) as 봉사종료일,sysdate as 발급일,vi.vol_info_no\n" + 
 				"from vol_apply_list va, vol_detail vd, vol_info vi,center_member cm,center_info ci, general_member gm\n" + 
 				"where va.g_id = gm.g_id and va.vol_detail_no = vd.vol_detail_no and vd.vol_info_no = vi.vol_info_no and vi.c_id = cm.c_id and cm.c_id = ci.c_id\n" + 
 				"and cm.c_id = ? and vi.vol_info_no = ? and gm.g_id  = ? and va.vol_status = '2' and vd.rec_status = '2' and\n" + 
 				"vd.vol_detail_no in ( select vol_detail_no from vol_apply_list where g_id = ?)\n" + 
-				"group by gm.g_id,gm.g_name,gm.g_address,cm.c_id,vi.v_title,vi.start_time,vi.end_time,va.vol_status,vd.rec_status,vi.vol_info_no,vd.vol_detail_no \n" + 
+				"group by gm.g_id,gm.g_name,gm.g_address,cm.c_id,vi.start_time,vi.end_time,va.vol_status,vd.rec_status,vi.vol_info_no,vi.vol_info_no\n" + 
 				"order by max(vd.vol_date) desc";
 
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 
-		System.out.println((String) map.get("centerId"));
-		System.out.println((String) map.get("volInfoNo"));
-		System.out.println((String) map.get("generalId"));
-		
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, (String) map.get("centerId"));
@@ -831,21 +832,21 @@ public class CenterDao {
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
+				
 				map.put("generalId",rs.getString("g_id"));
 				map.put("generalName",rs.getString("g_name"));
 				map.put("generalAddress",rs.getString("g_address"));
 				map.put("centerId",rs.getString("c_id"));
-				map.put("volTitle",rs.getString("v_title"));
 				map.put("startTime",rs.getDate("start_time"));
 				map.put("endTime",rs.getDate("end_time"));
 				map.put("volStatus",rs.getString("vol_status"));
 				map.put("recStatus",rs.getString("rec_status"));
 				map.put("volDate",rs.getString("봉사시작일"));
 				map.put("today",rs.getDate("발급일"));
-				map.put("activityDate",rs.getInt("활동일"));
-				map.put("volDetailNo",rs.getInt("vol_detail_no"));
+				map.put("volInfoNo",rs.getInt("vol_info_no"));
 				
 			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CommonException();
@@ -868,8 +869,6 @@ public class CenterDao {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 
-		System.out.println((String) map.get("volCode"));
-		
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, (String) map.get("volCode"));
@@ -894,20 +893,21 @@ public class CenterDao {
 	 * @param map
 	 * @throws CommonException 
 	 */
-	public void insertIssue(Connection conn,HashMap<String, Object> map) throws CommonException {
+	public void insertIssue(Connection conn,String volCode,HashMap<String, Object> map) throws CommonException {
 		String sql = "insert into vol_confirmation values(?,?,?,'내용하드코딩',?,?)";
 
 		PreparedStatement pstmt = null;
 
+		int rows = 0;
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, (String)map.get("volCode"));
-			pstmt.setString(2, (String)map.get("generalId"));
-			pstmt.setString(3, (String)map.get("centerId"));
-			pstmt.setInt(4, (int)map.get("volDetailNo"));
-			pstmt.setString(5, (String)map.get("volDate"));
-			
-			int rows = pstmt.executeUpdate();
+				pstmt.setString(1, volCode);
+				pstmt.setString(2, (String)map.get("generalId"));
+				pstmt.setString(3, (String)map.get("centerId"));
+				pstmt.setInt(4, (int)map.get("volInfoNo"));
+				pstmt.setString(5, (String)map.get("volDate"));
+				
+				rows = pstmt.executeUpdate();
 			
 			System.out.println("rows : " + rows);
 			if (rows != 1) {
@@ -979,4 +979,34 @@ public class CenterDao {
 		}
 	}
 
+	/**
+	 * 활동상태 변경(활동 완료)
+	 * 
+	 * @param conn
+	 * @param map
+	 * @throws CommonException 
+	 */
+	public void checkVolStatus(Connection conn, String checkDates) throws CommonException {
+		String sql = "update vol_apply_list set vol_status = '2' where vol_apply_no = ? and vol_status = '1'";
+		System.out.println(sql);
+
+		PreparedStatement pstmt = null;
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, Integer.parseInt(checkDates));
+			int rows = pstmt.executeUpdate();
+			System.out.println("rows : " + rows);
+			if (rows != 1) {
+				throw new Exception();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(pstmt);
+		}
+	}
+	
 }

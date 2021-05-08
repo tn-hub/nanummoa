@@ -25,7 +25,7 @@ public class MessageEntity {
 		
 		ArrayList<String> success = new ArrayList<String>();
 		success.add("[아이디 찾기 완료]");	// 0
-		success.add("[아이디 변경 완료]");		// 1
+		success.add("[비밀번호 변경 완료]");		// 1
 		
 		ArrayList<String> message = new ArrayList<String>();
 		message.add("[이 페이지는 로그인이 필요합니다.]");

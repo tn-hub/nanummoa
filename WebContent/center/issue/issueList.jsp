@@ -209,7 +209,7 @@ text-align: center;
 					</c:choose>
 					<span>${dto.categoryName}</span>
 				</div>
-				<input type="button" value="신청 내역" class="float_r g_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=applyList&volInfoNo=${dto.volInfoNo}'">
+				<input type="button" value="신청 내역" class="float_r g_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=issueDetailListForm&volInfoNo=${dto.volInfoNo}'">
 				<h3><a href="${CONTEXT_PATH}/common/commonController?action=volDetatilForm&volInfoNo=${dto.volInfoNo}">${dto.volTitle }</a></h3>
 				
 				<div class="span_box clear_b ">
