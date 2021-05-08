@@ -42,7 +42,8 @@ h4{
 	padding: 10px; 
 	margin-bottom: 20px;
 	font-size: 17px;
-	border-color: 1px solid gray;
+	border: none;
+	resize : none;
 }
 
 
@@ -82,14 +83,17 @@ h4{
 #r_det_contexts{
 	width:985px; 
 	height: 200px; 
-	margin-top: 10px;
+	margin-top: 40px;
 }
 
 #r_input_contexts{
 	width:985px; 
 	height: 100px; 
 	background-color: #F6F6F6;
+	margin-top: 
 	margin-left: 5px;
+	resize : none;
+	borde: 1px solide #AAA;
 }
 
 #btn_r_resp{
@@ -99,14 +103,34 @@ h4{
 
 #r_resp{
 	float: right;
-	margin-top: 20px;
+	margin-top: -40px;
+}
+
+.admin_id {
+	font-weight: bold;
+}
+
+.admin_writeDate {
+	color: #5F5F5F;
+
+}
+
+.reply_content {
+	width: 700px;
+}
+
+.no_reply {
+	color: #5F5F5F;
+	width:985px;
+	height: 80px;
+	line-height: 80px;
+	text-align: center;
 }
 </style>
 </head>
 <script type="text/javascript">
 
 $(document).ready(function() {
-	$('#r_text_input').hide(); // 댓글등록 
 	
 	// 댓글등록 이벤트 
 	$("#btn_rAdd").click(function () {
@@ -124,7 +148,7 @@ $(document).ready(function() {
 <%@ include file="/common/header.jsp"%>
 <div id="section_contents">
 <form name="qnaDetailForm" action="${CONTEXT_PATH}/common/commonController?action=qnaUpt" method="post">
-<h3>문의글 상세</h3>
+<h1>문의글 상세</h1>
 <hr>
 <div id="qna_detail">
 	
@@ -154,28 +178,41 @@ $(document).ready(function() {
 	</c:if>	
 	</div>
 	<h4>제목 : <input type="text" id="qnaTitle" name="qnaTitle" value="${sdto.qnaTitle}"></h4>
-	<hr>
 	<div id="qna_det_contexts"><textarea id="qnaContents" name="qnaContents">${sdto.qnaContents}</textarea> </div>	
-	<hr>
 	</div>
-	<div id="rAdd"><input id="btn_rAdd" class="btn_qna" type="button" value="댓글달기"></div>
+	<span>답글</span>
 	<hr>
-	<div id="r_text_input">	
-		<div id="r_det_contexts"><textarea id="r_input_contexts"></textarea>
-		<div id="r_resp"><input class="btn_qna" id="btn_r_resp" type="button" value="댓글 등록"></div>
+	<c:if test="${empty reply }">
+		<div class="no_reply">
+			<span>등록된 답글이 없습니다</span>
 		</div>
-	</div>	
-	<hr>
-	<div id="r_text_input">	
-		<div id="r_det_contexts"><textarea id="r_input_contexts"></textarea>
+	</c:if>
+	<c:forEach var="rDto" items="${reply}">
+	<div id="r_text_input">
+		<span class="admin_id">${rDto.adminId}</span>
+		<p class="reply_content">${rDto.replyContents}</p>
+		<span class="admin_writeDate">${rDto.replyWriteDate}</span>
+		<c:if test="${not empty dto.adminId and dto.adminId == rDto.adminId}">
 		<div id="r_resp">
-			<input class="btn_qna" type="button" value="수정하기">
-			<input class="btn_qna" type="button" value="삭제하기">
+			<input class="btn_qna g_btn" type="button" value="수정">
+			<input class="btn_qna g_btn" type="button" value="삭제">
 		</div>
-		</div>
+		</c:if>
+		<hr>
+	</div>
+	</c:forEach>
+	<c:if test="${not empty dto and grade == 'A'}">
+	<div id="r_det_contexts">
+		<textarea id="r_input_contexts" name="replyContent"></textarea>
+			<input class="btn_qna g_btn" id="btn_r_resp" type="button" value="답글 등록">
 	</div>	
+	<hr>
+	</c:if>
 	 <input type="hidden"  id="qnaNo" name="qnaNo" value="${sdto.qnaNo}">
 	</form>
 </div>
+
+<!-- footer -->
+<%@ include file="/common/footer.jsp"%>
 </body>
 </html>

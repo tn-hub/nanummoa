@@ -201,7 +201,6 @@ $(document).ready(function() {
 	<input type="button" value="1">
 	<input type="button" value="다음 > ">
 </div>
-<hr>
 <div id="footer" class="footer">
 		<%@ include file="/common/footer.jsp"%>
 </div>

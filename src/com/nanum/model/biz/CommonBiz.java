@@ -10,6 +10,7 @@ import com.nanum.dto.AdminMemberDto;
 import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.QnADto;
+import com.nanum.dto.QnAReplyDto;
 import com.nanum.dto.ServiceCategoryDto;
 import com.nanum.dto.LocalDto;
 import com.nanum.dto.VolBlockDto;
@@ -297,10 +298,11 @@ public class CommonBiz {
 	 * @param qnaNo
 	 * @throws CommonException
 	 */
-	public void qnaDetail(QnADto dto, String qnaNo) throws CommonException{
+	public void qnaDetail(QnADto dto, String qnaNo, ArrayList<QnAReplyDto> list) throws CommonException{
 		Connection conn = JdbcTemplate.getConnection();
 		try {
 			dao.qnaDetail(conn, dto, qnaNo);
+			dao.selectQnaReply(conn, qnaNo, list);
 		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;
@@ -504,6 +506,5 @@ public class CommonBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
-
 	
 }

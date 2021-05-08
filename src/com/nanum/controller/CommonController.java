@@ -26,6 +26,7 @@ import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.LocalDto;
 import com.nanum.dto.QnADto;
+import com.nanum.dto.QnAReplyDto;
 import com.nanum.dto.ServiceCategoryDto;
 import com.nanum.dto.VolCategoryDto;
 import com.nanum.dto.VolInfoDto;
@@ -815,10 +816,11 @@ public class CommonController extends HttpServlet {
 		String qnaNo = request.getParameter("qnaNo");
 		CommonBiz biz = new CommonBiz();
 		QnADto dto = new QnADto();
-		
+		ArrayList<QnAReplyDto> list = new ArrayList<QnAReplyDto>();
 		try {
-			biz.qnaDetail(dto, qnaNo);
+			biz.qnaDetail(dto, qnaNo, list);
 			request.setAttribute("sdto", dto);
+			request.setAttribute("reply", list);
 			request.getRequestDispatcher("/qna/qnaDetail.jsp").forward(request, response);
 		} catch (CommonException e) {
 			e.printStackTrace();
