@@ -16,6 +16,7 @@ import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.LocalDto;
 import com.nanum.dto.QnADto;
 import com.nanum.dto.QnAReplyDto;
+import com.nanum.dto.SearchAllDto;
 import com.nanum.dto.ServiceCategoryDto;
 import com.nanum.dto.VolBlockDto;
 import com.nanum.dto.VolCategoryDto;
@@ -510,7 +511,6 @@ public class CommonDao {
 			sql.append(" or q.g_id in (select g.g_id from general_member g where g.g_name like '%'||?||'%') ");
 			sql.append(" or q.c_id in (select c.c_id from center_member c where c.c_name like '%'||?||'%') ");
 		}
-		
 		
 		sql.append(" order by q_no desc ");
 		
@@ -1156,6 +1156,116 @@ public class CommonDao {
 				
 				list.add(dto);
 			}
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+				throw new CommonException();
+			} finally {
+				JdbcTemplate.close(rs);
+				JdbcTemplate.close(stmt);
+			}
+		}
+
+	public void searchAllList(Connection conn, ArrayList<SearchAllDto> saList, String searchAllOpt,String searchAllText) throws CommonException {
+		StringBuilder sql = new StringBuilder();
+		
+		if (searchAllOpt.equals("V")) {
+			sql.append(" select ");
+			sql.append("   '[자원봉사] ' division_name ");
+			sql.append("   , 'vol' as division_sub ");
+			sql.append("   , v.vol_info_no as info_no ");
+			sql.append("   , (select c.c_name from center_member c where c.c_id = v.c_id) as writer "); 
+			sql.append("   , v.v_title as title ");
+			sql.append("   , case when length(v.v_content) < 200 then v.v_content ");
+			sql.append("     else substr(v.v_content, 0, 200)||'...' end contents ");
+			sql.append("  from vol_info v ");
+			sql.append("   where v.v_title like  '%'|| ? || '%' ");
+			sql.append("   or v.v_content like '%'|| ? || '%' ");
+			
+			sql.append("  order by v.vol_info_no desc ");
+			
+		}else if (searchAllOpt.equals("Q")) {
+			sql.append(" select ");
+			sql.append("   '[QNA] 'as division_name ");
+			sql.append("   , 'qna' as division_sub ");
+			sql.append("   , q.q_no as info_no ");
+			sql.append("   , case when q.g_id is not null then (select g.g_name from general_member g where g.g_id = q.g_id) ");
+			sql.append("    else (select c.c_name from center_member c where c.c_id = q.c_id)  end writer ");
+			sql.append("   , q.q_title as title ");
+			sql.append("   , case when length(q.q_contents) < 200 then q.q_contents ");
+			sql.append("     else substr(q.q_contents, 0, 200)||'...' end contents ");
+			sql.append("   from qna q ");
+			sql.append("   where q.q_title like '%'|| ? || '%' ");
+			sql.append("   or q.q_contents like  '%'|| ? || '%' ");
+			
+			sql.append("  order by q.q_no desc ");
+			
+		}else {
+			sql.append(" select ");
+			sql.append("   '[자원봉사] ' division_name ");
+			sql.append("   , 'vol' as division_sub ");
+			sql.append("   , v.vol_info_no as info_no ");
+			sql.append("   , (select c.c_name from center_member c where c.c_id = v.c_id) as writer "); 
+			sql.append("   , v.v_title as title ");
+			sql.append("   , case when length(v.v_content) < 200 then v.v_content ");
+			sql.append("     else substr(v.v_content, 0, 200)||'...' end contents ");
+			sql.append("  from vol_info v ");
+			sql.append("   where v.v_title like  '%'|| ? || '%' ");
+			sql.append("   or v.v_content like '%'|| ? || '%' ");
+			
+			sql.append(" union ");
+			
+			sql.append(" select ");
+			sql.append("   '[QNA] 'as division_name ");
+			sql.append("   , 'qna' as division_sub ");
+			sql.append("   , q.q_no as info_no ");
+			sql.append("   , case when q.g_id is not null then (select g.g_name from general_member g where g.g_id = q.g_id) ");
+			sql.append("    else (select c.c_name from center_member c where c.c_id = q.c_id)  end writer ");
+			sql.append("   , q.q_title as title ");
+			sql.append("   , case when length(q.q_contents) < 200 then q.q_contents ");
+			sql.append("     else substr(q.q_contents, 0, 200)||'...' end contents ");
+			sql.append("   from qna q ");
+			sql.append("   where q.q_title like '%'|| ? || '%' ");
+			sql.append("   or q.q_contents like  '%'|| ? || '%' ");
+		
+			sql.append("  order by division_sub desc ");
+		
+		
+		}
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			
+			stmt = conn.prepareStatement(sql.toString());// 쿼리 담기
+			
+		    if (searchAllOpt.equals("V") || searchAllOpt.equals("Q")) {
+				stmt.setString(1, searchAllText);
+				stmt.setString(2, searchAllText);
+		    }else {
+		    	stmt.setString(1, searchAllText);
+				stmt.setString(2, searchAllText);
+				stmt.setString(3, searchAllText);
+				stmt.setString(4, searchAllText);
+		    }
+			
+			rs = stmt.executeQuery();
+			
+			SearchAllDto dto = null;
+			
+			// 담기 
+			while(rs.next()) {
+				dto = new SearchAllDto(); // 담는곳 선언 
+				dto.setDvisionName(rs.getNString("division_name"));
+				dto.setDivisionSub(rs.getString("division_sub"));
+				dto.setInfoNo(rs.getInt("info_no"));
+				dto.setWriter(rs.getString("writer"));
+				dto.setTitle(rs.getString("title"));
+				dto.setContents(rs.getString("contents"));
+
+				saList.add(dto); // list 담기 
+			}
+			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();

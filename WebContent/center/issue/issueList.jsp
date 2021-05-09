@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>센터회원 자원봉사 목록</title>
+<title>확인서 발급</title>
 <link type="text/css" rel="stylesheet" href="${initParam.CONTEXT_PATH}/resources/css/common.css">
 
 <style type="text/css">
@@ -186,14 +186,7 @@ text-align: center;
 <div class="contents">
 	<div class="wrapper">
 		<div class="title">
-			<h1>자원 봉사 목록</h1>
-		<hr>
-		<div class="link_box">
-			<a href="${CONTEXT_PATH}/center/centerController?action=centerVolListForm">모집 봉사</a>
-		</div>
-		<div class="link_box">
-			<a href="${CONTEXT_PATH }/center/centerController?action=deadlineList">마감 봉사</a>
-		</div>
+			<h1>확인서 발급목록</h1>
 		<hr>
 		
 	<p>[전체 <em style="color: red;">${fn:length(list)}</em>건, 현재페이지 <em>0</em>/0]</p>
@@ -216,7 +209,7 @@ text-align: center;
 					</c:choose>
 					<span>${dto.categoryName}</span>
 				</div>
-				<input type="button" value="신청 내역" class="float_r g_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=applyList&volInfoNo=${dto.volInfoNo}'">
+				<input type="button" value="신청 내역" class="float_r g_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=issueDetailListForm&volInfoNo=${dto.volInfoNo}'">
 				<h3><a href="${CONTEXT_PATH}/common/commonController?action=volDetatilForm&volInfoNo=${dto.volInfoNo}">${dto.volTitle }</a></h3>
 				
 				<div class="span_box clear_b ">
@@ -239,11 +232,8 @@ text-align: center;
 			
 			<div class="deadline_box">
 			<c:choose>	
-				<c:when test="${dto.deadline > 0}">
+				<c:when test="${dto.deadline >= 0}">
 					<p>마감 <em>${dto.deadline }</em> 일전</p>
-				</c:when>
-				<c:when test="${dto.deadline == 0}">
-					<p>오늘 마감</p>
 				</c:when>
 				<c:otherwise>
 					<p>마감 종료</p>

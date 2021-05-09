@@ -40,6 +40,21 @@ public class Utility {
 	}
 	
 	/**
+	 * 인증서코드 발급
+	 * @param length
+	 * @param isUpper
+	 * @return
+	 */
+	public static String getVolConCode() {
+		Random extractNo = new Random((long) (Math.random() * System.nanoTime()));
+		String secureCode = "";
+		for (int index = 0; index < 8; index++) {
+				secureCode += extractNo.nextInt(8); // 0 ~ 9 숫자
+		}
+		return secureCode;
+	}
+	
+	/**
 	 * 현재날짜 반환 
 	 * @return 현재 기본형식(년도4-월2-일2) 날짜 
 	 */
@@ -88,6 +103,10 @@ public class Utility {
 	
 	public static String getCurrentDate() {
 		return getCurrentDate("yyyy-MM-dd", Locale.KOREA);
+	}
+	
+	public static String getVolCon() {
+		return getCurrentDate("yyyyMMdd", Locale.KOREA);
 	}
 	
 	public static String getCurrentDate(String pattern) {

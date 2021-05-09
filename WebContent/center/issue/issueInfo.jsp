@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>신청자 승인</title>
+<title>인증서 발급</title>
 <!-- jquery-3.6.0.min.js -->
 <script type="text/javascript" src="${CONTEXT_PATH }/resources/js/jquery-3.6.0.min.js"></script>
 <link type="text/css" rel="stylesheet" href="${initParam.CONTEXT_PATH}/resources/css/common.css">
@@ -308,6 +308,10 @@ text-align: center;
 	.detatil_btn{
 	margin-left: 85px; 
 	}
+	
+	.g_btn , .y_btn{
+	font-weight: bold;
+	}
 </style>
 <script type="text/javascript">
 $(document).ready(function() {
@@ -375,7 +379,7 @@ $(document).ready(function() {
 			</td>
 		</tr>
 	</table>
-<form action="${CONTEXT_PATH }/center/centerController?action=applyGeneral" method="post">
+<form action="${CONTEXT_PATH}/center/centerController?action=checkVolStatus" method="post">
 	<input type="hidden" id="generalId" name="generalId" value="${list[0].generalId }">
 	<input type="hidden" id="volInfoNo" name="volInfoNo" value="${list[0].volInfoNo }">
 
@@ -387,7 +391,7 @@ $(document).ready(function() {
 			<div class="list_box">
 					<span class="title_span">
 						<c:choose>
-							<c:when test="${dto.volStatus != '0' or dto.recStatus != '0'}">
+							<c:when test="${dto.volStatus != '1'}">
 								<span><input type="checkbox" name="checkDate" id="checkDate" value="${dto.volApplyNo }" disabled="disabled"></span>
 							</c:when>
 							<c:otherwise>
@@ -407,8 +411,11 @@ $(document).ready(function() {
 						<c:when test="${dto.recStatus == '0'}">
 							<span>모집중</span>
 						</c:when>
-						<c:when test="${dto.recStatus != '0'}">
+						<c:when test="${dto.recStatus == '1'}">
 							<span>모집마감</span>
+						</c:when>
+						<c:when test="${dto.recStatus == '2'}">
+							<span>활동종료</span>
 						</c:when>
 					</c:choose>
 				</div>
@@ -418,20 +425,15 @@ $(document).ready(function() {
 					<span>${dto.applyCount }/${dto.totalCount }명</span>
 				</div>
 				<c:choose>
+					<c:when test="${dto.volStatus == '0' and dto.recStatus == '2'}" >
+						<span class="title_span g_btn">미승인</span>
+					</c:when>
+					<c:when test="${dto.volStatus == '1' and dto.recStatus == '2'}" >
+						<span class="title_span g_btn">활동 미완료</span>
+					</c:when>
 					<c:when test="${dto.volStatus == '2' and dto.recStatus == '2'}">
-						<span class="title_span">
-							<input type="button" value="활동 여부" class="g_btn detatil_btn" 
-								onclick="location.href='${CONTEXT_PATH}/center/centerController?action=#'">
-						</span>
+						<span class="title_span g_btn">활동 완료</span>
 					</c:when>
-					<c:when test="${dto.volStatus != '0' and dto.recStatus == '0'}" >
-					<span class="title_span">
-						<input type="button" value="승인 취소" class="g_btn detatil_btn" 
-						onclick="location.href='${CONTEXT_PATH}/center/centerController?action=closeApply&volApplyNo=${dto.volApplyNo }&generalId=${list[0].generalId }&volInfoNo=${list[0].volInfoNo }'">
-					</span>
-					</c:when>
-					<c:otherwise>
-					</c:otherwise>
 				</c:choose>
 				
 			</div>
@@ -441,10 +443,9 @@ $(document).ready(function() {
 		</li>
 	</ul>
 	</c:forEach>
-		<div id="add_btn">
-			<input class="y_btn" id="btn_add" type="submit" value="신청승인"  style="cursor:hand;">
-		</div>
-	
+			<div id="add_btn">
+				<input type="submit" id="btn_add" value="활동 여부" class="y_btn detatil_btn" >
+			</div>
 </form>
 		</div>
 	</div>	

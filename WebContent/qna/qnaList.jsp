@@ -41,7 +41,7 @@ a.bold { font-weight: bold; }
 	font-size: 17px;
 }
 
-#search_opt{
+.search_opt{
 	border-style: none;
 	font-size: 17px;
 }
@@ -129,6 +129,7 @@ $(document).ready(function() {
 		//검색조건
 		var searchOpt = $("#search_opt").val();   
 		
+		
 		// 내용 빈값 확인 
 		if (searchOpt == "T" || searchOpt == "C" || searchOpt == "W"){
 			if ($("#search_text").val() == null || $("#search_text").val() == "") {
@@ -136,7 +137,7 @@ $(document).ready(function() {
 				$("#search_text").focus();
 				return false;
 			}
-		}			
+		}		
 	});
 	
 });
@@ -156,11 +157,11 @@ $(document).ready(function() {
 		
 		</td>
 		<td id="search_qna_tdSelect">
-			<select  id="search_opt" name ="search_opt">
-				<option value="">전체</option>
-				<option value="T" <c:if test="${searchOpt eq 'T'}">selected</c:if> >제목 </option>
-				<option value="C" <c:if test="${searchOpt eq 'C'}">selected</c:if>>내용</option>
-				<option value="W" <c:if test="${searchOpt eq 'W'}">selected</c:if>>작성자</option>
+			<select id="search_opt" name ="search_opt" class="search_opt">
+				<option>전체 </option>
+				<option value="T" <c:if test="${searchOpt eq 'T'}">selected</c:if>> 제목 </option>
+				<option value="C" <c:if test="${searchOpt eq 'C'}">selected</c:if>> 내용 </option>
+				<option value="W" <c:if test="${searchOpt eq 'W'}">selected</c:if>> 작성자 </option>
 			</select>
 		</td>
 		<td id="search_qna_tdText">
@@ -177,20 +178,14 @@ $(document).ready(function() {
 <div id="sec_vol_list">
 <ul class="vol_list_ul">
 <c:forEach var="dto" items="${qnaList}">
-<li>
-	<div class="list_box">
-		<div>
-			<span class="title_span">글번호 : </span>
-			<span>${dto.qnaNo}</span>
-			<span class="qna_list_span">답변 여부 : ${dto.answerYn}</span>
-			<span class="qna_list_span">작성자 : ${dto.qnaWriter}</span>
-			<span class="qna_list_span">작성일 : ${dto.qnaWriteDate}</span>
-		</div>
+	<li>
+		<span class="title_span">글번호 : ${dto.qnaNo}</span>
+		<span class="qna_list_span">답변 여부 : ${dto.answerYn}</span>
+		<span class="qna_list_span">작성자 : ${dto.qnaWriter}</span>
+		<span class="qna_list_span">작성일 : ${dto.qnaWriteDate}</span>
 		<h3>제목 : <a href="${CONTEXT_PATH}/common/commonController?action=qnaDtl&qnaNo=${dto.qnaNo}" >${dto.qnaTitle}</a></h3>
-	</div>
-	
-	<hr class="list_hr">
-</li>
+	</li>
+	<hr>
 </c:forEach>	
 </ul>
 </div>
@@ -201,6 +196,22 @@ $(document).ready(function() {
 	<input type="button" value="1">
 	<input type="button" value="다음 > ">
 </div>
+<div class="pager">
+    <ul>
+        <c:forEach var="i" begin="${ 1 }" end="${ 10 }">
+            <c:choose>
+                <c:when test="${ i > 0 }">
+                    <li>${ i }</li>
+                </c:when>
+                <c:when test="${ i == 3 }">
+                    <li class="selected">${ i }</li>
+                </c:when>               
+            </c:choose>
+        </c:forEach>        
+      
+    </ul>
+</div>  
+<hr>
 <div id="footer" class="footer">
 		<%@ include file="/common/footer.jsp"%>
 </div>

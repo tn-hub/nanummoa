@@ -8,7 +8,8 @@
 <script type="text/javascript" src="${CONTEXT_PATH }/resources/js/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
-
+	
+	/* 비밀번호 표시 */
 	$("#pwVisible").click(function () {
 		var visiblePwElement = $("#pwVisible");
 		var pwElement = $("#memberPw");
@@ -23,7 +24,8 @@ $(document).ready(function() {
 		}
 	});
 	
-	function pwCheck(){
+	/* 비밀번호 검증 */
+	$("#updatePw").click(function () {
 		console.log("비밀번호 들어옴");
 		var pwElement = $("#memberPw");
 		var pw = pwElement.val();
@@ -57,16 +59,15 @@ $(document).ready(function() {
 			pw2Element.focus();
 			return false;
 		}
-		
 		return true;
-	}
+	});
 	
 	/* 비밀번호 정규식 */
 	function pwReg(data){
 		var regExp = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[~!@#$%^&*()+=]).{8,20}$/;
 		return regExp.test(data);
 	}
-	
+
 	/* 비밀번호 에러메세지 클리어 */
 	function clearMessagePw(){
 		$("#pwMessage").html("");
@@ -78,6 +79,10 @@ $(document).ready(function() {
 	}
 	
 });
+
+
+
+
 </script>
 
 <link type="text/css" rel="stylesheet"
@@ -117,6 +122,10 @@ table{
 text-align: center;
 }
 
+ .g_btn{
+ font-weight: bold;
+ }
+
 </style>
 
 </head>
@@ -143,7 +152,7 @@ text-align: center;
 						<th>새 비밀번호</th> 
 						<td>
 							<input type="password" id="memberPw" name="memberPw" size="30" required="required">
-							<div class="pwMessage"></div>
+							<div class="pwMessage" id="pwMessage"></div>
 						</td>
 					</tr>
 						
@@ -151,13 +160,13 @@ text-align: center;
 						<th>비밀번호 확인</th> 
 						<td>
 							<input type="password" id="checkMemberPw" name="checkMemberPw" size="30" required="required">
-							<div class="pwMessage"></div>
-							<input type="checkbox" id="pwVisible" name="pwVisible" > <span>비밀번호 표시</span>
+							<div class="pw2Message" id="pw2Message"></div>
+							<input type="checkbox" id="pwVisible" name="pwVisible"> <span>비밀번호 표시</span>
 						</td>
 					</tr>
 					<tr>
 						<td colspan="2" align="center">
-							<input type="submit" value="완료" >
+							<input type="submit" class="g_btn" id="updatePw" value="완료">
 						</td>
 					</tr>
 				</table>

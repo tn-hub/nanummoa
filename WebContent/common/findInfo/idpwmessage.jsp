@@ -5,18 +5,41 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>아이디 비밀번호 찾기 결과</title>
+<title>아이디/비밀번호 찾기 결과</title>
+<style type="text/css">
+.title{
+width: 1000px;
+margin:  auto;
+}
+
+#wrap .box{ 
+    width:400px;
+    height:300px;
+    margin:0 auto;
+}
+
+ .g_btn{
+ font-weight: bold;
+ text-align: center;
+ 
+ }
+
+</style>
 </head>
 <body>
-<c:choose>
-	<c:when test="${dto.generalId != null}">
-		일반회원 : ${dto.generalId }
-	</c:when>
-	<c:when test="${center.centerId != null}">
-		센터회원 : ${dto.centerId }
-	</c:when>
-</c:choose>
-
-
+<%@ include file="/common/header.jsp"%>
+<div class="contents">
+	<div id="wrap">	
+		<div class="box">
+		<h1><font color="red">${message.message }</font></h1>
+		
+		<h3>${id }</h3>
+		
+			<a class="g_btn" href="${message.url}">${message.linkTitle}</a>
+		
+		</div>
+	</div>
+</div>
+<%@ include file="/common/footer.jsp"%>
 </body>
 </html>
