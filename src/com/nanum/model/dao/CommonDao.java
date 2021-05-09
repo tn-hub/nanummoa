@@ -779,6 +779,64 @@ public class CommonDao {
 	}
 
 	/**
+	 * 봉사상세조회
+	 * @param conn
+	 * @param map
+	 * @param volInfoNo
+	 */
+	public void selectVolInfo(Connection conn, HashMap<String, Object> map, int volInfoNo) throws CommonException{
+		String sql = "select \r\n" + 
+				"i.vol_info_no, i.c_id, i.v_title, i.v_content, i.vol_write_date\r\n" + 
+				", to_char(i.start_time,'HH24:MI'), to_char(i.end_time,'HH24:MI'), to_char(i.start_date,'yyyy-mm-dd'), to_char(i.end_date,'yyyy-mm-dd') \r\n" + 
+				", i.category_no, i.local_no, i.v_type, i.v_place, i.v_subject, min(d.total_count) as total_count\r\n" + 
+				", min(d.vol_date) as 봉사시작일, max(d.vol_date) as 봉사종료일, i.latitude, i.longitude\r\n" + 
+				"from vol_info i, vol_detail d\r\n" + 
+				"where i.vol_info_no = d.vol_info_no\r\n" + 
+				"and i.vol_info_no = ? \r\n" + 
+				"group by i.vol_info_no, i.c_id, i.v_title, i.v_content, i.vol_write_date, \r\n" + 
+				"to_char(i.start_time,'HH24:MI'), i.start_time, 'HH24:MI', to_char(i.end_time,'HH24:MI'), i.end_time, \r\n" + 
+				"'HH24:MI', to_char(i.start_date,'yyyy-mm-dd'), i.start_date, 'yyyy-mm-dd', to_char(i.end_date,'yyyy-mm-dd'), \r\n" + 
+				"i.end_date, 'yyyy-mm-dd', i.category_no, i.local_no, i.v_type, \r\n" + 
+				"i.v_place, i.v_subject, i.latitude, i.longitude";
+
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, volInfoNo);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				map.put("volInfoNo", rs.getString(1));
+				map.put("centerId", rs.getString(2));
+				map.put("volTitle", rs.getString(3));
+				map.put("volContents", rs.getString(4));
+				map.put("volWriteDate", rs.getString(5));
+				map.put("startTime", rs.getString(6));
+				map.put("endTime", rs.getString(7));
+				map.put("startDate", rs.getString(8));
+				map.put("endDate", rs.getString(9));
+				map.put("categoryNo", rs.getString(10));
+				map.put("localNo", rs.getString(11));
+				map.put("volType", rs.getString(12));
+				map.put("volPlace", rs.getString(13));
+				map.put("volSubject", rs.getString(14));
+				map.put("totalCount", rs.getString(15));
+				map.put("startVolDate", rs.getString(16));
+				map.put("endVolDate", rs.getString(17));
+				map.put("latitude", rs.getString(18));
+				map.put("longitude", rs.getString(19));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(pstmt);
+		}
+	}
+	
+	/**
 	 * 문의글 전체조회 건수
 	 * @param conn
 	 * @param cdto
@@ -894,8 +952,9 @@ public class CommonDao {
 				+ "from vol_info i, vol_detail d " 
 				+ "where i.vol_info_no = d.vol_info_no and d.rec_status = 0 "
 				+ "group by i.vol_info_no, i.v_title, i.category_no, i.local_no, i.start_date, i.end_date "
-				+ "order by 6";
+				+ "order by 1 desc";
 		
+		System.out.println("[sql] " + sql);
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
@@ -965,7 +1024,8 @@ public class CommonDao {
 				+ "from vol_info i, vol_detail d " 
 				+ "where i.vol_info_no = d.vol_info_no and d.rec_status = 0 "
 				+ "group by i.vol_info_no, i.v_title, i.category_no, i.local_no, i.start_date, i.end_date "
-				+ "order by 6";
+				+ "order by 1";
+		System.out.println("sql : " + sql);
 		HashMap<String, Object> map = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -1156,16 +1216,18 @@ public class CommonDao {
 				
 				list.add(dto);
 			}
-			} catch (SQLException e) {
-				System.out.println(e.getMessage());
-				e.printStackTrace();
-				throw new CommonException();
-			} finally {
-				JdbcTemplate.close(rs);
-				JdbcTemplate.close(stmt);
-			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(stmt);
 		}
+	}
 
+	
+	/** 통합검색 */
 	public void searchAllList(Connection conn, ArrayList<SearchAllDto> saList, String searchAllOpt,String searchAllText) throws CommonException {
 		StringBuilder sql = new StringBuilder();
 		

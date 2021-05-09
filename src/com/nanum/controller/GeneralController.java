@@ -509,11 +509,9 @@ public class GeneralController extends HttpServlet {
 		String generalId = dto.getGeneralId();
 		String[] volDetailNos = request.getParameterValues("volDetailNo");
 		GeneralBiz biz = new GeneralBiz();
+		
 		try{
-			for (String volDetailNo : volDetailNos) {
-				System.out.println("[con] 봉사신청  volDetailNo : " +volDetailNo);
-				biz.enrollVol(generalId, volDetailNo);
-			}	
+			biz.enrollVol(generalId, volDetailNos);
 			response.sendRedirect(CONTEXT_PATH+"/general/generalController?action=volApplyList");
 			
 		} catch(CommonException e) {

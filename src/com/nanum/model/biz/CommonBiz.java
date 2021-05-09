@@ -368,6 +368,23 @@ public class CommonBiz {
 	}
 
 	/**
+	 * 봉사 상세조회
+	 * @param map
+	 * @param volInfoNo
+	 */
+	public void volDetailInfo(HashMap<String, Object> map, int volInfoNo) throws CommonException{
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.selectVolInfo(conn, map, volInfoNo);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+	
+	/**
 	 * 문의하게 게시판 건수
 	 * @param cdto
 	 * @throws CommonException

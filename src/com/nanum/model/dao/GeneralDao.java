@@ -316,7 +316,7 @@ public class GeneralDao {
 				"where i.vol_info_no = d.vol_info_no \r\n" + 
 				"and d.vol_detail_no = a.vol_detail_no\r\n" + 
 				"and a.g_id = ? \r\n" + 
-				"order by 6, 7";
+				"order by 6 desc, 7";
 		System.out.println(sql);
 		HashMap<String, Object> map = null;
 		PreparedStatement pstmt = null;

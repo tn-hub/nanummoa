@@ -11,7 +11,7 @@
 		
 		<h2 class="main_title">모집중인 자원봉사</h2>
 		<div class="vol_wrapper">
-		<c:forEach var="vol" items="${volList}" varStatus="vs">
+		<c:forEach var="vol" items="${volList}" varStatus="vs" begin="0" end="11">
 			<c:if test="${vs.count % 4 == 1 }">
 			<div class="block_row">
 			</c:if>

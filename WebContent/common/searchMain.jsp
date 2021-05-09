@@ -32,7 +32,7 @@ a.bold { font-weight: bold; }
 
 
 .searchAllDVS_menu li{
-	background-color: yellow;
+	background-color: #EAEAEA;
 	padding: 10px 30px 10px 30px;
 	width: 260px;
 	display: inline-block;
@@ -67,6 +67,8 @@ a.bold { font-weight: bold; }
 	height: 40px;
 	padding: 5px;
 	font-size: 20px;
+	border: none;
+	border-radius: 5px;
 }
 
 .searchAllDVS_area{
