@@ -9,20 +9,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.sql.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 import com.nanum.dto.VolDetailDto;
 import com.nanum.dto.CenterInfoDto;
 import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.CenterVolDto;
 import com.nanum.dto.GeneralMemberDto;
-import com.nanum.dto.VolApplyListDto;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
 import com.nanum.util.MessageEntity;
-import com.sun.javafx.css.StyleCacheEntry.Key;
 
 /**
  * 센터회원 Dao 클래스
@@ -632,15 +628,13 @@ public class CenterDao {
 
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, String.valueOf(map.get("centerId")));
+			pstmt.setString(1, (String) (map.get("centerId")));
 			pstmt.setString(2, (String) map.get("volTitle"));
 			pstmt.setString(3, (String) map.get("volContents"));
-
 			pstmt.setString(4, (String) map.get("startTime"));
 			pstmt.setString(5, (String) map.get("endTime"));
 			pstmt.setString(6, (String) map.get("startDate"));
 			pstmt.setString(7, (String) map.get("endDate"));
-
 			pstmt.setString(8, (String) map.get("categoryNo"));
 			pstmt.setString(9, (String) map.get("localNo"));
 			pstmt.setString(10, (String) map.get("volType"));
@@ -980,9 +974,10 @@ public class CenterDao {
 	 * 봉사정보 삭제
 	 * @param conn
 	 * @param volInfoNo
+	 * @param centerId 
 	 */
-	public void deleteVolInfo(Connection conn, int volInfoNo) throws CommonException {
-		String sql = "delete from vol_info where vol_info_no = ?";
+	public void deleteVolInfo(Connection conn, int volInfoNo, String centerId) throws CommonException {
+		String sql = "delete from vol_info where vol_info_no = ? and c_id = ?";
 		System.out.println(sql);
 
 		PreparedStatement pstmt = null;
@@ -990,6 +985,7 @@ public class CenterDao {
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, volInfoNo);
+			pstmt.setString(2, centerId);
 			int rows = pstmt.executeUpdate();
 			System.out.println("rows : " + rows);
 			if (rows != 1) {
@@ -1033,6 +1029,115 @@ public class CenterDao {
 		}
 	}
 
+	/**
+	 * 봉사 정보 업데이트(info)
+	 * @param conn
+	 * @param volInfoNo
+	 * @param map
+	 * @throws CommonException
+	 */
+	public void updateVolInfo(Connection conn, int volInfoNo, HashMap<String, Object> map) throws CommonException {
+		String sql = "update vol_info set v_title = ?, v_content= ?, start_time=to_date(?,'HH24:MI'), end_time=to_date(?,'HH24:MI'), start_date=?, end_date=? " + 
+				", category_no=?, local_no=?, v_type=?, v_place=?, latitude=?, longitude=?, v_subject=? " + 
+				"where vol_info_no = ? and c_id = ?";
+		System.out.println(sql);
+
+		PreparedStatement pstmt = null;
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, (String)map.get("volTitle"));
+			pstmt.setString(2, (String)map.get("volContents"));
+			pstmt.setString(3, (String)map.get("startTime"));
+			pstmt.setString(4, (String)map.get("endTime"));
+			pstmt.setString(5, (String)map.get("startDate"));
+			pstmt.setString(6, (String)map.get("endDate"));
+			pstmt.setString(7, (String)map.get("categoryNo"));
+			pstmt.setString(8, (String)map.get("localNo"));
+			pstmt.setString(9, (String)map.get("volType"));
+			pstmt.setString(10, (String)map.get("volPlace"));
+			pstmt.setString(11, (String)map.get("latitude"));
+			pstmt.setString(12, (String)map.get("longitude"));
+			pstmt.setString(13, (String)map.get("volSubject"));;
+			pstmt.setInt(14, volInfoNo);
+			pstmt.setString(15,(String)map.get("centerId"));
+			int rows = pstmt.executeUpdate();
+			System.out.println("rows : " + rows);
+			if (rows != 1) {
+				throw new Exception();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(pstmt);
+		}
+		
+	}
+
+	/**
+	 * 새로변경된 기간 외 날짜별 봉사 정보 삭제(detail)
+	 * @param conn
+	 * @param volInfoNo
+	 * @param centerId
+	 * @param startVolDateStr
+	 * @param endVolDateStr
+	 * @throws CommonException
+	 */
+	public void deleteVolDetail(Connection conn, int volInfoNo, String startVolDateStr, String endVolDateStr) throws CommonException {
+		String sql = "delete from vol_detail where vol_info_no = ? and vol_date not between ? and ? ";
+		System.out.println(sql);
+
+		PreparedStatement pstmt = null;
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, volInfoNo);
+			pstmt.setString(2, startVolDateStr);
+			pstmt.setString(3, endVolDateStr);
+			int rows = pstmt.executeUpdate();
+			System.out.println("rows : " + rows);
+			if (rows < 0) {
+				throw new Exception();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(pstmt);
+		}
+	}
+
+	/**
+	 * 날짜 리스트조회
+	 * @param conn
+	 * @param dateList
+	 * @throws CommonException
+	 */
+	public void getVolDetailDate(Connection conn,int volInfoNo, ArrayList<String> dateList) throws CommonException {
+		String sql = "select vol_date from vol_detail where vol_info_no = ?";
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, volInfoNo);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				dateList.remove(rs.getString(1));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(pstmt);
+		}
+	}	
+	
 	/**
 	 * 인증서 폼
 	 * 
@@ -1081,6 +1186,7 @@ public class CenterDao {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * 봉사등록 마감
 	 * 
 	 * @param conn
@@ -1130,4 +1236,36 @@ public class CenterDao {
 		}
 	}
 
+	/**
+	 * 봉사상세정보 수정
+	 * @param conn
+	 * @param volInfoNo
+	 * @param centerId
+	 * @param totalCount
+	 * @throws CommonException
+	 */
+	public void updateVolDetail(Connection conn, int volInfoNo, int totalCount) throws CommonException {
+		String sql = "update vol_detail set total_count = ? where vol_info_no = ?";
+		System.out.println(sql);
+
+		PreparedStatement pstmt = null;
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, totalCount);
+			pstmt.setInt(2, volInfoNo);
+			int rows = pstmt.executeUpdate();
+			System.out.println("rows : " + rows);
+			if (rows < 1) {
+				throw new Exception();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(pstmt);
+		}
+	}
+	
 }

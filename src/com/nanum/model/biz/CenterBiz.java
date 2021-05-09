@@ -114,8 +114,8 @@ public class CenterBiz {
 	 * @param list
 	 * @throws CommonException
 	 */
-	public void applicantInfo(String centerId, int volInfoNo, GeneralMemberDto general, ArrayList<HashMap<String, Object>> list)
-			throws CommonException {
+	public void applicantInfo(String centerId, int volInfoNo, GeneralMemberDto general,
+			ArrayList<HashMap<String, Object>> list) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
 
 		try {
@@ -397,13 +397,14 @@ public class CenterBiz {
 	 * 봉사게시글 삭제(info, 연관 detail)
 	 * 
 	 * @param volInfoNo
+	 * @param centerId
 	 */
-	public void deleteVol(int volInfoNo) throws CommonException {
+	public void deleteVol(int volInfoNo, String centerId) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
 
 		try {
 			dao.deleteVolDetail(conn, volInfoNo);
-			dao.deleteVolInfo(conn, volInfoNo);
+			dao.deleteVolInfo(conn, volInfoNo, centerId);
 			JdbcTemplate.commit(conn);
 		} catch (CommonException e) {
 			JdbcTemplate.rollback(conn);
@@ -418,7 +419,7 @@ public class CenterBiz {
 	 * 활동상태 변경(활동완료)
 	 * 
 	 * @param map
-	 * @throws CommonException 
+	 * @throws CommonException
 	 */
 	public void checkVolStatus(String checkDates) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
@@ -434,17 +435,18 @@ public class CenterBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
-	
+
 	/**
-	 * 인증서 폼 
+	 * 인증서 폼
+	 * 
 	 * @param map
-	 * @throws CommonException 
+	 * @throws CommonException
 	 */
 	public void volIssueForm(HashMap<String, Object> map) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
 
 		try {
-			dao.volIssueForm(conn,map);
+			dao.volIssueForm(conn, map);
 		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;
@@ -454,20 +456,172 @@ public class CenterBiz {
 	}
 
 	/**
-	 * 봉사등록 마감,종료
+	 * <<<<<<< HEAD 봉사등록 마감,종료
 	 * 
 	 * @param map
-	 * @throws CommonException 
+	 * @throws CommonException
 	 */
 	public void endVol(HashMap<String, Object> map) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
 
 		try {
 			if (map.get("recStatus").equals("0")) {
-				dao.endVol(conn, map);	
-			}else if (map.get("recStatus").equals("1")) {
+				dao.endVol(conn, map);
+			} else if (map.get("recStatus").equals("1")) {
 				dao.finishVol(conn, map);
 			}
+			JdbcTemplate.commit(conn);
+		} catch (CommonException e) {
+			JdbcTemplate.rollback(conn);
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+
+	/**
+	 * 봉사 정보 업데이트(info)
+	 * 
+	 * @param volInfoNo
+	 * @param map
+	 * @throws CommonException
+	 */
+	public void updateVolInfo(int volInfoNo, HashMap<String, Object> map) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+
+		try {
+			dao.updateVolInfo(conn, volInfoNo, map);
+			JdbcTemplate.commit(conn);
+		} catch (CommonException e) {
+			JdbcTemplate.rollback(conn);
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+
+	/**
+	 * 새로변경된 기간 외 날짜별 봉사 정보 삭제(detail)
+	 * 
+	 * @param volInfoNo
+	 * @param startVolDateStr
+	 * @param endVolDateStr
+	 * @param endVolDateStr2
+	 * @throws CommonException
+	 */
+	public void deleteVolDetail(int volInfoNo, String startVolDateStr, String endVolDateStr) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+
+		try {
+			dao.deleteVolDetail(conn, volInfoNo, startVolDateStr, endVolDateStr);
+			JdbcTemplate.commit(conn);
+		} catch (CommonException e) {
+			JdbcTemplate.rollback(conn);
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+
+	/**
+	 * 봉사진행일 기간 리스트 조회
+	 * 
+	 * @param volInfoNo
+	 * @param dateList
+	 * @throws CommonException
+	 */
+	public void getVolDetailDate(int volInfoNo, ArrayList<String> dateList) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+
+		try {
+			dao.getVolDetailDate(conn, volInfoNo, dateList);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+
+	/**
+	 * 봉사상세정보 수정
+	 * 
+	 * @param volInfoNo
+	 * @param centerId
+	 * @param totalCount
+	 * @throws CommonException
+	 */
+	public void updateVolDetail(int volInfoNo, int totalCount) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+
+		try {
+			dao.updateVolDetail(conn, volInfoNo, totalCount);
+			JdbcTemplate.commit(conn);
+		} catch (CommonException e) {
+			JdbcTemplate.rollback(conn);
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+
+	/**
+	 * 봉사글수정 전체과정
+	 * 
+	 * @param volInfoNo
+	 * @param startVolDateStr
+	 * @param endVolDateStr
+	 * @param dateList
+	 * @param totalCount
+	 * @param map
+	 */
+	public void updateVol(int volInfoNo, String startVolDateStr, String endVolDateStr, ArrayList<String> dateList,
+			int totalCount, HashMap<String, Object> map) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+
+		try {
+			dao.deleteVolDetail(conn, volInfoNo, startVolDateStr, endVolDateStr);
+			dao.getVolDetailDate(conn, volInfoNo, dateList);
+			for (String volDate : dateList) {
+				dao.addVolDetail(conn, volInfoNo, endVolDateStr, totalCount);
+			}
+			dao.updateVolDetail(conn, volInfoNo, totalCount);
+
+			dao.updateVolInfo(conn, volInfoNo, map);
+			JdbcTemplate.commit(conn);
+		} catch (CommonException e) {
+			JdbcTemplate.rollback(conn);
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+
+	}
+
+	/**
+	 * 봉사글 등록
+	 * @param map
+	 * @param dateList 
+	 */
+	public void addVol(HashMap<String, Object> map, ArrayList<String> dateList) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		
+		try {
+			dao.addVolInfo(conn, map);
+			int volInfoNo = getVolInfoNoCurrentSeq();
+			map.put("volInfoNo", volInfoNo);
+			
+			volInfoNo = (int) map.get("volInfoNo") - 1;
+			System.out.println("[detail 등록] volInfoNo : " + volInfoNo);
+			for (String volDate : dateList) {
+				dao.addVolDetail(conn, volInfoNo, volDate, (int) map.get("totalCount"));
+			}
+			
 			JdbcTemplate.commit(conn);
 		} catch (CommonException e) {
 			JdbcTemplate.rollback(conn);

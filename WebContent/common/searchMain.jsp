@@ -71,11 +71,6 @@ a.bold { font-weight: bold; }
 	border-radius: 5px;
 }
 
-.searchAllDVS_area{
-	border: 1px solid gray;
-}
-
-
 .searchAllListUl{
 width: 1000px;
 	list-style:none;
@@ -92,6 +87,11 @@ width: 1000px;
 	border-top: 2px solid black;
 	border-bottom: 2px solid black;	
 	padding: 20px;
+}
+
+#page_btn{
+	text-align: center; 
+	margin: 20px 0px 20px 0px;
 }
 
 </style>
@@ -115,8 +115,35 @@ $(document).ready(function() {
 		$("#searchAll_opt").val('Q');	
 		document.searchAllForm.submit();
 	});
+	
+	// 이전페이지
+	$("#preBtn").click(function() {
+		var curPageNum = ${curPageNum};
+		if (curPageNum> 1){
+			$("#pageNum").val(curPageNum -1);
+			document.searchAllForm.submit();
+		}
+	});
+	
+	// 다음페이지
+	$("#nestBtn").click(function() {
+		var curPageNum = ${curPageNum};
+		var lastPageNum = ${lastPageNum};
+		
+		if (curPageNum < lastPageNum){
+			$("#pageNum").val(curPageNum +1);
+			document.searchAllForm.submit();
+		}
+	});
+	
 });
 
+//페이징 submit
+function main_btnPageNum(ret){
+	$("#pageNum").val(ret);
+	document.searchAllForm.submit();
+	
+}
 
 </script>
 <body>
@@ -141,16 +168,21 @@ $(document).ready(function() {
 	<li id="tab_searchQna">문의</li>
 </ul>
 </div>
+<input type="hidden" value="1" id="pageNum" name="pageNum">
 </form>
-
-<form>
+[전체 <em> ${totCnt}</em> 건, 현재 페이지 <em>${curPageNum}</em> /${lastPageNum}]
 <div class="search_all_list">
 <ul class="searchAllListUl">
 <c:forEach var="dto" items="${saList}">
 <li>
 	<div class="searchList_box">
 			<b><span class="sListSpan">${dto.dvisionName}</span></b>
-			<span class="sListSpan">${dto.title}</span>
+			<c:if test="${dto.divisionSub eq 'qna'}">
+				<a href="${CONTEXT_PATH}/common/commonController?action=qnaDtl&qnaNo=${dto.infoNo}">${dto.title}</a>
+			</c:if>
+			<c:if test="${dto.divisionSub eq 'vol'}">
+  			  <a href="${CONTEXT_PATH}/common/commonController?action=volDetatilForm&volInfoNo=${dto.infoNo}">${dto.title}</a>
+			</c:if>
 			<span class="sListSpan_r">작성자 : ${dto.writer}</span>
 			<br><br>${dto.contents}			
 	</div>
@@ -158,13 +190,12 @@ $(document).ready(function() {
 </c:forEach>	
 </ul>
 </div>
-</form>
-
-
-<div id=page_btn>
-	<input type="button" value="이전 < ">
-	<input type="button" value="1">
-	<input type="button" value="다음 > ">
+<div id="page_btn">
+	<input type="button" value="이전 " id="preBtn" name="preBtn">
+	 <c:forEach var="i" begin="${ 1 }" end="${lastPageNum}">
+           <input type="button" value=${ i } id="btnPageNum" name="btnPageNum" onclick="main_btnPageNum(${ i })">
+     </c:forEach>   
+	<input type="button" value="다음 " id="nestBtn" name="nestBtn">	
 </div>
 <hr>
 <div id="footer" class="footer">
