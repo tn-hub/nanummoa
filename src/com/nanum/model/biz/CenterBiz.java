@@ -433,5 +433,23 @@ public class CenterBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
+	
+	/**
+	 * 인증서 폼 
+	 * @param map
+	 * @throws CommonException 
+	 */
+	public void volIssueForm(HashMap<String, Object> map) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+
+		try {
+			dao.issueList(conn,map);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
 
 }

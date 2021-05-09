@@ -1008,5 +1008,55 @@ public class CenterDao {
 			JdbcTemplate.close(pstmt);
 		}
 	}
+
+	/**
+	 * 인증서 폼
+	 * 
+	 * @param conn
+	 * @param map
+	 * @throws CommonException 
+	 */
+	public void issueList(Connection conn, HashMap<String, Object> map) throws CommonException {
+		String sql = "select vc.vol_con_no,gm.g_name,gm.g_address,min(vd.vol_date) as 활동시작일,max(vd.vol_date) as 활동종료일,vi.start_time,vi.end_time,vc.vol_date,ci.c_name\n" + 
+				"from vol_confirmation vc,vol_apply_list va, vol_detail vd, vol_info vi,center_member cm,center_info ci, general_member gm\n" + 
+				"where vc.g_id = gm.g_id and vc.c_id = cm.c_id and vc.vol_info_no = vi.vol_info_no and va.g_id = gm.g_id and va.vol_detail_no = vd.vol_detail_no and vd.vol_info_no = vi.vol_info_no and vi.c_id = cm.c_id and cm.c_id = ci.c_id\n" + 
+				"and cm.c_id = ? and va.vol_status = '2' and vd.rec_status = '2' and vi.vol_info_no = ? and\n" + 
+				"vd.vol_detail_no in ( select vol_detail_no from vol_apply_list where g_id = ?)\n" + 
+				"group by vc.vol_con_no,gm.g_name,gm.g_address,vi.start_time,vi.end_time,vc.vol_date,ci.c_name";
+
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, (String) map.get("centerId"));
+			pstmt.setString(2, (String) map.get("volInfoNo"));
+			pstmt.setString(3, (String) map.get("generalId"));
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				
+				map.put("volConNo",rs.getString("vol_con_no"));
+				map.put("generalName",rs.getString("g_name"));
+				map.put("generalAddress",rs.getString("g_address"));
+				map.put("startDate",rs.getDate("활동시작일"));
+				map.put("endDate",rs.getDate("활동종료일"));
+				map.put("startTime",rs.getDate("start_time"));
+				map.put("endTime",rs.getDate("end_time"));
+				map.put("centerId",rs.getString("c_id"));
+				map.put("volDate",rs.getDate("vol_date"));
+				map.put("centerName",rs.getString("c_name"));
+				
+				System.out.println(map);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(pstmt);
+		}
+	}
 	
 }

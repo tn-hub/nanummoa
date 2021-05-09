@@ -1141,6 +1141,7 @@ public class CenterController extends HttpServlet {
 	}
 
 	/**
+	 * 인증서 폼 
 	 * 
 	 * @param request
 	 * @param response
@@ -1149,7 +1150,28 @@ public class CenterController extends HttpServlet {
 	 */
 	protected void volIssueForm(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		request.getRequestDispatcher("/confirmation.jsp").forward(request,response);
+		HttpSession session = request.getSession();
+		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
+		String centerId = dto.getCenterId();
+		String volInfoNo = request.getParameter("volInfoNo");
+		String generalId = request.getParameter("generalId");
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("centerId", centerId);
+		map.put("volInfoNo", volInfoNo);
+		map.put("generalId", generalId);
+		
+		CenterBiz biz = new CenterBiz();
+		try {
+			biz.volIssueForm(map);
+			request.setAttribute("volInfoNo", volInfoNo);
+			request.setAttribute("map", map);
+			request.getRequestDispatcher("/center/issue/issueForm.jsp").forward(request,response);
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
+		
+		
 	}
 
 	/**
