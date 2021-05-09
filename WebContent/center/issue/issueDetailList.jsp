@@ -258,7 +258,7 @@ document.onkeydown = noEvent;
 				<input type="button" value="상세정보" class="g_btn detatil_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=issueInfoForm&volInfoNo=${dto.volInfoNo}&generalId=${dto.generalId }'">
 					<c:if test="${dto.activityStatus == 2 and dto.recStatus == 2}">
 				<input type="button" value="인증서 발급" class="y_btn detatil_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=volIssue&volInfoNo=${dto.volInfoNo}&generalId=${dto.generalId }'">
-				<input type="button" value="인증서 발급폼" class="y_btn detatil_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=volIssueForm'">
+				<input type="button" value="인증서 발급폼" class="y_btn detatil_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=volIssueForm&volInfoNo=${dto.volInfoNo}&generalId=${dto.generalId }'">
 					</c:if> 	
 			</div>
 			

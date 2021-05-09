@@ -87,31 +87,37 @@
 </script>
 </head>
 <body>
-<h3>pdf 변환 테스트페이지</h3>
+<form action="${CONTEXT_PATH }/center/centerController?action=volIssue" method="post" >
+<input type="submit" class="y_btn detatil_btn" value="발급하기">
+
+<input type="hidden" id="volInfoNo" name="volInfoNo" value="${map.volInfoNo}">
+<input type="hidden" id="generalId" name="generalId" value="${map.generalId }">
+
 <div id="pdf_wrap">
-		<span class="left_wrap">발급번호 : ${volConNo }</span>
+		<span class="left_wrap">발급번호 : ${map.volConNo }</span>
 		<span class="right_wrap">나눔모아</span>
 		<h1 class="title_h">자원봉사활동 확인서</h1>
 		<div class="memberInfo">
 			<h3>성명 :</h3>
-			<span>고태민</span>
+			<span>${map.generalName }</span>
 			<hr>
 			<h3>주소 :</h3>
-			<span>인천광역시 부평구</span>
+			<span>${map.generalAddress }</span>
 			<hr>
 		</div>
-		
 
 		<ul class="vol_info_ul">
-			<li>자원봉사 활동기간 : 2021-04-28</li>
-			<li>자원봉사 활동시간 : 09:00 - 16:00</li>
-			<li>봉사활동 내용 : 연탄 나눔 봉사</li>
+			<li>자원봉사 활동기간 : ${map.startDate } ~ ${map.endDate } (${map.playDate }일)</li>
+			<li>자원봉사 활동시간 : ${map.startTime } - ${map.endTime }</li>
+			
+			<li>봉사활동 내용 : <input type="text" id="contents" name="contents" placeholder="간략 봉사내용" size="50"> </li>
 		</ul>
 
 		<h2>위와 같이 자원봉사 활동에 참여하였음을 확인함</h2>
-		<p class="write_date">2021-04-30</p>
+		<p class="write_date">발행일 : ${map.volDate }</p>
 
-		<h1>사단법인 서울유스랩</h1>
+		<h1>${map.centerName }</h1>
 </div>
+</form>
 </body>
 </html>

@@ -1123,11 +1123,16 @@ public class CenterController extends HttpServlet {
 		String centerId = dto.getCenterId();
 		String volInfoNo = request.getParameter("volInfoNo");
 		String generalId = request.getParameter("generalId");
+		String contents = request.getParameter("contents");
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
+		System.out.println(volInfoNo);
+		System.out.println(generalId);
+		
 		map.put("centerId", centerId);
 		map.put("volInfoNo", volInfoNo);
 		map.put("generalId", generalId);
+		map.put("contents", contents);
 
 		CenterBiz biz = new CenterBiz();
 		try {
@@ -1170,8 +1175,6 @@ public class CenterController extends HttpServlet {
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
-		
-		
 	}
 
 	/**

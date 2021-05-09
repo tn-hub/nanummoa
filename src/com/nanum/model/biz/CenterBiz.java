@@ -443,7 +443,7 @@ public class CenterBiz {
 		Connection conn = JdbcTemplate.getConnection();
 
 		try {
-			dao.issueList(conn,map);
+			dao.volIssueForm(conn,map);
 		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;
