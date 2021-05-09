@@ -291,7 +291,7 @@
 				<input type="button" value="우편번호 찾기" onclick="postcode();">
 				<span id="addressMessage" class="error_message"></span>
 				
-				<input type="text" id="address" name="address" placeholder="기본주소" size="40" readonly="readonly">
+				<input type="text" id="address" name="address" placeholder="기본주소" size="40" readonly="readonly" required="required">
 				<input type="text" id="detailAddress" name="detailAddress" placeholder="상세주소" size="40">
 				<input type="hidden" id="local" name="local">
 				<input type="hidden" id="latitude" name="latitude">
@@ -309,7 +309,7 @@
 	</div>
 	<div id="center_info">
 	<h3>◎ 담당자 정보</h3>
-	<input type="button" value="내정보수정" class="float_r y_btn minus_mg_t" onclick="location.href=''">
+	<input type="button" value="내정보수정" class="float_r y_btn minus_mg_t" onclick="location.href='${CONTEXT_PATH}/center/centerController?action=centerMyInfoForm'">
 	<hr class="clear_b">
 	<ul class="vol_list_ul">
 		<li>
