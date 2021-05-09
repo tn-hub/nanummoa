@@ -217,26 +217,6 @@ $(document).ready(function() {
 </div>
 
 
-<div id=page_btn>
-	<input type="button" value="이전 < ">
-	<input type="button" value="1">
-	<input type="button" value="다음 > ">
-</div>
-<div class="pager">
-    <ul>
-        <c:forEach var="i" begin="${ 1 }" end="${ 10 }">
-            <c:choose>
-                <c:when test="${ i > 0 }">
-                    <li>${ i }</li>
-                </c:when>
-                <c:when test="${ i == 3 }">
-                    <li class="selected">${ i }</li>
-                </c:when>               
-            </c:choose>
-        </c:forEach>        
-      
-    </ul>
-</div>  
 <hr>
 
 <div id="footer" class="footer">
