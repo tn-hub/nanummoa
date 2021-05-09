@@ -56,6 +56,12 @@ public class AdminController extends HttpServlet {
 		case "getReply" :
 			getReply(request, response);
 			break;
+		case "deleteReply" :
+			deleteReply(request, response);
+			break;
+		case "updateReply" :
+			updateReply(request, response);
+			break;
 		}
 	}
 	
@@ -163,6 +169,7 @@ public class AdminController extends HttpServlet {
 				JSONArray jsonArr = new JSONArray();
 				for(QnAReplyDto qDto : list) {
 					JSONObject obj = new JSONObject();
+					obj.put("replyNo", qDto.getReplyNo());
 					obj.put("adminId", qDto.getAdminId());
 					obj.put("replyContents", qDto.getReplyContents());
 					obj.put("replyWriteDate", qDto.getReplyWriteDate());
@@ -180,4 +187,52 @@ public class AdminController extends HttpServlet {
 		
 	}
 	
+	/**
+	 * 댓글 삭제
+	 */
+	private void deleteReply(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		response.setContentType("text/html; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		
+		int rNo = Integer.parseInt(request.getParameter("rNo"));
+		String content = request.getParameter("content");
+		
+		
+		AdminBiz aBiz = new AdminBiz();
+		try {
+			aBiz.deleteReply(rNo);
+			out.print("success");
+		}catch (Exception e) {
+			e.printStackTrace();
+			out.print("fail");
+		} finally {
+			out.flush();
+			out.close();
+		}
+		
+	}
+	
+	/**
+	 * 댓글 수정
+	 */
+	private void updateReply(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		response.setContentType("text/html; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		
+		int rNo = Integer.parseInt(request.getParameter("rNo"));
+		String content = request.getParameter("content");
+		
+		AdminBiz aBiz = new AdminBiz();
+		try {
+			aBiz.updateReply(rNo, content);
+			out.print("success");
+		}catch (Exception e) {
+			e.printStackTrace();
+			out.print("fail");
+		} finally {
+			out.flush();
+			out.close();
+		}
+		
+	}
 }

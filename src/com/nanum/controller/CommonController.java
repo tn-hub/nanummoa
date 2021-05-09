@@ -89,8 +89,8 @@ public class CommonController extends HttpServlet {
 		case "qnaDtl":
 			qnaDtl(request, response);
 			break;
-		case "qnaUpt":
-			qnaUpt(request, response);
+		case "qnaUptForm":
+			qnaUptForm(request, response);
 			break;
 		case "qnaDel":
 			qnaDel(request, response);
@@ -127,7 +127,10 @@ public class CommonController extends HttpServlet {
 			break;		
 		case "searchAllForm":
 			searchAllForm(request, response);
-			break;		
+			break;
+		case "qnaUpt":
+			qnaUpt(request, response);
+			break;
 		}
 	}
 
@@ -849,22 +852,40 @@ public class CommonController extends HttpServlet {
 	}
 
 	/**
-	 * QNA 수정
+	 * QNA 수정폼 이동
 	 */
-	private void qnaUpt(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String qnaTitle = request.getParameter("qnaTitle");
-		String qnaContents = request.getParameter("qnaContents");
+	private void qnaUptForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String qnaNo = request.getParameter("qnaNo");
 
 		QnADto dto = new QnADto();
 		dto.setQnaNo(Integer.parseInt(qnaNo));
-		dto.setQnaContents(qnaContents);
+		System.out.println("문의하기 수정 : " + qnaNo);
+		try {
+			CommonBiz biz = new CommonBiz();
+			biz.qnaDetail(dto, qnaNo);
+			request.setAttribute("dto", dto);
+			request.getRequestDispatcher("/qna/qnaUpdate.jsp").forward(request, response);
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * QNA 수정
+	 */
+	private void qnaUpt(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int qnaNo = Integer.parseInt(request.getParameter("qnaNo"));
+		String qnaTitle = request.getParameter("qnaTitle");
+		String qnaContents = request.getParameter("qnaContents");
+		
+		QnADto dto = new QnADto();
+		dto.setQnaNo(qnaNo);
 		dto.setQnaTitle(qnaTitle);
-
+		dto.setQnaContents(qnaContents);
 		try {
 			CommonBiz biz = new CommonBiz();
 			biz.qnaUpdate(dto);
-			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=qnaList");
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=qnaDtl&qnaNo=" + qnaNo);
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
@@ -927,7 +948,12 @@ public class CommonController extends HttpServlet {
 		ArrayList<VolCategoryDto> volCategoryList = new ArrayList<VolCategoryDto>();
 		ArrayList<ServiceCategoryDto> serviceList = new ArrayList<ServiceCategoryDto>();
 		HashMap<String, String> searchMap = new HashMap<String, String>();
-
+		
+		String pageNum = request.getParameter("pageNum");
+		if (pageNum == null || pageNum == "") {
+			pageNum = "1";
+		}
+		
 		String local = request.getParameter("local");
 		String category = request.getParameter("category");
 		String service = request.getParameter("service");
@@ -1002,7 +1028,10 @@ public class CommonController extends HttpServlet {
 			String sql = biz.searchVolList(list, searchMap);
 			int total = biz.volListTotalCount(searchMap, sql);
 			System.out.println("total : " + total);
-
+			
+			int pageCount = 5; // 원하는 row 수 
+			int curPage = Integer.parseInt(pageNum) * pageCount;		// 현재 rownum 계산 
+			
 			request.setAttribute("date", date);
 			request.setAttribute("localList", localList);
 			request.setAttribute("volCategoryList", volCategoryList);

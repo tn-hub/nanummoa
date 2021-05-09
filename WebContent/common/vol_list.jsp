@@ -192,6 +192,33 @@ $(document).ready(function(){
 		$("#searchForm").submit();
 	});
 	
+	// 이전페이지
+  	$("#preBtn").click(function() {
+  		var curPageNum = ${curPageNum};
+  		if (curPageNum> 1){
+  			$("#pageNum").val(curPageNum -1);
+  			$("#searchForm").submit();
+  		}
+  	});
+  	
+  	// 다음페이지
+  	$("#nestBtn").click(function() {
+  		var curPageNum = ${curPageNum};
+  		var lastPageNum = ${lastPageNum};
+  		
+  		if (curPageNum < lastPageNum){
+  			$("#pageNum").val(curPageNum +1);
+  			$("#searchForm").submit();
+  		}
+  	});
+  	
+  //페이징 submit
+    function main_btnPageNum(ret){
+    	$("#pageNum").val(ret);
+    	$("#searchForm").submit();
+    	
+    }   
+	
 });
 </script>
 </head>
@@ -204,6 +231,7 @@ $(document).ready(function(){
 	<!-- 검색창 -------------------------------------------------------------------------------------------->
 	<div id="vol_search">
 		<form action="${CONTEXT_PATH}/common/commonController?action=volListForm" method="post" id="searchForm">
+		<input type="hidden" value="1" id="pageNum" name="pageNum">
 			<table id="vol_search_table">
 				<tr>
 					<th class="search_table_large_th">봉사지역</th>
@@ -371,6 +399,16 @@ $(document).ready(function(){
 		</c:forEach>
 	</ul>
 	<!-- 봉사모집글 목록 -->
+	
+	<!-- 페이징--------------------------------------------------------------------->
+	<div id="page_btn">
+  	<input type="button" value="이전 " id="preBtn" name="preBtn">
+  	 <c:forEach var="i" begin="${ 1 }" end="${lastPageNum}">
+             <input type="button" value=${ i } id="btnPageNum" name="btnPageNum" onclick="main_btnPageNum(${ i })">
+       </c:forEach>   
+  	<input type="button" value="다음 " id="nestBtn" name="nestBtn">	
+  </div> 
+	<!-- 페이징 -->
 </div>
 <%@ include file="/common/footer.jsp"%>
 </body>

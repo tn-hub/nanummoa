@@ -17,6 +17,7 @@ import com.nanum.dto.LocalDto;
 import com.nanum.dto.VolBlockDto;
 import com.nanum.dto.VolCategoryDto;
 import com.nanum.dto.VolInfoDto;
+import com.nanum.model.dao.AdminDao;
 import com.nanum.model.dao.CommonDao;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
@@ -338,8 +339,9 @@ public class CommonBiz {
 	 */
 	public void qnaDelete(String qnaNo) throws CommonException{
 		Connection conn = JdbcTemplate.getConnection();// 비즈에서 커넥션 생성해서 dao전달
-		
+		AdminDao aDao = AdminDao.getInstance();
 		try {
+			aDao.deleteAllReply(conn, Integer.parseInt(qnaNo));
 			dao.qnaDelete(conn, qnaNo);
 			JdbcTemplate.commit(conn); // commit;
 		} catch (CommonException e) {
