@@ -19,6 +19,7 @@ import com.nanum.dto.AdminMemberDto;
 import com.nanum.dto.CenterInfoDto;
 import com.nanum.dto.QnAReplyDto;
 import com.nanum.model.biz.AdminBiz;
+import com.nanum.util.Paging;
 import com.nanum.model.biz.CommonBiz;
 
 /**
@@ -72,14 +73,38 @@ public class AdminController extends HttpServlet {
 		AdminBiz biz = new AdminBiz();
 		CenterInfoDto cDto = new CenterInfoDto(); 
 		ArrayList<CenterInfoDto> centerActList = new ArrayList<CenterInfoDto>();
+		String pageNum = request.getParameter("pageNum"); 
+
+		if (pageNum == null || pageNum == "") {
+			pageNum = "1";
+		}
 		
 		try {
-			
+			// 총건수 
 			biz.getCenterAcceptListToCnt(cDto);
 			request.setAttribute("cDto", cDto);
 			
-			biz.getCenterAcceptList(centerActList);
+			int pageCount = 2;  
+			int curPage = Integer.parseInt(pageNum) * pageCount; 
+			
+			// 현재 페이지가 속한 block의 시작 번호, 끝 번호를 계산
+			Paging.makeBlock(curPage, pageCount);   // 현재페이지 번호, 원하는row 건수 
+			
+			// 하단 페이징 번호 max 조회 
+			Paging.makeLastPageNum(cDto.getTotAcceptCnt(), pageCount) ; // 총건수, 원하는row 건수
+			
+			// 값가져오기 
+			Integer sartNum = Paging.getBlockStartNum();
+			Integer lastNum = Paging.getBlockLastNum();
+			Integer lastPageNum = Paging.getLastPageNum();
+			
+			
+			biz.getCenterAcceptList(centerActList, sartNum, lastNum);
 			request.setAttribute("centerActList", centerActList);
+			
+			// jsp 에 총건수 및 건수 보여주기 위해 셋팅 
+			request.setAttribute("lastPageNum", lastPageNum);
+			request.setAttribute("curPageNum", pageNum);
 			
 			request.getRequestDispatcher("/admin/centerInputAccept.jsp").forward(request, response);
 		}catch (Exception e) {

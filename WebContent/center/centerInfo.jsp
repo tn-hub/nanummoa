@@ -178,6 +178,12 @@ text-align: center;
     margin: 0 auto;
     text-align: center;
 	}
+	em{
+	color: red;
+	}
+	.g_btn{
+	    margin-left: 10px;
+	}
 </style>
 </head>
 <body>
@@ -216,9 +222,16 @@ text-align: center;
 					</c:choose>
 					<span>${dto.categoryName}</span>
 				</div>
-				<input type="button" value="신청 내역" class="float_r g_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=applyList&volInfoNo=${dto.volInfoNo}'">
+					<input type="button" value="신청 내역" class="float_r g_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=applyList&volInfoNo=${dto.volInfoNo}'">
+				<c:choose>
+					<c:when test="${dto.recStatus == '0' }">
+						<input type="button" value="등록 마감 " class="float_r g_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=endVol&volInfoNo=${dto.volInfoNo}&recStatus=${dto.recStatus}'">
+					</c:when>
+					<c:when test="${dto.recStatus == '1' }">
+						<input type="button" value="활동 종료 " class="float_r g_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=endVol&volInfoNo=${dto.volInfoNo}&recStatus=${dto.recStatus}'">
+					</c:when>
+				</c:choose>
 				<h3><a href="${CONTEXT_PATH}/common/commonController?action=volDetatilForm&volInfoNo=${dto.volInfoNo}">${dto.volTitle }</a></h3>
-				
 				<div class="span_box clear_b ">
 					<span class="title_span">[모집기관]</span>
 					<span>${dto.centerName }</span>
@@ -236,20 +249,21 @@ text-align: center;
 					<span>${dto.volEnd }</span>
 				</div>
 			</div>
-			
+											
 			<div class="deadline_box">
 			<c:choose>	
 				<c:when test="${dto.deadline > 0}">
 					<p>마감 <em>${dto.deadline }</em> 일전</p>
 				</c:when>
 				<c:when test="${dto.deadline == 0}">
-					<p>오늘 마감</p>
+					<em>오늘 마감</em>
 				</c:when>
 				<c:otherwise>
 					<p>마감 종료</p>
 				</c:otherwise>
 			</c:choose>
 			</div>
+			
 			<hr class="list_hr">
 		</li>
 	</ul>
