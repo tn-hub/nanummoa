@@ -14,13 +14,21 @@ $(function () {
 	        type: 'bar'
 	    },
 	    title: {
-	        text: '지역별 자원봉사 현황'
-	    },
-	    subtitle: {
-	        text: 'Source: <a href="https://en.wikipedia.org/wiki/World_population">Wikipedia.org</a>'
+	        text: '분야별 자원봉사 모집 현황'
 	    },
 	    xAxis: {
-	        categories: ['Africa', 'America', 'Asia', 'Europe', 'Oceania'],
+	        categories: [
+	        	<c:forEach var="category" items="${categoryStatistics}" varStatus="status">
+    			<c:choose>
+    				<c:when test="${status.last}">
+ 	                 '${category.categoryName}'
+    				</c:when>
+    				<c:otherwise>
+    				'${category.categoryName}',
+    				</c:otherwise>
+    			</c:choose>
+    	</c:forEach>
+	        	],
 	        title: {
 	            text: null
 	        }
@@ -28,15 +36,12 @@ $(function () {
 	    yAxis: {
 	        min: 0,
 	        title: {
-	            text: 'Population (millions)',
+	            text: '모집 수',
 	            align: 'high'
 	        },
 	        labels: {
 	            overflow: 'justify'
 	        }
-	    },
-	    tooltip: {
-	        valueSuffix: ' millions'
 	    },
 	    plotOptions: {
 	        bar: {
@@ -61,17 +66,20 @@ $(function () {
 	        enabled: false
 	    },
 	    series: [{
-	        name: 'Year 1800',
-	        data: [107, 31, 635, 203, 2]
-	    }, {
-	        name: 'Year 1900',
-	        data: [133, 156, 947, 408, 6]
-	    }, {
-	        name: 'Year 2000',
-	        data: [814, 841, 3714, 727, 31]
-	    }, {
-	        name: 'Year 2016',
-	        data: [1216, 1001, 4436, 738, 40]
+	        name: '모집 수',
+	        data: [
+	        	<c:forEach var="category" items="${categoryStatistics}" varStatus="status">
+    			<c:choose>
+    				<c:when test="${status.last}">
+ 	                 ${category.count}
+    				</c:when>
+    				<c:otherwise>
+    				${category.count},
+    				</c:otherwise>
+    			</c:choose>
+    	</c:forEach>
+	        	
+	        	]
 	    }]
 	});
 	
@@ -80,10 +88,7 @@ $(function () {
 	        type: 'column'
 	    },
 	    title: {
-	        text: '분야별 자원봉사 모집 현황'
-	    },
-	    subtitle: {
-	        text: 'Click the columns to view versions. Source: <a href="http://statcounter.com" target="_blank">statcounter.com</a>'
+	        text: '지역별 자원봉사 현황'
 	    },
 	    accessibility: {
 	        announceNewData: {
@@ -95,7 +100,7 @@ $(function () {
 	    },
 	    yAxis: {
 	        title: {
-	            text: 'Total percent market share'
+	            text: '신청자 수 '
 	        }
 
 	    },
@@ -107,314 +112,102 @@ $(function () {
 	            borderWidth: 0,
 	            dataLabels: {
 	                enabled: true,
-	                format: '{point.y:.1f}%'
+	                format: '{point.y}명'
 	            }
 	        }
 	    },
 
 	    tooltip: {
 	        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-	        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+	        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}명</b><br/>'
 	    },
 
 	    series: [
 	        {
-	            name: "Browsers",
+	            name: "신청자 수",
 	            colorByPoint: true,
 	            data: [
-	                {
-	                    name: "Chrome",
-	                    y: 62.74,
-	                    drilldown: "Chrome"
-	                },
-	                {
-	                    name: "Firefox",
-	                    y: 10.57,
-	                    drilldown: "Firefox"
-	                },
-	                {
-	                    name: "Internet Explorer",
-	                    y: 7.23,
-	                    drilldown: "Internet Explorer"
-	                },
-	                {
-	                    name: "Safari",
-	                    y: 5.58,
-	                    drilldown: "Safari"
-	                },
-	                {
-	                    name: "Edge",
-	                    y: 4.02,
-	                    drilldown: "Edge"
-	                },
-	                {
-	                    name: "Opera",
-	                    y: 1.92,
-	                    drilldown: "Opera"
-	                },
-	                {
-	                    name: "Other",
-	                    y: 7.62,
-	                    drilldown: null
-	                }
+	            	<c:forEach var="local" items="${localStatistics}" varStatus="status">
+            			<c:choose>
+            				<c:when test="${status.last}">
+            				{
+         	                    name: "${local.localName}",
+         	                    y: ${local.count}
+         	                }
+            				</c:when>
+            				<c:otherwise>
+            				{
+         	                    name: "${local.localName}",
+         	                    y: ${local.count}
+         	                },
+            				</c:otherwise>
+            			</c:choose>
+            	</c:forEach>
 	            ]
 	        }
-	    ],
-	    drilldown: {
-	        series: [
-	            {
-	                name: "Chrome",
-	                id: "Chrome",
-	                data: [
-	                    [
-	                        "v65.0",
-	                        0.1
-	                    ],
-	                    [
-	                        "v64.0",
-	                        1.3
-	                    ],
-	                    [
-	                        "v63.0",
-	                        53.02
-	                    ],
-	                    [
-	                        "v62.0",
-	                        1.4
-	                    ],
-	                    [
-	                        "v61.0",
-	                        0.88
-	                    ],
-	                    [
-	                        "v60.0",
-	                        0.56
-	                    ],
-	                    [
-	                        "v59.0",
-	                        0.45
-	                    ],
-	                    [
-	                        "v58.0",
-	                        0.49
-	                    ],
-	                    [
-	                        "v57.0",
-	                        0.32
-	                    ],
-	                    [
-	                        "v56.0",
-	                        0.29
-	                    ],
-	                    [
-	                        "v55.0",
-	                        0.79
-	                    ],
-	                    [
-	                        "v54.0",
-	                        0.18
-	                    ],
-	                    [
-	                        "v51.0",
-	                        0.13
-	                    ],
-	                    [
-	                        "v49.0",
-	                        2.16
-	                    ],
-	                    [
-	                        "v48.0",
-	                        0.13
-	                    ],
-	                    [
-	                        "v47.0",
-	                        0.11
-	                    ],
-	                    [
-	                        "v43.0",
-	                        0.17
-	                    ],
-	                    [
-	                        "v29.0",
-	                        0.26
-	                    ]
-	                ]
-	            },
-	            {
-	                name: "Firefox",
-	                id: "Firefox",
-	                data: [
-	                    [
-	                        "v58.0",
-	                        1.02
-	                    ],
-	                    [
-	                        "v57.0",
-	                        7.36
-	                    ],
-	                    [
-	                        "v56.0",
-	                        0.35
-	                    ],
-	                    [
-	                        "v55.0",
-	                        0.11
-	                    ],
-	                    [
-	                        "v54.0",
-	                        0.1
-	                    ],
-	                    [
-	                        "v52.0",
-	                        0.95
-	                    ],
-	                    [
-	                        "v51.0",
-	                        0.15
-	                    ],
-	                    [
-	                        "v50.0",
-	                        0.1
-	                    ],
-	                    [
-	                        "v48.0",
-	                        0.31
-	                    ],
-	                    [
-	                        "v47.0",
-	                        0.12
-	                    ]
-	                ]
-	            },
-	            {
-	                name: "Internet Explorer",
-	                id: "Internet Explorer",
-	                data: [
-	                    [
-	                        "v11.0",
-	                        6.2
-	                    ],
-	                    [
-	                        "v10.0",
-	                        0.29
-	                    ],
-	                    [
-	                        "v9.0",
-	                        0.27
-	                    ],
-	                    [
-	                        "v8.0",
-	                        0.47
-	                    ]
-	                ]
-	            },
-	            {
-	                name: "Safari",
-	                id: "Safari",
-	                data: [
-	                    [
-	                        "v11.0",
-	                        3.39
-	                    ],
-	                    [
-	                        "v10.1",
-	                        0.96
-	                    ],
-	                    [
-	                        "v10.0",
-	                        0.36
-	                    ],
-	                    [
-	                        "v9.1",
-	                        0.54
-	                    ],
-	                    [
-	                        "v9.0",
-	                        0.13
-	                    ],
-	                    [
-	                        "v5.1",
-	                        0.2
-	                    ]
-	                ]
-	            },
-	            {
-	                name: "Edge",
-	                id: "Edge",
-	                data: [
-	                    [
-	                        "v16",
-	                        2.6
-	                    ],
-	                    [
-	                        "v15",
-	                        0.92
-	                    ],
-	                    [
-	                        "v14",
-	                        0.4
-	                    ],
-	                    [
-	                        "v13",
-	                        0.1
-	                    ]
-	                ]
-	            },
-	            {
-	                name: "Opera",
-	                id: "Opera",
-	                data: [
-	                    [
-	                        "v50.0",
-	                        0.96
-	                    ],
-	                    [
-	                        "v49.0",
-	                        0.82
-	                    ],
-	                    [
-	                        "v12.1",
-	                        0.14
-	                    ]
-	                ]
-	            }
-	        ]
-	    }
+	    ]
+	    
 	});
 	
 	Highcharts.chart('container3', {
-	    chart: {
-	        type: 'line'
+		chart: {
+	        type: 'column'
 	    },
 	    title: {
 	        text: '이용자별 가입 현황'
 	    },
-	    subtitle: {
-	        text: 'Source: WorldClimate.com'
+	    accessibility: {
+	        announceNewData: {
+	            enabled: true
+	        }
 	    },
 	    xAxis: {
-	        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+	        type: 'category'
 	    },
 	    yAxis: {
 	        title: {
-	            text: 'Temperature (°C)'
+	            text: '회원 수 '
 	        }
+
+	    },
+	    legend: {
+	        enabled: false
 	    },
 	    plotOptions: {
-	        line: {
+	        series: {
+	            borderWidth: 0,
 	            dataLabels: {
-	                enabled: true
-	            },
-	            enableMouseTracking: false
+	                enabled: true,
+	                format: '{point.y}명'
+	            }
 	        }
 	    },
-	    series: [{
-	        name: 'Tokyo',
-	        data: [7.0, 6.9, 9.5, 14.5, 18.4, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
-	    }, {
-	        name: 'London',
-	        data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
-	    }]
+
+	    tooltip: {
+	        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+	        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}명</b><br/>'
+	    },
+
+	    series: [
+	        {
+	            name: "회원 수",
+	            colorByPoint: true,
+	            data: [
+            				{
+         	                    name: "청소년 봉사자",
+         	                    y: ${memberStatistics.teenager}
+         	                },
+            				{
+         	                    name: "성인 봉사자",
+         	                    y: ${memberStatistics.adult}
+         	                },
+         	                {
+         	                    name: "봉사센터",
+         	                    y: ${memberStatistics.centerMember}
+         	                }
+	            ]
+	        }
+	    ]
 	});
 });
 </script>

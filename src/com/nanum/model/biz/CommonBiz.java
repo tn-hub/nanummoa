@@ -543,4 +543,56 @@ public class CommonBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
+	
+	
+	/**
+	 * 지역별 신청자 수 통계
+	 * @param list ArrayList<HashMap<String, Object>>
+	 * @throws CommonException
+	 */
+	public void getLocalStatistics(ArrayList<HashMap<String, Object>> list) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.selectLocalStatistics(conn, list);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+	
+	/**
+	 * 분야별 자원봉사 모집 현황
+	 * @param list ArrayList<HashMap<String, Object>>
+	 * @throws CommonException
+	 */
+	public void getCategoryStatistics(ArrayList<HashMap<String, Object>> list) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.selectCategoryStatistics(conn, list);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+	
+	/**
+	 * 이용자별 가입 현황
+	 * @param map HashMap<String, Integer>
+	 * @throws CommonException
+	 */
+	public void getMemberStatistics(HashMap<String, Integer> map) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.selectMemberStatistics(conn, map);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
 }

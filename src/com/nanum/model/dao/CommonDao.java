@@ -1275,6 +1275,121 @@ public class CommonDao {
 			JdbcTemplate.close(stmt);
 		}
 	}
+	
+	
+	/**
+	 * 지역별 신청자 수
+	 * @param conn
+	 * @param list ArrayList<HashMap<String, Object>>
+	 * @throws CommonException
+	 */
+	public void selectLocalStatistics(Connection conn, ArrayList<HashMap<String, Object>> list) throws CommonException {
+		String sql = "select rownum, a.*\r\n" + 
+				"from (select l.local_name, sum(d.apply_count)\r\n" + 
+				"    from local l left join vol_info i on(l.local_no = i.local_no)\r\n" + 
+				"    left join  vol_detail d on (i.vol_info_no = d.vol_info_no)\r\n" + 
+				"    group by l.local_name\r\n" + 
+				"    having sum(d.apply_count) is not null\r\n" + 
+				"    order by 2 desc) a\r\n" + 
+				"where rownum <= 5";
+
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+
+			stmt = conn.prepareStatement(sql);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				map.put("localName", rs.getString(2));
+				map.put("count", rs.getString(3));
+				
+				list.add(map);
+			}
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+				throw new CommonException();
+			} finally {
+				JdbcTemplate.close(rs);
+				JdbcTemplate.close(stmt);
+			}
+		}
+	
+	/**
+	 * 분야별 자원봉사 모집 현황
+	 * @param conn
+	 * @param list ArrayList<HashMap<String, Object>>
+	 * @throws CommonException
+	 */
+	public void selectCategoryStatistics(Connection conn, ArrayList<HashMap<String, Object>> list) throws CommonException {
+		String sql = "select rownum, a.*\r\n" + 
+				"from (select c.category_name, count(i.vol_info_no)\r\n" + 
+				"    from vol_category c left join  vol_info i on (c.category_no = i.category_no)\r\n" + 
+				"    group by c.category_name\r\n" + 
+				"    order by 2 desc) a\r\n" + 
+				"where rownum <= 5";
+
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+
+			stmt = conn.prepareStatement(sql);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				map.put("categoryName", rs.getString(2));
+				map.put("count", rs.getString(3));
+				
+				list.add(map);
+			}
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+				throw new CommonException();
+			} finally {
+				JdbcTemplate.close(rs);
+				JdbcTemplate.close(stmt);
+			}
+		}
+	
+	/**
+	 * 이용자별 가입 현황
+	 * @param conn
+	 * @param map HashMap<String, Integer
+	 * @throws CommonException
+	 */
+	public void selectMemberStatistics(Connection conn, HashMap<String, Integer> map) throws CommonException {
+		String sql = "select (select count(*)\r\n" + 
+				"from general_member\r\n" + 
+				"where birthday > SYSDATE - (INTERVAL '19' YEAR)) as 청소년,\r\n" + 
+				"(select count(*)\r\n" + 
+				"from general_member\r\n" + 
+				"where birthday <= SYSDATE - (INTERVAL '19' YEAR)) as 성인,\r\n" + 
+				"(select count(*)\r\n" + 
+				"from center_member) as 센터회원\r\n" + 
+				"from dual";
+
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+
+			stmt = conn.prepareStatement(sql);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				map.put("teenager", rs.getInt(1));
+				map.put("adult", rs.getInt(2));
+				map.put("centerMember", rs.getInt(3));
+			}
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+				throw new CommonException();
+			} finally {
+				JdbcTemplate.close(rs);
+				JdbcTemplate.close(stmt);
+			}
+		}
 }
 
 
