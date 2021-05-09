@@ -1129,6 +1129,8 @@ public class CommonDao {
 		return 0;
 	}
 
+	
+	/** 통합검색 */
 	public void searchAllList(Connection conn, ArrayList<SearchAllDto> saList, String searchAllOpt,String searchAllText) throws CommonException {
 		StringBuilder sql = new StringBuilder();
 		
