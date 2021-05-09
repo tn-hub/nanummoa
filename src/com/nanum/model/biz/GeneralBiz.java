@@ -294,6 +294,35 @@ public class GeneralBiz {
 		} finally {
 			JdbcTemplate.close(conn);
 		}
+	}
+
+	/**
+	 * 봉사 확인서 내역 조회
+	 * @param generalId 일반회원 아이디
+	 * @param list ArrayList<HashMap<String, Object>>
+	 * @throws CommonException
+	 */
+	public void getConfirmationList(String generalId, ArrayList<HashMap<String, Object>> list) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			gDao.searchConfirmationList(conn, generalId, list);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
 	
+	public void getConfirmation(HashMap<String, String> selectInfo, HashMap<String, String> map) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			gDao.searchConfirmation(conn, selectInfo, map);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
 	}
 }

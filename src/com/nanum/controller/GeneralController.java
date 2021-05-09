@@ -15,10 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.LocalDto;
-import com.nanum.dto.VolApplyListDto;
 import com.nanum.dto.VolCategoryDto;
-import com.nanum.dto.VolDetailDto;
-import com.nanum.dto.VolInfoDto;
 import com.nanum.model.biz.GeneralBiz;
 import com.nanum.util.CommonException;
 
@@ -75,6 +72,12 @@ public class GeneralController extends HttpServlet {
 			break;
 		case "generalDelete" :
 			generalDelete(request, response);
+			break;
+		case "confirmationListForm" :
+			confirmationListForm(request, response);
+			break;
+		case "confirmationForm" :
+			confirmationForm(request, response);
 			break;
 		}
 	}
@@ -636,6 +639,67 @@ public class GeneralController extends HttpServlet {
 			}
 			request.setAttribute("list", list);
 			request.getRequestDispatcher("/vol_list.jsp").forward(request, response);
+			
+		} catch(CommonException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 봉사확인서 내역 조회 페이지
+	 */
+	private void confirmationListForm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || 
+				session.getAttribute("dto") == null ||
+				session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");	
+			return;
+		}
+		
+		GeneralMemberDto dto = (GeneralMemberDto)session.getAttribute("dto");
+		String generalId = dto.getGeneralId();
+		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String,Object>>();
+		GeneralBiz biz = new GeneralBiz();
+		try{
+			biz.getConfirmationList(generalId, list);
+			request.setAttribute("list", list);
+			request.setAttribute("totalcount", list.size());
+			request.getRequestDispatcher("/general/confirmationList.jsp").forward(request, response);
+			
+		} catch(CommonException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 봉사확인서 다운
+	 */
+	private void confirmationForm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || 
+				session.getAttribute("dto") == null ||
+				session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");	
+			return;
+		}
+		
+		String volConNo = request.getParameter("volConNo");
+		String volInfoNo = request.getParameter("volInfoNo");
+		GeneralMemberDto dto = (GeneralMemberDto)session.getAttribute("dto");
+		String generalId = dto.getGeneralId();
+		HashMap<String, String> selectInfo = new HashMap<String, String>();
+		selectInfo.put("volConNo", volConNo);
+		selectInfo.put("volInfoNo", volInfoNo);
+		selectInfo.put("generalId", generalId);
+		HashMap<String, String> map = new HashMap<String, String>();
+		GeneralBiz biz = new GeneralBiz();
+		try{
+			biz.getConfirmation(selectInfo, map);
+			request.setAttribute("map", map);
+			request.getRequestDispatcher("/general/confirmation.jsp").forward(request, response);
 			
 		} catch(CommonException e) {
 			e.printStackTrace();

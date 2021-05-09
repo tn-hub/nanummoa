@@ -1,6 +1,7 @@
 package com.nanum.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
@@ -9,9 +10,16 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+import com.nanum.dto.AdminMemberDto;
 import com.nanum.dto.CenterInfoDto;
+import com.nanum.dto.QnAReplyDto;
 import com.nanum.model.biz.AdminBiz;
+import com.nanum.model.biz.CommonBiz;
 
 /**
  * 관리자 컨트롤러
@@ -41,6 +49,12 @@ public class AdminController extends HttpServlet {
 			break;
 		case "centerRefuse" :
 			centerRefuse(request, response);
+			break;
+		case "addReply" :
+			addReply(request, response);
+			break;
+		case "getReply" :
+			getReply(request, response);
 			break;
 		}
 	}
@@ -97,4 +111,73 @@ public class AdminController extends HttpServlet {
 		}
 		
 	}
+	
+	/**
+	 * 댓글 등록
+	 */
+	private void addReply(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		response.setContentType("text/html; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		
+		String qno = request.getParameter("qno");
+		String content = request.getParameter("content");
+		
+		System.out.println("컨트롤러 qno, content : " + qno + ", " + content);
+		
+		HttpSession session = request.getSession();
+		AdminMemberDto dto = (AdminMemberDto)session.getAttribute("dto");
+		String adminId = dto.getAdminId();
+		QnAReplyDto replyDto = new QnAReplyDto();
+		replyDto.setAdminId(adminId);
+		replyDto.setQnaNo(Integer.parseInt(qno));
+		replyDto.setReplyContents(content);
+		
+		AdminBiz aBiz = new AdminBiz();
+		try {
+			aBiz.addReply(replyDto);
+			out.print("success");
+		}catch (Exception e) {
+			e.printStackTrace();
+			out.print("fail");
+		} finally {
+			out.flush();
+			out.close();
+		}
+		
+	}
+	
+	/**
+	 * 댓글 조회
+	 */
+	private void getReply(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		response.setContentType("text/html; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		
+		String qno = request.getParameter("qno");
+		
+		CommonBiz cBiz = new CommonBiz();
+		ArrayList<QnAReplyDto> list = new ArrayList<QnAReplyDto>();
+		try {
+			cBiz.getReply(qno, list);
+			if (list.size() > 0) {
+				JSONArray jsonArr = new JSONArray();
+				for(QnAReplyDto qDto : list) {
+					JSONObject obj = new JSONObject();
+					obj.put("adminId", qDto.getAdminId());
+					obj.put("replyContents", qDto.getReplyContents());
+					obj.put("replyWriteDate", qDto.getReplyWriteDate());
+					
+					jsonArr.add(obj);
+				}
+		        out.println(jsonArr);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			out.flush();
+			out.close();
+		}
+		
+	}
+	
 }

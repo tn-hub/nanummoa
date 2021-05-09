@@ -26,6 +26,8 @@ import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.LocalDto;
 import com.nanum.dto.QnADto;
+import com.nanum.dto.QnAReplyDto;
+import com.nanum.dto.SearchAllDto;
 import com.nanum.dto.ServiceCategoryDto;
 import com.nanum.dto.VolCategoryDto;
 import com.nanum.dto.VolInfoDto;
@@ -34,6 +36,7 @@ import com.nanum.model.biz.GeneralBiz;
 import com.nanum.util.CommonException;
 import com.nanum.util.Gmail;
 import com.nanum.util.MessageEntity;
+import com.nanum.util.Paging;
 import com.nanum.util.SHA256;
 import com.nanum.util.Utility;
 
@@ -121,9 +124,14 @@ public class CommonController extends HttpServlet {
 			break;
 		case "volDetatilForm":
 			volDetatilForm(request, response);
-			break;
+			break;		
+		case "searchAllForm":
+			searchAllForm(request, response);
+			break;		
 		}
 	}
+
+	
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
@@ -783,8 +791,10 @@ public class CommonController extends HttpServlet {
 	/**
 	 * QNA 목록조회
 	 */
-	private void qnaList(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	private void qnaList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		
+		
+		int curPage = 6;
 		String searchOpt = request.getParameter("search_opt");
 		String searchText = request.getParameter("search_text");
 		CommonBiz biz = new CommonBiz();
@@ -794,6 +804,19 @@ public class CommonController extends HttpServlet {
 
 			request.setAttribute("searchText", searchText);
 			request.setAttribute("searchOpt", searchOpt);
+			
+			biz.qnaListTotCnt(cdto); // 총건수 조회 
+			
+			Paging.makeBlock(curPage);
+			
+			Integer blockStartNum = Paging.getBlockStartNum();
+			Integer blockLastNum = Paging.getBlockLastNum();
+			Integer lastPageNum = Paging.getLastPageNum();
+			
+			System.out.println("blockStartNum=  " + blockStartNum);
+			System.out.println("blockLastNum=  " + blockLastNum);
+			System.out.println("lastPageNum=  " + lastPageNum);
+			
 
 			biz.qnaListTotCnt(cdto);
 			request.setAttribute("cdto", cdto);
@@ -816,7 +839,6 @@ public class CommonController extends HttpServlet {
 		String qnaNo = request.getParameter("qnaNo");
 		CommonBiz biz = new CommonBiz();
 		QnADto dto = new QnADto();
-
 		try {
 			biz.qnaDetail(dto, qnaNo);
 			request.setAttribute("sdto", dto);
@@ -1023,5 +1045,45 @@ public class CommonController extends HttpServlet {
 
 		response.sendRedirect(CONTEXT_PATH + "/home");
 	}
-
+	
+	
+	/**
+	 * 통합검색
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void searchAllForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		String searchAllOpt = "";
+		String searchAllText = "";
+		
+		if(request.getParameter("main_searchAll_text") != null || request.getParameter("main_searchAll_text") == "") {
+			// 전체통합검색
+			searchAllOpt = request.getParameter("main_searchAll_opt");
+			searchAllText = request.getParameter("main_searchAll_text");
+		}else {
+			//통합검색
+			searchAllOpt = request.getParameter("searchAll_opt");
+			searchAllText = request.getParameter("searchAll_text");
+		}
+		
+		System.out.println("searchAll_opt" + searchAllOpt);
+		System.out.println("searchAllText" + searchAllText);
+		
+		CommonBiz biz = new CommonBiz();
+		ArrayList<SearchAllDto> saList = new ArrayList<SearchAllDto>();
+		
+		try {
+			request.setAttribute("searchAllOpt", searchAllOpt);
+			request.setAttribute("searchAllText", searchAllText);
+			
+			biz.searchAllList(saList, searchAllOpt, searchAllText);
+			request.setAttribute("saList", saList);
+			
+			request.getRequestDispatcher("/common/searchMain.jsp").forward(request, response);
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
+	}
 }
