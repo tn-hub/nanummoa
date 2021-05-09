@@ -382,6 +382,7 @@ public class CenterBiz {
 				continue uniqueNoLoop;
 			}
 			dao.insertIssue(conn, volCode, map);
+			dao.updateStatus(conn, map);
 			JdbcTemplate.commit(conn);
 		} catch (CommonException e) {
 			JdbcTemplate.rollback(conn);

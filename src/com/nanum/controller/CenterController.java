@@ -1118,30 +1118,45 @@ public class CenterController extends HttpServlet {
 	 */
 	protected void volIssue(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		PrintWriter out = response.getWriter();
 		HttpSession session = request.getSession();
 		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
-		String centerId = dto.getCenterId();
-		String volInfoNo = request.getParameter("volInfoNo");
-		String generalId = request.getParameter("generalId");
-		String contents = request.getParameter("contents");
-		HashMap<String, Object> map = new HashMap<String, Object>();
-
-		System.out.println(volInfoNo);
-		System.out.println(generalId);
 		
-		map.put("centerId", centerId);
-		map.put("volInfoNo", volInfoNo);
+		String generalId = request.getParameter("generalId");
+		String centerId = dto.getCenterId();
+		String contents = request.getParameter("contents");
+		String volInfoNo = request.getParameter("volInfoNo");
+		String issueDate = request.getParameter("issueDate");
+		int volApplyNo = Integer.parseInt(request.getParameter("volApplyNo")); 
+		
+		if (contents == null || contents.trim().length() == 0 || contents == null) {
+			out.println("<script>alert('내용을 입력해 주세요');history.go(-1); </script>");
+			out.flush();
+			out.close();
+			return;
+		}
+		contents.trim();
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("generalId", generalId);
+		map.put("centerId", centerId);
 		map.put("contents", contents);
+		map.put("volInfoNo", volInfoNo);
+		map.put("issueDate", issueDate);
+		map.put("volApplyNo", volApplyNo);
 
+		System.out.println(map);
+		
 		CenterBiz biz = new CenterBiz();
 		try {
 			biz.volIssue(map);
 			request.setAttribute("volInfoNo", volInfoNo);
-			request.getRequestDispatcher("/center/centerController?action=issueDetailListForm").forward(request,
-					response);
+			request.setAttribute("generalId", generalId);
+			request.getRequestDispatcher("/center/centerController?action=issueDetailListForm").forward(request,response);
 		} catch (CommonException e) {
 			e.printStackTrace();
+			request.getRequestDispatcher("/center/centerController?action=issueDetailListForm").forward(request,response);
 		}
 	}
 
@@ -1161,6 +1176,7 @@ public class CenterController extends HttpServlet {
 		String volInfoNo = request.getParameter("volInfoNo");
 		String generalId = request.getParameter("generalId");
 		HashMap<String, Object> map = new HashMap<String, Object>();
+		
 		
 		map.put("centerId", centerId);
 		map.put("volInfoNo", volInfoNo);
@@ -1196,6 +1212,7 @@ public class CenterController extends HttpServlet {
 		try {
 			for (int i = 0; i < checkDates.length; i++) {
 				biz.checkVolStatus(checkDates[i]);
+				request.getRequestDispatcher("/center/issue/issueInfoForm").forward(request,response);
 			}
 		} catch (CommonException e) {
 			e.printStackTrace();
