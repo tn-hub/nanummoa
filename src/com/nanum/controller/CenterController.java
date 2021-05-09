@@ -127,6 +127,9 @@ public class CenterController extends HttpServlet {
 		case "volIssueForm":
 			volIssueForm(request, response);
 			break;
+		case "endVol":
+			endVol(request, response);
+			break;
 		}
 	}
 
@@ -1109,59 +1112,7 @@ public class CenterController extends HttpServlet {
 	}
 
 	/**
-	 * 인증서발급 요청
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws ServletException
-	 * @throws IOException
-	 */
-	protected void volIssue(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		PrintWriter out = response.getWriter();
-		HttpSession session = request.getSession();
-		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
-		
-		String generalId = request.getParameter("generalId");
-		String centerId = dto.getCenterId();
-		String contents = request.getParameter("contents");
-		String volInfoNo = request.getParameter("volInfoNo");
-		String issueDate = request.getParameter("issueDate");
-		int volApplyNo = Integer.parseInt(request.getParameter("volApplyNo")); 
-		
-		if (contents == null || contents.trim().length() == 0 || contents == null) {
-			out.println("<script>alert('내용을 입력해 주세요');history.go(-1); </script>");
-			out.flush();
-			out.close();
-			return;
-		}
-		contents.trim();
-		
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("generalId", generalId);
-		map.put("centerId", centerId);
-		map.put("contents", contents);
-		map.put("volInfoNo", volInfoNo);
-		map.put("issueDate", issueDate);
-		map.put("volApplyNo", volApplyNo);
-
-		System.out.println(map);
-		
-		CenterBiz biz = new CenterBiz();
-		try {
-			biz.volIssue(map);
-			request.setAttribute("volInfoNo", volInfoNo);
-			request.setAttribute("generalId", generalId);
-			request.getRequestDispatcher("/center/centerController?action=issueDetailListForm").forward(request,response);
-		} catch (CommonException e) {
-			e.printStackTrace();
-			request.getRequestDispatcher("/center/centerController?action=issueDetailListForm").forward(request,response);
-		}
-	}
-
-	/**
-	 * 인증서 폼 
+	 * 인증서 폼
 	 * 
 	 * @param request
 	 * @param response
@@ -1176,20 +1127,71 @@ public class CenterController extends HttpServlet {
 		String volInfoNo = request.getParameter("volInfoNo");
 		String generalId = request.getParameter("generalId");
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		
-		
+
 		map.put("centerId", centerId);
 		map.put("volInfoNo", volInfoNo);
 		map.put("generalId", generalId);
-		
+
 		CenterBiz biz = new CenterBiz();
 		try {
 			biz.volIssueForm(map);
 			request.setAttribute("volInfoNo", volInfoNo);
 			request.setAttribute("map", map);
-			request.getRequestDispatcher("/center/issue/issueForm.jsp").forward(request,response);
+			request.getRequestDispatcher("/center/issue/issueForm.jsp").forward(request, response);
 		} catch (CommonException e) {
 			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 인증서발급 요청
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void volIssue(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		PrintWriter out = response.getWriter();
+		HttpSession session = request.getSession();
+		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
+
+		String generalId = request.getParameter("generalId");
+		String centerId = dto.getCenterId();
+		String contents = request.getParameter("contents");
+		String volInfoNo = request.getParameter("volInfoNo");
+		String issueDate = request.getParameter("issueDate");
+		int volApplyNo = Integer.parseInt(request.getParameter("volApplyNo"));
+
+		if (contents == null || contents.trim().length() == 0 || contents == null) {
+			out.println("<script>alert('내용을 입력해 주세요');history.go(-1); </script>");
+			out.flush();
+			out.close();
+			return;
+		}
+		contents.trim();
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+
+		map.put("generalId", generalId);
+		map.put("centerId", centerId);
+		map.put("contents", contents);
+		map.put("volInfoNo", volInfoNo);
+		map.put("issueDate", issueDate);
+		map.put("volApplyNo", volApplyNo);
+
+		CenterBiz biz = new CenterBiz();
+		try {
+			biz.volIssue(map);
+			request.setAttribute("volInfoNo", volInfoNo);
+			request.setAttribute("generalId", generalId);
+			request.getRequestDispatcher("/center/centerController?action=issueDetailListForm").forward(request,
+					response);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			request.getRequestDispatcher("/center/centerController?action=issueDetailListForm").forward(request,
+					response);
 		}
 	}
 
@@ -1206,16 +1208,55 @@ public class CenterController extends HttpServlet {
 		HttpSession session = request.getSession();
 		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
 		String centerId = dto.getCenterId();
+		String generalId = request.getParameter("generalId");
+		int volInfoNo = Integer.parseInt(request.getParameter("volInfoNo"));
 		String[] checkDates = request.getParameterValues("checkDate");
 
 		CenterBiz biz = new CenterBiz();
 		try {
 			for (int i = 0; i < checkDates.length; i++) {
 				biz.checkVolStatus(checkDates[i]);
-				request.getRequestDispatcher("/center/issue/issueInfoForm").forward(request,response);
+				request.setAttribute("generalId", generalId);
+				request.setAttribute("volInfoNo", volInfoNo);
+				request.getRequestDispatcher("/center/centerController?action=issueInfoForm").forward(request,
+						response);
 			}
 		} catch (CommonException e) {
-			e.printStackTrace();
+			request.setAttribute("generalId", generalId);
+			request.setAttribute("volInfoNo", volInfoNo);
+			request.getRequestDispatcher("/center/centerController?action=issueInfoForm").forward(request, response);
 		}
+	}
+
+	/**
+	 * 봉사등록마감, 종료
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void endVol(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
+		String centerId = dto.getCenterId();
+		int volInfoNo = Integer.parseInt(request.getParameter("volInfoNo"));
+		String recStatus = request.getParameter("recStatus");
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("centerId", centerId);
+		map.put("volInfoNo", volInfoNo);
+		map.put("recStatus", recStatus);
+
+		CenterBiz biz = new CenterBiz();
+		try {
+			biz.endVol(map);
+			request.getRequestDispatcher("/center/centerController?action=centerVolListForm").forward(request,
+					response);
+		} catch (CommonException e) {
+
+		}
+
 	}
 }

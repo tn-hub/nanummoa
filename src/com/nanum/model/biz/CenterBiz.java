@@ -453,4 +453,29 @@ public class CenterBiz {
 		}
 	}
 
+	/**
+	 * 봉사등록 마감,종료
+	 * 
+	 * @param map
+	 * @throws CommonException 
+	 */
+	public void endVol(HashMap<String, Object> map) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+
+		try {
+			if (map.get("recStatus").equals("0")) {
+				dao.endVol(conn, map);	
+			}else if (map.get("recStatus").equals("1")) {
+				dao.finishVol(conn, map);
+			}
+			JdbcTemplate.commit(conn);
+		} catch (CommonException e) {
+			JdbcTemplate.rollback(conn);
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+
 }

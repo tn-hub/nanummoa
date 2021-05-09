@@ -77,7 +77,7 @@ public class CenterDao {
 		String sql = "select  \n" + "vi.vol_info_no\n" + ", vi.v_title \n" + ", vi.start_date\n" + ", vi.end_date\n"
 				+ ", min(vd.vol_date) as 봉사시작일\n" + ", max(vd.vol_date) as 봉사종료일\n" + ", min(vd.rec_status) as 모집중\n"
 				+ ", max(vd.rec_status) as 마감\n" + ", ci.c_name\n" + ", vc.category_name\n"
-				+ ", round(vi.end_date - sysdate,0) as deadline\n"
+				+ ", vi.end_date - trunc(sysdate) as deadline\n"
 				+ "from vol_info vi,vol_detail vd, center_member cm, center_info ci,vol_category vc\n"
 				+ "where vi.vol_info_no = vd.vol_info_no\n" + "and vi.c_id = cm.c_id\n" + "and cm.c_id = ci.c_id\n"
 				+ "and vi.category_no = vc.category_no\n" + "and cm.c_id= ?\n"
@@ -756,9 +756,9 @@ public class CenterDao {
 	 * @throws CommonException 
 	 */
 	public void issueList( Connection conn,String centerId, ArrayList<HashMap<String, Object>> list) throws CommonException {
-		String sql = "select  \n" + "vi.vol_info_no\n" + ", vi.v_title \n" + ", vi.start_date\n" + ", vi.end_date\n"
-				+ ", min(vd.vol_date) as 봉사시작일\n" + ", max(vd.vol_date) as 봉사종료일\n" + ", min(vd.rec_status) as 모집중\n"
-				+ ", max(vd.rec_status) as 마감\n" + ", ci.c_name\n" + ", vc.category_name\n"
+		String sql = "select vi.vol_info_no, vi.v_title , vi.start_date ,vi.end_date\n"
+				+ ", min(vd.vol_date) as 봉사시작일, max(vd.vol_date) as 봉사종료일, min(vd.rec_status) as 모집중\n"
+				+ ", max(vd.rec_status) as 마감, ci.c_name, vc.category_name\n"
 				+ ", round(vi.end_date - sysdate,0) as deadline\n"
 				+ "from vol_info vi,vol_detail vd, center_member cm, center_info ci,vol_category vc\n"
 				+ "where vi.vol_info_no = vd.vol_info_no\n" + "and vi.c_id = cm.c_id\n" + "and cm.c_id = ci.c_id\n"
@@ -928,18 +928,17 @@ public class CenterDao {
 	 * @throws CommonException 
 	 */
 	public void updateStatus(Connection conn, HashMap<String, Object> map) throws CommonException {
-		String sql = "update vol_apply_list set vol_status = '3' where vol_apply_no = ? and vol_status = '2'";
+		String sql = "update vol_apply_list set vol_status = '3' \n" + 
+				"where vol_detail_no in (select vol_detail_no from vol_detail where vol_info_no = ?)\n" + 
+				"and vol_status = '2'";
 
 		PreparedStatement pstmt = null;
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, (int)map.get("volApplyNo"));
+			pstmt.setInt(1, (int)map.get("volInfoNo"));
 			int rows = pstmt.executeUpdate();
 			System.out.println("rows : " + rows);
-			if (rows != 1) {
-				throw new Exception();
-			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1081,6 +1080,54 @@ public class CenterDao {
 		}
 	}
 
-	
-	
+	/**
+	 * 봉사등록 마감
+	 * 
+	 * @param conn
+	 * @param map
+	 * @throws CommonException 
+	 */
+	public void endVol(Connection conn, HashMap<String, Object> map) throws CommonException {
+		String sql = "update vol_detail set rec_status = '1' where vol_info_no = ? and rec_status = '0'";
+
+		PreparedStatement pstmt = null;
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, (int)map.get("volInfoNo"));
+			int rows = pstmt.executeUpdate();
+			System.out.println("rows : " + rows);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(pstmt);
+		}
+	}
+
+	/**
+	 * 봉사활동 종료
+	 * 
+	 * @param conn
+	 * @param map
+	 * @throws CommonException 
+	 */
+	public void finishVol(Connection conn, HashMap<String, Object> map) throws CommonException {
+		String sql = "update vol_detail set rec_status = '2' where vol_info_no = ? and rec_status = '1'";
+
+		PreparedStatement pstmt = null;
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, (int)map.get("volInfoNo"));
+			int rows = pstmt.executeUpdate();
+			System.out.println("rows : " + rows);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(pstmt);
+		}
+	}
+
 }
