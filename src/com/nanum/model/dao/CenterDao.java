@@ -9,20 +9,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.sql.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 import com.nanum.dto.VolDetailDto;
 import com.nanum.dto.CenterInfoDto;
 import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.CenterVolDto;
 import com.nanum.dto.GeneralMemberDto;
-import com.nanum.dto.VolApplyListDto;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
 import com.nanum.util.MessageEntity;
-import com.sun.javafx.css.StyleCacheEntry.Key;
 
 /**
  * 센터회원 Dao 클래스
@@ -892,7 +888,7 @@ public class CenterDao {
 	 * @throws CommonException 
 	 */
 	public void insertIssue(Connection conn,String volCode,HashMap<String, Object> map) throws CommonException {
-		String sql = "insert into vol_confirmation values(?,?,?,'내용하드코딩',?,?)";
+		String sql = "insert into vol_confirmation values(?,?,?,?,?,?)";
 
 		PreparedStatement pstmt = null;
 
@@ -902,8 +898,9 @@ public class CenterDao {
 				pstmt.setString(1, volCode);
 				pstmt.setString(2, (String)map.get("generalId"));
 				pstmt.setString(3, (String)map.get("centerId"));
-				pstmt.setInt(4, (int)map.get("volInfoNo"));
-				pstmt.setString(5, (String)map.get("volDate"));
+				pstmt.setString(4, (String)map.get("contents"));
+				pstmt.setInt(5, (int)map.get("volInfoNo"));
+				pstmt.setString(6, (String)map.get("volDate"));
 				
 				rows = pstmt.executeUpdate();
 			
@@ -1066,9 +1063,6 @@ public class CenterDao {
 	 * @throws CommonException
 	 */
 	public void deleteVolDetail(Connection conn, int volInfoNo, String startVolDateStr, String endVolDateStr) throws CommonException {
-		System.out.println("volInfoNo : " + volInfoNo);
-		System.out.println("변경 시작일" + startVolDateStr);
-		System.out.println("변경 종료일" + endVolDateStr);
 		String sql = "delete from vol_detail where vol_info_no = ? and vol_date not between ? and ? ";
 		System.out.println(sql);
 
@@ -1094,14 +1088,13 @@ public class CenterDao {
 	}
 
 	/**
-	 * 
+	 * 날짜 리스트조회
 	 * @param conn
 	 * @param dateList
 	 * @throws CommonException
 	 */
 	public void getVolDetailDate(Connection conn,int volInfoNo, ArrayList<String> dateList) throws CommonException {
 		String sql = "select vol_date from vol_detail where vol_info_no = ?";
-
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 
@@ -1113,6 +1106,57 @@ public class CenterDao {
 			while (rs.next()) {
 				dateList.remove(rs.getString(1));
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(pstmt);
+		}
+	}	
+	
+	/**
+	 * 인증서 폼
+	 * 
+	 * @param conn
+	 * @param map
+	 * @throws CommonException 
+	 */
+	public void volIssueForm(Connection conn, HashMap<String, Object> map) throws CommonException {
+		String sql = "select vc.vol_con_no,gm.g_name,gm.g_address,min(vd.vol_date) as 활동시작일,max(vd.vol_date) as 활동종료일,to_char(vi.start_time,'HH24:MI') as start_time,to_char(vi.end_time,'HH24:MI') as end_time,vc.vol_date,ci.c_name,vc.g_id,vi.vol_info_no,count(vd.vol_detail_no) as 활동일\n" + 
+				"from vol_confirmation vc,vol_apply_list va, vol_detail vd, vol_info vi,center_member cm,center_info ci, general_member gm\n" + 
+				"where vc.g_id = gm.g_id and vc.c_id = cm.c_id and vc.vol_info_no = vi.vol_info_no and va.g_id = gm.g_id and va.vol_detail_no = vd.vol_detail_no and vd.vol_info_no = vi.vol_info_no and vi.c_id = cm.c_id and cm.c_id = ci.c_id\n" + 
+				"and cm.c_id = ? and va.vol_status = '2' and vd.rec_status = '2' and vi.vol_info_no = ? and\n" +
+				"vd.vol_detail_no in ( select vol_detail_no from vol_apply_list where g_id = ?)\n" + 
+				"group by vc.vol_con_no,gm.g_name,gm.g_address,vi.start_time,vi.end_time,vc.vol_date,ci.c_name,vc.g_id,vi.vol_info_no";
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, (String) map.get("centerId"));
+			pstmt.setString(2, (String) map.get("volInfoNo"));
+			pstmt.setString(3, (String) map.get("generalId"));
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				
+				map.put("volConNo",rs.getString("vol_con_no"));
+				map.put("generalName",rs.getString("g_name"));
+				map.put("generalAddress",rs.getString("g_address"));
+				map.put("startDate",rs.getDate("활동시작일"));
+				map.put("endDate",rs.getDate("활동종료일"));
+				map.put("startTime",rs.getString("start_time"));
+				map.put("endTime",rs.getString("end_time"));
+				map.put("volDate",rs.getDate("vol_date"));
+				map.put("centerName",rs.getString("c_name"));
+				map.put("generalId",rs.getString("g_id"));
+				map.put("volInfoNo",rs.getString("vol_info_no"));
+				map.put("playDate",rs.getInt("활동일"));
+				
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CommonException();

@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.nanum.dto.CenterInfoDto;
+import com.nanum.dto.QnAReplyDto;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
 
@@ -202,6 +203,38 @@ public class AdminDao {
 				throw new Exception();
 			}
 			
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}  finally {
+			JdbcTemplate.close(stmt);
+		}
+		
+		
+	}
+	
+	
+	/**
+	 * 댓글 등록
+	 * @param conn
+	 * @param replyDto QnAReplyDto
+	 * @throws CommonException
+	 */
+	public void insertReply(Connection conn, QnAReplyDto replyDto) throws CommonException{
+		String sql = "insert into qna_reply (r_no, q_no, a_id, r_contents) values (qna_reply_seq.nextval, ?, ?, ?)";
+		
+		PreparedStatement stmt = null;
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, replyDto.getQnaNo());
+			stmt.setString(2, replyDto.getAdminId());
+			stmt.setString(3, replyDto.getReplyContents());
+			
+			int rows = stmt.executeUpdate();
+			
+			if (rows != 1) {
+				throw new Exception();
+			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
