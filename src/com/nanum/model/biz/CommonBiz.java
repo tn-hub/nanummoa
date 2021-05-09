@@ -614,4 +614,25 @@ public class CommonBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
+	
+	/**
+	 * 봉사모집 전체조회 페이징 추가
+	 * @param list
+	 * @param searchMap
+	 * @param startNum
+	 * @param lastNum
+	 * @throws CommonException
+	 */
+	public void searchVolListWithPaging(ArrayList<HashMap<String, Object>> list,  HashMap<String, String> searchMap, int startNum, int lastNum) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		
+		try {
+			dao.searchVolListWithPaging(conn, list, searchMap, startNum, lastNum);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
 }

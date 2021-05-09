@@ -166,7 +166,8 @@
 $(document).ready(function(){
 	
 	// 검색목록 초기화
-	$("input[type='button']").click(function(){
+	$("#resetBtn").click(function(){
+		console.log("검색항목 초기화");
 		$("#local option:eq(0)").attr("selected", "selected");
 		$("#category option:eq(0)").attr("selected", "selected");
 		$("#service option:eq(0)").attr("selected", "selected");
@@ -203,6 +204,7 @@ $(document).ready(function(){
   	
   	// 다음페이지
   	$("#nestBtn").click(function() {
+  		console.log("다음");
   		var curPageNum = ${curPageNum};
   		var lastPageNum = ${lastPageNum};
   		
@@ -213,12 +215,12 @@ $(document).ready(function(){
   	});
   	
   //페이징 submit
-    function main_btnPageNum(ret){
-    	$("#pageNum").val(ret);
-    	$("#searchForm").submit();
-    	
-    }   
-	
+    $("#page_btn").on("click", "input[name='btnPageNum']", function(e){
+    		console.log("페이징 submit : " + $(e.target).val());
+        	$("#pageNum").val($(e.target).val());
+        	$("#searchForm").submit();
+    });
+	  	
 });
 </script>
 </head>
@@ -336,7 +338,7 @@ $(document).ready(function(){
 				
 				<div id="search_button_box">
 					<input class="y_btn" type="submit" id="searchBtn" value="검색">
-					<input class="g_btn" type="button" value="초기화">
+					<input class="g_btn" type="button" id="resetBtn" value="초기화">
 				</div>
 			</div>
 		</form>
@@ -347,8 +349,8 @@ $(document).ready(function(){
 	<p>[전체 
 		<em>${total}</em>
 		건, 현재페이지 
-		<em>0</em>
-		/0]
+		<em>${curPageNum}</em>
+		/${lastPageNum}]
 	</p>
 	<c:if test="${grade == 'C' }">
 		<button class="y_btn float_r minus_mg_t" onclick="location.href='${CONTEXT_PATH}/center/centerController?action=volInputForm'">글작성</button>
@@ -404,7 +406,11 @@ $(document).ready(function(){
 	<div id="page_btn">
   	<input type="button" value="이전 " id="preBtn" name="preBtn">
   	 <c:forEach var="i" begin="${ 1 }" end="${lastPageNum}">
-             <input type="button" value=${ i } id="btnPageNum" name="btnPageNum" onclick="main_btnPageNum(${ i })">
+             <input type="button" value=${ i }  name="btnPageNum"
+             	<c:if test="${curPageNum == i}">
+             		style="background-color: #FBD157;"
+             	</c:if>
+             >
        </c:forEach>   
   	<input type="button" value="다음 " id="nestBtn" name="nestBtn">	
   </div> 
