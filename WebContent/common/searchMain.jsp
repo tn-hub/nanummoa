@@ -25,103 +25,71 @@ a.bold { font-weight: bold; }
 }
 
 
-#addQna{
-	width: 1000px;
-	height: 30px;
-	float: right;  
-	width: 20px; 
-	margin-right: 80px; 
-	margin-top: 10px;
-}
-
-#btn_addQna{
-	width: 100px;
-	height: 30px;
-	border-style: none;
-	font-size: 17px;
-}
-
-#search_opt{
-	border-style: none;
-	font-size: 17px;
-}
-
-#sec_vol_list{
-	margin-top: 70px;
-	border-top: 2px solid black;
-	border-bottom: 2px solid black;	
+.searchAllDVS_menu {
+	padding:0px;
+	text-align: center;
 }
 
 
-.vol_list_ul {
-		list-style:none;
-		color: #5F5F5F;	
-		padding-inline-start: 0px;
-	}
-	
-.vol_list_ul li {
-		text-indent: 20px;
-	}	
-	
-	
-.qna_list_span{
-	float: right;
-}	
-	
-
-#page_btn{
-	text-align: center; 
-	margin: 20px 0px 20px 0px;
-}
-
-
-#search_qna_table{
-	border-top: 2px solid black;
-	border-bottom: 2px solid black;	
-	font-size: 17px;
-	width: 1000px;
-}
-
-#search_qna_table tr, td{
-	padding: 7px;
-}
-
-
-
-#search_qna_tdcnt{
-	width: 400px;
-	text-align: left;
-}
-
-#search_qna_tdSelect{
-	width: 150px;
-}
-
-#search_qna_tdText{
-	width: 250px;
-}
-
-#search_text{
-	width: 230px;
-	font-size: 17px;
-}
-
-#btn_searchQna{
-	width: 60px;
-	height: 30px;
-	border-style: none;
-	font-size: 17px;
-}
-
-.searchAll {
-	background-color: red;
-		list-style:none;
-}
-
-.searchAll li{
-	border: 1px solid gray;
-	list-style: none;
+.searchAllDVS_menu li{
 	background-color: yellow;
+	padding: 10px 30px 10px 30px;
+	width: 260px;
+	display: inline-block;
+	margin-bottom: 20px;
+}
+
+
+
+.searchAll_area{
+	border-bottom: 2px solid black;	
+	text-align: center;
+	height: 40px;
+	padding-bottom: 20px;
+}
+
+.searchAll_option{
+	border-style: none;
+	font-size: 20px;
+	margin-right: 10px;
+}
+
+.searchAll_searchtext{
+	width: 400px;
+	font-size: 20px;
+	margin-right: 30px;
+	padding: 3px 10px 3px 10px;
+}
+
+
+.btn_searchAll{
+	width: 100px;
+	height: 40px;
+	padding: 5px;
+	font-size: 20px;
+}
+
+.searchAllDVS_area{
+	border: 1px solid gray;
+}
+
+
+.searchAllListUl{
+width: 1000px;
+	list-style:none;
+	color: #5F5F5F;	
+	padding-inline-start: 0px;
+}
+
+
+.sListSpan_r{
+	float: right;
+}
+
+.searchList_box{
+	border-top: 2px solid black;
+	border-bottom: 2px solid black;	
+	padding: 20px;
 }
 
 </style>
@@ -131,29 +99,22 @@ a.bold { font-weight: bold; }
 <script type="text/javascript">
 
 $(document).ready(function() {
-	
-	$("#search_btn").click(function () {
-		//검색조건
-		var searchOpt = $("#search_opt").val();   
-		
-		// 내용 빈값 확인 
-		if (searchOpt == "T" || searchOpt == "C" || searchOpt == "W"){
-			if ($("#search_text").val() == null || $("#search_text").val() == "") {
-				alert("검색내용을 입력하세요");
-				$("#search_text").focus();
-				return false;
-			}
-		}else{
-			if ($("#search_text").val() != null && $("#search_text").val() != "") {
-				alert("조건을 선택하세요");
-				$("#search_opt").focus();
-				return false;
-			}
-			
-		}			
+	$("#tab_searchAll").click(function () {
+		$("#searchAll_opt").val('A');
+		document.searchAllForm.submit();
 	});
 	
+	$("#tab_searchVol").click(function () {
+		$("#searchAll_opt").val('V');
+		document.searchAllForm.submit();
+	});
+	
+	$("#tab_searchQna").click(function () {
+		$("#searchAll_opt").val('Q');	
+		document.searchAllForm.submit();
+	});
 });
+
 
 </script>
 <body>
@@ -161,72 +122,43 @@ $(document).ready(function() {
 <div id="section_contents">
 <h2>통합검색</h2>
 <hr>
-<div>
-	<select>
-		<option>전체</option>
-		<option>봉사 게시판</option>
-		<option>문의 게시판</option>
-	</select>
-	<input type="text">
-	<input type="button" value="검색">
+<form name="searchAllForm" id="searchAllForm" action="${CONTEXT_PATH}/common/commonController?action=searchAllForm" method="post">
+<div class="searchAll_area">
+	<select class="searchAll_option" id="searchAll_opt" name="searchAll_opt">
+		<option value="A">전체</option>
+		<option value="V" <c:if test="${searchAllOpt eq 'V'}">selected</c:if>>봉사 게시판</option>
+		<option value="Q" <c:if test="${searchAllOpt eq 'Q'}">selected</c:if>>문의 게시판</option>
+	</select> 
+	<input type="text" class="searchAll_searchtext" id="searchAll_text" name="searchAll_text" value="${searchAllText}">
+	<input type="submit" value="검색" class="btn_searchAll" id="btn_searchAllList" name="btn_searchAllList" style="cursor:hand;">
 </div>
-<hr>
-<ul class="searchAll">
-	<li>전체</li>
-	<li>봉사</li>
-	<li>문의</li>
-	
+<div class="searchAllDVS_area">
+<ul class="searchAllDVS_menu" style="cursor:hand;">
+	<li id="tab_searchAll">전체</li>
+	<li id="tab_searchVol">봉사</li>
+	<li id="tab_searchQna">문의</li>
 </ul>
-
-
-<h2>QNA</h2>
-<form name="qnaListForm" id="qnaListForm" action="${CONTEXT_PATH}/common/commonController?action=qnaList" method="post">
-<div id="search_qna">
-	<table id="search_qna_table">
-	<tr>
-		<td id="search_qna_tdcnt">
-			[전체 <em> ${cdto.totCnt}</em> 건, 현재 페이지 <em>1</em> /1]
-		
-		</td>
-		<td id="search_qna_tdSelect">
-			<select  id="search_opt" name ="search_opt">
-				<option value="">전체</option>
-				<option value="T" <c:if test="${searchOpt eq 'T'}">selected</c:if> >제목 </option>
-				<option value="C" <c:if test="${searchOpt eq 'C'}">selected</c:if>>내용</option>
-				<option value="W" <c:if test="${searchOpt eq 'W'}">selected</c:if>>작성자</option>
-			</select>
-		</td>
-		<td id="search_qna_tdText">
-			<input type="text" id="search_text" name ="search_text" value="${searchText}">
-			<input type="submit" id="search_btn" name="search_btn" value="검색"  style="cursor:hand;">
-		</td>
-	</tr>
-	</table>
 </div>
-<hr>
-<div id="addQna"><a href="${CONTEXT_PATH}/common/commonController?action=qnaInputForm"><input type="button" value="글 쓰기" id="btn_addQna" style="cursor:hand;"></a></div>
-<div id="sec_vol_list">
-<ul class="vol_list_ul">
-<c:forEach var="dto" items="${qnaList}">
+</form>
+
+<form>
+<div class="search_all_list">
+<ul class="searchAllListUl">
+<c:forEach var="dto" items="${saList}">
 <li>
-	<div class="list_box">
-		<div>
-			<span class="title_span">글번호 : </span>
-			<span>${dto.qnaNo}</span>
-			<span class="qna_list_span">답변 여부 : ${dto.answerYn}</span>
-			<span class="qna_list_span">작성자 : ${dto.qnaWriter}</span>
-			<span class="qna_list_span">작성일 : ${dto.qnaWriteDate}</span>
-		</div>
-		<h3>제목 : <a href="${CONTEXT_PATH}/common/commonController?action=qnaDtl&qnaNo=${dto.qnaNo}" >${dto.qnaTitle}</a></h3>
+	<div class="searchList_box">
+			<b><span class="sListSpan">${dto.dvisionName}</span></b>
+			<span class="sListSpan">${dto.title}</span>
+			<span class="sListSpan_r">작성자 : ${dto.writer}</span>
+			<br><br>${dto.contents}			
 	</div>
-	
-	<hr class="list_hr">
 </li>
 </c:forEach>	
 </ul>
 </div>
 </form>
-</div>
+
+
 <div id=page_btn>
 	<input type="button" value="이전 < ">
 	<input type="button" value="1">
@@ -235,6 +167,7 @@ $(document).ready(function() {
 <hr>
 <div id="footer" class="footer">
 		<%@ include file="/common/footer.jsp"%>
+</div>
 </div>
 </body>
 </html>
