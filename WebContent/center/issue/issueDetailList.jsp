@@ -206,6 +206,22 @@ text-align: center;
 	}
 	
 </style>
+
+<script language='javascript'>
+
+function noEvent() {
+    if (event.keyCode == 116) {
+        event.keyCode= 2;
+        return false;
+    }
+    else if(event.ctrlKey && (event.keyCode==78 || event.keyCode == 82))
+    {
+        return false;
+    }
+}
+document.onkeydown = noEvent;
+
+</script>
 </head>
 <body>
 <%@ include file="/common/header.jsp"%>
@@ -239,11 +255,11 @@ text-align: center;
 					<span>${dto.generalMobile }</span> 
 				</div>
 				
-				<input type="button" value="상세정보" class="g_btn detatil_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=applicantInfoForm&volInfoNo=${dto.volInfoNo}&generalId=${dto.generalId }'">
+				<input type="button" value="상세정보" class="g_btn detatil_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=issueInfoForm&volInfoNo=${dto.volInfoNo}&generalId=${dto.generalId }'">
 					<c:if test="${dto.activityStatus == 2 and dto.recStatus == 2}">
 				<input type="button" value="인증서 발급" class="y_btn detatil_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=volIssue&volInfoNo=${dto.volInfoNo}&generalId=${dto.generalId }'">
-					</c:if>
-						
+				<input type="button" value="인증서 발급폼" class="y_btn detatil_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=volIssueForm&volInfoNo=${dto.volInfoNo}&generalId=${dto.generalId }'">
+					</c:if> 	
 			</div>
 			
 			<hr class="list_hr">

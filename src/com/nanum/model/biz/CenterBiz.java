@@ -6,6 +6,7 @@ package com.nanum.model.biz;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.nanum.dto.VolDetailDto;
 import com.nanum.dto.CenterInfoDto;
@@ -16,6 +17,7 @@ import com.nanum.dto.VolApplyListDto;
 import com.nanum.model.dao.CenterDao;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
+import com.nanum.util.Utility;
 
 /**
  * 센터회원 관리 업무 로직을 위한 클래스
@@ -52,8 +54,7 @@ public class CenterBiz {
 	 * 
 	 * @throws CommonException
 	 */
-	public void centerVolList(String centerId, ArrayList<CenterVolDto> list, CenterVolDto voDto)
-			throws CommonException {
+	public void centerVolList(String centerId, ArrayList<CenterVolDto> list) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
 
 		try {
@@ -67,11 +68,11 @@ public class CenterBiz {
 	}
 
 	/**
-	 * 센터회원 봉사 목록(종료)
+	 * 센터회원 봉사 목록(마감)
 	 * 
 	 * @throws CommonException
 	 */
-	public void deadlineList(String centerId, ArrayList<CenterVolDto> list, CenterVolDto voDto) throws CommonException {
+	public void deadlineList(String centerId, ArrayList<CenterVolDto> list) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
 
 		try {
@@ -91,7 +92,8 @@ public class CenterBiz {
 	 * @param list
 	 * @throws CommonException
 	 */
-	public void applyList(String centerId, int volInfoNo, ArrayList<VolApplyListDto> list) throws CommonException {
+	public void applyList(String centerId, int volInfoNo, ArrayList<HashMap<String, Object>> list)
+			throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
 
 		try {
@@ -112,7 +114,7 @@ public class CenterBiz {
 	 * @param list
 	 * @throws CommonException
 	 */
-	public void applicantInfo(String centerId, int volInfoNo, GeneralMemberDto general, ArrayList<VolApplyListDto> list)
+	public void applicantInfo(String centerId, int volInfoNo, GeneralMemberDto general, ArrayList<HashMap<String, Object>> list)
 			throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
 
@@ -307,7 +309,7 @@ public class CenterBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
-	
+
 	/**
 	 * 센터회원 및 센터정보 삭제
 	 * 
@@ -331,18 +333,118 @@ public class CenterBiz {
 	}
 
 	/**
+	 * 인증서 발급 목록
+	 * 
+	 * @param centerId
+	 * @param list
+	 * @throws CommonException
+	 */
+	public void issueList(String centerId, ArrayList<HashMap<String, Object>> list) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+
+		try {
+			dao.issueList(conn, centerId, list);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+
+	/**
+	 * 인증서 발급
+	 * 
+	 * @param centerId
+	 * @param volInfoNo
+	 * @param generalId
+	 * @throws CommonException
+	 */
+	public void volIssue(HashMap<String, Object> map) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+
+		try {
+			dao.volIssue(conn, map);
+
+			String today = Utility.getVolCon();
+			String code = Utility.getVolConCode();
+			String volCode = today + "-" + code;
+			today = Utility.getVolCon();
+
+			code = Utility.getVolConCode();
+			map.put("volCode", volCode);
+			boolean checkCode = dao.isVolCode(conn, map);
+
+			uniqueNoLoop: while (checkCode) {
+				code = Utility.getVolConCode();
+				volCode = today + "-" + code;
+				checkCode = dao.isVolCode(conn, map);
+				continue uniqueNoLoop;
+			}
+			dao.insertIssue(conn, volCode, map);
+			JdbcTemplate.commit(conn);
+		} catch (CommonException e) {
+			JdbcTemplate.rollback(conn);
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+
+	/**
 	 * 봉사게시글 삭제(info, 연관 detail)
+	 * 
 	 * @param volInfoNo
 	 */
 	public void deleteVol(int volInfoNo) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
 
 		try {
-			cDao.deleteVolDetail(conn, volInfoNo);
-			cDao.deleteVolInfo(conn, volInfoNo);
+			dao.deleteVolDetail(conn, volInfoNo);
+			dao.deleteVolInfo(conn, volInfoNo);
 			JdbcTemplate.commit(conn);
 		} catch (CommonException e) {
 			JdbcTemplate.rollback(conn);
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+
+	/**
+	 * 활동상태 변경(활동완료)
+	 * 
+	 * @param map
+	 * @throws CommonException 
+	 */
+	public void checkVolStatus(String checkDates) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+
+		try {
+			dao.checkVolStatus(conn, checkDates);
+			JdbcTemplate.commit(conn);
+		} catch (CommonException e) {
+			JdbcTemplate.rollback(conn);
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+	
+	/**
+	 * 인증서 폼 
+	 * @param map
+	 * @throws CommonException 
+	 */
+	public void volIssueForm(HashMap<String, Object> map) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+
+		try {
+			dao.volIssueForm(conn,map);
+		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;
 		} finally {

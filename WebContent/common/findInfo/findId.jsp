@@ -95,6 +95,10 @@ table{
 	margin: 0 auto;
 }
 
+	.g_btn {
+		font-weight: bold;
+	}
+
 </style>
 </head>
 <body>
@@ -118,14 +122,14 @@ table{
 							<th>이메일</th>
 							<td>  
 								<input type="text" id="email" name="email" size="30" required="required"> 
-								<input type="button" id="checkEmail" value="인증하기" >
+								<input type="button" class="g_btn" id="checkEmail" value="인증하기" >
 							</td>
 					</tr>
 					<tr>
 							<th>인증번호</th>
 							<td>
 								<input type="text" id="code" name="code" size="30" required="required">
-								<input type="submit" id="checkCode" value="완료" >
+								<input type="submit" class="g_btn" id="checkCode" value="완료" >
 							</td>
 					</tr>
 				</table>

@@ -90,6 +90,12 @@ table{
 	text-align: center;
 	margin: 10px;
 }
+
+ .g_btn{
+ font-weight: bold;
+ }
+ 
+
 </style>
 </head>
 <body>
@@ -108,12 +114,14 @@ table{
 				<table border="1">
 					<tr>
 						<th>아이디</th> 
-						<td><input type="text" id="memberId" name="memberId" size="30" required="required"></td>
+						<td>
+							<input type="text" id="memberId" name="memberId" size="30" required="required">
+							<input type="submit" class="g_btn" id="checkPw" name="checkPw" value="다음" >
+						</td>
 					</tr>
 				</table>
 			<div class="submit">
-				<input type="reset" id="reset" name="reset" value="초기화" >
-				<input type="submit" id="checkPw" name="checkPw" value="다음" >
+				
 			</div>
 			</form>
 </div>

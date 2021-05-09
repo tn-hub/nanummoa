@@ -51,6 +51,9 @@ public class VolApplyListDto {
 	/** 모집상태 */
 	private String recStatus;
 
+	/** 활동여부 */
+	private String activityStatus;
+
 	/**
 	 * 기본 생성자
 	 */
@@ -88,7 +91,7 @@ public class VolApplyListDto {
 	 */
 	public VolApplyListDto(int volApplyNo, Date applyDate, String generalId, int volDetailNo, int volStatus,
 			int volInfoNo, String volTitle, String generalName, String volDate, int applyCount, int totalCount,
-			String recStatus) {
+			String recStatus, String activityStatus) {
 		super();
 		this.volApplyNo = volApplyNo;
 		this.applyDate = applyDate;
@@ -102,6 +105,7 @@ public class VolApplyListDto {
 		this.applyCount = applyCount;
 		this.totalCount = totalCount;
 		this.recStatus = recStatus;
+		this.activityStatus = activityStatus;
 	}
 
 	/**
@@ -272,6 +276,20 @@ public class VolApplyListDto {
 		this.recStatus = recStatus;
 	}
 
+	/**
+	 * @return the activityStatus
+	 */
+	public String getActivityStatus() {
+		return activityStatus;
+	}
+
+	/**
+	 * @param activityStatus the activityStatus to set
+	 */
+	public void setActivityStatus(String activityStatus) {
+		this.activityStatus = activityStatus;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -298,6 +316,8 @@ public class VolApplyListDto {
 		builder.append(totalCount);
 		builder.append(", ");
 		builder.append(recStatus);
+		builder.append(", ");
+		builder.append(activityStatus);
 		return builder.toString();
 	}
 

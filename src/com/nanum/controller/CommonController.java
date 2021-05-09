@@ -169,7 +169,7 @@ public class CommonController extends HttpServlet {
 	protected void login(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
-		
+
 		String memberId = request.getParameter("memberId");
 		String memberPw = request.getParameter("memberPw");
 		String grade = request.getParameter("grade");
@@ -219,10 +219,14 @@ public class CommonController extends HttpServlet {
 			dto.setCenterPass(memberPw);
 			try {
 				biz.login(dto);
-				if (dto.getCenterName() != null) {
+				if (dto.getCenterName() != null && dto.getAppStatus().equals("1")) {
 					session.setAttribute("dto", dto);
 					session.setAttribute("grade", grade);
 					response.sendRedirect(CONTEXT_PATH + "/home");
+				} else if (dto.getCenterName() != null && dto.getAppStatus().equals("0")) {
+					out.println("<script>alert('[오류] 미승인된 아이디 입니다 .');history.go(-1); </script>");
+					out.flush();
+					return;
 				} else {
 					out.println("<script>alert('[오류] 로그인 정보가 맞지 않습니다.');history.go(-1); </script>");
 					out.flush();
@@ -254,7 +258,7 @@ public class CommonController extends HttpServlet {
 		}
 
 	}
-	
+
 	/**
 	 * 아이디찾기 페이지
 	 * 
@@ -288,7 +292,7 @@ public class CommonController extends HttpServlet {
 		String host = "http://localhost:8090/nanummoa/";
 		String from = "gusqls904@gmail.com";
 		String code = SHA256.getEncrypt(email, "cos");
-		
+
 		System.out.println("이름 : " + name);
 		System.out.println("등급 : " + grade);
 		System.out.println("이메일 : " + email);
@@ -418,7 +422,7 @@ public class CommonController extends HttpServlet {
 	protected void findId(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
-		
+
 		String code = request.getParameter("code");
 		String name = request.getParameter("name");
 		String email = request.getParameter("email");
@@ -438,7 +442,7 @@ public class CommonController extends HttpServlet {
 					message.setLinkTitle("로그인");
 					message.setUrl(CONTEXT_PATH + "/common/commonController?action=loginForm");
 					request.setAttribute("message", message);
-					request.setAttribute("id", dto.getGeneralId());	
+					request.setAttribute("id", dto.getGeneralId());
 					request.getRequestDispatcher("/common/findInfo/idpwmessage.jsp").forward(request, response);
 				} catch (CommonException e) {
 					out.println("<script>alert('[오류]');history.go(-1); </script>");
@@ -492,10 +496,10 @@ public class CommonController extends HttpServlet {
 	protected void findPw(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
-		
+
 		String memberId = request.getParameter("memberId");
 		String grade = request.getParameter("grade");
-		
+
 		if (memberId == null || memberId.trim().length() == 0 || memberId == "") {
 			out.println("<script>alert('[오류] 아이디를 입력하세요');history.go(-1); </script>");
 			out.flush();
@@ -534,7 +538,7 @@ public class CommonController extends HttpServlet {
 					request.setAttribute("dto", dto);
 					request.getRequestDispatcher("/common/findInfo/checkEmail.jsp").forward(request, response);
 				} else {
-					
+
 					out.println("<script>alert('[오류] 존재하지 않는 아이디 입니다.');history.go(-1); </script>");
 					out.flush();
 					return;
@@ -604,7 +608,7 @@ public class CommonController extends HttpServlet {
 				dto.setGeneralEmail(email);
 				try {
 					biz.checkEmail(dto);
-					System.out.println("비밀번호 : " +dto.getGeneralPass());
+					System.out.println("비밀번호 : " + dto.getGeneralPass());
 					if (dto.getGeneralPass() != null) {
 						request.setAttribute("grade", grade);
 						request.setAttribute("dto", dto);
@@ -673,14 +677,10 @@ public class CommonController extends HttpServlet {
 	protected void newPw(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
-		
+
 		String memberPw = request.getParameter("memberPw");
 		String email = request.getParameter("email");
 		String grade = request.getParameter("grade");
-
-		System.out.println(memberPw);
-		System.out.println(email);
-		System.out.println(grade);
 
 		if (memberPw == null || memberPw.trim().length() == 0 || memberPw == "") {
 			out.println("<script>alert('[오류] 이름을 입력하세요');history.go(-1); </script>");
@@ -732,62 +732,63 @@ public class CommonController extends HttpServlet {
 
 	/**
 	 * 전체 문의글에서 글쓰기 연동
+	 * 
 	 * @param request
 	 * @param response
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	private void qnaInputForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	private void qnaInputForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		request.getRequestDispatcher("/qna/qnaInput.jsp").forward(request, response);
 	}
 
-	
 	/**
 	 * QNA 등록
 	 */
-	   private void qnaInput(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		      HttpSession session = request.getSession();
-		      String grade = (String) session.getAttribute("grade");
-		      String qnaTitle = request.getParameter("qnaTitle");
-		      String qnaContents = request.getParameter("qnaContents");
-		      
-		      QnADto dto = new QnADto();
-		      dto.setQnaTitle(qnaTitle);
-		      dto.setQnaContents(qnaContents);
-		      
-		      CommonBiz biz = new CommonBiz();
-		      
-		      // 작성자는 로그인에서
-		      if (grade.equals("G")) { 
-		         GeneralMemberDto gdto = (GeneralMemberDto) session.getAttribute("dto");
-		         dto.setGeneralId(gdto.getGeneralId());
+	private void qnaInput(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		String grade = (String) session.getAttribute("grade");
+		String qnaTitle = request.getParameter("qnaTitle");
+		String qnaContents = request.getParameter("qnaContents");
 
-		         System.out.println("dto.getGeneralId() = "+dto.getGeneralId());
-		         try {
-		            biz.addQna_gen(dto);
-		            response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=qnaList");
-		         } catch (CommonException e) {
-		            e.printStackTrace();
-		         }
-		         
-		      }else if (grade.equals("C")) {
-		         CenterMemberDto cdto = (CenterMemberDto) session.getAttribute("dto");
-		         dto.setCenterId(cdto.getCenterId());
+		QnADto dto = new QnADto();
+		dto.setQnaTitle(qnaTitle);
+		dto.setQnaContents(qnaContents);
 
-		         try {
-		            biz.addQna_cen(dto);
-		            response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=qnaList");
-		         } catch (CommonException e) {
-		            e.printStackTrace();
-		         }
-		      }else if  (grade.equals("A")) {// 어드민
-		         //AdminMemberDto adto = (AdminMemberDto) session.getAttribute("dto");
-		      }
-		   }
-	
-   
+		CommonBiz biz = new CommonBiz();
+
+		// 작성자는 로그인에서
+		if (grade.equals("G")) {
+			GeneralMemberDto gdto = (GeneralMemberDto) session.getAttribute("dto");
+			dto.setGeneralId(gdto.getGeneralId());
+
+			System.out.println("dto.getGeneralId() = " + dto.getGeneralId());
+			try {
+				biz.addQna_gen(dto);
+				response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=qnaList");
+			} catch (CommonException e) {
+				e.printStackTrace();
+			}
+
+		} else if (grade.equals("C")) {
+			CenterMemberDto cdto = (CenterMemberDto) session.getAttribute("dto");
+			dto.setCenterId(cdto.getCenterId());
+
+			try {
+				biz.addQna_cen(dto);
+				response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=qnaList");
+			} catch (CommonException e) {
+				e.printStackTrace();
+			}
+		} else if (grade.equals("A")) {// 어드민
+			// AdminMemberDto adto = (AdminMemberDto) session.getAttribute("dto");
+		}
+	}
+
 	/**
-	 * QNA 목록조회 
+	 * QNA 목록조회
 	 */
 	private void qnaList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		
@@ -797,9 +798,9 @@ public class CommonController extends HttpServlet {
 		String searchText = request.getParameter("search_text");
 		CommonBiz biz = new CommonBiz();
 		ArrayList<QnADto> qnaList = new ArrayList<QnADto>();
-		QnADto cdto = new QnADto(); 
+		QnADto cdto = new QnADto();
 		try {
-			
+
 			request.setAttribute("searchText", searchText);
 			request.setAttribute("searchOpt", searchOpt);
 			
@@ -815,28 +816,29 @@ public class CommonController extends HttpServlet {
 			System.out.println("blockLastNum=  " + blockLastNum);
 			System.out.println("lastPageNum=  " + lastPageNum);
 			
+
+			biz.qnaListTotCnt(cdto);
 			request.setAttribute("cdto", cdto);
-			
+
 			biz.qnaList(qnaList, searchOpt, searchText);
 			request.setAttribute("qnaList", qnaList);
-			
+
 			request.getRequestDispatcher("/qna/qnaList.jsp").forward(request, response);
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
-			
+
 	}
-	
-	
+
 	/**
-	 * QNA 상세조회 
+	 * QNA 상세조회
 	 */
-	private void qnaDtl(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		
+	private void qnaDtl(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
 		String qnaNo = request.getParameter("qnaNo");
 		CommonBiz biz = new CommonBiz();
 		QnADto dto = new QnADto();
-		
+
 		try {
 			biz.qnaDetail(dto, qnaNo);
 			request.setAttribute("sdto", dto);
@@ -845,21 +847,20 @@ public class CommonController extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	/**
 	 * QNA 수정
 	 */
-	private void qnaUpt(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	private void qnaUpt(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String qnaTitle = request.getParameter("qnaTitle");
 		String qnaContents = request.getParameter("qnaContents");
 		String qnaNo = request.getParameter("qnaNo");
-		
+
 		QnADto dto = new QnADto();
 		dto.setQnaNo(Integer.parseInt(qnaNo));
 		dto.setQnaContents(qnaContents);
 		dto.setQnaTitle(qnaTitle);
-		
+
 		try {
 			CommonBiz biz = new CommonBiz();
 			biz.qnaUpdate(dto);
@@ -868,13 +869,13 @@ public class CommonController extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * QNA 삭제
 	 */
-	private void qnaDel(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	private void qnaDel(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String qnaNo = request.getParameter("qnaNo");
-		
+
 		try {
 			CommonBiz biz = new CommonBiz();
 			biz.qnaDelete(qnaNo);
@@ -886,17 +887,19 @@ public class CommonController extends HttpServlet {
 
 	/**
 	 * 봉사 상세보기
+	 * 
 	 * @param request
 	 * @param response
 	 */
-	private void volDetatilForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	private void volDetatilForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		CommonBiz biz = new CommonBiz();
 		GeneralBiz gBiz = new GeneralBiz();
 		String volInfoNo = request.getParameter("volInfoNo");
-		
+
 		// 카테고리 가져오기
 		ArrayList<VolCategoryDto> categoryList = new ArrayList<VolCategoryDto>();
-		
+
 		try {
 			gBiz.getVolCategoryList(categoryList);
 			request.setAttribute("volCategory", categoryList);
@@ -905,17 +908,18 @@ public class CommonController extends HttpServlet {
 			biz.volDetailInfo(dto, Integer.parseInt(volInfoNo));
 			request.setAttribute("vDto", dto);
 			request.getRequestDispatcher("/volInfo.jsp").forward(request, response);
-			
+
 		} catch (CommonException e1) {
 			e1.printStackTrace();
 		}
-		
+
 	}
-	
+
 	/**
 	 * 봉사조회 페이지 요청 서비스
 	 */
-	private void volListForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	private void volListForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		CommonBiz biz = new CommonBiz();
 		GeneralBiz gBiz = new GeneralBiz();
 		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
@@ -923,7 +927,7 @@ public class CommonController extends HttpServlet {
 		ArrayList<VolCategoryDto> volCategoryList = new ArrayList<VolCategoryDto>();
 		ArrayList<ServiceCategoryDto> serviceList = new ArrayList<ServiceCategoryDto>();
 		HashMap<String, String> searchMap = new HashMap<String, String>();
-		
+
 		String local = request.getParameter("local");
 		String category = request.getParameter("category");
 		String service = request.getParameter("service");
@@ -933,7 +937,7 @@ public class CommonController extends HttpServlet {
 		String[] volType = request.getParameterValues("volType");
 		String volTitle = request.getParameter("volTitle");
 		String centerName = request.getParameter("centerName");
-		
+
 		if (local == null) {
 			local = "0";
 		}
@@ -968,7 +972,7 @@ public class CommonController extends HttpServlet {
 				centerName = centerName.trim();
 			}
 		}
-		
+
 		searchMap.put("local", local);
 		searchMap.put("category", category);
 		searchMap.put("service", service);
@@ -982,8 +986,7 @@ public class CommonController extends HttpServlet {
 		}
 		searchMap.put("volTitle", volTitle);
 		searchMap.put("centerName", centerName);
-		
-		
+
 		try {
 			if (!local.equals("0")) {
 				HashMap<String, LocalDto> localMap = new HashMap<String, LocalDto>();
@@ -991,15 +994,15 @@ public class CommonController extends HttpServlet {
 				LocalDto dto = localMap.get(local);
 				searchMap.put("local", dto.getLocalName());
 			}
-			
+
 			gBiz.getLocalList(localList);
 			gBiz.getVolCategoryList(volCategoryList);
 			biz.searchServiceCategory(serviceList);
-			String[] date = {Utility.getCurrentDate(), Utility.getCurrentDate(3)};
+			String[] date = { Utility.getCurrentDate(), Utility.getCurrentDate(3) };
 			String sql = biz.searchVolList(list, searchMap);
 			int total = biz.volListTotalCount(searchMap, sql);
 			System.out.println("total : " + total);
-			
+
 			request.setAttribute("date", date);
 			request.setAttribute("localList", localList);
 			request.setAttribute("volCategoryList", volCategoryList);
@@ -1012,7 +1015,7 @@ public class CommonController extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 회원가입 페이지 요청
 	 */
@@ -1020,26 +1023,27 @@ public class CommonController extends HttpServlet {
 			throws ServletException, IOException {
 		request.getRequestDispatcher("/common/inputForm.jsp").forward(request, response);
 	}
-	
+
 	/**
-	 * 로그아웃  서비스
+	 * 로그아웃 서비스
 	 */
-	protected void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void logout(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
 		System.out.println("[debug] 로그아웃 요청");
 		if (session != null) {
 			if (session.getAttribute("dto") != null) {
 				session.removeAttribute("dto");
 			}
-			
+
 			if (session.getAttribute("grade") != null) {
 				session.removeAttribute("grade");
 			}
-			
+
 			session.invalidate();
 		}
-		
-		response.sendRedirect(CONTEXT_PATH + "/home"); 
+
+		response.sendRedirect(CONTEXT_PATH + "/home");
 	}
 	
 	

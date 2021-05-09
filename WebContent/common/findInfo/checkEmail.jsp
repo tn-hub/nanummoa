@@ -96,6 +96,10 @@ text-align: center;
 	margin: 10px;
 }
 
+ .g_btn{
+ font-weight: bold;
+ }
+
 </style>
 </head>
 <body>
@@ -130,12 +134,12 @@ text-align: center;
 						<th>인증번호</th> 
 						<td>
 							<input type="text" id="code" name="code" size="30" required="required">
-							<input type="button" id="checkEmail" value="인증번호 받기">
+							<input type="button"  class="g_btn"id="checkEmail" value="인증번호 받기">
 						</td>
 					</tr>
 				</table>
 				<div class="submit">
-					<input type="submit" id="checkPw" name="checkPw" value="다음" >
+					<input type="submit" class="g_btn" id="checkPw" name="checkPw" value="다음" >
 				</div>
 			</form>
 			
