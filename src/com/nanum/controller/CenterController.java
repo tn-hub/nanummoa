@@ -813,14 +813,14 @@ public class CenterController extends HttpServlet {
 		int totalCount = Integer.parseInt(totalCountStr);
 
 		if (volTitle == null || volTitle.trim().length() == 0) {
-			out.print("제목을 입력해 주세요");
+			out.println("<script>alert('제목을 입력해 주세요');history.back();</script>");
 			out.flush();
 			out.close();
 			return;
 		}
 
 		if (volContents == null || volContents.trim().length() == 0) {
-			out.print("내용을 입력해 주세요");
+			out.println("<script>alert('내용을 입력해 주세요');history.back();</script>");
 			out.flush();
 			out.close();
 			return;
@@ -831,7 +831,7 @@ public class CenterController extends HttpServlet {
 				|| endTimeStr == null || endTimeStr.trim().length() == 0 || startVolDateStr == null
 				|| startVolDateStr.trim().length() == 0 || endVolDateStr == null
 				|| endVolDateStr.trim().length() == 0) {
-			out.print("날짜를 입력해 주세요");
+			out.println("<script>alert('날짜를 입력해 주세요');history.back();</script>");
 			out.flush();
 			out.close();
 			return;
@@ -839,16 +839,14 @@ public class CenterController extends HttpServlet {
 
 		if (startTimeStr == null || startTimeStr.trim().length() == 0 || endTimeStr == null
 				|| endTimeStr.trim().length() == 0) {
-			out.print("시간을 입력해 주세요");
+			out.println("<script>alert('시간을 입력해 주세요');history.back();</script>");
 			out.flush();
 			out.close();
 			return;
 		}
-		System.out.println("con 시간 str");
-		System.out.println(startTimeStr);
 
 		if (totalCountStr == null || totalCountStr.trim().length() == 0) {
-			out.print("모집인원을 입력해 주세요");
+			out.println("<script>alert('모집인원을 입력해 주세요');history.back();</script>");
 			out.flush();
 			out.close();
 			return;
@@ -856,14 +854,14 @@ public class CenterController extends HttpServlet {
 
 		if (categoryNo == null || categoryNo.equals("none") || volSubject == null || volSubject.equals("none")
 				|| volTitle == null || volTitle.equals("none")) {
-			out.print("값을 선택해 주세요");
+			out.println("<script>alert('값을 선택해 주세요');history.back();</script>");
 			out.flush();
 			out.close();
 			return;
 		}
 
 		if (address == null || address.trim().length() == 0) {
-			out.print("주소를 입력해 주세요");
+			out.println("<script>alert('주소를 입력해 주세요');history.back();</script>");
 			out.flush();
 			out.close();
 			return;
@@ -904,6 +902,9 @@ public class CenterController extends HttpServlet {
 			
 			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=volListForm");
 		} catch (CommonException | ParseException e) {
+			out.println("<script>alert('글 등록에 실패했습니다.');history.back();</script>");
+			out.flush();
+			out.close();
 			e.printStackTrace();
 		}
 	}
@@ -951,7 +952,7 @@ public class CenterController extends HttpServlet {
 	 */
 	private void updateVol(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(false);
 		PrintWriter out = response.getWriter();
 		
 		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null) {
@@ -989,14 +990,14 @@ public class CenterController extends HttpServlet {
 		
 		
 		if (volTitle == null || volTitle.trim().length() == 0) {
-			out.print("제목을 입력해 주세요");
+			out.println("<script>alert('제목을 입력해 주세요');history.back();</script>");
 			out.flush();
 			out.close();
 			return;
 		}
 
 		if (volContents == null || volContents.trim().length() == 0) {
-			out.print("내용을 입력해 주세요");
+			out.println("<script>alert('내용을 입력해 주세요');history.back();</script>");
 			out.flush();
 			out.close();
 			return;
@@ -1007,7 +1008,7 @@ public class CenterController extends HttpServlet {
 				|| endTimeStr == null || endTimeStr.trim().length() == 0 || startVolDateStr == null
 				|| startVolDateStr.trim().length() == 0 || endVolDateStr == null
 				|| endVolDateStr.trim().length() == 0) {
-			out.print("날짜를 입력해 주세요");
+			out.println("<script>alert('날짜를 입력해 주세요');history.back();</script>");
 			out.flush();
 			out.close();
 			return;
@@ -1015,14 +1016,14 @@ public class CenterController extends HttpServlet {
 
 		if (startTimeStr == null || startTimeStr.trim().length() == 0 || endTimeStr == null
 				|| endTimeStr.trim().length() == 0) {
-			out.print("시간을 입력해 주세요");
+			out.println("<script>alert('시간을 입력해 주세요');history.back();</script>");
 			out.flush();
 			out.close();
 			return;
 		}
 
 		if (totalCountStr == null || totalCountStr.trim().length() == 0) {
-			out.print("모집인원을 입력해 주세요");
+			out.println("<script>alert('모집인원을 입력해 주세요');history.back();</script>");
 			out.flush();
 			out.close();
 			return;
@@ -1030,14 +1031,14 @@ public class CenterController extends HttpServlet {
 
 		if (categoryNo == null || categoryNo.equals("none") || volSubject == null || volSubject.equals("none")
 				|| volTitle == null || volTitle.equals("none")) {
-			out.print("값을 선택해 주세요");
+			out.println("<script>alert('값을 선택해 주세요');history.back();</script>");
 			out.flush();
 			out.close();
 			return;
 		}
 
 		if (address == null || address.trim().length() == 0) {
-			out.print("주소를 입력해 주세요");
+			out.println("<script>alert('주소를 입력해 주세요');history.back();</script>");
 			out.flush();
 			out.close();
 			return;
@@ -1082,6 +1083,10 @@ public class CenterController extends HttpServlet {
 			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=volDetatilForm&volInfoNo=" + volInfoNo);
 		} catch (CommonException | ParseException e) {
 			e.printStackTrace();
+			out.println("<script>alert('글수정에 실패했습니다.');history.back();</script>");
+			out.flush();
+			out.close();
+			return;
 		}
 
 	}
@@ -1092,6 +1097,7 @@ public class CenterController extends HttpServlet {
 	private void deleteVol(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
+		PrintWriter out = response.getWriter();
 		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
 		String centerId = dto.getCenterId();
 		
@@ -1103,6 +1109,10 @@ public class CenterController extends HttpServlet {
 			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=volListForm");
 		} catch (CommonException e) {
 			e.printStackTrace();
+			out.println("<script>alert('글삭제에 실패했습니다.');history.back();</script>");
+			out.flush();
+			out.close();
+			return;
 		}
 	}
 

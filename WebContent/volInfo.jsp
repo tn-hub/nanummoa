@@ -56,6 +56,7 @@
 	margin-right: 10px;
 	margin-bottom: 10px;
 	border-radius: 25px;
+	font-size: smaller;
 }
 
 #volAdd{

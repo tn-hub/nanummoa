@@ -98,7 +98,7 @@ $(document).ready(function() {
 		<div class="header_menu">
 			<ul>
 				<c:choose>
-					<c:when test="${empty grade}">
+					<c:when test="${empty grade or empty dto}">
 						<li><a href="${CONTEXT_PATH}/common/commonController?action=volListForm">봉사조회</a></li>
 						<li><a href="${CONTEXT_PATH}/common/commonController?action=loginForm">인증서발급</a></li>
 						<li><a href="${CONTEXT_PATH}/common/commonController?action=qnaList">문의하기</a></li>
