@@ -15,6 +15,7 @@ import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.LocalDto;
 import com.nanum.dto.QnADto;
+import com.nanum.dto.QnAReplyDto;
 import com.nanum.dto.SearchAllDto;
 import com.nanum.dto.ServiceCategoryDto;
 import com.nanum.dto.VolBlockDto;
@@ -1128,6 +1129,42 @@ public class CommonDao {
 		
 		return 0;
 	}
+	
+	/**
+	 * 문의하기 게시글 댓글 조회
+	 * @param conn
+	 * @param qnaNo 게시글 번호
+	 * @param list ArrayList<QnAReplyDto>
+	 * @throws CommonException
+	 */
+	public void selectQnaReply(Connection conn, String qnaNo, ArrayList<QnAReplyDto> list) throws CommonException {
+		String sql = "select r_no, a_id, r_contents, to_char(r_write_date, 'yyyy-mm-dd') from qna_reply where q_no = ? order by 4, 1";
+
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, qnaNo);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				QnAReplyDto dto = new QnAReplyDto();
+				dto.setReplyNo(rs.getInt(1));
+				dto.setAdminId(rs.getString(2));
+				dto.setReplyContents(rs.getString(3));
+				dto.setReplyWriteDate(rs.getString(4));
+				
+				list.add(dto);
+			}
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+				throw new CommonException();
+			} finally {
+				JdbcTemplate.close(rs);
+				JdbcTemplate.close(stmt);
+			}
+		}
 
 	
 	/** 통합검색 */

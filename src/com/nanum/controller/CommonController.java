@@ -26,6 +26,7 @@ import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.LocalDto;
 import com.nanum.dto.QnADto;
+import com.nanum.dto.QnAReplyDto;
 import com.nanum.dto.SearchAllDto;
 import com.nanum.dto.ServiceCategoryDto;
 import com.nanum.dto.VolCategoryDto;
@@ -838,7 +839,6 @@ public class CommonController extends HttpServlet {
 		String qnaNo = request.getParameter("qnaNo");
 		CommonBiz biz = new CommonBiz();
 		QnADto dto = new QnADto();
-
 		try {
 			biz.qnaDetail(dto, qnaNo);
 			request.setAttribute("sdto", dto);

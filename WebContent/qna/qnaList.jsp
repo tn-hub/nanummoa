@@ -191,6 +191,11 @@ $(document).ready(function() {
 </div>
 </form>
 </div>
+<div id=page_btn>
+	<input type="button" value="이전 < ">
+	<input type="button" value="1">
+	<input type="button" value="다음 > ">
+</div>
 <div class="pager">
     <ul>
         <c:forEach var="i" begin="${ 1 }" end="${ 10 }">

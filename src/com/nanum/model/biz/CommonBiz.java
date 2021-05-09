@@ -10,6 +10,7 @@ import com.nanum.dto.AdminMemberDto;
 import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.QnADto;
+import com.nanum.dto.QnAReplyDto;
 import com.nanum.dto.SearchAllDto;
 import com.nanum.dto.ServiceCategoryDto;
 import com.nanum.dto.LocalDto;
@@ -505,7 +506,24 @@ public class CommonBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
-
+	
+	/**
+	 * 댓글 조회
+	 * @param qnaNo 게시글 번호
+	 * @param list ArrayList<QnAReplyDto>
+	 * @throws CommonException
+	 */
+	public void getReply(String qnaNo, ArrayList<QnAReplyDto> list) throws CommonException{
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.selectQnaReply(conn, qnaNo, list);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
 	
 	/**
 	 * 통합검색

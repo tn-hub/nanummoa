@@ -42,7 +42,8 @@ h4{
 	padding: 10px; 
 	margin-bottom: 20px;
 	font-size: 17px;
-	border-color: 1px solid gray;
+	border: none;
+	resize : none;
 }
 
 
@@ -84,14 +85,17 @@ h4{
 #r_det_contexts{
 	width:985px; 
 	height: 200px; 
-	margin-top: 10px;
+	margin-top: 40px;
 }
 
 #r_input_contexts{
 	width:985px; 
 	height: 100px; 
 	background-color: #F6F6F6;
+	margin-top: 
 	margin-left: 5px;
+	resize : none;
+	borde: 1px solide #AAA;
 }
 
 #btn_r_resp{
@@ -99,34 +103,113 @@ h4{
 	margin-top: 5px;
 }
 
-#r_resp{
+.r_resp{
 	float: right;
-	margin-top: 20px;
+	margin-top: -40px;
+}
+
+.admin_id {
+	font-weight: bold;
+}
+
+.admin_writeDate {
+	color: #5F5F5F;
+
+}
+
+.reply_content {
+	width: 700px;
+}
+
+.no_reply {
+	color: #5F5F5F;
+	width:985px;
+	height: 80px;
+	line-height: 80px;
+	text-align: center;
+}
+
+.btn_margin {
+	margin-right: 5px;
 }
 </style>
 </head>
 <script type="text/javascript">
 
 $(document).ready(function() {
-	$('#r_text_input').hide(); // 댓글등록 
+	
+	// 댓글조회
+	function selectReply() {
+		var qno = ${sdto.qnaNo};
+		console.log("댓글조회 : " + qno);
+		$.ajax({
+			  type:'post',
+			  url:'${CONTEXT_PATH}/admin/adminController?action=getReply',
+			  data:{qno:qno},
+			  dataType: 'json',
+			  success: function(data, textStatus){
+				  var html = "";
+				     $.each(data, function(index, item) {
+				           html += "<span class='admin_id'>" + item.adminId + "</span>";
+				           html += "<p class='reply_content'>" + item.replyContents + "</p>";
+				           html += "<span class='dmin_writeDate'>" + item.replyWriteDate + "</span>";
+				           
+				        	   if ($("#adminId").val() == item.adminId) {
+				        		   html += "<div class='r_resp'>";
+						           html += "<input class='btn_qna g_btn btn_margin' type='button' value='수정'>";
+						           html += "<input class='btn_qna g_btn' type='button' value='삭제'>";
+						           html += "</div>"; 
+				        	   }
+				           
+				           html += "<hr>";
+				       });
+						console.log("html : " + html);
+				     $("#r_text_input").html(html);
+				     $("#r_input_contexts").val("");
+			  },
+			  error : function(xhr,status,error) {
+			     console.log("faild");
+			  }
+			});
+	}
+	
+	
 	
 	// 댓글등록 이벤트 
-	$("#btn_rAdd").click(function () {
-		if($('#r_text_input').css('display') == 'none'){
-            $('#r_text_input').show();
-        }else{
-            $('#r_text_input').hide();
-        }			
+	$("#btn_r_resp").click(function () {
+		var content = $("#r_input_contexts").val();
+		var qno = ${sdto.qnaNo};
+		console.log(content, qno);
+		$.ajax({
+			  type:'post',
+			  url:'${CONTEXT_PATH}/admin/adminController?action=addReply',
+			  data:{qno:qno, content:content},
+			  dataType: 'text',
+			  success: function(result, textStatus){
+				  if (result == "success") {
+					  selectReply();
+				  } else {
+					  alert("답글 등록 실패");
+				  }
+			  },
+			  error : function(xhr,status,error) {
+			     console.log("error");
+			  }
+			});
 	});
 	
+	selectReply();
+	
 });
+</script>
+<script type="text/javascript">
 
 </script>
 <body>
 <%@ include file="/common/header.jsp"%>
 <div id="section_contents">
 <form name="qnaDetailForm" action="${CONTEXT_PATH}/common/commonController?action=qnaUpt" method="post">
-<h3>문의글 상세</h3>
+<h1>문의글 상세</h1>
 <hr>
 <div id="qna_detail">
 	
@@ -156,28 +239,42 @@ $(document).ready(function() {
 	</c:if>	
 	</div>
 	<h4>제목 : <input type="text" id="qnaTitle" name="qnaTitle" value="${sdto.qnaTitle}"></h4>
-	<hr>
 	<div id="qna_det_contexts"><textarea id="qnaContents" name="qnaContents">${sdto.qnaContents}</textarea> </div>	
-	<hr>
 	</div>
-	<div id="rAdd"><input id="btn_rAdd" class="btn_qna" type="button" value="댓글달기"></div>
+	<input type="hidden"  id="qnaNo" name="qnaNo" value="${sdto.qnaNo}">
+	<c:choose> 
+		<c:when test="${not empty dto and grade == 'A'}">
+			<input type="hidden"  id="adminId" value="${dto.adminId}">
+		</c:when>
+		<c:otherwise>
+			<input type="hidden"  id="adminId" value="notAdmin">
+		</c:otherwise>
+	</c:choose>
+</form>
+	<span>답글</span>
 	<hr>
-	<div id="r_text_input">	
-		<div id="r_det_contexts"><textarea id="r_input_contexts"></textarea>
-		<div id="r_resp"><input class="btn_qna" id="btn_r_resp" type="button" value="댓글 등록"></div>
-		</div>
+	
+	<!-- 댓글 -->
+	<div id="r_text_input">
+		<c:if test="${empty reply }">
+			<div class="no_reply">
+				<span>등록된 답글이 없습니다</span>
+			</div>
+		</c:if>
+	</div>
+	
+	<c:if test="${not empty dto and grade == 'A'}">
+	<div id="r_det_contexts">
+		<textarea id="r_input_contexts" name="replyContent"></textarea>
+			<input class="btn_qna y_btn" id="btn_r_resp" type="button" value="답글 등록">
 	</div>	
 	<hr>
-	<div id="r_text_input">	
-		<div id="r_det_contexts"><textarea id="r_input_contexts"></textarea>
-		<div id="r_resp">
-			<input class="btn_qna" type="button" value="수정하기">
-			<input class="btn_qna" type="button" value="삭제하기">
-		</div>
-		</div>
-	</div>	
-	 <input type="hidden"  id="qnaNo" name="qnaNo" value="${sdto.qnaNo}">
-	</form>
+	</c:if>
+	 
+	
 </div>
+
+<!-- footer -->
+<%@ include file="/common/footer.jsp"%>
 </body>
 </html>
