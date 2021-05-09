@@ -533,16 +533,16 @@ public class GeneralDao {
 		String sql = "select i.vol_info_no, vc.vol_con_no, i.v_title, c.c_name, \r\n" + 
 							"(select min(vol_date)\r\n" + 
 								"from vol_detail\r\n" + 
-								"where vol_info_no = 1) as 봉사시작일,\r\n" + 
+								"where vol_info_no = i.vol_info_no) as 봉사시작일,\r\n" + 
 							"(select max(vol_date)\r\n" + 
 								"from vol_detail\r\n" + 
-								"where vol_info_no = 1) as 봉사마감일, \r\n" + 
+								"where vol_info_no = i.vol_info_no) as 봉사마감일, \r\n" + 
 							"to_char(i.start_time, 'HH24:MI') as 시작시간, to_char(i.end_time, 'HH24:MI') as 마감시간 \r\n" + 
 				"from vol_info i, vol_detail d, center_info c, vol_confirmation vc\r\n" + 
 				"where i.vol_info_no = d.vol_info_no\r\n" + 
 						"and i.c_id = c.c_id\r\n" + 
 						"and i.c_id = vc.c_id\r\n" + 
-						"and vc.vol_detail_no = d.vol_detail_no \r\n" + 
+						"and vc.vol_info_no = d.vol_info_no \r\n" + 
 						"and vc.g_id = ?\r\n" + 
 				"group by i.vol_info_no, vc.vol_con_no, i.v_title, c.c_name, i.start_time, i.end_time, vc.vol_date\r\n" + 
 				"order by vc.vol_date desc";
@@ -597,12 +597,12 @@ public class GeneralDao {
 							"(select count(*)\r\n" + 
 								"from vol_detail d, vol_apply_list a\r\n" + 
 								"where d.vol_detail_no = a.vol_detail_no \r\n" + 
-										"and a.g_id = ? and d.vol_info_no = ?) as cnt\r\n" + 
+										"and a.g_id = ? and d.vol_info_no = ? and a.vol_status = 2) as cnt\r\n" + 
 				"from vol_info i, vol_detail d, center_info c, vol_confirmation vc, general_member g\r\n" + 
 				"where i.vol_info_no = d.vol_info_no\r\n" + 
 						"and i.c_id = c.c_id\r\n" + 
 						"and i.c_id = vc.c_id\r\n" + 
-						"and vc.vol_detail_no = d.vol_detail_no\r\n" + 
+						"and vc.vol_info_no = d.vol_info_no\r\n" + 
 						"and vc.g_id = g.g_id\r\n" + 
 						"and vc.vol_con_no = ?\r\n" + 
 				"group by  vc.vol_con_no, g.g_name, g.g_address, vc.contents, i.v_title, c.c_name,\r\n" + 
