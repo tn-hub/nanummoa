@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 
 import com.nanum.dto.CenterInfoDto;
+import com.nanum.dto.QnAReplyDto;
 import com.nanum.model.dao.AdminDao;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
@@ -81,6 +82,26 @@ public class AdminBiz {
 		}catch (Exception e) {
 			e.printStackTrace();
 			JdbcTemplate.rollback(conn);// rollback;
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+	
+	/**
+	 * 댓글등록
+	 * @param replyDto QnAReplyDto
+	 * @throws CommonException
+	 */
+	public void addReply(QnAReplyDto replyDto) throws CommonException{
+		Connection conn = JdbcTemplate.getConnection();
+		
+		try {
+			dao.insertReply(conn, replyDto);
+			JdbcTemplate.commit(conn);
+		}catch (Exception e) {
+			e.printStackTrace();
+			JdbcTemplate.rollback(conn);
 			throw e;
 		} finally {
 			JdbcTemplate.close(conn);

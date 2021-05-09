@@ -14,6 +14,9 @@ package com.nanum.dto;
 public class QnAReplyDto {
 	/** 답글번호 */
 	private int replyNo;
+	
+	/** 게시글 번호 */
+	private int qnaNo;
 
 	/** 관리자아이디 */
 	private String adminId;
@@ -31,15 +34,16 @@ public class QnAReplyDto {
 	}
 
 	/**
-	 * 전체생성자
-	 * 
 	 * @param replyNo        답글번호
+	 * @param qnaNo			  게시글 번호
 	 * @param adminId        관리자아이디
 	 * @param replyContents  내용
 	 * @param replyWriteDate 작성일
 	 */
-	public QnAReplyDto(int replyNo, String adminId, String replyContents, String replyWriteDate) {
+	public QnAReplyDto(int replyNo, int qnaNo, String adminId, String replyContents, String replyWriteDate) {
+		super();
 		this.replyNo = replyNo;
+		this.qnaNo = qnaNo;
 		this.adminId = adminId;
 		this.replyContents = replyContents;
 		this.replyWriteDate = replyWriteDate;
@@ -100,11 +104,27 @@ public class QnAReplyDto {
 	public void setReplyWriteDate(String replyWriteDate) {
 		this.replyWriteDate = replyWriteDate;
 	}
+	
+	/**
+	 * @return the qnaNo
+	 */
+	public int getQnaNo() {
+		return qnaNo;
+	}
+
+	/**
+	 * @param qnaNo the qnaNo to set
+	 */
+	public void setQnaNo(int qnaNo) {
+		this.qnaNo = qnaNo;
+	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(replyNo);
+		builder.append(", ");
+		builder.append(qnaNo);
 		builder.append(", ");
 		builder.append(adminId);
 		builder.append(", ");
@@ -113,5 +133,7 @@ public class QnAReplyDto {
 		builder.append(replyWriteDate);
 		return builder.toString();
 	}
+
+	
 
 }
