@@ -41,6 +41,20 @@ public class CenterInfoDto {
 	
 	/** 가입 대기 건수 */
 	private int totAcceptCnt;
+	
+	/** 가입신청일자 */
+	private String cmemberEntryDate;
+	
+	/** 센터멤버이름 */
+	private String cmemberName;
+	
+	/** 센터멤버전화번호 */
+	private String cmemberMobile;
+	
+	/** 센터멤버이메일 */
+	private String cmemberEmail;
+	
+	
 
 	/**
 	 * 기본 생성자
@@ -48,7 +62,8 @@ public class CenterInfoDto {
 	public CenterInfoDto() {
 	}
 
-	
+
+
 	/**
 	 * 전체 생성자
 	 * 
@@ -62,11 +77,14 @@ public class CenterInfoDto {
 	 * @param ceoName         대표이름
 	 * @param ceoMobile       대표연락처
 	 * @param totAcceptCnt	   가입 대기 건수
-	 */
-	 
+	 * @param cmemberEntryDate 센터신청일자
+	 * @param cmemberName    센터멤버이름
+	 * @param cmemberMobile  센터멤버전화번호
+	 * @param cmemberEmail   센터멤버이메일
+	 */	
 	public CenterInfoDto(String centerId, String centerName, String centerEntryDate, String centerZipCode,
 			String centerAddress, String registerCode, String service, String ceoName, String ceoMobile,
-			int totAcceptCnt) {
+			int totAcceptCnt, String cmemberEntryDate, String cmemberName, String cmemberMobile, String cmemberEmail) {
 		super();
 		this.centerId = centerId;
 		this.centerName = centerName;
@@ -78,23 +96,31 @@ public class CenterInfoDto {
 		this.ceoName = ceoName;
 		this.ceoMobile = ceoMobile;
 		this.totAcceptCnt = totAcceptCnt;
+		this.cmemberEntryDate = cmemberEntryDate;
+		this.cmemberName = cmemberName;
+		this.cmemberMobile = cmemberMobile;
+		this.cmemberEmail = cmemberEmail;
 	}
 
-	
-	
+
+
 	/**
 	 * @return the centerId
 	 */
 	public String getCenterId() {
 		return centerId;
 	}
-	
+
+
+
 	/**
 	 * @param centerId the centerId to set
 	 */
 	public void setCenterId(String centerId) {
 		this.centerId = centerId;
 	}
+
+
 
 	/**
 	 * @return the centerName
@@ -103,12 +129,16 @@ public class CenterInfoDto {
 		return centerName;
 	}
 
+
+
 	/**
 	 * @param centerName the centerName to set
 	 */
 	public void setCenterName(String centerName) {
 		this.centerName = centerName;
 	}
+
+
 
 	/**
 	 * @return the centerEntryDate
@@ -117,12 +147,16 @@ public class CenterInfoDto {
 		return centerEntryDate;
 	}
 
+
+
 	/**
 	 * @param centerEntryDate the centerEntryDate to set
 	 */
 	public void setCenterEntryDate(String centerEntryDate) {
 		this.centerEntryDate = centerEntryDate;
 	}
+
+
 
 	/**
 	 * @return the centerZipCode
@@ -131,12 +165,16 @@ public class CenterInfoDto {
 		return centerZipCode;
 	}
 
+
+
 	/**
 	 * @param centerZipCode the centerZipCode to set
 	 */
 	public void setCenterZipCode(String centerZipCode) {
 		this.centerZipCode = centerZipCode;
 	}
+
+
 
 	/**
 	 * @return the centerAddress
@@ -145,12 +183,16 @@ public class CenterInfoDto {
 		return centerAddress;
 	}
 
+
+
 	/**
 	 * @param centerAddress the centerAddress to set
 	 */
 	public void setCenterAddress(String centerAddress) {
 		this.centerAddress = centerAddress;
 	}
+
+
 
 	/**
 	 * @return the registerCode
@@ -159,12 +201,16 @@ public class CenterInfoDto {
 		return registerCode;
 	}
 
+
+
 	/**
 	 * @param registerCode the registerCode to set
 	 */
 	public void setRegisterCode(String registerCode) {
 		this.registerCode = registerCode;
 	}
+
+
 
 	/**
 	 * @return the service
@@ -173,12 +219,16 @@ public class CenterInfoDto {
 		return service;
 	}
 
+
+
 	/**
 	 * @param service the service to set
 	 */
 	public void setService(String service) {
 		this.service = service;
 	}
+
+
 
 	/**
 	 * @return the ceoName
@@ -187,12 +237,16 @@ public class CenterInfoDto {
 		return ceoName;
 	}
 
+
+
 	/**
 	 * @param ceoName the ceoName to set
 	 */
 	public void setCeoName(String ceoName) {
 		this.ceoName = ceoName;
 	}
+
+
 
 	/**
 	 * @return the ceoMobile
@@ -201,14 +255,16 @@ public class CenterInfoDto {
 		return ceoMobile;
 	}
 
+
+
 	/**
 	 * @param ceoMobile the ceoMobile to set
 	 */
 	public void setCeoMobile(String ceoMobile) {
 		this.ceoMobile = ceoMobile;
 	}
-	
-	
+
+
 
 	/**
 	 * @return the totAcceptCnt
@@ -218,12 +274,86 @@ public class CenterInfoDto {
 	}
 
 
+
 	/**
 	 * @param totAcceptCnt the totAcceptCnt to set
 	 */
 	public void setTotAcceptCnt(int totAcceptCnt) {
 		this.totAcceptCnt = totAcceptCnt;
 	}
+
+
+
+	/**
+	 * @return the cmemberEntryDate
+	 */
+	public String getCmemberEntryDate() {
+		return cmemberEntryDate;
+	}
+
+
+
+	/**
+	 * @param cmemberEntryDate the cmemberEntryDate to set
+	 */
+	public void setCmemberEntryDate(String cmemberEntryDate) {
+		this.cmemberEntryDate = cmemberEntryDate;
+	}
+
+
+
+	/**
+	 * @return the cmemberName
+	 */
+	public String getCmemberName() {
+		return cmemberName;
+	}
+
+
+
+	/**
+	 * @param cmemberName the cmemberName to set
+	 */
+	public void setCmemberName(String cmemberName) {
+		this.cmemberName = cmemberName;
+	}
+
+
+
+	/**
+	 * @return the cmemberMobile
+	 */
+	public String getCmemberMobile() {
+		return cmemberMobile;
+	}
+
+
+
+	/**
+	 * @param cmemberMobile the cmemberMobile to set
+	 */
+	public void setCmemberMobile(String cmemberMobile) {
+		this.cmemberMobile = cmemberMobile;
+	}
+
+
+
+	/**
+	 * @return the cmemberEmail
+	 */
+	public String getCmemberEmail() {
+		return cmemberEmail;
+	}
+
+
+
+	/**
+	 * @param cmemberEmail the cmemberEmail to set
+	 */
+	public void setCmemberEmail(String cmemberEmail) {
+		this.cmemberEmail = cmemberEmail;
+	}
+
 
 
 	@Override
@@ -248,6 +378,15 @@ public class CenterInfoDto {
 		builder.append(ceoMobile);
 		builder.append(", ");
 		builder.append(totAcceptCnt);
+		builder.append(", ");
+		builder.append(cmemberEntryDate);
+		builder.append(", ");
+		builder.append(cmemberName);
+		builder.append(", ");
+		builder.append(cmemberMobile);
+		builder.append(", ");
+		builder.append(cmemberEmail);
 		return builder.toString();
 	}
+
 }

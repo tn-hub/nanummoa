@@ -276,13 +276,15 @@ public class CommonBiz {
 	 * @param qnaList
 	 * @param searchOpt
 	 * @param searchText
+	 * @param lastNum 
+	 * @param sartNum 
 	 * @throws CommonException
 	 */
 	
-	public void qnaList(ArrayList<QnADto> qnaList, String searchOpt, String searchText) throws CommonException{
+	public void qnaList(ArrayList<QnADto> qnaList, String searchOpt, String searchText, Integer sartNum, Integer lastNum) throws CommonException{
 		Connection conn = JdbcTemplate.getConnection();
 		try {
-			dao.qnaList(conn, qnaList, searchOpt, searchText);
+			dao.qnaList(conn, qnaList, searchOpt, searchText, sartNum, lastNum);
 			System.out.println("searchOpt : " +searchOpt );
 		} catch (CommonException e) {
 			e.printStackTrace();
@@ -367,12 +369,14 @@ public class CommonBiz {
 	/**
 	 * 문의하게 게시판 건수
 	 * @param cdto
+	 * @param searchText 
+	 * @param searchOpt 
 	 * @throws CommonException
 	 */
-	public void qnaListTotCnt(QnADto cdto) throws CommonException{
+	public void qnaListTotCnt(QnADto cdto, String searchOpt, String searchText) throws CommonException{
 		Connection conn = JdbcTemplate.getConnection();
 		try {
-			dao.selectQnaListTotCnt(conn, cdto);
+			dao.selectQnaListTotCnt(conn, cdto, searchOpt, searchText);
 		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;
@@ -512,11 +516,13 @@ public class CommonBiz {
 	 * @param searchAllList
 	 * @param searchAllOpt
 	 * @param searchAllText
+	 * @param lastNum 
+	 * @param sartNum 
 	 */
-	public void searchAllList(ArrayList<SearchAllDto> saList, String searchAllOpt, String searchAllText) throws CommonException {
+	public void searchAllList(ArrayList<SearchAllDto> saList, String searchAllOpt, String searchAllText, Integer sartNum, Integer lastNum) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
 		try {
-			dao.searchAllList(conn, saList, searchAllOpt, searchAllText);
+			dao.searchAllList(conn, saList, searchAllOpt, searchAllText, sartNum, lastNum);
 			System.out.println("searchAllOpt : " +searchAllOpt );
 		} catch (CommonException e) {
 			e.printStackTrace();
@@ -525,4 +531,23 @@ public class CommonBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
+
+	/**
+	 * 통합검색 게시판 건수
+	 * @param searchAllText 
+	 * @param cdto
+	 * @throws CommonException
+	 */
+	public void selectSearchAllListTotCnt(SearchAllDto aDto, String searchAllOpt, String searchAllText) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.selectSearchAllListTotCnt(conn, aDto, searchAllOpt, searchAllText);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+		
 }

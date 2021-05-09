@@ -792,10 +792,16 @@ public class CommonController extends HttpServlet {
 	 */
 	private void qnaList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		
-		
-		int curPage = 6;
 		String searchOpt = request.getParameter("search_opt");
 		String searchText = request.getParameter("search_text");
+		String pageNum = request.getParameter("pageNum");
+		
+		if (pageNum == null || pageNum == "") {
+			System.out.println("pageNum ====== " + pageNum);
+			
+			pageNum = "1";
+		}
+	
 		CommonBiz biz = new CommonBiz();
 		ArrayList<QnADto> qnaList = new ArrayList<QnADto>();
 		QnADto cdto = new QnADto();
@@ -804,25 +810,31 @@ public class CommonController extends HttpServlet {
 			request.setAttribute("searchText", searchText);
 			request.setAttribute("searchOpt", searchOpt);
 			
-			biz.qnaListTotCnt(cdto); // 총건수 조회 
+			biz.qnaListTotCnt(cdto, searchOpt, searchText); // 총건수 조회 
 			
-			Paging.makeBlock(curPage);
+			int pageCount = 5;
+			int curPage = Integer.parseInt(pageNum) * pageCount;
 			
-			Integer blockStartNum = Paging.getBlockStartNum();
-			Integer blockLastNum = Paging.getBlockLastNum();
+			
+			Paging.makeBlock(curPage, pageCount);
+			Paging.makeLastPageNum(cdto.getTotCnt(), pageCount) ;
+
+			Integer sartNum = Paging.getBlockStartNum();
+			Integer lastNum = Paging.getBlockLastNum();
 			Integer lastPageNum = Paging.getLastPageNum();
 			
-			System.out.println("blockStartNum=  " + blockStartNum);
-			System.out.println("blockLastNum=  " + blockLastNum);
-			System.out.println("lastPageNum=  " + lastPageNum);
-			
-
-			biz.qnaListTotCnt(cdto);
+			// 총건수
 			request.setAttribute("cdto", cdto);
 
-			biz.qnaList(qnaList, searchOpt, searchText);
+			// 목록
+			biz.qnaList(qnaList, searchOpt, searchText, sartNum, lastNum);
 			request.setAttribute("qnaList", qnaList);
 
+			// 페이징 
+			request.setAttribute("lastPageNum", lastPageNum);
+			request.setAttribute("curPageNum", pageNum);
+			
+			
 			request.getRequestDispatcher("/qna/qnaList.jsp").forward(request, response);
 		} catch (CommonException e) {
 			e.printStackTrace();
@@ -1057,6 +1069,13 @@ public class CommonController extends HttpServlet {
 	private void searchAllForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String searchAllOpt = "";
 		String searchAllText = "";
+		String pageNum = request.getParameter("pageNum");
+		
+		System.out.println("pageNum ==== " + pageNum);
+		
+		if (pageNum == null || pageNum == "") {
+			pageNum = "1";
+		}
 		
 		if(request.getParameter("main_searchAll_text") != null || request.getParameter("main_searchAll_text") == "") {
 			// 전체통합검색
@@ -1073,14 +1092,36 @@ public class CommonController extends HttpServlet {
 		
 		CommonBiz biz = new CommonBiz();
 		ArrayList<SearchAllDto> saList = new ArrayList<SearchAllDto>();
-		
+		SearchAllDto aDto = new SearchAllDto();
 		try {
 			request.setAttribute("searchAllOpt", searchAllOpt);
 			request.setAttribute("searchAllText", searchAllText);
 			
-			biz.searchAllList(saList, searchAllOpt, searchAllText);
+			biz.selectSearchAllListTotCnt(aDto, searchAllOpt, searchAllText); // 총건수 조회 
+			
+			int pageCount = 10;
+			int curPage = Integer.parseInt(pageNum) * pageCount;			
+			
+			System.out.println("aDto.getTotCnt() = " + aDto.getTotCnt());
+			Paging.makeBlock(curPage, pageCount);
+			Paging.makeLastPageNum(aDto.getTotCnt(), pageCount) ;
+
+			Integer sartNum = Paging.getBlockStartNum();
+			Integer lastNum = Paging.getBlockLastNum();
+			Integer lastPageNum = Paging.getLastPageNum();
+			
+			System.out.println("sartNum == " + sartNum);
+			System.out.println("lastNum == " + lastNum);
+			System.out.println("lastPageNum == " + lastPageNum);
+			
+			// 목록
+			biz.searchAllList(saList, searchAllOpt, searchAllText, sartNum, lastNum);
 			request.setAttribute("saList", saList);
 			
+			// 페이징 
+			request.setAttribute("lastPageNum", lastPageNum);
+			request.setAttribute("curPageNum", pageNum);
+			request.setAttribute("totCnt", aDto.getTotCnt());
 			request.getRequestDispatcher("/common/searchMain.jsp").forward(request, response);
 		} catch (CommonException e) {
 			e.printStackTrace();

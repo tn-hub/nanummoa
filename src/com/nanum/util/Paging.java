@@ -2,11 +2,9 @@ package com.nanum.util;
 
 public class Paging {
 	
-	 private final static int pageCount = 5;
 	    private static int blockStartNum = 0;
 	    private static int blockLastNum = 0;
 	    private static int lastPageNum = 0;
-	    private static int total = 0;
 	    
 	    public static int getBlockStartNum() {
 	        return blockStartNum;
@@ -29,7 +27,7 @@ public class Paging {
 
 	    // block을 생성
 	    // 현재 페이지가 속한 block의 시작 번호, 끝 번호를 계산
-	    public static void makeBlock(int curPage){
+	    public static void makeBlock(int curPage, int pageCount){
 	        int blockNum = 0;
 
 	        blockNum = (int)Math.floor((curPage-1)/ pageCount);
@@ -38,7 +36,7 @@ public class Paging {
 	    }
 
 	    // 총 페이지의 마지막 번호
-	    public static void makeLastPageNum() {
+	    public static void makeLastPageNum(int total, int pageCount) {
 	        if( total % pageCount == 0 ) {
 	            lastPageNum = (int)Math.floor(total/pageCount);
 	        }
@@ -46,8 +44,5 @@ public class Paging {
 	            lastPageNum = (int)Math.floor(total/pageCount) + 1;
 	        }
 	    }
-	
-	    // 검색을 했을 때 총 페이지의 마지막 번호
-	   
 
 }

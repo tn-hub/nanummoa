@@ -44,11 +44,11 @@ public class AdminBiz {
 		}
 	}
 
-	public void getCenterAcceptList(ArrayList<CenterInfoDto> centerActList) throws CommonException{
+	public void getCenterAcceptList(ArrayList<CenterInfoDto> centerActList, Integer sartNum, Integer lastNum) throws CommonException{
 		Connection conn = JdbcTemplate.getConnection();
 		
 		try {
-			dao.selCenterAcceptList(conn, centerActList);
+			dao.selCenterAcceptList(conn, centerActList, sartNum, lastNum);
 		}catch (Exception e) {
 			e.printStackTrace();
 			throw e;

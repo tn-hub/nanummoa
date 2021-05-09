@@ -86,9 +86,55 @@ em{
 	border: 1px solid gray;
 }
 
+
+#page_btn{
+	text-align: center; 
+	margin: 20px 0px 20px 0px;
+}
+
 </style>
 </head>
+<script type="text/javascript">
 
+$(document).ready(function() {
+	
+	
+	// 이전페이지
+	$("#preBtn").click(function() {
+		var curPageNum = ${curPageNum};
+		if (curPageNum> 1){
+			$("#pageNum").val(curPageNum -1);
+			document.centerAcceptListForm.submit();
+		}
+	});
+	
+	// 다음페이지
+	$("#nestBtn").click(function() {
+		var curPageNum = ${curPageNum};
+		var lastPageNum = ${lastPageNum};
+		
+		if (curPageNum < lastPageNum){
+			$("#pageNum").val(curPageNum +1);
+			document.centerAcceptListForm.submit();
+		}
+	});
+});
+
+	// 페이징 submit
+	function btnPageNum(ret){
+		$("#pageNum").val(ret);
+		document.centerAcceptListForm.submit();
+		
+	}
+	
+	function divhideen(ret){
+		alert(ret);
+		
+	}
+	
+	
+
+</script>
 
 <body>
 <%@ include file="/common/header.jsp"%>
@@ -97,22 +143,48 @@ em{
 [가입대기 센터회원 <em>${cDto.totAcceptCnt}</em> 건]
 <a href="${CONTEXT_PATH}/admin/adminController?action=centerAcceptList" style="float:right;">조회</a>
 <hr>
+<form name="centerAcceptListForm" id="centerAcceptListForm" action="${CONTEXT_PATH}/admin/adminController?action=centerAcceptList" method="post">
 <c:forEach var="dto" items="${centerActList}">
 <div id="cecnter_standBy">
 	<ul id="cecnter_standBy_ul">
 		<li id="centerNAme_li">[센터명] <br>${dto.centerName}</li>
-		<li id="centerId_li">[센터 아이디] <br><span id="detailCId" style="cursor:hand;">${dto.centerId}</span></li>
-		<li id="centerDate_li">[신청일] <br>${dto.centerEntryDate}</li>
+		<li id="centerId_li">[센터 아이디] <br><span id="detailCId" style="cursor:hand;" onclick="divhideen(${dto.centerId})">${dto.centerId}</span></li>
+		<li id="centerDate_li">[신청일] <br>${dto.cmemberEntryDate}</li>
 		<li id="c_stan_btnArea">
 			<a href="${CONTEXT_PATH}/admin/adminController?action=centerRefuse&centerId=${dto.centerId}"><input type="button" value="반려" id="c_in_refuse" style="cursor:hand;"></a>
 			<a href="${CONTEXT_PATH}/admin/adminController?action=centerAccept&centerId=${dto.centerId}"><input type="button" value="승인" id="c_in_accept" style="cursor:hand;"></a>
+	
+		<li>
+		<br><br>
+		<div>
+			<ul>
+			<li>[센터등록일자] ${dto.centerEntryDate}</li>
+			<li>[센터 주소] ${dto.centerAddress}</li>
+			<li>[등록번호] ${dto.registerCode}</li>
+			<li>[서비스대상] ${dto.service}</li>
+			<li>[대표이름] ${dto.ceoName}</li>
+			<li>[대표연락처] ${dto.ceoMobile}</li>
+			<li>[센터멤버전화번호] ${dto.cmemberMobile}</li>
+			<li>[센터멤버이메일] ${dto.cmemberEmail}</li>
+		</ul>
+		</div>
+		</li>
 	</ul>
+	
+		
+	
 </div>
 <hr>
 </c:forEach>
-
-
-
+<input type="hidden" value="1" id="pageNum" name="pageNum">
+</form>
+<div id="page_btn">
+	<input type="button" value="이전 " id="preBtn" name="preBtn">
+	 <c:forEach var="i" begin="${ 1 }" end="${lastPageNum}">
+           <input type="button" value=${ i } id="btnPageNum" name="btnPageNum" onclick="btnPageNum(${ i })">
+     </c:forEach>   
+	<input type="button" value="다음 " id="nestBtn" name="nestBtn">	
+</div>
 
 <div id="footer" class="footer">
 	<%@ include file="/common/footer.jsp"%>

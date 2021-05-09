@@ -482,9 +482,11 @@ public class CommonDao {
 	 * @param qnaList
 	 * @param searchOpt
 	 * @param searchText
+	 * @param lastNum 
+	 * @param sartNum 
 	 * @throws CommonException
 	 */
-	public void qnaList(Connection conn, ArrayList<QnADto> qnaList, String searchOpt, String searchText) throws CommonException  {
+	public void qnaList(Connection conn, ArrayList<QnADto> qnaList, String searchOpt, String searchText, Integer sartNum, Integer lastNum) throws CommonException  {
 
 		StringBuilder sql = new StringBuilder();
 		
@@ -495,7 +497,9 @@ public class CommonDao {
 		sql.append("    else (select c.c_name from center_member c where c.c_id = q.c_id) end as qnaWriter "); 
 		sql.append("  , q.q_write_date  ");
 		sql.append("  , (select case when count(1) > 0 then 'Y' else 'N' end  from qna_reply r where r.q_no = q.q_no) as answerYn  ");
+		sql.append("  , rownum as page_num ");
 		sql.append(" from qna q ");
+		
 		
 		if ("T".equals(searchOpt)) {
 			sql.append(" where q.q_title like '%'|| ? ||'%' ");
@@ -513,23 +517,32 @@ public class CommonDao {
 		
 		sql.append(" order by q_no desc ");
 		
+		// 페이징 추가 쿼리 
+		String page_sql = "select * from ("+sql.toString()+") where page_num between ? and ?";
+		
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		
 		try {
 			System.out.println("다오 searchOpt : " +searchOpt);
-			stmt = conn.prepareStatement(sql.toString());// 쿼리 담기
+			stmt = conn.prepareStatement(page_sql);// 쿼리 담기
 			
 			if ("T".equals(searchOpt) || "C".equals(searchOpt) ) {
 				stmt.setString(1, searchText);
+				stmt.setInt(2, sartNum);
+				stmt.setInt(3, lastNum);
 			}else if  ("W".equals(searchOpt)){
 				stmt.setString(1, searchText);
 				stmt.setString(2, searchText);
+				stmt.setInt(3, sartNum);
+				stmt.setInt(4, lastNum);
 			} else {
 				stmt.setString(1, searchText);
 				stmt.setString(2, searchText);
 				stmt.setString(3, searchText);
 				stmt.setString(4, searchText);
+				stmt.setInt(5, sartNum);
+				stmt.setInt(6, lastNum);
 			}
 			
 			rs = stmt.executeQuery();
@@ -556,10 +569,8 @@ public class CommonDao {
 			JdbcTemplate.close(rs);
 			JdbcTemplate.close(stmt);
 		}
-		
 	}
 
-	
 	
 	/**
 	 * 문의글 상세
@@ -781,20 +792,52 @@ public class CommonDao {
 	 * 문의글 전체조회 건수
 	 * @param conn
 	 * @param cdto
+	 * @param searchText 
+	 * @param searchOpt 
 	 * @throws CommonException
 	 */
-	public void selectQnaListTotCnt(Connection conn, QnADto cdto) throws CommonException{
+	public void selectQnaListTotCnt(Connection conn, QnADto cdto, String searchOpt, String searchText) throws CommonException{
 		StringBuilder sql = new StringBuilder();
 		
 		sql.append(" select count(1) as tot_cnt ");
-		sql.append("  from qna  ");
-		  
+		sql.append(" from qna q ");
+		
+		if (searchText != null && searchText != "") {
+			if ("T".equals(searchOpt)) {
+				sql.append(" where q.q_title like '%'|| ? ||'%' ");
+			}else if ("C".equals(searchOpt)) {
+				sql.append(" where q.q_contents like '%'|| ? ||'%' ");
+			}else if  ("W".equals(searchOpt)) {
+				sql.append(" where q.g_id in (select g.g_id from general_member g where g.g_name like '%'||?||'%') ");
+				sql.append(" or q.c_id in (select c.c_id from center_member c where c.c_name like '%'||?||'%')  ");
+			} else {
+				sql.append(" where q.q_title like '%'|| ? ||'%' ");
+				sql.append(" or q.q_contents like '%'|| ? ||'%' ");
+				sql.append(" or q.g_id in (select g.g_id from general_member g where g.g_name like '%'||?||'%') ");
+				sql.append(" or q.c_id in (select c.c_id from center_member c where c.c_name like '%'||?||'%') ");
+			}
+		}
+		
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		
 		try {
-
-			stmt = conn.prepareStatement(sql.toString()); 
+			stmt = conn.prepareStatement(sql.toString());// 쿼리 담기
+			
+			if (searchText != null && searchText != "") {
+				if ("T".equals(searchOpt) || "C".equals(searchOpt) ) {
+					stmt.setString(1, searchText);
+				}else if  ("W".equals(searchOpt)){
+					stmt.setString(1, searchText);
+					stmt.setString(2, searchText);
+				} else {
+					stmt.setString(1, searchText);
+					stmt.setString(2, searchText);
+					stmt.setString(3, searchText);
+					stmt.setString(4, searchText);
+				}
+			}
+			
 			rs = stmt.executeQuery();
 			
 			if(rs.next()) { 
@@ -1130,8 +1173,10 @@ public class CommonDao {
 	}
 
 	
-	/** 통합검색 */
-	public void searchAllList(Connection conn, ArrayList<SearchAllDto> saList, String searchAllOpt,String searchAllText) throws CommonException {
+	/** 통합검색 
+	 * @param lastNum 
+	 * @param sartNum */
+	public void searchAllList(Connection conn, ArrayList<SearchAllDto> saList, String searchAllOpt,String searchAllText, Integer sartNum, Integer lastNum) throws CommonException {
 		StringBuilder sql = new StringBuilder();
 		
 		if (searchAllOpt.equals("V")) {
@@ -1142,7 +1187,8 @@ public class CommonDao {
 			sql.append("   , (select c.c_name from center_member c where c.c_id = v.c_id) as writer "); 
 			sql.append("   , v.v_title as title ");
 			sql.append("   , case when length(v.v_content) < 200 then v.v_content ");
-			sql.append("     else substr(v.v_content, 0, 200)||'...' end contents ");
+			sql.append("     else substr(v.v_content, 0, 200)||'...' end contents "); 
+			sql.append("   , rownum as page_num ");
 			sql.append("  from vol_info v ");
 			sql.append("   where v.v_title like  '%'|| ? || '%' ");
 			sql.append("   or v.v_content like '%'|| ? || '%' ");
@@ -1159,6 +1205,7 @@ public class CommonDao {
 			sql.append("   , q.q_title as title ");
 			sql.append("   , case when length(q.q_contents) < 200 then q.q_contents ");
 			sql.append("     else substr(q.q_contents, 0, 200)||'...' end contents ");
+			sql.append("   , rownum as page_num ");
 			sql.append("   from qna q ");
 			sql.append("   where q.q_title like '%'|| ? || '%' ");
 			sql.append("   or q.q_contents like  '%'|| ? || '%' ");
@@ -1166,6 +1213,7 @@ public class CommonDao {
 			sql.append("  order by q.q_no desc ");
 			
 		}else {
+			sql.append(" select division_name, division_sub, info_no,writer, title, contents, rownum as page_num from (  ");
 			sql.append(" select ");
 			sql.append("   '[자원봉사] ' division_name ");
 			sql.append("   , 'vol' as division_sub ");
@@ -1192,9 +1240,93 @@ public class CommonDao {
 			sql.append("   from qna q ");
 			sql.append("   where q.q_title like '%'|| ? || '%' ");
 			sql.append("   or q.q_contents like  '%'|| ? || '%' ");
+			sql.append("  ) ");
 		
-			sql.append("  order by division_sub desc ");
+		}
 		
+		// 페이징 추가 쿼리 
+		String page_sql = "select * from ("+sql.toString()+") where page_num between ? and ?";
+				
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			
+			stmt = conn.prepareStatement(page_sql);// 쿼리 담기
+			
+		    if (searchAllOpt.equals("V") || searchAllOpt.equals("Q")) {
+				stmt.setString(1, searchAllText);
+				stmt.setString(2, searchAllText);
+				stmt.setInt(3, sartNum);
+				stmt.setInt(4, lastNum);
+		    }else {
+		    	stmt.setString(1, searchAllText);
+				stmt.setString(2, searchAllText);
+				stmt.setString(3, searchAllText);
+				stmt.setString(4, searchAllText);
+				stmt.setInt(5, sartNum);
+				stmt.setInt(6, lastNum);
+		    }
+			
+			rs = stmt.executeQuery();
+			
+			SearchAllDto dto = null;
+			
+			// 담기 
+			while(rs.next()) {
+				dto = new SearchAllDto(); // 담는곳 선언 
+				dto.setDvisionName(rs.getNString("division_name"));
+				dto.setDivisionSub(rs.getString("division_sub"));
+				dto.setInfoNo(rs.getInt("info_no"));
+				dto.setWriter(rs.getString("writer"));
+				dto.setTitle(rs.getString("title"));
+				dto.setContents(rs.getString("contents"));
+
+				saList.add(dto); // list 담기 
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(stmt);
+		}
+	}
+
+
+	public void selectSearchAllListTotCnt(Connection conn, SearchAllDto aDto, String searchAllOpt, String searchAllText) throws CommonException {
+		StringBuilder sql = new StringBuilder();
+		
+		if (searchAllOpt.equals("V")) {
+			sql.append(" select count(1) as tot_cnt ");
+			sql.append("  from vol_info v ");
+			sql.append("   where v.v_title like  '%'|| ? || '%' ");
+			sql.append("   or v.v_content like '%'|| ? || '%' ");
+			
+		}else if (searchAllOpt.equals("Q")) {
+			sql.append(" select count(1) as tot_cnt ");
+			sql.append("   from qna q ");
+			sql.append("   where q.q_title like '%'|| ? || '%' ");
+			sql.append("   or q.q_contents like  '%'|| ? || '%' ");
+			
+		}else {
+			
+			sql.append(" select count(1) as tot_cnt from (  ");
+			sql.append(" select v.vol_info_no, v.v_title, v.v_content ");
+			sql.append("  from vol_info v ");
+			sql.append("   where v.v_title like  '%'|| ? || '%' ");
+			sql.append("   or v.v_content like '%'|| ? || '%' ");
+			
+			sql.append(" union ");
+			
+			sql.append(" select q.q_no, q.q_title, q.q_contents ");
+			sql.append("   from qna q ");
+			sql.append("   where q.q_title like '%'|| ? || '%' ");
+			sql.append("   or q.q_contents like  '%'|| ? || '%' ");
+			sql.append(" ) ");
+			
 		
 		}
 		PreparedStatement stmt = null;
@@ -1216,19 +1348,9 @@ public class CommonDao {
 			
 			rs = stmt.executeQuery();
 			
-			SearchAllDto dto = null;
-			
 			// 담기 
-			while(rs.next()) {
-				dto = new SearchAllDto(); // 담는곳 선언 
-				dto.setDvisionName(rs.getNString("division_name"));
-				dto.setDivisionSub(rs.getString("division_sub"));
-				dto.setInfoNo(rs.getInt("info_no"));
-				dto.setWriter(rs.getString("writer"));
-				dto.setTitle(rs.getString("title"));
-				dto.setContents(rs.getString("contents"));
-
-				saList.add(dto); // list 담기 
+			if(rs.next()) {
+				aDto.setTotCnt(rs.getInt("tot_cnt"));
 			}
 			
 		} catch (SQLException e) {

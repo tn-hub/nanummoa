@@ -112,24 +112,14 @@ a.bold { font-weight: bold; }
 	border-style: none;
 	font-size: 17px;
 }
-
-
-
-
-
 </style>
 </head>
-
-
 <script type="text/javascript">
 
 $(document).ready(function() {
-	
-	$("#search_btn").click(function () {
+	$("#search_btn").click(function() {
 		//검색조건
 		var searchOpt = $("#search_opt").val();   
-		
-		
 		// 내용 빈값 확인 
 		if (searchOpt == "T" || searchOpt == "C" || searchOpt == "W"){
 			if ($("#search_text").val() == null || $("#search_text").val() == "") {
@@ -140,7 +130,33 @@ $(document).ready(function() {
 		}		
 	});
 	
+	// 이전페이지
+	$("#preBtn").click(function() {
+		var curPageNum = ${curPageNum};
+		if (curPageNum> 1){
+			$("#pageNum").val(curPageNum -1);
+			document.qnaListForm.submit();
+		}
+	});
+	
+	// 다음페이지
+	$("#nestBtn").click(function() {
+		var curPageNum = ${curPageNum};
+		var lastPageNum = ${lastPageNum};
+		
+		if (curPageNum < lastPageNum){
+			$("#pageNum").val(curPageNum +1);
+			document.qnaListForm.submit();
+		}
+	});
 });
+
+	// 페이징 submit
+	function btnPageNum(ret){
+		$("#pageNum").val(ret);
+		document.qnaListForm.submit();
+		
+	}
 
 </script>
 
@@ -153,12 +169,12 @@ $(document).ready(function() {
 	<table id="search_qna_table">
 	<tr>
 		<td id="search_qna_tdcnt">
-			[전체 <em> ${cdto.totCnt}</em> 건, 현재 페이지 <em>1</em> /1]
+			[전체 <em> ${cdto.totCnt}</em> 건, 현재 페이지 <em>${curPageNum}</em> /${lastPageNum}]
 		
 		</td>
 		<td id="search_qna_tdSelect">
 			<select id="search_opt" name ="search_opt" class="search_opt">
-				<option>전체 </option>
+				<option value="" >전체 </option>
 				<option value="T" <c:if test="${searchOpt eq 'T'}">selected</c:if>> 제목 </option>
 				<option value="C" <c:if test="${searchOpt eq 'C'}">selected</c:if>> 내용 </option>
 				<option value="W" <c:if test="${searchOpt eq 'W'}">selected</c:if>> 작성자 </option>
@@ -189,24 +205,20 @@ $(document).ready(function() {
 </c:forEach>	
 </ul>
 </div>
+<input type="hidden" value="1" id="pageNum" name="pageNum">
 </form>
 </div>
-<div class="pager">
-    <ul>
-        <c:forEach var="i" begin="${ 1 }" end="${ 10 }">
-            <c:choose>
-                <c:when test="${ i > 0 }">
-                    <li>${ i }</li>
-                </c:when>
-                <c:when test="${ i == 3 }">
-                    <li class="selected">${ i }</li>
-                </c:when>               
-            </c:choose>
-        </c:forEach>        
-      
-    </ul>
-</div>  
+<div id="page_btn">
+	<input type="button" value="이전 " id="preBtn" name="preBtn">
+	 <c:forEach var="i" begin="${ 1 }" end="${lastPageNum}">
+           <input type="button" value=${ i } id="btnPageNum" name="btnPageNum" onclick="btnPageNum(${ i })">
+     </c:forEach>   
+	<input type="button" value="다음 " id="nestBtn" name="nestBtn">	
+</div>
+
+
 <hr>
+
 <div id="footer" class="footer">
 		<%@ include file="/common/footer.jsp"%>
 </div>
