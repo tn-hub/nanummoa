@@ -283,7 +283,9 @@
 				
 				<input type="text" id="address" name="address" placeholder="기본주소" size="40" readonly="readonly" value="${map['volPlace']}">
 				<input type="text" id="detailAddress" name="detailAddress" placeholder="상세주소" size="40">
+				
 				<input type="hidden" id="local" name="local" value="${map['local']}">
+				
 				<input type="hidden" id="latitude" name="latitude" value="${map['latitude']}">
 				<input type="hidden" id="longitude" name="longitude" value="${map['longitude']}">
 			</td>
