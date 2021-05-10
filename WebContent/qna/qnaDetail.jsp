@@ -156,6 +156,7 @@ $(document).ready(function() {
 	// 댓글조회
 	function selectReply(rNo) {
 		var qno = ${sdto.qnaNo};
+		 var html = "";
 		console.log("댓글조회 : " + qno);
 		$.ajax({
 			  type:'post',
@@ -163,36 +164,40 @@ $(document).ready(function() {
 			  data:{qno:qno},
 			  dataType: 'json',
 			  success: function(data, textStatus){
-				  var html = "";
-				     $.each(data, function(index, item) {
-				    	 if (rNo == item.replyNo) {
-				    		 html += "<textarea id='updateText'>" +  item.replyContents + "</textarea><br>";
-				    		 html += "<div class='btn_right_box'>";
-				    		 html += "<button class='btn_qna r_btn btn_margin updateBtn' value='" +  item.replyNo + "'>등록</button>";
-				    		 html += "</div>";
-				    	 } else {
-				    		 html += "<span class='admin_id'>" + item.adminId + "</span>";
-					           html += "<p class='reply_content'>" + item.replyContents + "</p>";
-					           html += "<span class='dmin_writeDate'>" + item.replyWriteDate + "</span>";
-					           
-					        	   if ($("#adminId").val() == item.adminId) {
-					        		   html += "<div class='r_resp'>";
-							           html += "<button class='btn_qna g_btn btn_margin updateFormBtn' value='" +  item.replyNo + "'>수정</button>";
-							           html += "<button class='btn_qna g_btn deleteBtn' value='" +  item.replyNo + "'>삭제</button>";
-							           html += "</div>"; 
-					        	   }
-					           
-					           
-				    	 }
-				    	 html += "<hr>";
-				          
-				       });
-						console.log("html : " + html);
+					  $.each(data, function(index, item) {
+					    	 if (rNo == item.replyNo) {
+					    		 html += "<textarea id='updateText'>" +  item.replyContents + "</textarea><br>";
+					    		 html += "<div class='btn_right_box'>";
+					    		 html += "<button class='btn_qna r_btn btn_margin updateBtn' value='" +  item.replyNo + "'>등록</button>";
+					    		 html += "</div>";
+					    	 } else {
+					    		 html += "<span class='admin_id'>" + item.adminId + "</span>";
+						           html += "<p class='reply_content'>" + item.replyContents + "</p>";
+						           html += "<span class='dmin_writeDate'>" + item.replyWriteDate + "</span>";
+						           
+						        	   if ($("#adminId").val() == item.adminId) {
+						        		   html += "<div class='r_resp'>";
+								           html += "<button class='btn_qna g_btn btn_margin updateFormBtn' value='" +  item.replyNo + "'>수정</button>";
+								           html += "<button class='btn_qna g_btn deleteBtn' value='" +  item.replyNo + "'>삭제</button>";
+								           html += "</div>"; 
+						        	   }
+						           
+						           
+					    	 }
+					    	 html += "<hr>";
+					          
+					       });
+					 
+					console.log("html : " + html);
 				     $("#r_text_input").html(html);
 				     $("#r_input_contexts").val("");
 			  },
 			  error : function(xhr,status,error) {
-			     console.log("faild");
+				  console.log("등록답글없음");
+				  html += "<div class='no_reply'>";
+				  html += "<span>등록된 답글이 없습니다</span>";
+				  html += "</div>";
+				  $("#r_text_input").html(html);
 			  }
 			});
 	}
@@ -332,11 +337,7 @@ $(document).ready(function() {
 	
 	<!-- 댓글 -->
 	<div id="r_text_input">
-		<c:if test="${empty reply }">
-			<div class="no_reply">
-				<span>등록된 답글이 없습니다</span>
-			</div>
-		</c:if>
+		
 	</div>
 	
 	<c:if test="${not empty dto and grade == 'A'}">
