@@ -175,6 +175,8 @@ text-align: center;
 	display: inline-block;
     font-weight: bold;
     width: 490px;
+    height:25px;
+    padding:5px 0;
     margin: 0 auto;
     text-align: center;
 	}
@@ -185,7 +187,7 @@ text-align: center;
 	    margin-left: 10px;
 	}
 	.bg_y{
-	background-color: #ffdf89;
+	background-color: #fcdb80;
 	}
 </style>
 </head>
