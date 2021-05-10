@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.nanum.dto.CenterInfoDto;
 import com.nanum.dto.CenterMemberDto;
@@ -429,6 +430,59 @@ public class AdminDao {
 		} finally {
 			JdbcTemplate.close(rs);
 			JdbcTemplate.close(stmt);
+		}
+	}
+	
+	/**
+	 * 봉사 확인서 내역 조회
+	 */
+	public void searchConfirmationList(Connection conn, ArrayList<HashMap<String, Object>> list) throws CommonException {
+		String sql = "select i.vol_info_no, vc.vol_con_no, i.v_title, c.c_name, \r\n" + 
+							"(select min(vol_date)\r\n" + 
+								"from vol_detail\r\n" + 
+								"where vol_info_no = i.vol_info_no) as 봉사시작일,\r\n" + 
+							"(select max(vol_date)\r\n" + 
+								"from vol_detail\r\n" + 
+								"where vol_info_no = i.vol_info_no) as 봉사마감일, \r\n" + 
+							"to_char(i.start_time, 'HH24:MI') as 시작시간, to_char(i.end_time, 'HH24:MI') as 마감시간, \r\n" + 
+							"vc.g_id " +
+				"from vol_info i, vol_detail d, center_info c, vol_confirmation vc\r\n" + 
+				"where i.vol_info_no = d.vol_info_no\r\n" + 
+						"and i.c_id = c.c_id\r\n" + 
+						"and i.c_id = vc.c_id\r\n" + 
+						"and vc.vol_info_no = d.vol_info_no \r\n" + 
+				"group by i.vol_info_no, vc.vol_con_no, i.v_title, c.c_name, i.start_time, i.end_time, vc.vol_date, vc.g_id\r\n" + 
+				"order by vc.vol_date desc";
+		
+		System.out.println(sql);
+		HashMap<String, Object> map = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				map = new HashMap<String, Object>();
+				map.put("volInfoNo", rs.getString(1));
+				map.put("volConNo", rs.getString(2));
+				map.put("volTitle", rs.getString(3));
+				map.put("centerName", rs.getString(4));
+				map.put("startDate", rs.getString(5));
+				map.put("endDate", rs.getString(6));
+				map.put("startTime", rs.getString(7));
+				map.put("endTime", rs.getString(8));
+				map.put("gId", rs.getString(9));
+				
+				list.add(map);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(pstmt);
 		}
 	}
 }

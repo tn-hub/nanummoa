@@ -77,7 +77,7 @@ $(document).ready(function(){
 	});
 	
 	/* 센터회원 아이디 중복 확인*/
-	$("#centerIdBtn").click(function(){
+	$("#idBtn").click(function(){
 		if(idCheck()) {
 			var id = $("#id").val();
 			$.ajax({
@@ -88,11 +88,41 @@ $(document).ready(function(){
 				  success: function(data, textStatus){
 					  if (data == "usable") {
 						  alert("사용 가능한 아이디 입니다");
-						  $("#centerIdBtn").attr("disabled", true);
+						  $("#idBtn").attr("disabled", true);
 					  } else if (data == "not-usable") {
 						  alert("이미 존재하는 아이디 입니다");
 					  } else if (data == "none") {
 						  alert("아이디를 입력해 주세요");
+					  }
+				      
+				  },
+				  error : function(xhr,status,error) {
+				     console.log("error");
+				  }
+				});
+		}
+	});
+	
+	/* 센터회원 아이디 중복 확인*/
+	$("#centerNameBtn").click(function(){
+		if(centerNameCheck()) {
+			var centerName = $("#centerName").val();
+			$.ajax({
+				  type:'get',
+				  url:'${CONTEXT_PATH}/center/centerController?action=centerNameCheck',
+				  data:{centerName:centerName},
+				  dataType: 'text',
+				  success: function(data, textStatus){
+					  if (data == "usable") {
+						  alert("서울시에 등록된 기관입니다. 회원가입 후 바로 활동 가능합니다");
+						  $("#centerNameBtn").attr("disabled", true);
+						  $("#appStatus").val("1");
+					  } else if (data == "not-usable") {
+						  alert("서울시에 미등록된 기관입니다. 관리자 승인 후 활동 가능합니다");
+						  $("#centerNameBtn").attr("disabled", true);
+						  $("#appStatus").val("0");
+					  } else if (data == "none") {
+						  alert("기관 이름을 입력해 주세요");
 					  }
 				      
 				  },
@@ -116,6 +146,7 @@ $(document).ready(function(){
 <h1>회원가입</h1>
 <hr class="head_hr">
 	<form action="${CONTEXT_PATH}/center/centerController?action=centerInput" method="post" id="centerInputForm">
+		<input type="hidden" id="appStatus" name="appStatus">
 		<table border="1">
 			<tr>
 				<th>이름</th>
@@ -129,7 +160,7 @@ $(document).ready(function(){
 				<th>아이디</th>
 				<td>
 					<input type="text" id="id" name="id" placeholder="6 ~ 30자리 이내" size="30" onkeydown="clearMessageId()">
-					<input type="button" value="중복확인" id="centerIdBtn">
+					<input type="button" value="중복확인" id="idBtn">
 					<span id="idMessage" class="error_message"></span>
 					</td>
 			</tr>
@@ -201,6 +232,7 @@ $(document).ready(function(){
 					<th>기관이름</th>
 					<td>
 						<input type="text" id="centerName" name="centerName" size="30" onkeydown="clearMessageCenterName()">
+						<input type="button" value="인증확인" id="centerNameBtn">
 						<span id="centerNameMessage" class="error_message"></span>
 					</td>
 				</tr>
