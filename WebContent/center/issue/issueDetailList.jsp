@@ -6,7 +6,6 @@
 <meta charset="UTF-8">
 <title>신청자 목록</title>
 <link type="text/css" rel="stylesheet" href="${initParam.CONTEXT_PATH}/resources/css/common.css">
-
 <style type="text/css">
 .wrapper{
 width: 100%;
@@ -214,7 +213,6 @@ text-align: center;
 		<div class="title">
 			<h1>신청자 목록</h1>
 		<hr>
-		
 	<h2>${list[0].volTitle }</h2>
 	<p>[전체 <em style="color: red;">${fn:length(list)}</em>건]</p>
 	<hr class="list_head_hr">

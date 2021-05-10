@@ -127,7 +127,7 @@ function main_btnPageNum(ret){
 			<span class="genMinList_span">[이름] ${dto.generalName}</span>
 			<span class="genMinList_span">[이메일] ${dto.generalEmail}</span>
 			<span class="genMinList_spanR"><a href="${CONTEXT_PATH}/admin/adminController?action=generalDetail&generalId=${dto.generalId}"><input type="button" value="상세보기" class="r_btn" class="btn_ac"></a></span>
-			<span class="genMinList_spanR"><a href="${CONTEXT_PATH}/admin/adminController?action=generalDel&generalId=${dto.generalId}"><input type="button" value="깅제탈퇴" class="y_btn" class="btn_re"></a></span>
+			<span class="genMinList_spanR"><a href="${CONTEXT_PATH}/admin/adminController?action=generalDel&generalId=${dto.generalId}"><input type="button" value="강제탈퇴" class="y_btn" class="btn_re"></a></span>
 		</li>
 	</ul>
 	</c:if>
@@ -138,7 +138,7 @@ function main_btnPageNum(ret){
 			<span class="genMinList_span">[이름] ${dto.centerName}</span>
 			<span class="genMinList_span">[이메일] ${dto.centerEmail}</span>
 			<span class="genMinList_spanR"><a href="${CONTEXT_PATH}/admin/adminController?action=centerDetail&centerId=${dto.centerId}"><input type="button" value="상세보기" class="r_btn" class="btn_ac" ></a></span>
-			<span class="genMinList_spanR"><a href="${CONTEXT_PATH}/admin/adminController?action=centerDel&centerId=${dto.centerId}"><input type="button" value="깅제탈퇴" class="y_btn" class="btn_re"></a></span>
+			<span class="genMinList_spanR"><a href="${CONTEXT_PATH}/admin/adminController?action=centerDel&centerId=${dto.centerId}"><input type="button" value="강제탈퇴" class="y_btn" class="btn_re"></a></span>
 		</li>
 	</ul>
 	</c:if>	

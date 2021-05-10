@@ -234,7 +234,7 @@ pageContext.setAttribute("newLineChar", "\n");
 		<tr>
 			<th>봉사 시작일</th>
 			<td>${map['startVolDate']}</td>
-			<th>봉사 마감일</th>
+			<th>봉사 종료일</th>
 			<td>${map['endVolDate']}</td>
 		</tr>
 		<tr>

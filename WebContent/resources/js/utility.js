@@ -62,4 +62,6 @@ function getAddDate(num){
 	date = date < 10 ? "0" + date : date;
 	
 	return year + "-" + month + "-" + date;
+	
+	
 }
