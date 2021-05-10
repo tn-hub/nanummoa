@@ -255,8 +255,6 @@ $(document).ready(function() {
 	<input type="button" value="다음 " id="nestBtn" name="nestBtn">	
 </div>
 
-
-
 		<%@ include file="/common/footer.jsp"%>
 </body>
 </html>
