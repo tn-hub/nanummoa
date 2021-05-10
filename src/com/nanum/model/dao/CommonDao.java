@@ -491,11 +491,7 @@ public class CommonDao {
 		sql.append("    else (select c.c_name from center_member c where c.c_id = q.c_id) end as qnaWriter "); 
 		sql.append("  , q.q_write_date  ");
 		sql.append("  , (select case when count(1) > 0 then 'Y' else 'N' end  from qna_reply r where r.q_no = q.q_no) as answerYn  ");
-<<<<<<< HEAD
-		sql.append(" from qna q ");
-=======
 		sql.append(" from qna q");
->>>>>>> main
 		
 		
 		if ("T".equals(searchOpt)) {
@@ -514,16 +510,8 @@ public class CommonDao {
 		
 		sql.append(" order by q_no desc");
 		
-<<<<<<< HEAD
 		String page_sql = "select b.* from (select a.*, rownum as page_num from (" + sql.toString() + ") a ) b where page_num between ? and ?";
 
-=======
-		// 페이징 추가 쿼리 								
-		String page_sql = "select b.* from (select a.*, rownum as page_num from (" + sql.toString() + ") a ) b where page_num between ? and ?";
-
-		 
->>>>>>> main
-		
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		
