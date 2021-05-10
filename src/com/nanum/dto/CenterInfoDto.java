@@ -14,6 +14,9 @@ package com.nanum.dto;
 public class CenterInfoDto {
 	/** 센터회원아이디 */
 	private String centerId;
+	
+	/** 센터회원 휴대폰*/
+	private String centerMobile;
 
 	/** 센터이름 */
 	private String centerName;
@@ -54,6 +57,9 @@ public class CenterInfoDto {
 	/** 센터멤버이메일 */
 	private String cmemberEmail;
 	
+	/** 전체건수  */
+	private int totCnt;
+	
 	
 
 	/**
@@ -63,30 +69,31 @@ public class CenterInfoDto {
 	}
 
 
-
 	/**
-	 * 전체 생성자
-	 * 
-	 * @param centerId        센터회원아이디
-	 * @param centerName      센터이름
-	 * @param centerEntryDate 센터등록일자
-	 * @param centerZipCode   우편번호
-	 * @param centerAddress   기본주소
-	 * @param registerCode    등록번호
-	 * @param service         서비스대상
-	 * @param ceoName         대표이름
-	 * @param ceoMobile       대표연락처
-	 * @param totAcceptCnt	   가입 대기 건수
-	 * @param cmemberEntryDate 센터신청일자
-	 * @param cmemberName    센터멤버이름
-	 * @param cmemberMobile  센터멤버전화번호
-	 * @param cmemberEmail   센터멤버이메일
-	 */	
-	public CenterInfoDto(String centerId, String centerName, String centerEntryDate, String centerZipCode,
-			String centerAddress, String registerCode, String service, String ceoName, String ceoMobile,
-			int totAcceptCnt, String cmemberEntryDate, String cmemberName, String cmemberMobile, String cmemberEmail) {
+	 * @param centerId			센터회원아이디
+	 * @param centerMobile 		센터회원 휴대폰
+	 * @param centerName     	 센터이름
+	 * @param centerEntryDate 	센터등록일자
+	 * @param centerZipCode   	우편번호
+	 * @param centerAddress   	기본주소
+	 * @param registerCode   	 등록번호
+	 * @param service        	 서비스대상
+	 * @param ceoName         	대표이름
+	 * @param ceoMobile       	대표연락처
+	 * @param totAcceptCnt	   	가입 대기 건수
+	 * @param cmemberEntryDate 	센터신청일자
+	 * @param cmemberName    	센터멤버이름
+	 * @param cmemberMobile 	 센터멤버전화번호
+	 * @param cmemberEmail   	센터멤버이메일
+	 *  @param totCnt   		전체건수
+	 */
+	public CenterInfoDto(String centerId, String centerMobile, String centerName, String centerEntryDate,
+			String centerZipCode, String centerAddress, String registerCode, String service, String ceoName,
+			String ceoMobile, int totAcceptCnt, String cmemberEntryDate, String cmemberName, String cmemberMobile,
+			String cmemberEmail, int totCnt) {
 		super();
 		this.centerId = centerId;
+		this.centerMobile = centerMobile;
 		this.centerName = centerName;
 		this.centerEntryDate = centerEntryDate;
 		this.centerZipCode = centerZipCode;
@@ -100,6 +107,7 @@ public class CenterInfoDto {
 		this.cmemberName = cmemberName;
 		this.cmemberMobile = cmemberMobile;
 		this.cmemberEmail = cmemberEmail;
+		this.totCnt = totCnt;
 	}
 
 
@@ -110,8 +118,6 @@ public class CenterInfoDto {
 	public String getCenterId() {
 		return centerId;
 	}
-
-
 
 	/**
 	 * @param centerId the centerId to set
@@ -356,10 +362,46 @@ public class CenterInfoDto {
 
 
 
+	/**
+	 * @return the totCnt
+	 */
+	public int getTotCnt() {
+		return totCnt;
+	}
+
+
+
+	/**
+	 * @param totCnt the totCnt to set
+	 */
+	public void setTotCnt(int totCnt) {
+		this.totCnt = totCnt;
+	}
+
+
+
+	/**
+	 * @return the centerMobile
+	 */
+	public String getCenterMobile() {
+		return centerMobile;
+	}
+
+
+	/**
+	 * @param centerMobile the centerMobile to set
+	 */
+	public void setCenterMobile(String centerMobile) {
+		this.centerMobile = centerMobile;
+	}
+
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(centerId);
+		builder.append(", ");
+		builder.append(centerMobile);
 		builder.append(", ");
 		builder.append(centerName);
 		builder.append(", ");
@@ -386,7 +428,8 @@ public class CenterInfoDto {
 		builder.append(cmemberMobile);
 		builder.append(", ");
 		builder.append(cmemberEmail);
+		builder.append(", ");
+		builder.append(totCnt);
 		return builder.toString();
 	}
-
 }

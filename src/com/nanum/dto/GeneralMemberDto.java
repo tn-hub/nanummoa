@@ -56,15 +56,17 @@ public class GeneralMemberDto {
 	/** 구분 */
 	private String gubun;
 	
+	/** 전체건수  */
+	private int totCnt;
+	
 
 	/**
 	 * 기본 생성자
 	 */
 	public GeneralMemberDto() {}
 
+	
 	/**
-	 * 전체 생성자
-	 * 
 	 * @param generalId      일반회원아이디
 	 * @param generalPass    일반회원비밀번호
 	 * @param generalName    이름
@@ -78,31 +80,12 @@ public class GeneralMemberDto {
 	 * @param localNo        지역번호
 	 * @param categoryName
 	 * @param localName
-	 */
-	
-	
-
-	
-	
-	/**
-	 * @param generalId
-	 * @param generalPass
-	 * @param generalName
-	 * @param gender
-	 * @param birthday
-	 * @param generalZipCode
-	 * @param generalAddress
-	 * @param generalMobile
-	 * @param generalEmail
-	 * @param categoryNo
-	 * @param localNo
-	 * @param categoryName
-	 * @param localName
-	 * @param gubun
+	 * @param gubun			구분
+	 * * @param totCnt		전체건수
 	 */
 	public GeneralMemberDto(String generalId, String generalPass, String generalName, String gender, String birthday,
 			String generalZipCode, String generalAddress, String generalMobile, String generalEmail, String categoryNo,
-			String localNo, String categoryName, String localName, String gubun) {
+			String localNo, String categoryName, String localName, String gubun, int totCnt) {
 		super();
 		this.generalId = generalId;
 		this.generalPass = generalPass;
@@ -118,10 +101,11 @@ public class GeneralMemberDto {
 		this.categoryName = categoryName;
 		this.localName = localName;
 		this.gubun = gubun;
+		this.totCnt = totCnt;
 	}
-	
-	
 
+	
+	
 	/**
 	 * @return the generalId
 	 */
@@ -319,6 +303,24 @@ public class GeneralMemberDto {
 	public void setGubun(String gubun) {
 		this.gubun = gubun;
 	}
+	
+	
+
+	/**
+	 * @return the totCnt
+	 */
+	public int getTotCnt() {
+		return totCnt;
+	}
+
+
+	/**
+	 * @param totCnt the totCnt to set
+	 */
+	public void setTotCnt(int totCnt) {
+		this.totCnt = totCnt;
+	}
+
 
 	@Override
 	public String toString() {
@@ -350,8 +352,12 @@ public class GeneralMemberDto {
 		builder.append(localName);
 		builder.append(", ");
 		builder.append(gubun);
+		builder.append(", ");
+		builder.append(totCnt);
 		return builder.toString();
 	}
+
+
 
 	
 }

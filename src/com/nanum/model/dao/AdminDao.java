@@ -101,7 +101,7 @@ public class AdminDao {
 	 * @param sartNum 
 	 * @throws CommonException
 	 */
-	public void selCenterAcceptList(Connection conn, ArrayList<CenterInfoDto> centerActList, Integer sartNum, Integer lastNum) throws CommonException{
+	public void selCenterAcceptList(Connection conn, ArrayList<CenterInfoDto> centerActList) throws CommonException{
 		StringBuilder sql = new StringBuilder();
 		
 		
@@ -109,7 +109,6 @@ public class AdminDao {
 		sql.append("  c.c_id  ");
 		sql.append("  , i.c_name   ");
 		sql.append("  , to_char(c.entry_date,'yyyy-mm-dd') as member_entry_date "); 
-		sql.append("  , rownum as page_num  ");
 		sql.append("  , c.c_name as member_name ");
 		sql.append("  , c.c_mobile as member_mobile ");
 		sql.append("  , c.c_email as member_email ");
@@ -127,14 +126,10 @@ public class AdminDao {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		
-		 // 페이징 추가 쿼리 
-		String page_sql = "select * from ("+sql.toString()+") where page_num between ? and ?";
 		
 		
 		try {
-			stmt = conn.prepareStatement(page_sql); 
-			stmt.setInt(1, sartNum);
-			stmt.setInt(2, lastNum);
+			stmt = conn.prepareStatement(sql.toString()); 
 			
 			rs = stmt.executeQuery();
 			
@@ -360,7 +355,8 @@ public class AdminDao {
 		
 	}
 
-	public void selectGetGenralMinList(Connection conn, ArrayList<GeneralMemberDto> glist) throws CommonException{
+	/**관리자 센터회원 목록 보기*/
+	public void selectGetGenralMinList(Connection conn, ArrayList<GeneralMemberDto> list) throws CommonException{
 		StringBuilder sql = new StringBuilder();
 		
 		sql.append(" select 'gen' as gubun, g_id, g_name, g_email from general_member ");
@@ -377,12 +373,15 @@ public class AdminDao {
 			
 			while(rs.next()) { 
 				dto = new GeneralMemberDto();
+				
+				
+				
 				dto.setGubun(rs.getString("gubun"));
 				dto.setGeneralId(rs.getString("g_id"));
 				dto.setGeneralName(rs.getString("g_name"));
 				dto.setGeneralEmail(rs.getString("g_email"));
 				
-				glist.add(dto);
+				list.add(dto);
 			}
 			
 		} catch (SQLException e) {
@@ -399,22 +398,26 @@ public class AdminDao {
 	public void selectCenterMinList(Connection conn, ArrayList<CenterMemberDto> list) throws CommonException{
 		StringBuilder sql = new StringBuilder();
 		
-		
 		sql.append(" select 'cen' as gubun, c_id, c_name, c_email from center_member ");
 		 
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		
-		
 		try {
 			stmt = conn.prepareStatement(sql.toString()); 
-			
 			rs = stmt.executeQuery();
 			
 			CenterMemberDto dto = null;
 			
 			while(rs.next()) { 
 				dto = new CenterMemberDto();
+				
+				System.out.println("++++"+rs.getString("gubun"));
+				System.out.println("++++"+rs.getString("c_id"));
+				System.out.println("++++"+rs.getString("c_name"));
+				System.out.println("++++"+rs.getString("c_email"));
+				
+				
 				dto.setGubun(rs.getString("gubun"));
 				dto.setCenterId(rs.getString("c_id"));
 				dto.setCenterName(rs.getString("c_name"));
@@ -432,6 +435,218 @@ public class AdminDao {
 			JdbcTemplate.close(stmt);
 		}
 	}
+
+	/**관리자 일반회원 목록 보기*/
+	public void selectGetGenralDetatilList(Connection conn, ArrayList<GeneralMemberDto> list) throws CommonException{
+		StringBuilder sql = new StringBuilder();
+		
+		sql.append(" select 'gen' as gubun, g_id, g_name, g_email from general_member ");
+		 
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			stmt = conn.prepareStatement(sql.toString()); 
+			
+			rs = stmt.executeQuery();
+			
+			GeneralMemberDto dto = null;
+			
+			while(rs.next()) { 
+				dto = new GeneralMemberDto();
+				
+				dto.setGubun(rs.getString("gubun"));
+				dto.setGeneralId(rs.getString("g_id"));
+				dto.setGeneralName(rs.getString("g_name"));
+				dto.setGeneralEmail(rs.getString("g_email"));
+				
+				list.add(dto);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(stmt);
+		}
+		
+	}
+
+	
+	public void selectGenralDetailListTotCnt(Connection conn, GeneralMemberDto dto) throws CommonException{
+		StringBuilder sql = new StringBuilder();
+				
+		sql.append(" select count(*) as tot_cnt from general_member ");
+		
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			stmt = conn.prepareStatement(sql.toString()); 
+			
+			rs = stmt.executeQuery();
+			
+			if(rs.next()) { 
+				dto.setTotCnt(rs.getInt("tot_cnt"));
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(stmt);
+		}
+		
+	}
+
+	public void selectCenterDetailListCnt(Connection conn, CenterInfoDto dto) throws CommonException{
+		StringBuilder sql = new StringBuilder();
+		
+		sql.append(" select count(*) as tot_cnt from center_member where app_status = 1  ");
+		 
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			stmt = conn.prepareStatement(sql.toString()); 
+			
+			rs = stmt.executeQuery();
+			
+			if(rs.next()) { 
+				dto.setTotCnt(rs.getInt("tot_cnt"));
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(stmt);
+		}
+		
+	}
+
+
+	/** 관리자가 일반회원 상세 보기*/
+	public void selectGeneralDetail(Connection conn, GeneralMemberDto dto, String generalId) throws CommonException{
+		StringBuilder sql = new StringBuilder();
+		
+		sql.append(" select   ");
+		sql.append("  g.g_id  ");
+		sql.append("  , g.g_name  ");
+		sql.append("  , g.gender  ");
+
+		sql.append("  , to_char(to_date(birthday, 'yyyymmdd'), 'yyyy-mm-dd') as birthday ");
+		
+		sql.append("  , g.g_zipcode  ");
+		sql.append("  , g.g_address  ");
+		sql.append("  , g.g_mobile  ");
+		sql.append("  , g.g_email  ");
+		sql.append("  , g.category_no  ");
+		sql.append("  , g.local_no   ");
+		sql.append("  , v.category_name  ");
+		sql.append("  , l.local_name  ");
+		sql.append(" from general_member g, vol_category v, local l  ");
+		sql.append(" where g.category_no = v.category_no(+)  ");
+		sql.append(" and g.local_no = l.local_no(+)  ");
+		sql.append(" and g.g_id = ?   ");
+		 
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		
+		try {
+			stmt = conn.prepareStatement(sql.toString()); 
+			stmt.setString(1, generalId);
+			
+			
+			rs = stmt.executeQuery();
+			
+			if(rs.next()) { 
+				dto.setGeneralId(rs.getString("g_id"));
+				dto.setGeneralName(rs.getString("g_name"));
+				dto.setGender(rs.getString("gender"));
+				dto.setBirthday(rs.getString("birthday"));
+				dto.setGeneralAddress(rs.getString("g_address"));
+				dto.setGeneralMobile(rs.getString("g_mobile"));
+				dto.setGeneralEmail(rs.getString("g_email"));
+				dto.setCategoryName(rs.getString("category_name"));
+				dto.setLocalName(rs.getString("local_name"));
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(stmt);
+		}
+		
+	}
+	
+	/** 관리자가 센터회원 상세 보기*/
+	public void selectCenterDetail(Connection conn, CenterInfoDto dto, String centerId) throws CommonException{
+		StringBuilder sql = new StringBuilder();
+		
+		sql.append(" select  ");
+		sql.append("  c.c_id  ");
+		sql.append("  , i.c_name   ");
+		sql.append("  , to_char(c.entry_date,'yyyy-mm-dd') as member_entry_date "); 
+		sql.append("  , rownum as page_num  ");
+		sql.append("  , c.c_name as member_name ");
+		sql.append("  , c.c_mobile as member_mobile ");
+		sql.append("  , c.c_email as member_email ");
+		sql.append("  , i.register_code ");
+		sql.append("  , i.c_entry_date ");
+		sql.append("  , i.c_address ");
+		sql.append("  , i.ceo_name ");
+		sql.append("  , i.ceo_mobile ");
+		sql.append("  , i.service_subject ");
+		sql.append("  from center_member c, center_info i  ");
+		sql.append("  where c.c_id = i.c_id  ");
+		sql.append("  and  c.app_status = 1  ");
+		sql.append("  and  c.c_id = ?  ");
+		 
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		
+		try {
+			stmt = conn.prepareStatement(sql.toString()); 
+			stmt.setString(1, centerId);
+			
+			
+			rs = stmt.executeQuery();
+			
+			if(rs.next()) { 
+				dto.setCenterId(rs.getString("c_id"));
+				dto.setCenterName(rs.getString("c_name"));
+				dto.setCmemberEntryDate(rs.getString("member_entry_date"));
+				dto.setCmemberName(rs.getString("member_name"));
+				dto.setCmemberMobile(rs.getString("member_mobile"));
+				dto.setCmemberEmail(rs.getString("member_email"));
+				dto.setRegisterCode(rs.getString("register_code"));
+				dto.setCenterEntryDate(rs.getString("c_entry_date"));
+				dto.setCenterAddress(rs.getString("c_address"));
+				dto.setCeoName(rs.getString("ceo_name"));
+				dto.setCeoMobile(rs.getString("ceo_mobile"));
+				dto.setService(rs.getString("service_subject"));
+				
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(stmt);
+			}
+		}
 	
 	/**
 	 * 봉사 확인서 내역 조회
@@ -484,5 +699,5 @@ public class AdminDao {
 			JdbcTemplate.close(rs);
 			JdbcTemplate.close(pstmt);
 		}
-	}
+		}
 }

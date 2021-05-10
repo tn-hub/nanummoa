@@ -238,14 +238,14 @@ public class CommonBiz {
 	 * @throws CommonException
 	 */
 	public void addQna_gen(QnADto dto) throws CommonException{
-		Connection conn = JdbcTemplate.getConnection();// 비즈에서 커넥션 생성해서 dao전달
+		Connection conn = JdbcTemplate.getConnection();
 		
 		try {
 			dao.insertQna_gen(conn, dto);
-			JdbcTemplate.commit(conn); // commit;
+			JdbcTemplate.commit(conn); 
 		} catch (CommonException e) {
 			e.printStackTrace();
-			JdbcTemplate.rollback(conn);// rollback;
+			JdbcTemplate.rollback(conn);
 			throw e;
 		} finally {
 			JdbcTemplate.close(conn);
@@ -259,14 +259,14 @@ public class CommonBiz {
 	 * @throws CommonException
 	 */
 	public void addQna_cen(QnADto dto) throws CommonException{
-		Connection conn = JdbcTemplate.getConnection();// 비즈에서 커넥션 생성해서 dao전달
+		Connection conn = JdbcTemplate.getConnection();
 		
 		try {
 			dao.insertQna_cen(conn, dto);
-			JdbcTemplate.commit(conn); // commit;
+			JdbcTemplate.commit(conn); 
 		} catch (CommonException e) {
 			e.printStackTrace();
-			JdbcTemplate.rollback(conn);// rollback;
+			JdbcTemplate.rollback(conn);
 			throw e;
 		} finally {
 			JdbcTemplate.close(conn);
@@ -319,14 +319,14 @@ public class CommonBiz {
 	 * @throws CommonException
 	 */
 	public void qnaUpdate(QnADto dto)throws CommonException{
-		Connection conn = JdbcTemplate.getConnection();// 비즈에서 커넥션 생성해서 dao전달
+		Connection conn = JdbcTemplate.getConnection();
 		
 		try {
 			dao.qnaUpdate(conn, dto);
-			JdbcTemplate.commit(conn); // commit;
+			JdbcTemplate.commit(conn);
 		} catch (CommonException e) {
 			e.printStackTrace();
-			JdbcTemplate.rollback(conn);// rollback;
+			JdbcTemplate.rollback(conn);
 			throw e;
 		} finally {
 			JdbcTemplate.close(conn);
@@ -339,15 +339,15 @@ public class CommonBiz {
 	 * @throws CommonException
 	 */
 	public void qnaDelete(String qnaNo) throws CommonException{
-		Connection conn = JdbcTemplate.getConnection();// 비즈에서 커넥션 생성해서 dao전달
+		Connection conn = JdbcTemplate.getConnection();
 		AdminDao aDao = AdminDao.getInstance();
 		try {
 			aDao.deleteAllReply(conn, Integer.parseInt(qnaNo));
 			dao.qnaDelete(conn, qnaNo);
-			JdbcTemplate.commit(conn); // commit;
+			JdbcTemplate.commit(conn); 
 		} catch (CommonException e) {
 			e.printStackTrace();
-			JdbcTemplate.rollback(conn);// rollback;
+			JdbcTemplate.rollback(conn);
 		}
 	}
 
