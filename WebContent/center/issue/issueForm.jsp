@@ -10,7 +10,7 @@
 #pdf_wrap {
   position: absolute;
   width: 1000px;
-  height: 1400px;
+  height: 1200px;
   padding: 15px;
   text-align:center;
   border: 1px solid black;
@@ -20,7 +20,7 @@
 
 .memberInfo {
 	width: 700px;
-	height: 200px;
+	height: 300px;
 	text-align:left;
 	margin: auto;
 }
@@ -37,7 +37,7 @@
 	font-weight: bold;
 	font-size: 60px;
 	margin-top: 70px;
-	margin-bottom: 200px;
+	margin-bottom: 100px;
 }
 	
 .left_wrap {
@@ -62,28 +62,20 @@
 	margin-bottom: 70px;
 }
 
+.title {
+margin-bottom: 150px;
+}
+
+.foo{
+margin-top: 300px; 
+}
+
 </style>
 <script type = "text/javascript" src = "http://code.jquery.com/jquery-latest.min.js"></script>
 <script type = "text/javascript" src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
 <script type = "text/javascript" src = "https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <script type="text/javascript">
- $(document).ready(function(){
-	
-		
-		/*  html2canvas($('#pdf_wrap')[0]).then(function(canvas) {
-		    var doc = new jsPDF('p', 'mm', 'a4'); //jspdf객체 생성
-		    var imgData = canvas.toDataURL('image/png'); //캔버스를 이미지로 변환
-		    var imgWidth = 190; // 이미지 가로 길이(mm) / A4 기준 210mm
-		    var pageHeight = imgWidth * 1.414;  // 출력 페이지 세로 길이 계산 A4 기준
-		    var imgHeight = canvas.height * imgWidth / canvas.width;
-		    var heightLeft = imgHeight;
-		    var margin = 10; // 출력 페이지 여백설정
-		    var position = 10;
-		    doc.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight); //이미지를 기반으로 pdf생성
-		    doc.save('sample-file.pdf'); //pdf저장
-		  }); */
-	
-});
+
 </script>
 </head>
 <body>
@@ -92,31 +84,29 @@
 
 <input type="hidden" id="volInfoNo" name="volInfoNo" value="${map.volInfoNo}">
 <input type="hidden" id="generalId" name="generalId" value="${map.generalId }">
+<input type="hidden" id="generalId" name="volApplyNo" value="${map.volApplyNo }">
+<input type="hidden" id="issueDate" name="issueDate" value="${map.issueDate }">
 
 <div id="pdf_wrap">
-		<span class="left_wrap">발급번호 : ${map.volConNo }</span>
-		<span class="right_wrap">나눔모아</span>
 		<h1 class="title_h">자원봉사활동 확인서</h1>
+		
 		<div class="memberInfo">
-			<h3>성명 :</h3>
-			<span>${map.generalName }</span>
+		<div class="title">
+			<h2>${map.volTitle }</h2>
+		</div>
+			<h3>봉사활동 내용 : <input type="text" id="contents" name="contents" placeholder="간략 봉사내용" size="50"></h3>
 			<hr>
-			<h3>주소 :</h3>
-			<span>${map.generalAddress }</span>
+			<h3>자원봉사 활동기간 : ${map.startDate } ~ ${map.endDate }</h3>
+			<hr>
+			<h3>자원봉사 활동시간 : ${map.startTime } - ${map.endTime }</h3>
 			<hr>
 		</div>
-
-		<ul class="vol_info_ul">
-			<li>자원봉사 활동기간 : ${map.startDate } ~ ${map.endDate } (${map.playDate }일)</li>
-			<li>자원봉사 활동시간 : ${map.startTime } - ${map.endTime }</li>
-			
-			<li>봉사활동 내용 : <input type="text" id="contents" name="contents" placeholder="간략 봉사내용" size="50"> </li>
-		</ul>
-
+<div class="foo">
 		<h2>위와 같이 자원봉사 활동에 참여하였음을 확인함</h2>
-		<p class="write_date">발행일 : ${map.volDate }</p>
+		<p class="write_date">발행일 : ${map.issueDate }</p>
 
 		<h1>${map.centerName }</h1>
+</div>
 </div>
 </form>
 </body>

@@ -418,12 +418,6 @@ $(document).ready(function() {
 					<span>${dto.applyCount }/${dto.totalCount }명</span>
 				</div>
 				<c:choose>
-					<c:when test="${dto.volStatus == '2' and dto.recStatus == '2'}">
-						<span class="title_span">
-							<input type="button" value="활동 여부" class="g_btn detatil_btn" 
-								onclick="location.href='${CONTEXT_PATH}/center/centerController?action=#'">
-						</span>
-					</c:when>
 					<c:when test="${dto.volStatus != '0' and dto.recStatus == '0'}" >
 					<span class="title_span">
 						<input type="button" value="승인 취소" class="g_btn detatil_btn" 

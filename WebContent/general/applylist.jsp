@@ -198,10 +198,10 @@
 			<li>
 				<div class="list_box">
 					<div>
-						<div class="apply_status">${dto.recStatus == "1" ? "승인" : "접수"}</div>
+					<div class="apply_status">${dto.recStatus == "1" ? "승인" : "접수"}</div>
 						<input type="button" value="취소하기" class="float_r g_btn" onclick="location.href='${CONTEXT_PATH}/general/generalController?action=cancelVol&volApplyNo=${dto.volApplyNo}&volDetailNo=${dto.volDetailNo}'">
 					</div>
-					<h3><a href="#">${dto.volTitle}</a></h3>
+					<h3><a href="${CONTEXT_PATH}/common/commonController?action=volDetatilForm&volInfoNo=${dto.volInfoNo}">${dto.volTitle}</a></h3>
 					<div class="span_box">
 						<span class="title_span">[신청일자]</span>
 						<span>${dto.applyDate}</span>
