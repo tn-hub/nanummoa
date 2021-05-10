@@ -182,9 +182,9 @@ function main_btnPageNum(ret){
 </div>
 <div class="searchAllDVS_area">
 <ul class="searchAllDVS_menu" style="cursor:hand;">
-	<li id="tab_searchAll">전체</li>
-	<li id="tab_searchVol">봉사</li>
-	<li id="tab_searchQna">문의</li>
+	<li id="tab_searchAll" <c:if test="${searchAllOpt eq 'A'}">style="font-weight:bold;"</c:if>>전체</li>
+	<li id="tab_searchVol" <c:if test="${searchAllOpt eq 'V'}">style="font-weight:bold;"</c:if> >봉사</li>
+	<li id="tab_searchQna" <c:if test="${searchAllOpt eq 'Q'}">style="font-weight:bold;"</c:if>>문의</li>
 </ul>
 </div>
 <input type="hidden" value="1" id="pageNum" name="pageNum">
