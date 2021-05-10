@@ -184,9 +184,9 @@
 		console.log("들어옴");
 		console.log(volInfoNo, volConNo);
 		var popupX = (window.screen.width / 2) - 600;
-		var popupY = (window.screen.height /2) - 200;
+		var popupY = (window.screen.height /2) - 700;
 		window.open('${CONTEXT_PATH}/general/generalController?action=confirmationForm&volInfoNo=' +volInfoNo + '&volConNo=' + volConNo, 
-				'window팝업', 'status=no, height=400, width=1200, left='+ popupX +
+				'window팝업', 'status=no, height=1400, width=1200, left='+ popupX +
 				'top='+ popupY + ', screenX='+ popupX + ', screenY= '+ popupY);
 		
 	}
