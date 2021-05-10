@@ -49,6 +49,7 @@ public class AdminController extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
 		String action = request.getParameter("action");
+		response.setContentType("text/html; charset=utf-8");
 		System.out.println("action : " + action);
 		switch (action) {
 		case "centerAcceptList":
@@ -72,7 +73,6 @@ public class AdminController extends HttpServlet {
 		case "centerMinList":
 			centerMinList(request, response);
 		case "deleteReply":
-			deleteReply(request, response);
 			break;
 		case "updateReply":
 			updateReply(request, response);
@@ -82,6 +82,15 @@ public class AdminController extends HttpServlet {
 			break;
 		case "adminUpdate":
 			adminUpdate(request, response);
+		case "generalDetail" :
+			generalDetail(request, response);
+			break;
+		case "centerDetail" :
+			centerDetail(request, response);
+			break;
+		case "searchAllMemberForm" :
+			searchAllMemberForm(request, response);
+			break;
 		case "confirmationListForm" :
 			confirmationListForm(request, response);
 			break;
@@ -92,8 +101,9 @@ public class AdminController extends HttpServlet {
 
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		process(request, response);
 	}
 
@@ -102,8 +112,21 @@ public class AdminController extends HttpServlet {
 		process(request, response);
 	}
 
-	private void centerAcceptList(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	
+	/**센터회원가입 대기 회원*/
+	private void centerAcceptList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		PrintWriter out = response.getWriter();
+		
+		HttpSession session = request.getSession(false);
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null ) {
+			String url = CONTEXT_PATH + "/common/commonController?action=loginForm";
+			out.println("<script>alert('로그인 후 이용해 주시기 바랍니다');location.href='" + url + "'; </script>");
+			out.flush();
+			out.close();
+			return;
+		}
+
+		
 		AdminBiz biz = new AdminBiz();
 		CenterInfoDto cDto = new CenterInfoDto();
 		ArrayList<CenterInfoDto> centerActList = new ArrayList<CenterInfoDto>();
@@ -132,34 +155,37 @@ public class AdminController extends HttpServlet {
 			Integer lastNum = Paging.getBlockLastNum();
 			Integer lastPageNum = Paging.getLastPageNum();
 
-			biz.getCenterAcceptList(centerActList, sartNum, lastNum);
+			biz.getCenterAcceptList(centerActList);
 			request.setAttribute("centerActList", centerActList);
 
 			// jsp 에 총건수 및 건수 보여주기 위해 셋팅
 			request.setAttribute("lastPageNum", lastPageNum);
 			request.setAttribute("curPageNum", pageNum);
 
+			
+			
 			request.getRequestDispatcher("/admin/centerInputAccept.jsp").forward(request, response);
-		} catch (Exception e) {
+		}catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
-	private void centerAccept(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	
+	/** 센터회원가입 승인*/
+	private void centerAccept(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String centerId = request.getParameter("centerId");
 		AdminBiz aBiz = new AdminBiz();
-
+		
 		try {
 			aBiz.acceptCenter(centerId);
 			response.sendRedirect(CONTEXT_PATH + "/admin/adminController?action=centerAcceptList");
-		} catch (Exception e) {
+		}catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void centerRefuse(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+
+	/**센터회원가입 거절*/
+	private void centerRefuse(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String centerId = request.getParameter("centerId");
 		AdminBiz aBiz = new AdminBiz();
 
@@ -243,16 +269,26 @@ public class AdminController extends HttpServlet {
 
 	}
 
-	private void generalMinList(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	/** 관리자 회원 일반회원 보기*/
+	private void generalMinList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		PrintWriter out = response.getWriter();
+		
+		HttpSession session = request.getSession(false);
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null ) {
+			String url = CONTEXT_PATH + "/common/commonController?action=loginForm";
+			out.println("<script>alert('로그인 후 이용해 주시기 바랍니다');location.href='" + url + "'; </script>");
+			out.flush();
+			out.close();
+			return;
+		}
+		
 		AdminBiz biz = new AdminBiz();
-		ArrayList<GeneralMemberDto> glist = new ArrayList<GeneralMemberDto>();
+		ArrayList<GeneralMemberDto> list = new ArrayList<GeneralMemberDto>();
 
 		try {
 
-			biz.getGenralMinList(glist);
-			request.setAttribute("glist", glist);
-
+			biz.getGenralMinList(list);
+			request.setAttribute("list", list);
 			request.getRequestDispatcher("/admin/searchAllMember.jsp").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -260,16 +296,26 @@ public class AdminController extends HttpServlet {
 
 	}
 
-	private void centerMinList(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	/** 관리자 회원 센터회원 보기*/
+	private void centerMinList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		PrintWriter out = response.getWriter();
+		
+		HttpSession session = request.getSession(false);
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null ) {
+			String url = CONTEXT_PATH + "/common/commonController?action=loginForm";
+			out.println("<script>alert('로그인 후 이용해 주시기 바랍니다');location.href='" + url + "'; </script>");
+			out.flush();
+			out.close();
+			return;
+		}
 		AdminBiz biz = new AdminBiz();
 		ArrayList<CenterMemberDto> list = new ArrayList<CenterMemberDto>();
 
 		try {
-
 			biz.getCenterMinList(list);
 			request.setAttribute("clist", list);
 
+			request.setAttribute("list", list);
 			request.getRequestDispatcher("/admin/searchAllMember.jsp").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -464,6 +510,31 @@ PrintWriter out = response.getWriter();
 		}
 	}
 	
+	
+	/**관리자  일반회원 상세보기*/
+	private void generalDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		PrintWriter out = response.getWriter();
+		HttpSession session = request.getSession(false);
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null ) {
+			String url = CONTEXT_PATH + "/common/commonController?action=loginForm";
+			out.println("<script>alert('로그인 후 이용해 주시기 바랍니다');location.href='" + url + "'; </script>");
+			out.flush();
+			out.close();
+			return;
+		}
+		
+		String generalId = request.getParameter("generalId");
+		
+		AdminBiz biz = new AdminBiz();
+		GeneralMemberDto dto = new GeneralMemberDto();
+
+		try {
+			biz.getGeneralDetail(dto, generalId);
+			request.setAttribute("dto", dto);
+			request.getRequestDispatcher("/admin/generalDetailnfo.jsp").forward(request, response);
+		}catch (Exception e) {
+		}
+		}
 	/**
 	 * 봉사확인서 내역 조회 페이지
 	 */
@@ -490,6 +561,36 @@ PrintWriter out = response.getWriter();
 		}
 	}
 	
+	
+	/**관리자 센터회원 상세보기*/
+	private void centerDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		PrintWriter out = response.getWriter();
+		HttpSession session = request.getSession(false);
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null ) {
+			String url = CONTEXT_PATH + "/common/commonController?action=loginForm";
+			out.println("<script>alert('로그인 후 이용해 주시기 바랍니다');location.href='" + url + "'; </script>");
+			out.flush();
+			out.close();
+			return;
+		}
+		
+		String centerId = request.getParameter("centerId");
+		
+		AdminBiz biz = new AdminBiz();
+		CenterInfoDto dto = new CenterInfoDto();
+
+		try {
+			biz.getCenterDetail(dto, centerId);
+			request.setAttribute("dto", dto);
+			request.getRequestDispatcher("/admin/centerDetailnfo.jsp").forward(request, response);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void searchAllMemberForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		request.getRequestDispatcher("/admin/searchAllMember.jsp").forward(request, response);
+	}
 	/**
 	 * 봉사확인서 다운
 	 */

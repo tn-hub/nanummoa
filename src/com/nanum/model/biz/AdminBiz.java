@@ -51,12 +51,11 @@ public class AdminBiz {
 		}
 	}
 
-	public void getCenterAcceptList(ArrayList<CenterInfoDto> centerActList, Integer sartNum, Integer lastNum)
-			throws CommonException {
+	public void getCenterAcceptList(ArrayList<CenterInfoDto> centerActList) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
 
 		try {
-			dao.selCenterAcceptList(conn, centerActList, sartNum, lastNum);
+			dao.selCenterAcceptList(conn, centerActList);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -116,18 +115,30 @@ public class AdminBiz {
 		}
 	}
 
-	public void getGenralMinList(ArrayList<GeneralMemberDto> glist) throws CommonException {
+	/** 관리자 일반회원 보기 */
+	public void getGenralMinList(ArrayList<GeneralMemberDto> list) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
 
 		try {
-			dao.selectGetGenralMinList(conn, glist);
+			dao.selectGetGenralMinList(conn, list);
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+
+	/** 관리자 센터회원 보기 */
+	public void getCenterMinList(ArrayList<CenterMemberDto> list) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.selectCenterMinList(conn, list);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		} finally {
 			JdbcTemplate.close(conn);
 		}
-
 	}
 
 	/**
@@ -150,19 +161,6 @@ public class AdminBiz {
 			JdbcTemplate.close(conn);
 		}
 
-	}
-
-	public void getCenterMinList(ArrayList<CenterMemberDto> list) throws CommonException {
-		Connection conn = JdbcTemplate.getConnection();
-
-		try {
-			dao.selectCenterMinList(conn, list);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		} finally {
-			JdbcTemplate.close(conn);
-		}
 	}
 
 	/**
@@ -227,6 +225,60 @@ public class AdminBiz {
 		}
 	}
 
+	/** 관리자 창에서 일반회원 전체 건수 */
+	public void getGenralDetailListTotCnt(GeneralMemberDto dto) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.selectGenralDetailListTotCnt(conn, dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+
+	}
+
+	/** 관리자 창에서 가입1센터회원 전체 건수 */
+	public void getCenterDetailListCnt(CenterInfoDto dto) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.selectCenterDetailListCnt(conn, dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+
+	}
+
+	/** 관리자가 일반회원 상세 보기 */
+	public void getGeneralDetail(GeneralMemberDto dto, String generalId) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.selectGeneralDetail(conn, dto, generalId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+
+	/** 관리자가 센터회원 상세 보기 */
+	public void getCenterDetail(CenterInfoDto dto, String centerId) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.selectCenterDetail(conn, dto, centerId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+
 	/**
 	 * 봉사 확인서 내역 조회
 	 * 
@@ -243,5 +295,7 @@ public class AdminBiz {
 		} finally {
 			JdbcTemplate.close(conn);
 		}
+
 	}
+
 }

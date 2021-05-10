@@ -297,10 +297,6 @@ public class CommonController extends HttpServlet {
 		String from = "gusqls904@gmail.com";
 		String code = SHA256.getEncrypt(email, "cos");
 
-		System.out.println("이름 : " + name);
-		System.out.println("등급 : " + grade);
-		System.out.println("이메일 : " + email);
-
 		if (email == null || email.trim().length() == 0 || email == "") {
 			out.print("none_email");
 			out.flush();
@@ -585,11 +581,6 @@ public class CommonController extends HttpServlet {
 		String email = request.getParameter("email");
 		String grade = request.getParameter("grade");
 
-		System.out.println("이름 : " + name);
-		System.out.println("코드 : " + code);
-		System.out.println("메일 : " + email);
-		System.out.println("등급 : " + grade);
-
 		if (name == null || name.trim().length() == 0 || name == "") {
 			out.println("<script>alert('[오류] 이름을 입력하세요');history.go(-1); </script>");
 			out.flush();
@@ -612,7 +603,6 @@ public class CommonController extends HttpServlet {
 				dto.setGeneralEmail(email);
 				try {
 					biz.checkEmail(dto);
-					System.out.println("비밀번호 : " + dto.getGeneralPass());
 					if (dto.getGeneralPass() != null) {
 						request.setAttribute("grade", grade);
 						request.setAttribute("dto", dto);
@@ -768,7 +758,6 @@ public class CommonController extends HttpServlet {
 			GeneralMemberDto gdto = (GeneralMemberDto) session.getAttribute("dto");
 			dto.setGeneralId(gdto.getGeneralId());
 
-			System.out.println("dto.getGeneralId() = " + dto.getGeneralId());
 			try {
 				biz.addQna_gen(dto);
 				response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=qnaList");
@@ -801,8 +790,6 @@ public class CommonController extends HttpServlet {
 		String pageNum = request.getParameter("pageNum");
 		
 		if (pageNum == null || pageNum == "") {
-			System.out.println("pageNum ====== " + pageNum);
-			
 			pageNum = "1";
 		}
 	
@@ -873,7 +860,6 @@ public class CommonController extends HttpServlet {
 
 		QnADto dto = new QnADto();
 		dto.setQnaNo(Integer.parseInt(qnaNo));
-		System.out.println("문의하기 수정 : " + qnaNo);
 		try {
 			CommonBiz biz = new CommonBiz();
 			biz.qnaDetail(dto, qnaNo);
@@ -1045,29 +1031,21 @@ public class CommonController extends HttpServlet {
 			String[] date = { Utility.getCurrentDate(), Utility.getCurrentDate(3) };
 			String sql = biz.searchVolList(list, searchMap);
 			int total = biz.volListTotalCount(searchMap, sql);
-			System.out.println("total : " + total);
 			
-			int pageCount = 5; // 원하는 row 수 
-			int curPage = Integer.parseInt(pageNum) * pageCount;		// 현재 rownum 계산 
+			int pageCount = 5;
+			int curPage = Integer.parseInt(pageNum) * pageCount;
 			
-			// 현재 페이지가 속한 block의 시작 번호, 끝 번호를 계산
-			Paging.makeBlock(curPage, pageCount); // 현재페이지 번호, 원하는row 건수
+			Paging.makeBlock(curPage, pageCount);
 
-			// 하단 페이징 번호 max 조회
-			Paging.makeLastPageNum(total, pageCount); // 총건수, 원하는row 건수
+			Paging.makeLastPageNum(total, pageCount);
 
-			// 값가져오기
 			Integer startNum = Paging.getBlockStartNum();
 			Integer lastNum = Paging.getBlockLastNum();
 			Integer lastPageNum = Paging.getLastPageNum();
 		 	 
-			System.out.println("startNum : " + startNum + ", " + "lastNum : " + lastNum);
 			ArrayList<HashMap<String, Object>> resultList = new ArrayList<HashMap<String, Object>>();
-			// 목록 호출 할때 dao 조건 sartNum, lastNum 값 셋팅
 			biz.searchVolListWithPaging(resultList, searchMap, startNum, lastNum);
-			System.out.println("resultList : " + resultList.size());
 			
-			// jsp 에 총건수 및 건수 보여주기 위해 셋팅
 			request.setAttribute("lastPageNum", lastPageNum);
 			request.setAttribute("curPageNum", pageNum);
 			request.setAttribute("totCnt", total);
@@ -1099,7 +1077,6 @@ public class CommonController extends HttpServlet {
 	protected void logout(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
-		System.out.println("[debug] 로그아웃 요청");
 		if (session != null) {
 			if (session.getAttribute("dto") != null) {
 				session.removeAttribute("dto");
@@ -1128,24 +1105,17 @@ public class CommonController extends HttpServlet {
 		String searchAllText = "";
 		String pageNum = request.getParameter("pageNum");
 		
-		System.out.println("pageNum ==== " + pageNum);
-		
 		if (pageNum == null || pageNum == "") {
 			pageNum = "1";
 		}
 		
 		if(request.getParameter("main_searchAll_text") != null || request.getParameter("main_searchAll_text") == "") {
-			// 전체통합검색
 			searchAllOpt = request.getParameter("main_searchAll_opt");
 			searchAllText = request.getParameter("main_searchAll_text");
 		}else {
-			//통합검색
 			searchAllOpt = request.getParameter("searchAll_opt");
 			searchAllText = request.getParameter("searchAll_text");
 		}
-		
-		System.out.println("searchAll_opt" + searchAllOpt);
-		System.out.println("searchAllText" + searchAllText);
 		
 		CommonBiz biz = new CommonBiz();
 		ArrayList<SearchAllDto> saList = new ArrayList<SearchAllDto>();
@@ -1159,7 +1129,6 @@ public class CommonController extends HttpServlet {
 			int pageCount = 10;
 			int curPage = Integer.parseInt(pageNum) * pageCount;			
 			
-			System.out.println("aDto.getTotCnt() = " + aDto.getTotCnt());
 			Paging.makeBlock(curPage, pageCount);
 			Paging.makeLastPageNum(aDto.getTotCnt(), pageCount) ;
 
@@ -1167,15 +1136,9 @@ public class CommonController extends HttpServlet {
 			Integer lastNum = Paging.getBlockLastNum();
 			Integer lastPageNum = Paging.getLastPageNum();
 			
-			System.out.println("sartNum == " + sartNum);
-			System.out.println("lastNum == " + lastNum);
-			System.out.println("lastPageNum == " + lastPageNum);
-			
-			// 목록
 			biz.searchAllList(saList, searchAllOpt, searchAllText, sartNum, lastNum);
 			request.setAttribute("saList", saList);
 			
-			// 페이징 
 			request.setAttribute("lastPageNum", lastPageNum);
 			request.setAttribute("curPageNum", pageNum);
 			request.setAttribute("totCnt", aDto.getTotCnt());
