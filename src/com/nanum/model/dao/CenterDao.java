@@ -758,7 +758,7 @@ public class CenterDao {
 				+ "where vi.vol_info_no = vd.vol_info_no\n" + "and vi.c_id = cm.c_id\n" + "and cm.c_id = ci.c_id\n"
 				+ "and vi.category_no = vc.category_no\n" + "and cm.c_id= ?\n"
 				+ "group by vi.vol_info_no, vi.v_title, vi.start_date, vi.end_date,ci.c_name,vc.category_name\n"
-				+ "having min(vd.rec_status) = 2 order by 봉사종료일,vol_info_no";
+				+ "having min(vd.rec_status) = 2 order by 봉사종료일 desc,vol_info_no";
 
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
