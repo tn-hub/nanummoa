@@ -17,6 +17,9 @@ a:hover { font-weight: bold; }
 a:active { font-weight: bold; }
 a.bold { font-weight: bold; }
 
+em{
+	color: red;
+}
 
 #section_contents{
 	width: 1000px; 
@@ -197,10 +200,9 @@ function main_btnPageNum(ret){
      </c:forEach>   
 	<input type="button" value="다음 " id="nestBtn" name="nestBtn">	
 </div>
-<hr>
-<div id="footer" class="footer">
-		<%@ include file="/common/footer.jsp"%>
 </div>
+<div id="footer" class="footer">
+	<%@ include file="/common/footer.jsp"%>
 </div>
 </body>
 </html>

@@ -27,8 +27,8 @@ input,th,td {
 }
 
 table{
-width: 1000px;
-height: 200px;
+	width: 1000px;
+	height: 200px;
 }
 
 #userInput_div {

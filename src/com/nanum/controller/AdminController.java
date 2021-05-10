@@ -88,6 +88,12 @@ public class AdminController extends HttpServlet {
 		case "centerDetail" :
 			centerDetail(request, response);
 			break;
+		case "generalDel" :
+			generalDel(request, response);
+			break;
+		case "centerDel" :
+			centerDel(request, response);
+			break;	
 		case "searchAllMemberForm" :
 			searchAllMemberForm(request, response);
 			break;
@@ -102,7 +108,6 @@ public class AdminController extends HttpServlet {
 	}
 
 	
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		process(request, response);
 	}
@@ -284,9 +289,15 @@ public class AdminController extends HttpServlet {
 		
 		AdminBiz biz = new AdminBiz();
 		ArrayList<GeneralMemberDto> list = new ArrayList<GeneralMemberDto>();
-
+		GeneralMemberDto dto = new GeneralMemberDto();
 		try {
 
+			// 총카운터 
+			biz.getGenralDetailListTotCnt(dto);
+			request.setAttribute("tDto", dto);	
+			
+			
+			// 목록조회
 			biz.getGenralMinList(list);
 			request.setAttribute("list", list);
 			request.getRequestDispatcher("/admin/searchAllMember.jsp").forward(request, response);
@@ -310,8 +321,12 @@ public class AdminController extends HttpServlet {
 		}
 		AdminBiz biz = new AdminBiz();
 		ArrayList<CenterMemberDto> list = new ArrayList<CenterMemberDto>();
-
+		CenterInfoDto dto = new CenterInfoDto();
 		try {
+			// 총카운터 
+			biz.getCenterDetailListCnt(dto);
+			request.setAttribute("tDto", dto);
+						
 			biz.getCenterMinList(list);
 			request.setAttribute("clist", list);
 
@@ -418,7 +433,7 @@ public class AdminController extends HttpServlet {
 	 */
 	private void adminUpdate(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-PrintWriter out = response.getWriter();
+		PrintWriter out = response.getWriter();
 		
 		String adminName = request.getParameter("name");
 		String adminPw = request.getParameter("pw");
@@ -562,7 +577,7 @@ PrintWriter out = response.getWriter();
 	}
 	
 	
-	/**관리자 센터회원 상세보기*/
+	/**관리자 가입된센터회원 상세보기*/
 	private void centerDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		PrintWriter out = response.getWriter();
 		HttpSession session = request.getSession(false);
@@ -588,9 +603,11 @@ PrintWriter out = response.getWriter();
 		}
 	}
 	
+	
 	private void searchAllMemberForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		request.getRequestDispatcher("/admin/searchAllMember.jsp").forward(request, response);
 	}
+	
 	/**
 	 * 봉사확인서 다운
 	 */
@@ -622,4 +639,59 @@ PrintWriter out = response.getWriter();
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * 일반회원 탈퇴
+	 */
+	private void generalDel(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || 
+				session.getAttribute("dto") == null ||
+				session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");	
+			return;
+		}
+		
+		String generalId = request.getParameter("generalId");
+		AdminBiz biz = new AdminBiz();
+		
+		System.out.println("generalId = " +  generalId);
+		try{
+			
+			biz.generalDel(generalId);
+			request.getRequestDispatcher("/admin/adminController?action=generalMinList").forward(request, response);
+			
+		} catch(CommonException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 센터회원 탈퇴
+	 */
+
+	private void centerDel(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || 
+				session.getAttribute("dto") == null ||
+				session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");	
+			return;
+		}
+		
+		String centerId = request.getParameter("centerId");
+		AdminBiz biz = new AdminBiz();
+		
+		try{
+			biz.centerDel(centerId);
+			request.getRequestDispatcher("/admin/adminController?action=centerMinList").forward(request, response);
+			
+		} catch(CommonException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 }

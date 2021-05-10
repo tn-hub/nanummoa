@@ -298,4 +298,35 @@ public class AdminBiz {
 
 	}
 
+	public void generalDel(String generalId) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		
+		try {
+			dao.generalDelete(conn, generalId);
+			JdbcTemplate.commit(conn); // commit;
+		} catch (CommonException e) {
+			JdbcTemplate.rollback(conn);// rollback;
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+
+	public void centerDel(String centerId) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		
+		try {
+			dao.centerDelete(conn, centerId);
+			JdbcTemplate.commit(conn); // commit;
+		} catch (CommonException e) {
+			JdbcTemplate.rollback(conn);// rollback;
+			e.printStackTrace();
+			throw e;
+		} finally {
+			
+			JdbcTemplate.close(conn);
+		}
+		
+	}
 }

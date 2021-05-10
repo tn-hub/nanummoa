@@ -25,9 +25,14 @@ input,th,td {
 	background-color: #FBD157;	
 }
 
+.centerMemberInfo{
+	width: 1000px;
+	height: 150px;
+}
+
 table{
-width: 1000px;
-height: 200px;
+	width: 1000px;
+	height: 300px;
 }
 
 #userInput_div {
@@ -77,7 +82,7 @@ height: 200px;
 <h1>내 정보</h1>
 <hr class="head_hr">
 	<form action="${CONTEXT_PATH}/admin/adminController?action=centerDetail" method="post" id="centerUpdateForm">
-		<table border="1">
+		<table border="1" class="centerMemberInfo">
 			<tr>
 				<th>이름</th>
 				<td>
@@ -109,7 +114,7 @@ height: 200px;
 		</table>
 
 			<h1>봉사센터 정보</h1>
-			<table border="1">
+			<table border="1" class="centerMemberInfoDetail">
 				<tr>
 					<th>등록번호</th>
 					<td>

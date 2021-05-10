@@ -10,6 +10,10 @@
 <title>회원 전체 조회</title>
 <style type="text/css">
 
+em{
+	color: red;
+}
+
 #section_contents{
 	width: 1000px; 
 	border: 1px gray; 
@@ -22,7 +26,7 @@
 }
 
 .searchAllMember li{
-	background-color: #EAEAEA;
+	background-color: #FBD157;
 	padding: 10px 30px 10px 30px;
 	width: 260px;
 	display: inline-block;
@@ -41,11 +45,17 @@
 .genMinList_area{
 	border: 2px solid gray;
 	padding: 30px;
-	
+	height: 30px;
 }
 
 .genMinList_span{
 	padding-right: 50px;
+	float: left;
+}
+
+.genMinList_spanR{
+	float: right;
+	padding-left: 20px;
 }
 
 </style>
@@ -92,14 +102,23 @@ function main_btnPageNum(ret){
 <div>
 <ul class="searchAllMember" style="cursor:hand;">
 	<li><a href="${CONTEXT_PATH}/admin/adminController?action=generalMinList">일반회원</a></li>
-	<li><a href="${CONTEXT_PATH}/admin/adminController?action=centerMinList">샌터회원</a></li>
+	<li><a href="${CONTEXT_PATH}/admin/adminController?action=centerMinList">센터회원</a></li>
 	<li><a href="${CONTEXT_PATH}/admin/adminController?action=centerAcceptList">센터대기회원</a></li>
 </ul>
  <input type="hidden" value="1" id="pageNum" name="pageNum">
 </div>
 </form>
 <form action="${CONTEXT_PATH}/admin/adminController?action=generalMinList" method="post">
+
+<c:if test="${tDto.gubun eq 'gen'}">
+[전체 <em>${tDto.totCnt}</em> 회원]
+</c:if>
+<c:if test="${tDto.gubun eq 'cen'}">
+[전체 <em>${tDto.totCnt}</em> 회원]
+</c:if>
+
 <div class="grandMinList_area">
+<hr>
 	<c:forEach var="dto" items="${list}">
 	<c:if test="${dto.gubun eq 'gen'}">
 	<ul class="genMinList_area">
@@ -107,18 +126,19 @@ function main_btnPageNum(ret){
 			<span class="genMinList_span">[아이디] ${dto.generalId}</span>
 			<span class="genMinList_span">[이름] ${dto.generalName}</span>
 			<span class="genMinList_span">[이메일] ${dto.generalEmail}</span>
-			<span class="genMinList_span"><a href="${CONTEXT_PATH}/admin/adminController?action=generalDetail&generalId=${dto.generalId}"><input type="button" value="상세보기" class="y_btn"></a></span>
+			<span class="genMinList_spanR"><a href="${CONTEXT_PATH}/admin/adminController?action=generalDetail&generalId=${dto.generalId}"><input type="button" value="상세보기" class="r_btn" class="btn_ac"></a></span>
+			<span class="genMinList_spanR"><a href="${CONTEXT_PATH}/admin/adminController?action=generalDel&generalId=${dto.generalId}"><input type="button" value="깅제탈퇴" class="y_btn" class="btn_re"></a></span>
 		</li>
 	</ul>
 	</c:if>
 	<c:if test="${dto.gubun eq 'cen'}">
-	
 	<ul class="genMinList_area">
 		<li>
 			<span class="genMinList_span">[아이디] ${dto.centerId}</span>
 			<span class="genMinList_span">[이름] ${dto.centerName}</span>
 			<span class="genMinList_span">[이메일] ${dto.centerEmail}</span>
-			<span class="genMinList_span"><a href="${CONTEXT_PATH}/admin/adminController?action=centerDetail&centerId=${dto.centerId}"><input type="button" value="상세보기" class="y_btn" ></a></span>
+			<span class="genMinList_spanR"><a href="${CONTEXT_PATH}/admin/adminController?action=centerDetail&centerId=${dto.centerId}"><input type="button" value="상세보기" class="r_btn" class="btn_ac" ></a></span>
+			<span class="genMinList_spanR"><a href="${CONTEXT_PATH}/admin/adminController?action=centerDel&centerId=${dto.centerId}"><input type="button" value="깅제탈퇴" class="y_btn" class="btn_re"></a></span>
 		</li>
 	</ul>
 	</c:if>	
