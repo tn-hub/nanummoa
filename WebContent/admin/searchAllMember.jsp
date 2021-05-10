@@ -38,12 +38,8 @@
 </style>
 </head>
 <script type="text/javascript">
-$(document).ready(function() {
-	$("#tab_searchAll").click(function () {
-		alert("sdfasfd");
-		//document.searchAllMinMemberForm.submit();
-	});
-});	
+
+
 </script>
 <body>
 <%@ include file="/common/header.jsp"%>
@@ -59,7 +55,6 @@ $(document).ready(function() {
 	<li id="tab_searchQna"><a href="${CONTEXT_PATH}/admin/adminController?action=centerAcceptList">센터대기회원</a></li>
 </ul>
 </div>
-<input type="hidden" value="1" id="pageNum" name="pageNum">
 </form>
 </div>
 <c:if test="${dto.gubun eq 'gen'}">

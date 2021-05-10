@@ -220,7 +220,7 @@ public class AdminController extends HttpServlet {
 		ArrayList<GeneralMemberDto> glist = new ArrayList<GeneralMemberDto>();
 
 		try {
-			
+			System.out.println("glist" +glist);
 			biz.getGenralMinList(glist);
 			request.setAttribute("glist", glist);
 			
