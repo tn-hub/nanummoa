@@ -107,7 +107,7 @@
 }
 
 #area_text{
-	min-height: 300px; 
+	min-height: 230px; 
 	padding-left : 30px; 
 	padding-bottom : 30px;
 	margin-bottom: 5px; 

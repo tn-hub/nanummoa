@@ -314,8 +314,11 @@ public class CommonController extends HttpServlet {
 
 		String subject = "나눔모아 이메일 인증 메일입니다.";
 		secureCode = Utility.getSecureString(8, true);
+		
+		System.out.println(grade);
 
 		CommonBiz biz = new CommonBiz();
+		Properties p = new Properties();
 		if (grade.equals("G")) {
 			GeneralMemberDto dto = new GeneralMemberDto();
 			dto.setGeneralName(name);
@@ -323,7 +326,6 @@ public class CommonController extends HttpServlet {
 			try {
 				biz.checkEmail(dto);
 				if (dto.getGeneralId() != null) {
-					Properties p = new Properties();
 					p.put("mail.smtp.user", from);
 					p.put("mail.smtp.host", "smtp.gmail.com");
 					p.put("mail.smtp.port", "465"); // TLS 587, SSL 465
@@ -333,6 +335,7 @@ public class CommonController extends HttpServlet {
 					p.put("mail.smtp.socketFactory.port", "465");
 					p.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 					p.put("mail.smtp.sockerFactory.fallback", "false");
+					
 					try {
 						Authenticator auth = new Gmail();
 						Session ses = Session.getInstance(p, auth);
@@ -369,7 +372,7 @@ public class CommonController extends HttpServlet {
 			try {
 				biz.checkEmail(dto);
 				if (dto.getCenterId() != null) {
-					Properties p = new Properties();
+					
 					p.put("mail.smtp.user", from);
 					p.put("mail.smtp.host", "smtp.gmail.com");
 					p.put("mail.smtp.port", "465"); // TLS 587, SSL 465

@@ -258,7 +258,6 @@ public class CommonDao {
 	 * @throws CommonException 
 	 */
 	public void findPw(Connection conn, CenterMemberDto dto) throws CommonException {
-		//String sql = "select lpad('*',1) || substr(c_email,2) as c_email from center_member where c_id=?";
 		String sql = "select c_email from center_member where c_id=?";
 		PreparedStatement stmt = null;
 		ResultSet rs = null;

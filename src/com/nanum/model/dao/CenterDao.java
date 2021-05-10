@@ -1147,11 +1147,16 @@ public class CenterDao {
 	 * @throws CommonException 
 	 */
 	public void volIssueForm(Connection conn, HashMap<String, Object> map) throws CommonException {
-		String sql = "select vi.vol_info_no,gm.g_id,min(vd.vol_date) as 활동시작일,max(vd.vol_date) as 활동종료일,to_char(vi.start_time,'HH24:MI') as start_time,to_char(vi.end_time,'HH24:MI') as end_time,ci.c_name,sysdate as 발급일,vi.v_title,va.vol_apply_no\n" + 
-				"from vol_apply_list va, vol_detail vd, vol_info vi,center_member cm,center_info ci, general_member gm\n" + 
-				"where va.g_id = gm.g_id and va.vol_detail_no = vd.vol_detail_no and vd.vol_info_no = vi.vol_info_no and vi.c_id = cm.c_id and cm.c_id = ci.c_id\n" + 
-				"and cm.c_id = ? and va.vol_status = '2' and vd.rec_status = '2' and vi.vol_info_no = ? \n" + 
-				"group by vi.vol_info_no,gm.g_id,vi.start_time,vi.end_time,ci.c_name,vi.v_title,va.vol_apply_no";
+//		String sql = "select vi.vol_info_no,gm.g_id,min(vd.vol_date) as 활동시작일,max(vd.vol_date) as 활동종료일,to_char(vi.start_time,'HH24:MI') as start_time,to_char(vi.end_time,'HH24:MI') as end_time,ci.c_name,sysdate as 발급일,vi.v_title,va.vol_apply_no\n" + 
+//				"from vol_apply_list va, vol_detail vd, vol_info vi,center_member cm,center_info ci, general_member gm\n" + 
+//				"where va.g_id = gm.g_id and va.vol_detail_no = vd.vol_detail_no and vd.vol_info_no = vi.vol_info_no and vi.c_id = cm.c_id and cm.c_id = ci.c_id\n" + 
+//				"and cm.c_id = ? and va.vol_status = '2' and vd.rec_status = '2' and vi.vol_info_no = ? \n" + 
+//				"group by vi.vol_info_no,gm.g_id,vi.start_time,vi.end_time,ci.c_name,vi.v_title,va.vol_apply_no";
+		String sql = "select vi.vol_info_no,gm.g_id,min(vd.vol_date) as 활동시작일,max(vd.vol_date) as 활동종료일,to_char(vi.start_time,'HH24:MI') as start_time,to_char(vi.end_time,'HH24:MI') as end_time,ci.c_name,sysdate as 발급일,vi.v_title\n" + 
+				"				from vol_apply_list va, vol_detail vd, vol_info vi,center_member cm,center_info ci, general_member gm\n" + 
+				"				where va.g_id = gm.g_id and va.vol_detail_no = vd.vol_detail_no and vd.vol_info_no = vi.vol_info_no and vi.c_id = cm.c_id and cm.c_id = ci.c_id\n" + 
+				"				and cm.c_id = ? and va.vol_status = '2' and vd.rec_status = '2' and vi.vol_info_no = ?\n" + 
+				"				group by vi.vol_info_no,gm.g_id,vi.start_time,vi.end_time,ci.c_name,vi.v_title";
 		
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -1173,7 +1178,7 @@ public class CenterDao {
 				map.put("centerName",rs.getString("c_name"));
 				map.put("issueDate",rs.getDate("발급일"));
 				map.put("volTitle",rs.getString("v_title"));
-				map.put("volApplyNo",rs.getInt("vol_apply_no"));
+//				map.put("volApplyNo",rs.getInt("vol_apply_no"));
 				
 			}
 			

@@ -17,7 +17,7 @@ $(document).ready(function() {
 	/* 이메일 인증*/
 	$("#checkEmail").click(function(){
 			var email = $("#email").val();
-			var grade = $(".grade").val();
+			var grade = $('input[name="grade"]:checked').val();
 			var name = $("#name").val();
 			
 			$.ajax({
@@ -110,8 +110,8 @@ table{
 	</div>
 				<form action="${CONTEXT_PATH}/common/commonController?action=findId" method="post">
 					<div class="radio">
-						<input type="radio" id="genaral" name="grade" class="grade" value="G" checked="checked">일반회원
-						<input type="radio" id="center" name="grade"  class="grade" value="C" >센터회원
+						<input type="radio" id="genaral" name="grade" value="G" checked="checked">일반회원
+						<input type="radio" id="center" name="grade"  value="C" >센터회원
 					</div>
 				<table border="1">
 					<tr>
