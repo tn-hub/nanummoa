@@ -18,6 +18,7 @@ em{
 	width: 1000px; 
 	border: 1px gray; 
 	margin: 0 auto;
+	min-height: 900px;
 }
 
 .searchAllMember {
@@ -26,7 +27,6 @@ em{
 }
 
 .searchAllMember li{
-	background-color: #FBD157;
 	padding: 10px 30px 10px 30px;
 	width: 260px;
 	display: inline-block;
@@ -57,7 +57,18 @@ em{
 	float: right;
 	padding-left: 20px;
 }
-
+.bg_y{
+	background-color: #fbd157;
+	}
+.link_box{
+display: inline-block;
+   font-weight: bold;
+   width: 320px;
+   height:20px;
+   padding:10px 0;
+   margin: 0 auto;
+   text-align: center;
+}
 </style>
 </head>
 <script type="text/javascript">
@@ -96,15 +107,20 @@ function main_btnPageNum(ret){
 <%@ include file="/common/header.jsp"%>
 <div id="section_contents">
 <h2> 회원 전체 조회 </h2>
-<hr>
 
 <form action="${CONTEXT_PATH}/admin/adminController?action=generalMinList" method="post">
 <div>
-<ul class="searchAllMember" style="cursor:hand;">
-	<li><a href="${CONTEXT_PATH}/admin/adminController?action=generalMinList">일반회원</a></li>
-	<li><a href="${CONTEXT_PATH}/admin/adminController?action=centerMinList">센터회원</a></li>
-	<li><a href="${CONTEXT_PATH}/admin/adminController?action=centerAcceptList">센터대기회원</a></li>
-</ul>
+<hr>
+<div class="link_box ${tap == 1? ' bg_y' : ''}" style="cursor:hand;">
+	<a href="${CONTEXT_PATH}/admin/adminController?action=generalMinList">일반회원</a>
+</div>
+<div class="link_box ${tap == 2? ' bg_y' : ''}" style="cursor:hand;">
+	<a href="${CONTEXT_PATH}/admin/adminController?action=centerMinList">센터회원</a>
+</div>
+<div class="link_box ${tap == 3? ' bg_y' : ''}" style="cursor:hand;">
+	<a href="${CONTEXT_PATH}/admin/adminController?action=centerAcceptList">센터대기회원</a>
+</div>
+<hr>
  <input type="hidden" value="1" id="pageNum" name="pageNum">
 </div>
 </form>
@@ -118,7 +134,6 @@ function main_btnPageNum(ret){
 </c:if>
 
 <div class="grandMinList_area">
-<hr>
 	<c:forEach var="dto" items="${list}">
 	<c:if test="${dto.gubun eq 'gen'}">
 	<ul class="genMinList_area">
