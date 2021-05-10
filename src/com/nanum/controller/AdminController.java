@@ -42,6 +42,7 @@ public class AdminController extends HttpServlet {
 	protected void process(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		String action = request.getParameter("action");
+		response.setContentType("text/html; charset=utf-8");
 		System.out.println("action : " + action);
 		switch (action) {
 		case "centerAcceptList" :
@@ -64,16 +65,26 @@ public class AdminController extends HttpServlet {
 			break;
 		case "centerMinList" :
 			centerMinList(request, response);
+			break;
 		case "deleteReply" :
 			deleteReply(request, response);
 			break;
 		case "updateReply" :
 			updateReply(request, response);
 			break;
+		case "generalDetail" :
+			generalDetail(request, response);
+			break;
+		case "centerDetail" :
+			centerDetail(request, response);
+			break;
+		case "searchAllMemberForm" :
+			searchAllMemberForm(request, response);
+			break;
 		}
 	}
 
-
+	
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		process(request, response);
@@ -84,42 +95,33 @@ public class AdminController extends HttpServlet {
 	}
 
 	
+	/**센터회원가입 대기 회원*/
 	private void centerAcceptList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		PrintWriter out = response.getWriter();
+		
+		HttpSession session = request.getSession(false);
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null ) {
+			String url = CONTEXT_PATH + "/common/commonController?action=loginForm";
+			out.println("<script>alert('로그인 후 이용해 주시기 바랍니다');location.href='" + url + "'; </script>");
+			out.flush();
+			out.close();
+			return;
+		}
+
+		
 		AdminBiz biz = new AdminBiz();
 		CenterInfoDto cDto = new CenterInfoDto(); 
 		ArrayList<CenterInfoDto> centerActList = new ArrayList<CenterInfoDto>();
-		String pageNum = request.getParameter("pageNum"); 
-
-		if (pageNum == null || pageNum == "") {
-			pageNum = "1";
-		}
 		
 		try {
 			// 총건수 
 			biz.getCenterAcceptListToCnt(cDto);
 			request.setAttribute("cDto", cDto);
 			
-			int pageCount = 2;  
-			int curPage = Integer.parseInt(pageNum) * pageCount; 
 			
-			// 현재 페이지가 속한 block의 시작 번호, 끝 번호를 계산
-			Paging.makeBlock(curPage, pageCount);   // 현재페이지 번호, 원하는row 건수 
-			
-			// 하단 페이징 번호 max 조회 
-			Paging.makeLastPageNum(cDto.getTotAcceptCnt(), pageCount) ; // 총건수, 원하는row 건수
-			
-			// 값가져오기 
-			Integer sartNum = Paging.getBlockStartNum();
-			Integer lastNum = Paging.getBlockLastNum();
-			Integer lastPageNum = Paging.getLastPageNum();
-			
-			
-			biz.getCenterAcceptList(centerActList, sartNum, lastNum);
+			biz.getCenterAcceptList(centerActList);
 			request.setAttribute("centerActList", centerActList);
 			
-			// jsp 에 총건수 및 건수 보여주기 위해 셋팅 
-			request.setAttribute("lastPageNum", lastPageNum);
-			request.setAttribute("curPageNum", pageNum);
 			
 			request.getRequestDispatcher("/admin/centerInputAccept.jsp").forward(request, response);
 		}catch (Exception e) {
@@ -127,6 +129,7 @@ public class AdminController extends HttpServlet {
 		}
 	}
 	
+	/** 센터회원가입 승인*/
 	private void centerAccept(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String centerId = request.getParameter("centerId");
 		AdminBiz aBiz = new AdminBiz();
@@ -139,6 +142,7 @@ public class AdminController extends HttpServlet {
 		}
 	}
 
+	/**센터회원가입 거절*/
 	private void centerRefuse(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String centerId = request.getParameter("centerId");
 		AdminBiz aBiz = new AdminBiz();
@@ -221,15 +225,25 @@ public class AdminController extends HttpServlet {
 		
 	}
 
+	/** 관리자 회원 일반회원 보기*/
 	private void generalMinList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		PrintWriter out = response.getWriter();
+		
+		HttpSession session = request.getSession(false);
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null ) {
+			String url = CONTEXT_PATH + "/common/commonController?action=loginForm";
+			out.println("<script>alert('로그인 후 이용해 주시기 바랍니다');location.href='" + url + "'; </script>");
+			out.flush();
+			out.close();
+			return;
+		}
+		
 		AdminBiz biz = new AdminBiz();
-		ArrayList<GeneralMemberDto> glist = new ArrayList<GeneralMemberDto>();
+		ArrayList<GeneralMemberDto> list = new ArrayList<GeneralMemberDto>();
 
 		try {
-			System.out.println("glist" +glist);
-			biz.getGenralMinList(glist);
-			request.setAttribute("glist", glist);
-			
+			biz.getGenralMinList(list);
+			request.setAttribute("list", list);
 			request.getRequestDispatcher("/admin/searchAllMember.jsp").forward(request, response);
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -237,16 +251,25 @@ public class AdminController extends HttpServlet {
 		
 	}	
 
+	/** 관리자 회원 센터회원 보기*/
 	private void centerMinList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		PrintWriter out = response.getWriter();
+		
+		HttpSession session = request.getSession(false);
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null ) {
+			String url = CONTEXT_PATH + "/common/commonController?action=loginForm";
+			out.println("<script>alert('로그인 후 이용해 주시기 바랍니다');location.href='" + url + "'; </script>");
+			out.flush();
+			out.close();
+			return;
+		}
 		AdminBiz biz = new AdminBiz();
 		ArrayList<CenterMemberDto> list = new ArrayList<CenterMemberDto>();
 
 		try {
-			
-			
 			biz.getCenterMinList(list);
-			request.setAttribute("clist", list);
-			
+			System.out.println("getCenterMinList" + list.size());
+			request.setAttribute("list", list);
 			request.getRequestDispatcher("/admin/searchAllMember.jsp").forward(request, response);
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -300,5 +323,63 @@ public class AdminController extends HttpServlet {
 			out.close();
 		}
 		
+	}
+	
+	
+	/**관리자  일반회원 상세보기*/
+	private void generalDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		PrintWriter out = response.getWriter();
+		HttpSession session = request.getSession(false);
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null ) {
+			String url = CONTEXT_PATH + "/common/commonController?action=loginForm";
+			out.println("<script>alert('로그인 후 이용해 주시기 바랍니다');location.href='" + url + "'; </script>");
+			out.flush();
+			out.close();
+			return;
+		}
+		
+		String generalId = request.getParameter("generalId");
+		
+		AdminBiz biz = new AdminBiz();
+		GeneralMemberDto dto = new GeneralMemberDto();
+
+		try {
+			biz.getGeneralDetail(dto, generalId);
+			request.setAttribute("dto", dto);
+			request.getRequestDispatcher("/admin/generalDetailnfo.jsp").forward(request, response);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	/**관리자 센터회원 상세보기*/
+	private void centerDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		PrintWriter out = response.getWriter();
+		HttpSession session = request.getSession(false);
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null ) {
+			String url = CONTEXT_PATH + "/common/commonController?action=loginForm";
+			out.println("<script>alert('로그인 후 이용해 주시기 바랍니다');location.href='" + url + "'; </script>");
+			out.flush();
+			out.close();
+			return;
+		}
+		
+		String centerId = request.getParameter("centerId");
+		
+		AdminBiz biz = new AdminBiz();
+		CenterInfoDto dto = new CenterInfoDto();
+
+		try {
+			biz.getCenterDetail(dto, centerId);
+			request.setAttribute("dto", dto);
+			request.getRequestDispatcher("/admin/centerDetailnfo.jsp").forward(request, response);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void searchAllMemberForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		request.getRequestDispatcher("/admin/searchAllMember.jsp").forward(request, response);
 	}
 }

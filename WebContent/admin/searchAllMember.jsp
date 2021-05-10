@@ -35,10 +35,51 @@
 }
 
 
+.grandMinList_area{
+	text-align: center;
+}
+.genMinList_area{
+	border: 2px solid gray;
+	padding: 30px;
+	
+}
+
+.genMinList_span{
+	padding-right: 50px;
+}
+
 </style>
 </head>
 <script type="text/javascript">
+$(document).ready(function(){
+	// 이전페이지
+  	$("#preBtn").click(function() {
+  		var curPageNum = ${curPageNum};
+  		if (curPageNum> 1){
+  			$("#pageNum").val(curPageNum -1);
+  			document.searchAllForm.submit();
+  		}
+  	});
+  	
+  	// 다음페이지
+  	$("#nestBtn").click(function() {
+  		var curPageNum = ${curPageNum};
+  		var lastPageNum = ${lastPageNum};
+  		
+  		if (curPageNum < lastPageNum){
+  			$("#pageNum").val(curPageNum +1);
+  			document.searchAllForm.submit();
+  		}
+  	});
+	
+}); 	
 
+//페이징 submit
+function main_btnPageNum(ret){
+	$("#pageNum").val(ret);
+	document.searchAllForm.submit();
+	
+}   
 
 </script>
 <body>
@@ -47,46 +88,45 @@
 <h2> 회원 전체 조회 </h2>
 <hr>
 
-<form name="searchAllMinMemberForm" id="searchAllMinMemberForm" action="${CONTEXT_PATH}/common/commonController?action=searchAllForm" method="post">
+<form action="${CONTEXT_PATH}/admin/adminController?action=generalMinList" method="post">
 <div>
 <ul class="searchAllMember" style="cursor:hand;">
-	<li id="tab_searchAll"><a href="${CONTEXT_PATH}/admin/adminController?action=generalMinList">일반회원</a></li>
-	<li id="tab_searchVol"><a href="${CONTEXT_PATH}/admin/adminController?action=centerMinList">샌터회원</a></li>
-	<li id="tab_searchQna"><a href="${CONTEXT_PATH}/admin/adminController?action=centerAcceptList">센터대기회원</a></li>
+	<li><a href="${CONTEXT_PATH}/admin/adminController?action=generalMinList">일반회원</a></li>
+	<li><a href="${CONTEXT_PATH}/admin/adminController?action=centerMinList">샌터회원</a></li>
+	<li><a href="${CONTEXT_PATH}/admin/adminController?action=centerAcceptList">센터대기회원</a></li>
 </ul>
+ <input type="hidden" value="1" id="pageNum" name="pageNum">
 </div>
 </form>
-</div>
-<c:if test="${dto.gubun eq 'gen'}">
-<div>
-	<c:forEach var="dto" items="${glist}">
-	<ul>
-		<li id="genMinMemberId">[아이디] <br>${dto.generalId}</li>
-		<li id="genMinMemberName">[이름] <br>${dto.generalName}</li>
-		<li id="genMinMemberEmail">[이메일] <br>${dto.generalEmail}</li>
-	</ul>
-	</c:forEach>
-</div>
-</c:if>
-<c:if test="${dto.gubun eq 'cen'}">
-<div>
+<form action="${CONTEXT_PATH}/admin/adminController?action=generalMinList" method="post">
+<div class="grandMinList_area">
 	<c:forEach var="dto" items="${list}">
-	<ul id="cecnter_standBy_ul">
-		<li id="cenMinMemberId">[아이디] <br>${cDto.centerName}</li>
-		<li id="cenMinMemberName">[이름] <br>${cDto.centerName}</li>
-		<li id="cenMinMemberEmail">[이메일] <br>${cDto.cmemberEntryDate}</li>
+	<c:if test="${dto.gubun eq 'gen'}">
+	<ul class="genMinList_area">
+		<li>
+			<span class="genMinList_span">[아이디] ${dto.generalId}</span>
+			<span class="genMinList_span">[이름] ${dto.generalName}</span>
+			<span class="genMinList_span">[이메일] ${dto.generalEmail}</span>
+			<span class="genMinList_span"><a href="${CONTEXT_PATH}/admin/adminController?action=generalDetail&generalId=${dto.generalId}"><input type="button" value="상세보기" class="y_btn"></a></span>
+		</li>
 	</ul>
+	</c:if>
+	<c:if test="${dto.gubun eq 'cen'}">
+	
+	<ul class="genMinList_area">
+		<li>
+			<span class="genMinList_span">[아이디] ${dto.centerId}</span>
+			<span class="genMinList_span">[이름] ${dto.centerName}</span>
+			<span class="genMinList_span">[이메일] ${dto.centerEmail}</span>
+			<span class="genMinList_span"><a href="${CONTEXT_PATH}/admin/adminController?action=centerDetail&centerId=${dto.centerId}"><input type="button" value="상세보기" class="y_btn" ></a></span>
+		</li>
+	</ul>
+	</c:if>	
 	</c:forEach>
 </div>
-</c:if>		
+</form>
 
-<div id="page_btn">
-	<input type="button" value="이전 " id="preBtn" name="preBtn">
-	 <c:forEach var="i" begin="${ 1 }" end="${lastPageNum}">
-           <input type="button" value=${ i } id="btnPageNum" name="btnPageNum" onclick="btnPageNum(${ i })">
-     </c:forEach>   
-	<input type="button" value="다음 " id="nestBtn" name="nestBtn">	
-</div>
+</div>	
 
 <div id="footer" class="footer">
 	<%@ include file="/common/footer.jsp"%>

@@ -97,28 +97,6 @@ em{
 <script type="text/javascript">
 
 $(document).ready(function() {
-	
-	
-	// 이전페이지
-	$("#preBtn").click(function() {
-		var curPageNum = ${curPageNum};
-		if (curPageNum> 1){
-			$("#pageNum").val(curPageNum -1);
-			document.centerAcceptListForm.submit();
-		}
-	});
-	
-	// 다음페이지
-	$("#nestBtn").click(function() {
-		var curPageNum = ${curPageNum};
-		var lastPageNum = ${lastPageNum};
-		
-		if (curPageNum < lastPageNum){
-			$("#pageNum").val(curPageNum +1);
-			document.centerAcceptListForm.submit();
-		}
-	});
-});
 
 	// 페이징 submit
 	function btnPageNum(ret){
@@ -141,7 +119,6 @@ $(document).ready(function() {
 <div id="section_contents">
 <h2>센터회원 가입대기 목록</h2><br>
 [가입대기 센터회원 <em>${cDto.totAcceptCnt}</em> 건]
-<a href="${CONTEXT_PATH}/admin/adminController?action=centerAcceptList" style="float:right;">조회</a>
 <hr>
 <form name="centerAcceptListForm" id="centerAcceptListForm" action="${CONTEXT_PATH}/admin/adminController?action=centerAcceptList" method="post">
 <c:forEach var="dto" items="${centerActList}">
@@ -157,15 +134,7 @@ $(document).ready(function() {
 </div>
 <hr>
 </c:forEach>
-<input type="hidden" value="1" id="pageNum" name="pageNum">
 </form>
-<div id="page_btn">
-	<input type="button" value="이전 " id="preBtn" name="preBtn">
-	 <c:forEach var="i" begin="${ 1 }" end="${lastPageNum}">
-           <input type="button" value=${ i } id="btnPageNum" name="btnPageNum" onclick="btnPageNum(${ i })">
-     </c:forEach>   
-	<input type="button" value="다음 " id="nestBtn" name="nestBtn">	
-</div>
 
 <div id="footer" class="footer">
 	<%@ include file="/common/footer.jsp"%>
