@@ -397,7 +397,7 @@ public class AdminDao {
 	public void selectCenterMinList(Connection conn, ArrayList<CenterMemberDto> list) throws CommonException {
 		StringBuilder sql = new StringBuilder();
 
-		sql.append(" select 'cen' as gubun, c_id, c_name, c_email from center_member ");
+		sql.append(" select 'cen' as gubun, c_id, c_name, c_email from center_member where app_status=1");
 
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -556,6 +556,7 @@ public class AdminDao {
 
 			if (rs.next()) {
 				dto.setTotCnt(rs.getInt("tot_cnt"));
+				dto.setGubun("gen");
 			}
 
 		} catch (SQLException e) {
@@ -584,6 +585,7 @@ public class AdminDao {
 
 			if (rs.next()) {
 				dto.setTotCnt(rs.getInt("tot_cnt"));
+				dto.setGubun("cen");
 			}
 
 		} catch (SQLException e) {
@@ -673,8 +675,7 @@ public class AdminDao {
 		sql.append("  , i.service_subject ");
 		sql.append("  from center_member c, center_info i  ");
 		sql.append("  where c.c_id = i.c_id  ");
-		sql.append("  and  c.app_status = 1  ");
-		sql.append("  and  c.c_id = ?  ");
+		sql.append("   and  c.c_id = ?  ");
 
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -755,5 +756,133 @@ public class AdminDao {
 			JdbcTemplate.close(rs);
 			JdbcTemplate.close(pstmt);
 		}
+	}
+
+	public void generalDelete(Connection conn, String generalId) throws CommonException{
+		String sql_vol_conf = " delete from vol_confirmation where g_id = ? ";
+		String sql_qna_rel = " delete from qna_reply where q_no in (select q_no from qna where g_id  = ?) ";
+		String sql_qna = " delete from qna where g_id = ? ";
+		String sql_vol_list = " delete from vol_apply_list where g_id = ? ";
+		String sql_gen_mem = " delete from general_member where g_id = ? ";
+		
+
+		PreparedStatement stmt = null;
+		PreparedStatement stmt2 = null;
+		PreparedStatement stmt3 = null;
+		PreparedStatement stmt4 = null;
+		PreparedStatement stmt5 = null;
+		
+		
+		try {
+			
+			stmt2 = conn.prepareStatement(sql_vol_conf);
+			stmt2.setString(1, generalId);
+			stmt2.executeUpdate();
+			
+			stmt3 = conn.prepareStatement(sql_qna_rel);
+			stmt3.setString(1, generalId);
+			stmt3.executeUpdate();
+			
+			stmt4 = conn.prepareStatement(sql_qna);
+			stmt4.setString(1, generalId);
+			stmt4.executeUpdate();
+			
+			stmt5 = conn.prepareStatement(sql_vol_list);
+			stmt5.setString(1, generalId);
+			stmt5.executeUpdate();
+			
+			stmt = conn.prepareStatement(sql_gen_mem);
+			stmt.setString(1, generalId);
+
+			int rows = stmt.executeUpdate();
+
+			if (rows == 0) {
+				throw new Exception();
+			}
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		} finally {
+			JdbcTemplate.close(stmt);
+		}
+		
+	}
+
+	public void centerDelete(Connection conn, String centerId) throws CommonException{
+
+		System.out.println("DAO centerId =" + centerId);
+		String sql_vol_list = " delete from vol_apply_list where g_id  = ? ";
+		String sql_qna_rel = " delete from qna_reply where q_no in (select q_no from qna where c_id  = ? )";
+		String sql_qna = " delete from qna where c_id  = ? ";
+		String sql_vol_conf = " delete from vol_confirmation where c_id =  ? ";
+		String sql_vol_appl_list = " delete from vol_apply_list where vol_detail_no in (select vol_detail_no from vol_detail where vol_info_no in (select vol_info_no from vol_info where c_id = ?))";
+		String sql_vol_dtl = " delete from vol_detail where vol_info_no in (select vol_info_no from vol_info where c_id = ?)" ;
+		String sql_vol_info = " delete from vol_info where c_id = ? ";
+		String sql_cen_info = " delete from center_info where c_id = ? ";
+		String sql_cen_mem = " delete from center_member where c_id  = ? ";
+
+
+		PreparedStatement stmt = null;
+		PreparedStatement stmt2 = null;
+		PreparedStatement stmt3 = null;
+		PreparedStatement stmt4 = null;
+		PreparedStatement stmt5 = null;
+		PreparedStatement stmt6 = null;
+		PreparedStatement stmt7 = null;
+		PreparedStatement stmt8 = null;
+		PreparedStatement stmt9 = null;
+
+		try {
+			
+			
+			stmt2 = conn.prepareStatement(sql_vol_list);
+			stmt2.setString(1, centerId);
+			stmt2.executeUpdate();
+			
+			stmt3 = conn.prepareStatement(sql_qna_rel);
+			stmt3.setString(1, centerId);
+			stmt3.executeUpdate();
+			
+			stmt4 = conn.prepareStatement(sql_qna);
+			stmt4.setString(1, centerId);
+			stmt4.executeUpdate();
+			
+			stmt5 = conn.prepareStatement(sql_vol_conf);
+			stmt5.setString(1, centerId);
+			stmt5.executeUpdate();
+			
+			stmt6 = conn.prepareStatement(sql_vol_appl_list);
+			stmt6.setString(1, centerId);
+			stmt6.executeUpdate();
+			
+			stmt7 = conn.prepareStatement(sql_vol_dtl);
+			stmt7.setString(1, centerId);
+			stmt7.executeUpdate();
+			
+			stmt8 = conn.prepareStatement(sql_vol_info);
+			stmt8.setString(1, centerId);
+			stmt8.executeUpdate();
+			
+			stmt9 = conn.prepareStatement(sql_cen_info);
+			stmt9.setString(1, centerId);
+			stmt9.executeUpdate();
+			
+			stmt = conn.prepareStatement(sql_cen_mem);
+			stmt.setString(1, centerId);
+
+			int rows = stmt.executeUpdate();
+
+			if (rows == 0) {
+				throw new Exception();
+			}
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		} finally {
+			JdbcTemplate.close(stmt);
+		}
+		
 	}
 }

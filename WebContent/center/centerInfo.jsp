@@ -175,6 +175,8 @@ text-align: center;
 	display: inline-block;
     font-weight: bold;
     width: 490px;
+    height:25px;
+    padding:5px 0;
     margin: 0 auto;
     text-align: center;
 	}
@@ -183,6 +185,9 @@ text-align: center;
 	}
 	.g_btn{
 	    margin-left: 10px;
+	}
+	.bg_y{
+	background-color: #fcdb80;
 	}
 </style>
 </head>
@@ -194,10 +199,10 @@ text-align: center;
 		<div class="title">
 			<h1>자원 봉사 목록</h1>
 		<hr>
-		<div class="link_box">
+		<div class="link_box ${tap == 1? ' bg_y' : ''}">
 			<a href="${CONTEXT_PATH}/center/centerController?action=centerVolListForm">모집 봉사</a>
 		</div>
-		<div class="link_box">
+		<div class="link_box ${tap == 2? 'bg_y' : ''}">
 			<a href="${CONTEXT_PATH }/center/centerController?action=deadlineList">마감 봉사</a>
 		</div>
 		<hr>
