@@ -18,6 +18,7 @@ em{
 	width: 1000px; 
 	border: 1px gray; 
 	margin: 0 auto;
+	min-height: 900px;
 }
 
 #cecnter_standBy{
@@ -76,7 +77,18 @@ em{
 .r_btn{
 	margin-left: 20px;
 }
-
+.bg_y{
+	background-color: #fbd157;
+	}
+.link_box{
+display: inline-block;
+   font-weight: bold;
+   width: 320px;
+   height:20px;
+   padding:10px 0;
+   margin: 0 auto;
+   text-align: center;
+}
 </style>
 </head>
 
@@ -85,8 +97,18 @@ em{
 <%@ include file="/common/header.jsp"%>
 <div id="section_contents">
 <h2>센터회원 가입대기 목록</h2><br>
-[가입대기 센터회원 <em>${cDto.totAcceptCnt}</em> 건]
 <hr>
+<div class="link_box ${tap == 1? ' bg_y' : ''}" style="cursor:hand;">
+	<a href="${CONTEXT_PATH}/admin/adminController?action=generalMinList">일반회원</a>
+</div>
+<div class="link_box ${tap == 2? ' bg_y' : ''}" style="cursor:hand;">
+	<a href="${CONTEXT_PATH}/admin/adminController?action=centerMinList">센터회원</a>
+</div>
+<div class="link_box ${tap == 3? ' bg_y' : ''}" style="cursor:hand;">
+	<a href="${CONTEXT_PATH}/admin/adminController?action=centerAcceptList">가입대기 센터회원</a>
+</div>
+<hr>
+[전체 <em>${cDto.totAcceptCnt}</em> 건]
 <form name="centerAcceptListForm" id="centerAcceptListForm" action="${CONTEXT_PATH}/admin/adminController?action=centerAcceptList" method="post">
 <c:forEach var="dto" items="${centerActList}">
 <div id="cecnter_standBy">
@@ -99,7 +121,6 @@ em{
 			<a href="${CONTEXT_PATH}/admin/adminController?action=centerAccept&centerId=${dto.centerId}"><input type="button" value="승인" class="r_btn" class="btn_re"></a>
 	</ul>
 </div>
-<hr>
 </c:forEach>
 </form>
 
