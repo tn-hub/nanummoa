@@ -310,8 +310,9 @@ public class GeneralDao {
 				", d.rec_status\r\n" + 
 				", a.apply_date\r\n" + 
 				", d.vol_date \r\n" + 
-				",to_char(i.start_time, 'HH24:MI')\r\n" + 
-				",to_char(i.end_time, 'HH24:MI')\r\n" + 
+				", to_char(i.start_time, 'HH24:MI')\r\n" + 
+				", to_char(i.end_time, 'HH24:MI')\r\n" + 
+				", a.vol_status\\r\\n "+
 				"from vol_info i, vol_detail d, vol_apply_list a\r\n" + 
 				"where i.vol_info_no = d.vol_info_no \r\n" + 
 				"and d.vol_detail_no = a.vol_detail_no\r\n" + 
@@ -338,6 +339,7 @@ public class GeneralDao {
 				map.put("volDate", rs.getDate(7));
 				map.put("startTime", rs.getString(8));
 				map.put("endTime", rs.getString(9));
+				map.put("volStatus", rs.getString(10));
 				
 				list.add(map);
 			}
