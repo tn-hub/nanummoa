@@ -1058,16 +1058,16 @@ public class CommonDao {
 	}
 
 	/**
-	 * 자원봉사 목록 조회(메인)
+	 * 자원봉사 목록 조회(메인) : map
 	 */
 	public void searchVolMapList(Connection conn, ArrayList<HashMap<String, Object>> list) throws CommonException {
 		String sql = "select i.vol_info_no as 글번호, i.v_title as 제목, i.category_no as 카테고리번호, i.local_no as 지역번호, "
 				+ "to_char(i.start_date,'yyyy-mm-dd') as 모집시작일, to_char(i.end_date,'yyyy-mm-dd') as 모집마감일,"
-				+ " min(d.vol_date) as 봉사시작일, max(d.vol_date) as 봉사종료일  " 
+				+ " min(d.vol_date) as 봉사시작일, max(d.vol_date) as 봉사종료일, d.rec_status  " 
 				+ "from vol_info i, vol_detail d " 
 				+ "where i.vol_info_no = d.vol_info_no "
-				+ "group by i.vol_info_no, i.v_title, i.category_no, i.local_no, i.start_date, i.end_date "
-				+ "order by 1";
+				+ "group by i.vol_info_no, i.v_title, i.category_no, i.local_no, i.start_date, i.end_date, d.rec_status "
+				+ "order by 9";
 		System.out.println("sql : " + sql);
 		HashMap<String, Object> map = null;
 		PreparedStatement stmt = null;
@@ -1085,6 +1085,7 @@ public class CommonDao {
 				map.put("endDate", rs.getString(6));
 				map.put("startVolDate", rs.getString(7));
 				map.put("endVolDate", rs.getString(8));
+				map.put("recStatus", rs.getString(9));
 				list.add(map);
 			} 
 		} catch (SQLException e) {

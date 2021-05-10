@@ -83,7 +83,7 @@ $(document).ready(function(){
 				  type:'get',
 				  url:'${CONTEXT_PATH}/general/generalController?action=idCheck',
 				  data:{id:id},
-				  dataType: 'json',
+				  dataType: 'text',
 				  success: function(data, textStatus){
 					  if (data == "usable") {
 						  alert("사용 가능한 아이디 입니다");

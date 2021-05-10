@@ -76,6 +76,7 @@ public class HomeController extends HttpServlet {
 					System.out.println(key+" : "+hashMap.get(key));
 				}
 			}
+			request.setAttribute("list", list);
 			
 			biz.getLocalStatistics(localStatistics);
 			request.setAttribute("localStatistics", localStatistics);

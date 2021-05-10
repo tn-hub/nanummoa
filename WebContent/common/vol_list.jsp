@@ -161,6 +161,15 @@
 	.vol_list_ul .deadline_box {
 		text-align: right;
 	}
+	
+	#page_btn {
+    text-align: center;
+    margin: 20px 0px 20px 0px;
+	}
+	
+	#preBtn, #nestBtn, input[name="btnPageNum"] {
+		cursor: pointer;
+	}
 </style>
 <script type="text/javascript">
 $(document).ready(function(){
@@ -168,13 +177,13 @@ $(document).ready(function(){
 	// 검색목록 초기화
 	$("#resetBtn").click(function(){
 		console.log("검색항목 초기화");
-		$("#local option:eq(0)").attr("selected", "selected");
-		$("#category option:eq(0)").attr("selected", "selected");
-		$("#service option:eq(0)").attr("selected", "selected");
-		$("#status option:eq(1)").attr("selected", "selected");
+		$("#local option:eq(0)").prop("selected", true);
+		$("#category option:eq(0)").prop("selected", true);
+		$("#service option:eq(0)").prop("selected", true);
+		$("#status option:eq(1)").prop("selected", true);
 		$("#volStart").val(getCurrentDate());
 		$("#volEnd").val(getAddDate(3));
-		$("input[name='volType']").attr("checked", "checked");
+		$("input[name='volType']").prop("checked",  true);
 		$("#volTitle").val("");
 		$("#centerName").val("");
 	});
@@ -417,13 +426,21 @@ $(document).ready(function(){
 	<!-- 페이징--------------------------------------------------------------------->
 	<div id="page_btn">
   	<input type="button" value="이전 " id="preBtn" name="preBtn">
-  	 <c:forEach var="i" begin="${ 1 }" end="${lastPageNum}">
+  	<c:choose>
+			<c:when test="${lastPageNum == 0}">
+				<input type="button" value= 1  name="btnPageNum" style="background-color: #FBD157;">
+			</c:when>
+			<c:otherwise>
+				 <c:forEach var="i" begin="${ 1 }" end="${lastPageNum}">
              <input type="button" value=${ i }  name="btnPageNum"
              	<c:if test="${curPageNum == i}">
              		style="background-color: #FBD157;"
              	</c:if>
              >
        </c:forEach>   
+			</c:otherwise>
+		</c:choose>
+  	
   	<input type="button" value="다음 " id="nestBtn" name="nestBtn">	
   </div> 
 	<!-- 페이징 -->

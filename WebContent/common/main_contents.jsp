@@ -11,18 +11,31 @@
 		
 		<h2 class="main_title">모집중인 자원봉사</h2>
 		<div class="vol_wrapper">
-		<c:forEach var="vol" items="${volList}" varStatus="vs" begin="0" end="11">
+		<c:forEach var="vol" items="${list}" varStatus="vs" begin="0" end="11">
 			<c:if test="${vs.count % 4 == 1 }">
 			<div class="block_row">
 			</c:if>
 				<div class="block_col">
 					<div class="vol_local">${localMap[vol.localNo].localName}</div>
+					<c:choose>
+						<c:when test="${vol.recStatus == '0'}">
+							<span class="status_sp">모집중</span>
+						</c:when>
+						<c:when test="${vol.recStatus == '1'}">
+							<span class="status_g_sp">마감</span>
+						</c:when>
+						<c:when test="${vol.recStatus == '2'}">
+							<span class="status_g_sp">종료</span>
+						</c:when>
+					</c:choose>	
 					<div class="vol_info">
 						<p class="vol_block_title">${volCategoryMap[vol.categoryNo].categoryName}</p>
 						<span class="vol_title">${vol.volTitle}</span>
 						<p class="vol_period">모집기간 : ${vol.startDate}~${vol.endDate}</p>
 						<p class="vol_period">봉사기간 : ${vol.startVolDate}~${vol.endVolDate}</p>
-						<button onclick="location.href='${CONTEXT_PATH}/common/commonController?action=volDetatilForm&volInfoNo=${vol.volInfoNo}'" class="apply_btn">신청하기</button>
+						<button onclick="location.href='${CONTEXT_PATH}/common/commonController?action=volDetatilForm&volInfoNo=${vol.volInfoNo}'" class="apply_btn">
+						${vol.recStatus == '0'? "신청하기" : "상세보기"}
+						</button>
 					</div>
 				</div>
 			<c:if test="${vs.count % 4 == 0 }">

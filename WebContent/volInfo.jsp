@@ -211,7 +211,7 @@ pageContext.setAttribute("newLineChar", "\n");
 <h1>자원봉사 상세</h1>
 <hr>
 <input class="btn_list g_btn" type="button" value="목록"  style="cursor:hand;" onclick="location.href='${CONTEXT_PATH}/common/commonController?action=volListForm'">
-<c:if test="${grade == 'G' }">
+<c:if test="${grade == 'G' and  vDto.recStatuse == '모집중'}">
 <input id="btn_apply" class="y_btn" type="button" value="신청하기" style="cursor:hand;" onclick="location.href='${CONTEXT_PATH}/general/generalController?action=enrollVolForm&volInfoNo=${vDto.volInfoNo}'">
 </c:if>
 
