@@ -333,7 +333,6 @@ public class AdminController extends HttpServlet {
 			request.setAttribute("tDto", dto);
 						
 			biz.getCenterMinList(list);
-			request.setAttribute("clist", list);
 
 			request.setAttribute("list", list);
 			request.setAttribute("tap", 2);
