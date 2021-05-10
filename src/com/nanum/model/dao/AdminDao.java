@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.nanum.dto.CenterInfoDto;
+import com.nanum.dto.CenterMemberDto;
+import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.QnAReplyDto;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
@@ -271,5 +273,78 @@ public class AdminDao {
 		}
 		
 		
+	}
+
+	public void selectGetGenralMinList(Connection conn, ArrayList<GeneralMemberDto> glist) throws CommonException{
+		StringBuilder sql = new StringBuilder();
+		
+		sql.append(" select 'gen' as gubun, g_id, g_name, g_email from general_member ");
+		 
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			stmt = conn.prepareStatement(sql.toString()); 
+			
+			rs = stmt.executeQuery();
+			
+			GeneralMemberDto dto = null;
+			
+			while(rs.next()) { 
+				dto = new GeneralMemberDto();
+				dto.setGubun(rs.getString("gubun"));
+				dto.setGeneralId(rs.getString("g_id"));
+				dto.setGeneralName(rs.getString("g_name"));
+				dto.setGeneralEmail(rs.getString("g_email"));
+				
+				glist.add(dto);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(stmt);
+		}
+		
+	}
+
+	public void selectCenterMinList(Connection conn, ArrayList<CenterMemberDto> list) throws CommonException{
+		StringBuilder sql = new StringBuilder();
+		
+		
+		sql.append(" select 'cen' as gubun, c_id, c_name, c_email from center_member ");
+		 
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		
+		try {
+			stmt = conn.prepareStatement(sql.toString()); 
+			
+			rs = stmt.executeQuery();
+			
+			CenterMemberDto dto = null;
+			
+			while(rs.next()) { 
+				dto = new CenterMemberDto();
+				dto.setGubun(rs.getString("gubun"));
+				dto.setCenterId(rs.getString("c_id"));
+				dto.setCenterName(rs.getString("c_name"));
+				dto.setCenterEmail(rs.getString("c_email"));
+				
+				list.add(dto);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(stmt);
+		}
 	}
 }

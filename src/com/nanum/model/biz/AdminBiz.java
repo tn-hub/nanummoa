@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.util.ArrayList;
 
 import com.nanum.dto.CenterInfoDto;
+import com.nanum.dto.CenterMemberDto;
+import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.QnAReplyDto;
 import com.nanum.model.dao.AdminDao;
 import com.nanum.util.CommonException;
@@ -102,6 +104,33 @@ public class AdminBiz {
 		}catch (Exception e) {
 			e.printStackTrace();
 			JdbcTemplate.rollback(conn);
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+
+	public void getGenralMinList(ArrayList<GeneralMemberDto> glist) throws CommonException{
+		Connection conn = JdbcTemplate.getConnection();
+		
+		try {
+			dao.selectGetGenralMinList(conn, glist);
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+		
+	}
+
+	public void getCenterMinList(ArrayList<CenterMemberDto> list) throws CommonException{
+		Connection conn = JdbcTemplate.getConnection();
+		
+		try {
+			dao.selectCenterMinList(conn,list);
+		}catch (Exception e) {
+			e.printStackTrace();
 			throw e;
 		} finally {
 			JdbcTemplate.close(conn);

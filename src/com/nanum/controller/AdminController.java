@@ -17,10 +17,12 @@ import org.json.simple.JSONObject;
 
 import com.nanum.dto.AdminMemberDto;
 import com.nanum.dto.CenterInfoDto;
+import com.nanum.dto.CenterMemberDto;
+import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.QnAReplyDto;
 import com.nanum.model.biz.AdminBiz;
-import com.nanum.util.Paging;
 import com.nanum.model.biz.CommonBiz;
+import com.nanum.util.Paging;
 
 /**
  * 관리자 컨트롤러
@@ -57,9 +59,17 @@ public class AdminController extends HttpServlet {
 		case "getReply" :
 			getReply(request, response);
 			break;
+		case "generalMinList" :
+			generalMinList(request, response);
+			break;
+		case "centerMinList" :
+			centerMinList(request, response);
+			break;
 		}
 	}
-	
+
+
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		process(request, response);
 	}
@@ -204,5 +214,37 @@ public class AdminController extends HttpServlet {
 		}
 		
 	}
-	
+
+	private void generalMinList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		AdminBiz biz = new AdminBiz();
+		ArrayList<GeneralMemberDto> glist = new ArrayList<GeneralMemberDto>();
+
+		try {
+			
+			biz.getGenralMinList(glist);
+			request.setAttribute("glist", glist);
+			
+			request.getRequestDispatcher("/admin/searchAllMember.jsp").forward(request, response);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}	
+
+	private void centerMinList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		AdminBiz biz = new AdminBiz();
+		ArrayList<CenterMemberDto> list = new ArrayList<CenterMemberDto>();
+
+		try {
+			
+			
+			biz.getCenterMinList(list);
+			request.setAttribute("clist", list);
+			
+			request.getRequestDispatcher("/admin/searchAllMember.jsp").forward(request, response);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 }
