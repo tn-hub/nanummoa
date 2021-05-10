@@ -1344,7 +1344,7 @@ public class CenterController extends HttpServlet {
 		String contents = request.getParameter("contents");
 		String volInfoNo = request.getParameter("volInfoNo");
 		String issueDate = request.getParameter("issueDate");
-		int volApplyNo = Integer.parseInt(request.getParameter("volApplyNo"));
+		//int volApplyNo = Integer.parseInt(request.getParameter("volApplyNo"));
 
 		if (contents == null || contents.trim().length() == 0 || contents == null) {
 			out.println("<script>alert('내용을 입력해 주세요');history.go(-1); </script>");
@@ -1361,10 +1361,8 @@ public class CenterController extends HttpServlet {
 		map.put("contents", contents);
 		map.put("volInfoNo", volInfoNo);
 		map.put("issueDate", issueDate);
-		map.put("volApplyNo", volApplyNo);
+		//map.put("volApplyNo", volApplyNo);
 		
-		System.out.println(map);
-
 		CenterBiz biz = new CenterBiz();
 		try {
 			biz.volIssue(map);
@@ -1444,7 +1442,7 @@ public class CenterController extends HttpServlet {
 		CenterBiz biz = new CenterBiz();
 		try {
 			biz.endVol(map);
-			request.getRequestDispatcher("/center/centerController?action=centerVolListForm").forward(request,
+			request.getRequestDispatcher("/center/centerController?action=deadlineList").forward(request,
 					response);
 		} catch (CommonException e) {
 

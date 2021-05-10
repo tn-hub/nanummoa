@@ -418,14 +418,17 @@ $(document).ready(function(){
 			
 			<div class="deadline_box">
 			<c:choose>	
-				<c:when test="${list.deadLine > 0}">
+				<c:when test="${list.deadLine > 0 and list.recStatus == '0'}">
 					<p>마감 <em>${list.deadLine }</em> 일전</p>
 				</c:when>
-				<c:when test="${list.deadLine == 0}">
+				<c:when test="${list.deadLine == 0 and list.recStatus == '0'}" >
 					<em>오늘 마감</em>
 				</c:when>
+				<c:when test="${list.deadLine < 0 or list.recStatus == '1'}" >
+					<em>마감</em>
+				</c:when>
 				<c:otherwise>
-					<p>마감 종료</p>
+					<p>활동 종료</p>
 				</c:otherwise>
 			</c:choose>
 			</div>

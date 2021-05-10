@@ -118,7 +118,7 @@ function main_btnPageNum(ret){
 	<a href="${CONTEXT_PATH}/admin/adminController?action=centerMinList">센터회원</a>
 </div>
 <div class="link_box ${tap == 3? ' bg_y' : ''}" style="cursor:hand;">
-	<a href="${CONTEXT_PATH}/admin/adminController?action=centerAcceptList">센터대기회원</a>
+	<a href="${CONTEXT_PATH}/admin/adminController?action=centerAcceptList">가입대기 센터회원</a>
 </div>
 <hr>
  <input type="hidden" value="1" id="pageNum" name="pageNum">
@@ -127,10 +127,10 @@ function main_btnPageNum(ret){
 <form action="${CONTEXT_PATH}/admin/adminController?action=generalMinList" method="post">
 
 <c:if test="${tDto.gubun eq 'gen'}">
-[전체 <em>${tDto.totCnt}</em> 회원]
+[전체 <em>${tDto.totCnt}</em> 명]
 </c:if>
 <c:if test="${tDto.gubun eq 'cen'}">
-[전체 <em>${tDto.totCnt}</em> 회원]
+[전체 <em>${tDto.totCnt}</em> 명]
 </c:if>
 
 <div class="grandMinList_area">
