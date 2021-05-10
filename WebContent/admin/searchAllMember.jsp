@@ -37,13 +37,21 @@
 
 </style>
 </head>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#tab_searchAll").click(function () {
+		alert("sdfasfd");
+		//document.searchAllMinMemberForm.submit();
+	});
+});	
+</script>
 <body>
 <%@ include file="/common/header.jsp"%>
 <div id="section_contents">
 <h2> 회원 전체 조회 </h2>
 <hr>
 
-<form name="" id="" action="${CONTEXT_PATH}/common/commonController?action=searchAllForm" method="post">
+<form name="searchAllMinMemberForm" id="searchAllMinMemberForm" action="${CONTEXT_PATH}/common/commonController?action=searchAllForm" method="post">
 <div>
 <ul class="searchAllMember" style="cursor:hand;">
 	<li id="tab_searchAll"><a href="${CONTEXT_PATH}/admin/adminController?action=generalMinList">일반회원</a></li>
@@ -58,9 +66,9 @@
 <div>
 	<c:forEach var="dto" items="${glist}">
 	<ul>
-		<li id="cNAme_li">[아이디] <br>${dto.generalId}</li>
-		<li id="centerId_li">[이름] <br>${dto.generalName}</li>
-		<li id="centerDate_li">[이메일] <br>${dto.generalEmail}</li>
+		<li id="genMinMemberId">[아이디] <br>${dto.generalId}</li>
+		<li id="genMinMemberName">[이름] <br>${dto.generalName}</li>
+		<li id="genMinMemberEmail">[이메일] <br>${dto.generalEmail}</li>
 	</ul>
 	</c:forEach>
 </div>
@@ -69,9 +77,9 @@
 <div>
 	<c:forEach var="dto" items="${list}">
 	<ul id="cecnter_standBy_ul">
-		<li id="centerNAme_li">[아이디] <br>${cDto.centerName}</li>
-		<li id="centerId_li">[이름] <br>${cDto.centerName}</li>
-		<li id="centerDate_li">[주소] <br>${cDto.cmemberEntryDate}</li>
+		<li id="cenMinMemberId">[아이디] <br>${cDto.centerName}</li>
+		<li id="cenMinMemberName">[이름] <br>${cDto.centerName}</li>
+		<li id="cenMinMemberEmail">[이메일] <br>${cDto.cmemberEntryDate}</li>
 	</ul>
 	</c:forEach>
 </div>
