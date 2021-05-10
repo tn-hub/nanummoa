@@ -6,11 +6,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -31,7 +28,6 @@ import com.nanum.dto.ServiceCategoryDto;
 import com.nanum.dto.VolCategoryDto;
 import com.nanum.dto.CenterVolDto;
 import com.nanum.dto.GeneralMemberDto;
-import com.nanum.dto.VolApplyListDto;
 import com.nanum.model.biz.CenterBiz;
 import com.nanum.model.biz.CommonBiz;
 import com.nanum.model.biz.GeneralBiz;
@@ -877,7 +873,7 @@ public class CenterController extends HttpServlet {
 	/**
 	 * 봉사게시글 수정 화면요청
 	 */
-	private void updateVolForm(HttpServletRequest request, HttpServletResponse response)
+	protected void updateVolForm(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		ArrayList<VolCategoryDto> categoryList = new ArrayList<VolCategoryDto>();
 		ArrayList<ServiceCategoryDto> serviceCategoryList = new ArrayList<ServiceCategoryDto>();
@@ -915,7 +911,7 @@ public class CenterController extends HttpServlet {
 	/**
 	 * 봉사게시글 수정
 	 */
-	private void updateVol(HttpServletRequest request, HttpServletResponse response)
+	protected void updateVol(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
 		PrintWriter out = response.getWriter();
@@ -1059,7 +1055,7 @@ public class CenterController extends HttpServlet {
 	/**
 	 * 봉사게시글 삭제
 	 */
-	private void deleteVol(HttpServletRequest request, HttpServletResponse response)
+	protected void deleteVol(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
 		PrintWriter out = response.getWriter();
