@@ -385,6 +385,7 @@ public class CenterController extends HttpServlet {
 		try {
 			biz.centerVolList(centerId, list);
 			request.setAttribute("list", list);
+			request.setAttribute("tap", 1);
 			request.getRequestDispatcher("/center/centerInfo.jsp").forward(request, response);
 		} catch (CommonException e) {
 			e.printStackTrace();
@@ -417,6 +418,8 @@ public class CenterController extends HttpServlet {
 		try {
 			biz.deadlineList(centerId, list);
 			request.setAttribute("list", list);
+			request.setAttribute("tap", 2);
+			
 			request.getRequestDispatcher("/center/centerInfo.jsp").forward(request, response);
 		} catch (CommonException e) {
 			e.printStackTrace();

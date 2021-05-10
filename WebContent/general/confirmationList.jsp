@@ -196,14 +196,12 @@
 <%@ include file="/common/header.jsp"%>
 <div class="contents">
 	<div id="vol_list_div">
-		<h1>봉사 신청내역</h1>
+		<h1>봉사 활동내역</h1>
 		<hr class="head_hr" style="margin-bottom:20px;">
 		<!-- 봉사모집글 목록----------------------------------------------------------------------->
 		<p style="margin-bottom:-5px;">[전체 
 			<em>${totalcount}</em>
-			건, 현재페이지 
-			<em>1</em>
-			/1]
+			건]
 		</p>
 		<p style="float: right;">
 		</p>
