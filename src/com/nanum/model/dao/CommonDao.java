@@ -72,7 +72,6 @@ public class CommonDao {
 			}
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
@@ -110,7 +109,6 @@ public class CommonDao {
 			}
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
@@ -147,7 +145,6 @@ public class CommonDao {
 			}
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
@@ -181,7 +178,6 @@ public class CommonDao {
 			}
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
@@ -214,7 +210,6 @@ public class CommonDao {
 			}
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
@@ -246,7 +241,7 @@ public class CommonDao {
 				dto.setGeneralEmail(rs.getString("g_email"));
 			}
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
@@ -278,7 +273,7 @@ public class CommonDao {
 				dto.setCenterEmail(rs.getString("c_email"));
 			}
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
@@ -311,7 +306,7 @@ public class CommonDao {
 				dto.setGeneralPass(rs.getString("g_pass"));
 			}
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
@@ -344,7 +339,7 @@ public class CommonDao {
 				dto.setCenterPass(rs.getString("c_pass"));
 			}
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
@@ -413,7 +408,6 @@ public class CommonDao {
 		}
 	}
 
-	////////////////////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * 문의글 일반회원
 	 * @param conn
@@ -424,7 +418,6 @@ public class CommonDao {
 		String sql = "insert into qna(q_no, g_id, q_title, q_contents, q_write_date) values(q_no.nextval, ?, ?, ?, sysdate)";
 		
 		PreparedStatement stmt = null; //초기화 
-		System.out.println();
 	
 		try {
 			 stmt = conn.prepareStatement(sql); // 실행 sql 넣기
@@ -438,7 +431,7 @@ public class CommonDao {
 				throw new Exception();
 			}
 		} catch (Exception e) {	// SQLException Exception
-			System.out.println(e.getMessage());
+			
 			e.printStackTrace();
 		} finally {
 			JdbcTemplate.close(stmt);
@@ -470,7 +463,7 @@ public class CommonDao {
 				throw new Exception();
 			}
 		} catch (Exception e) {	// SQLException Exception
-			System.out.println(e.getMessage());
+			
 			e.printStackTrace();
 		} finally {
 			JdbcTemplate.close(stmt);
@@ -525,7 +518,6 @@ public class CommonDao {
 		ResultSet rs = null;
 		
 		try {
-			System.out.println("다오 searchOpt : " +searchOpt);
 			stmt = conn.prepareStatement(page_sql);// 쿼리 담기
 			
 			if ("T".equals(searchOpt) || "C".equals(searchOpt) ) {
@@ -563,7 +555,7 @@ public class CommonDao {
 			}
 			
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
@@ -619,7 +611,7 @@ public class CommonDao {
 			}
 			
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
@@ -660,7 +652,7 @@ public class CommonDao {
 				throw new Exception();
 			}
 		} catch (Exception e) {	// SQLException Exception
-			System.out.println(e.getMessage());
+			
 			e.printStackTrace();
 		} finally {
 			JdbcTemplate.close(stmt);
@@ -691,7 +683,7 @@ public class CommonDao {
 				throw new Exception();
 			}
 		} catch (Exception e) {	// SQLException Exception
-			System.out.println(e.getMessage());
+			
 			e.printStackTrace();
 		} finally {
 			JdbcTemplate.close(stmt);
@@ -780,7 +772,7 @@ public class CommonDao {
 			}
 			
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
@@ -904,7 +896,7 @@ public class CommonDao {
 			}
 			
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
@@ -940,7 +932,7 @@ public class CommonDao {
 				localMap.put(rs.getString(1), dto);
 			}
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
@@ -973,7 +965,7 @@ public class CommonDao {
 				categoryMap.put(rs.getString(1), dto);
 			}
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
@@ -997,7 +989,6 @@ public class CommonDao {
 				+ "group by i.vol_info_no, i.v_title, i.category_no, i.local_no, i.start_date, i.end_date "
 				+ "order by 1 desc";
 		
-		System.out.println("[sql] " + sql);
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
@@ -1016,7 +1007,7 @@ public class CommonDao {
 				volList.add(dto);
 			} 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
@@ -1048,7 +1039,7 @@ public class CommonDao {
 				list.add(dto);
 			} 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
@@ -1068,7 +1059,6 @@ public class CommonDao {
 				+ "where i.vol_info_no = d.vol_info_no "
 				+ "group by i.vol_info_no, i.v_title, i.category_no, i.local_no, i.start_date, i.end_date, d.rec_status "
 				+ "order by 9";
-		System.out.println("sql : " + sql);
 		HashMap<String, Object> map = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -1089,7 +1079,7 @@ public class CommonDao {
 				list.add(map);
 			} 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
@@ -1139,14 +1129,10 @@ public class CommonDao {
 						whereSql  += "c.c_name like '%" + searchMap.get("centerName") + "%' and ";
 					}
 					
-					System.out.println("whereSql : " + whereSql);
 					int index = whereSql.lastIndexOf("and");
-					System.out.println("index : " + index);
 					whereSql = whereSql.substring(0, index - 1) + " ";
-					System.out.println("whereSql2 : " + whereSql);
 					
 					countSql += whereSql;
-					System.out.println("countSql1 : " + countSql);
 				}
 				
 				countSql += "group by i.vol_info_no, i.v_title, vc.category_name, i.category_no, "
@@ -1157,12 +1143,9 @@ public class CommonDao {
 				}
 				
 				countSql += "min(d.vol_date) >= ? and max(d.vol_date) <= ? ";
-				System.out.println("sql : " + sql);
-				System.out.println("countSql2 : " + countSql);
 				sql += countSql;
 				sql += "order by 마감일수";
 				
-				System.out.println("resultSql : " + sql);
 				
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -1189,7 +1172,7 @@ public class CommonDao {
 			} 
 			return countSql;
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
@@ -1212,7 +1195,6 @@ public class CommonDao {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		
-		System.out.println("totalCountSql : " + sql);
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, searchMap.get("volStart"));
@@ -1223,7 +1205,7 @@ public class CommonDao {
 				return rs.getInt(1);
 			}
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
@@ -1261,7 +1243,7 @@ public class CommonDao {
 				list.add(dto);
 			}
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
@@ -1384,7 +1366,7 @@ public class CommonDao {
 			}
 			
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
@@ -1424,7 +1406,7 @@ public class CommonDao {
 				list.add(map);
 			}
 			} catch (SQLException e) {
-				System.out.println(e.getMessage());
+				
 				e.printStackTrace();
 				throw new CommonException();
 			} finally {
@@ -1461,7 +1443,7 @@ public class CommonDao {
 				list.add(map);
 			}
 			} catch (SQLException e) {
-				System.out.println(e.getMessage());
+				
 				e.printStackTrace();
 				throw new CommonException();
 			} finally {
@@ -1499,7 +1481,7 @@ public class CommonDao {
 				map.put("centerMember", rs.getInt(3));
 			}
 			} catch (SQLException e) {
-				System.out.println(e.getMessage());
+				
 				e.printStackTrace();
 				throw new CommonException();
 			} finally {
@@ -1551,14 +1533,10 @@ public class CommonDao {
 						whereSql  += "c.c_name like '%" + searchMap.get("centerName") + "%' and ";
 					}
 					
-					System.out.println("whereSql : " + whereSql);
 					int index = whereSql.lastIndexOf("and");
-					System.out.println("index : " + index);
 					whereSql = whereSql.substring(0, index - 1) + " ";
-					System.out.println("whereSql2 : " + whereSql);
 					
 					countSql += whereSql;
-					System.out.println("countSql1 : " + countSql);
 				}
 				
 				countSql += "group by i.vol_info_no, i.v_title, vc.category_name, i.category_no, "
@@ -1569,12 +1547,9 @@ public class CommonDao {
 				}
 				
 				countSql += "min(d.vol_date) >= ? and max(d.vol_date) <= ? ";
-				System.out.println("sql : " + sql);
-				System.out.println("countSql2 : " + countSql);
 				sql += countSql;
 				sql += "order by 마감일수";
 			String page_sql = "select b.* from (select a.*, rownum as page_num from (" + sql + ") a ) b where page_num between ? and ?";
-				System.out.println("resultSql : " + page_sql);
 				
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -1602,7 +1577,7 @@ public class CommonDao {
 				list.add(map);
 			} 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
@@ -1670,7 +1645,7 @@ public class CommonDao {
 			}
 			
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {

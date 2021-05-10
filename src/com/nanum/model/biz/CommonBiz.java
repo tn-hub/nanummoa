@@ -287,7 +287,6 @@ public class CommonBiz {
 		Connection conn = JdbcTemplate.getConnection();
 		try {
 			dao.qnaList(conn, qnaList, searchOpt, searchText, sartNum, lastNum);
-			System.out.println("searchOpt : " +searchOpt );
 		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;
@@ -560,7 +559,6 @@ public class CommonBiz {
 		Connection conn = JdbcTemplate.getConnection();
 		try {
 			dao.searchAllList(conn, saList, searchAllOpt, searchAllText, sartNum, lastNum);
-			System.out.println("searchAllOpt : " +searchAllOpt );
 		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;
