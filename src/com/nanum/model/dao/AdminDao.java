@@ -759,11 +759,10 @@ public class AdminDao {
 	}
 
 	public void generalDelete(Connection conn, String generalId) throws CommonException{
-		
-		String sql_vol_list = " delete from vol_apply_list where g_id = ? ";
+		String sql_vol_conf = " delete from vol_confirmation where g_id = ? ";
 		String sql_qna_rel = " delete from qna_reply where q_no in (select q_no from qna where g_id  = ?) ";
 		String sql_qna = " delete from qna where g_id = ? ";
-		String sql_vol_conf = " delete from vol_confirmation where g_id = ? ";
+		String sql_vol_list = " delete from vol_apply_list where g_id = ? ";
 		String sql_gen_mem = " delete from general_member where g_id = ? ";
 		
 
@@ -776,7 +775,7 @@ public class AdminDao {
 		
 		try {
 			
-			stmt2 = conn.prepareStatement(sql_vol_list);
+			stmt2 = conn.prepareStatement(sql_vol_conf);
 			stmt2.setString(1, generalId);
 			stmt2.executeUpdate();
 			
@@ -788,7 +787,7 @@ public class AdminDao {
 			stmt4.setString(1, generalId);
 			stmt4.executeUpdate();
 			
-			stmt5 = conn.prepareStatement(sql_vol_conf);
+			stmt5 = conn.prepareStatement(sql_vol_list);
 			stmt5.setString(1, generalId);
 			stmt5.executeUpdate();
 			
