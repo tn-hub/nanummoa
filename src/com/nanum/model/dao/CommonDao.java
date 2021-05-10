@@ -1391,6 +1391,224 @@ public class CommonDao {
 			JdbcTemplate.close(stmt);
 		}
 	}
+	
+	
+	/**
+	 * 지역별 신청자 수
+	 * @param conn
+	 * @param list ArrayList<HashMap<String, Object>>
+	 * @throws CommonException
+	 */
+	public void selectLocalStatistics(Connection conn, ArrayList<HashMap<String, Object>> list) throws CommonException {
+		String sql = "select rownum, a.*\r\n" + 
+				"from (select l.local_name, sum(d.apply_count)\r\n" + 
+				"    from local l left join vol_info i on(l.local_no = i.local_no)\r\n" + 
+				"    left join  vol_detail d on (i.vol_info_no = d.vol_info_no)\r\n" + 
+				"    group by l.local_name\r\n" + 
+				"    having sum(d.apply_count) is not null\r\n" + 
+				"    order by 2 desc) a\r\n" + 
+				"where rownum <= 5";
+
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+
+			stmt = conn.prepareStatement(sql);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				map.put("localName", rs.getString(2));
+				map.put("count", rs.getString(3));
+				
+				list.add(map);
+			}
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+				throw new CommonException();
+			} finally {
+				JdbcTemplate.close(rs);
+				JdbcTemplate.close(stmt);
+			}
+		}
+	
+	/**
+	 * 분야별 자원봉사 모집 현황
+	 * @param conn
+	 * @param list ArrayList<HashMap<String, Object>>
+	 * @throws CommonException
+	 */
+	public void selectCategoryStatistics(Connection conn, ArrayList<HashMap<String, Object>> list) throws CommonException {
+		String sql = "select rownum, a.*\r\n" + 
+				"from (select c.category_name, count(i.vol_info_no)\r\n" + 
+				"    from vol_category c left join  vol_info i on (c.category_no = i.category_no)\r\n" + 
+				"    group by c.category_name\r\n" + 
+				"    order by 2 desc) a\r\n" + 
+				"where rownum <= 5";
+
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+
+			stmt = conn.prepareStatement(sql);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				map.put("categoryName", rs.getString(2));
+				map.put("count", rs.getString(3));
+				
+				list.add(map);
+			}
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+				throw new CommonException();
+			} finally {
+				JdbcTemplate.close(rs);
+				JdbcTemplate.close(stmt);
+			}
+		}
+	
+	/**
+	 * 이용자별 가입 현황
+	 * @param conn
+	 * @param map HashMap<String, Integer
+	 * @throws CommonException
+	 */
+	public void selectMemberStatistics(Connection conn, HashMap<String, Integer> map) throws CommonException {
+		String sql = "select (select count(*)\r\n" + 
+				"from general_member\r\n" + 
+				"where birthday > SYSDATE - (INTERVAL '19' YEAR)) as 청소년,\r\n" + 
+				"(select count(*)\r\n" + 
+				"from general_member\r\n" + 
+				"where birthday <= SYSDATE - (INTERVAL '19' YEAR)) as 성인,\r\n" + 
+				"(select count(*)\r\n" + 
+				"from center_member) as 센터회원\r\n" + 
+				"from dual";
+
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+
+			stmt = conn.prepareStatement(sql);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				map.put("teenager", rs.getInt(1));
+				map.put("adult", rs.getInt(2));
+				map.put("centerMember", rs.getInt(3));
+			}
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+				throw new CommonException();
+			} finally {
+				JdbcTemplate.close(rs);
+				JdbcTemplate.close(stmt);
+			}
+		}
+	
+	/**
+	 * 봉사모집 전체조회 페이징 추가
+	 * @param conn
+	 * @param list ArrayList<HashMap<String, Object>>
+	 * @param searchMap HashMap<String, String>
+	 * @param startNum
+	 * @param lastNum
+	 * @throws CommonException
+	 */
+	public void searchVolListWithPaging(Connection conn, ArrayList<HashMap<String, Object>> list, HashMap<String, String> searchMap, int startNum, int lastNum) throws CommonException {
+		String sql = "select i.vol_info_no as 글번호, i.v_title as 제목, vc.category_name as 봉사분야, "
+				+ "i.start_date as 모집시작일, i.end_date as 모집마감일, min(d.vol_date) as 봉사시작일, "
+				+ "max(d.vol_date) as 봉사종료일, c_name as 단체이름, min(d.rec_status) as 모집상태, "
+				+ "i.end_date - trunc(sysdate) as 마감일수, i.c_id as 센터회원아이디 ";
+		
+		String countSql = "from vol_info i left join vol_detail d on (i.vol_info_no = d.vol_info_no) "
+				+ "left join center_info c on (i.c_id = c.c_id) " 
+				+ "left join vol_category vc on (vc.category_no = i.category_no) ";
+				
+		
+				if (!searchMap.get("local").equals("0") || !searchMap.get("category").equals("0") || !searchMap.get("service").equals("0") ||
+					searchMap.get("volType") != null || searchMap.get("volTitle") != null || searchMap.get("centerName") != null) {
+					
+					String whereSql = "where ";
+					if (!searchMap.get("local").equals("0")) {
+						whereSql  += "i.v_place like '%" + searchMap.get("local") + "%' and ";
+					}
+					if (!searchMap.get("category").equals("0")) {
+						whereSql  += "i.category_no = '" + searchMap.get("category") + "' and ";
+					}
+					if (!searchMap.get("service").equals("0")) {
+						whereSql  += "i.v_subject = '" + searchMap.get("service") + "' and ";
+					}
+					if (searchMap.get("volType") != null) {
+						whereSql  += "i.v_type like '%" + searchMap.get("volType") + "%' and ";
+					}
+					if (searchMap.get("volTitle") != null) {
+						whereSql  += "i.v_title like '%" + searchMap.get("volTitle") + "%' and ";
+					}
+					if (searchMap.get("centerName") != null) {
+						whereSql  += "c.c_name like '%" + searchMap.get("centerName") + "%' and ";
+					}
+					
+					System.out.println("whereSql : " + whereSql);
+					int index = whereSql.lastIndexOf("and");
+					System.out.println("index : " + index);
+					whereSql = whereSql.substring(0, index - 1) + " ";
+					System.out.println("whereSql2 : " + whereSql);
+					
+					countSql += whereSql;
+					System.out.println("countSql1 : " + countSql);
+				}
+				
+				countSql += "group by i.vol_info_no, i.v_title, vc.category_name, i.category_no, "
+				+ "i.start_date, i.end_date, c_name, i.c_id having ";
+				
+				if (searchMap.get("status") != null) {
+					countSql += "min(d.rec_status) = " + Integer.parseInt(searchMap.get("status")) + " and ";
+				}
+				
+				countSql += "min(d.vol_date) >= ? and max(d.vol_date) <= ? ";
+				System.out.println("sql : " + sql);
+				System.out.println("countSql2 : " + countSql);
+				sql += countSql;
+				sql += "order by 마감일수";
+			String page_sql = "select b.* from (select a.*, rownum as page_num from (" + sql + ") a ) b where page_num between ? and ?";
+				System.out.println("resultSql : " + page_sql);
+				
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			stmt = conn.prepareStatement(page_sql);
+
+			stmt.setString(1, searchMap.get("volStart"));
+			stmt.setString(2, searchMap.get("volEnd"));
+			stmt.setInt(3, startNum);
+			stmt.setInt(4, lastNum);
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				map.put("volInfoNo", rs.getInt(1));
+				map.put("volTitle", rs.getString(2));
+				map.put("categoryName", rs.getString(3));
+				map.put("startDate", rs.getDate(4));
+				map.put("endDate", rs.getDate(5));
+				map.put("volStart", rs.getDate(6));
+				map.put("volEnd", rs.getDate(7));
+				map.put("centerName", rs.getString(8));
+				map.put("recStatus", rs.getString(9));
+				map.put("deadLine", rs.getInt(10));
+				map.put("centerId", rs.getString(11));
+				list.add(map);
+			} 
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(stmt);
+		}
+	}
 
 
 	public void selectSearchAllListTotCnt(Connection conn, SearchAllDto aDto, String searchAllOpt, String searchAllText) throws CommonException {

@@ -166,7 +166,8 @@
 $(document).ready(function(){
 	
 	// 검색목록 초기화
-	$("input[type='button']").click(function(){
+	$("#resetBtn").click(function(){
+		console.log("검색항목 초기화");
 		$("#local option:eq(0)").attr("selected", "selected");
 		$("#category option:eq(0)").attr("selected", "selected");
 		$("#service option:eq(0)").attr("selected", "selected");
@@ -192,6 +193,34 @@ $(document).ready(function(){
 		$("#searchForm").submit();
 	});
 	
+	// 이전페이지
+  	$("#preBtn").click(function() {
+  		var curPageNum = ${curPageNum};
+  		if (curPageNum> 1){
+  			$("#pageNum").val(curPageNum -1);
+  			$("#searchForm").submit();
+  		}
+  	});
+  	
+  	// 다음페이지
+  	$("#nestBtn").click(function() {
+  		console.log("다음");
+  		var curPageNum = ${curPageNum};
+  		var lastPageNum = ${lastPageNum};
+  		
+  		if (curPageNum < lastPageNum){
+  			$("#pageNum").val(curPageNum +1);
+  			$("#searchForm").submit();
+  		}
+  	});
+  	
+  //페이징 submit
+    $("#page_btn").on("click", "input[name='btnPageNum']", function(e){
+    		console.log("페이징 submit : " + $(e.target).val());
+        	$("#pageNum").val($(e.target).val());
+        	$("#searchForm").submit();
+    });
+	  	
 });
 </script>
 </head>
@@ -204,6 +233,7 @@ $(document).ready(function(){
 	<!-- 검색창 -------------------------------------------------------------------------------------------->
 	<div id="vol_search">
 		<form action="${CONTEXT_PATH}/common/commonController?action=volListForm" method="post" id="searchForm">
+		<input type="hidden" value="1" id="pageNum" name="pageNum">
 			<table id="vol_search_table">
 				<tr>
 					<th class="search_table_large_th">봉사지역</th>
@@ -308,7 +338,7 @@ $(document).ready(function(){
 				
 				<div id="search_button_box">
 					<input class="y_btn" type="submit" id="searchBtn" value="검색">
-					<input class="g_btn" type="button" value="초기화">
+					<input class="g_btn" type="button" id="resetBtn" value="초기화">
 				</div>
 			</div>
 		</form>
@@ -319,8 +349,12 @@ $(document).ready(function(){
 	<p>[전체 
 		<em>${total}</em>
 		건, 현재페이지 
-		<em>0</em>
-		/0]
+		<em>${curPageNum}</em>
+		<c:choose>
+			<c:when test="${lastPageNum == 0}">/1]</c:when>
+			<c:otherwise>/ ${lastPageNum}]</c:otherwise>
+		</c:choose>
+		
 	</p>
 	<c:if test="${grade == 'C' }">
 		<button class="y_btn float_r minus_mg_t" onclick="location.href='${CONTEXT_PATH}/center/centerController?action=volInputForm'">글작성</button>
@@ -379,6 +413,20 @@ $(document).ready(function(){
 		</c:forEach>
 	</ul>
 	<!-- 봉사모집글 목록 -->
+	
+	<!-- 페이징--------------------------------------------------------------------->
+	<div id="page_btn">
+  	<input type="button" value="이전 " id="preBtn" name="preBtn">
+  	 <c:forEach var="i" begin="${ 1 }" end="${lastPageNum}">
+             <input type="button" value=${ i }  name="btnPageNum"
+             	<c:if test="${curPageNum == i}">
+             		style="background-color: #FBD157;"
+             	</c:if>
+             >
+       </c:forEach>   
+  	<input type="button" value="다음 " id="nestBtn" name="nestBtn">	
+  </div> 
+	<!-- 페이징 -->
 </div>
 <%@ include file="/common/footer.jsp"%>
 </body>

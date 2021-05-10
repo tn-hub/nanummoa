@@ -45,7 +45,10 @@ public class HomeController extends HttpServlet {
 		HashMap<String, VolCategoryDto> volCategoryMap = new HashMap<>();
 		ArrayList<VolBlockDto> volList =  new ArrayList<VolBlockDto>();
 		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String,Object>>();
-
+		ArrayList<HashMap<String, Object>> localStatistics = new ArrayList<HashMap<String, Object>>();
+		ArrayList<HashMap<String, Object>> categoryStatistics = new ArrayList<HashMap<String, Object>>();
+		HashMap<String, Integer> memberStatistics = new HashMap<String, Integer>();
+		
 		CommonBiz biz = new CommonBiz();
 		try {
 			biz.searchLocal(localMap);
@@ -65,6 +68,23 @@ public class HomeController extends HttpServlet {
 				}
 				request.setAttribute("volList", volList);
 			}
+			
+			biz.searchVolMapList(list);
+			for (HashMap<String, Object> hashMap : list) {
+				System.out.println(">>");
+				for(String key : hashMap.keySet()){
+					System.out.println(key+" : "+hashMap.get(key));
+				}
+			}
+			
+			biz.getLocalStatistics(localStatistics);
+			request.setAttribute("localStatistics", localStatistics);
+			
+			biz.getCategoryStatistics(categoryStatistics);
+			request.setAttribute("categoryStatistics", categoryStatistics);
+			
+			biz.getMemberStatistics(memberStatistics);
+			request.setAttribute("memberStatistics", memberStatistics);
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}

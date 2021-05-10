@@ -89,8 +89,8 @@ public class CommonController extends HttpServlet {
 		case "qnaDtl":
 			qnaDtl(request, response);
 			break;
-		case "qnaUpt":
-			qnaUpt(request, response);
+		case "qnaUptForm":
+			qnaUptForm(request, response);
 			break;
 		case "qnaDel":
 			qnaDel(request, response);
@@ -127,7 +127,10 @@ public class CommonController extends HttpServlet {
 			break;		
 		case "searchAllForm":
 			searchAllForm(request, response);
-			break;		
+			break;
+		case "qnaUpt":
+			qnaUpt(request, response);
+			break;
 		}
 	}
 
@@ -811,6 +814,8 @@ public class CommonController extends HttpServlet {
 			request.setAttribute("searchText", searchText);
 			request.setAttribute("searchOpt", searchOpt);
 			
+			
+			//Paging.makeBlock(curPage);
 			biz.qnaListTotCnt(cdto, searchOpt, searchText); // 총건수 조회 
 			
 			int pageCount = 5;
@@ -861,22 +866,40 @@ public class CommonController extends HttpServlet {
 	}
 
 	/**
-	 * QNA 수정
+	 * QNA 수정폼 이동
 	 */
-	private void qnaUpt(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String qnaTitle = request.getParameter("qnaTitle");
-		String qnaContents = request.getParameter("qnaContents");
+	private void qnaUptForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String qnaNo = request.getParameter("qnaNo");
 
 		QnADto dto = new QnADto();
 		dto.setQnaNo(Integer.parseInt(qnaNo));
-		dto.setQnaContents(qnaContents);
+		System.out.println("문의하기 수정 : " + qnaNo);
+		try {
+			CommonBiz biz = new CommonBiz();
+			biz.qnaDetail(dto, qnaNo);
+			request.setAttribute("dto", dto);
+			request.getRequestDispatcher("/qna/qnaUpdate.jsp").forward(request, response);
+		} catch (CommonException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * QNA 수정
+	 */
+	private void qnaUpt(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int qnaNo = Integer.parseInt(request.getParameter("qnaNo"));
+		String qnaTitle = request.getParameter("qnaTitle");
+		String qnaContents = request.getParameter("qnaContents");
+		
+		QnADto dto = new QnADto();
+		dto.setQnaNo(qnaNo);
 		dto.setQnaTitle(qnaTitle);
-
+		dto.setQnaContents(qnaContents);
 		try {
 			CommonBiz biz = new CommonBiz();
 			biz.qnaUpdate(dto);
-			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=qnaList");
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=qnaDtl&qnaNo=" + qnaNo);
 		} catch (CommonException e) {
 			e.printStackTrace();
 		}
@@ -943,7 +966,12 @@ public class CommonController extends HttpServlet {
 		ArrayList<VolCategoryDto> volCategoryList = new ArrayList<VolCategoryDto>();
 		ArrayList<ServiceCategoryDto> serviceList = new ArrayList<ServiceCategoryDto>();
 		HashMap<String, String> searchMap = new HashMap<String, String>();
-
+		
+		String pageNum = request.getParameter("pageNum");
+		if (pageNum == null || pageNum == "") {
+			pageNum = "1";
+		}
+		
 		String local = request.getParameter("local");
 		String category = request.getParameter("category");
 		String service = request.getParameter("service");
@@ -1018,12 +1046,39 @@ public class CommonController extends HttpServlet {
 			String sql = biz.searchVolList(list, searchMap);
 			int total = biz.volListTotalCount(searchMap, sql);
 			System.out.println("total : " + total);
+			
+			int pageCount = 2; // 원하는 row 수 
+			int curPage = Integer.parseInt(pageNum) * pageCount;		// 현재 rownum 계산 
+			
+			// 페이징 숫자값들 호출
 
+			// 현재 페이지가 속한 block의 시작 번호, 끝 번호를 계산
+			Paging.makeBlock(curPage, pageCount); // 현재페이지 번호, 원하는row 건수
+
+			// 하단 페이징 번호 max 조회
+			Paging.makeLastPageNum(total, pageCount); // 총건수, 원하는row 건수
+
+			// 값가져오기
+			Integer startNum = Paging.getBlockStartNum();
+			Integer lastNum = Paging.getBlockLastNum();
+			Integer lastPageNum = Paging.getLastPageNum();
+		 	 
+			System.out.println("startNum : " + startNum + ", " + "lastNum : " + lastNum);
+			ArrayList<HashMap<String, Object>> resultList = new ArrayList<HashMap<String, Object>>();
+			// 목록 호출 할때 dao 조건 sartNum, lastNum 값 셋팅
+			biz.searchVolListWithPaging(resultList, searchMap, startNum, lastNum);
+			System.out.println("resultList : " + resultList.size());
+			
+			// jsp 에 총건수 및 건수 보여주기 위해 셋팅
+			request.setAttribute("lastPageNum", lastPageNum);
+			request.setAttribute("curPageNum", pageNum);
+			request.setAttribute("totCnt", total);
+			
 			request.setAttribute("date", date);
 			request.setAttribute("localList", localList);
 			request.setAttribute("volCategoryList", volCategoryList);
 			request.setAttribute("serviceList", serviceList);
-			request.setAttribute("volList", list);
+			request.setAttribute("volList", resultList);
 			request.setAttribute("total", total);
 			request.setAttribute("searchMap", searchMap);
 			request.getRequestDispatcher("/common/vol_list.jsp").forward(request, response);
