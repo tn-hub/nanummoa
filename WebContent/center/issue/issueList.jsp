@@ -4,9 +4,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>확인서 발급</title>
+<title>인증서 발급</title>
+<script type="text/javascript" src="${CONTEXT_PATH }/resources/js/common.js"></script>
 <link type="text/css" rel="stylesheet" href="${initParam.CONTEXT_PATH}/resources/css/common.css">
-
 <style type="text/css">
 .wrapper{
 width: 100%;
@@ -186,9 +186,8 @@ text-align: center;
 <div class="contents">
 	<div class="wrapper">
 		<div class="title">
-			<h1>확인서 발급목록</h1>
+			<h1>인증서 발급목록</h1>
 		<hr>
-		
 	<p>[전체 <em style="color: red;">${fn:length(list)}</em>건]</p>
 	<hr class="list_head_hr">
 	<c:forEach var="dto" items="${list }">
@@ -228,17 +227,6 @@ text-align: center;
 					<span>${dto.volStart }</span> ~
 					<span>${dto.volEnd }</span>
 				</div>
-			</div>
-			
-			<div class="deadline_box">
-			<c:choose>	
-				<c:when test="${dto.deadline >= 0}">
-					<p>마감 <em>${dto.deadline }</em> 일전</p>
-				</c:when>
-				<c:otherwise>
-					<p>마감 종료</p>
-				</c:otherwise>
-			</c:choose>
 			</div>
 			<hr class="list_hr">
 		</li>

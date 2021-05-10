@@ -5,8 +5,6 @@
 <head>
 <meta charset="UTF-8">
 <title>인증서 발급</title>
-<!-- jquery-3.6.0.min.js -->
-<script type="text/javascript" src="${CONTEXT_PATH }/resources/js/jquery-3.6.0.min.js"></script>
 <link type="text/css" rel="stylesheet" href="${initParam.CONTEXT_PATH}/resources/css/common.css">
 <style type="text/css">
 #section_contents{
@@ -316,21 +314,20 @@ text-align: center;
 <script type="text/javascript">
 $(document).ready(function() {
 	/* 신청승인 버튼 체크박스 값 없을시 return */
-	 $("#btn_add").click(function () {
-		 if($("input:checkbox[name='checkDate']:checked").length == 0){
-			alert("체크박스를 선택해주세요.");	
+	$("#btn_add").click(function() {
+		if ($("input:checkbox[name='checkDate']:checked").length == 0) {
+			alert("체크박스를 선택해주세요.");
 			return false;
-		 }
-	 });
-	
+		}
+	});
+
 });
- 
 </script>
 </head>
 <body>
 <%@ include file="/common/header.jsp"%>
 	<div class="wrapper">
-		<div class="title">	
+		<div class="title">
 <h1>신청자 정보</h1>
 	<table id="volAdd">
 		<tr>
