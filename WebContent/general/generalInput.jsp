@@ -87,7 +87,7 @@ $(document).ready(function(){
 				  success: function(data, textStatus){
 					  if (data == "usable") {
 						  alert("사용 가능한 아이디 입니다");
-						  $("#idBtn").attr("disabled", true);
+						  $("#idBtn").prop("disabled", true);
 					  } else if (data == "not-usable") {
 						  alert("이미 존재하는 아이디 입니다");
 					  } else if (data == "none") {
