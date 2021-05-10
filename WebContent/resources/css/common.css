@@ -163,6 +163,7 @@ a {
 	display:block;
 	border-radius: 5px;
 	font-weight:bolder;
+	position: relative;
 }
 .block_col{
 	margin: 25px 25px 25px 25px;
@@ -174,6 +175,7 @@ a {
 	display:block;
 	border-radius: 5px;
 	font-weight:bolder;
+	position: relative;
 }
 .block_col:nth-child(4){
 	margin: 25px 0 25px 25px;
@@ -185,6 +187,7 @@ a {
 	display:block;
 	border-radius: 5px;
 	font-weight:bolder;
+	position: relative;
 }
 
 .vol_local{
@@ -197,6 +200,26 @@ a {
 	padding: 5px 0;
 	border-radius: 5px;
 	color : white;
+}
+.status_sp{
+	float: left;
+	padding: 10px;
+	background-color: #FF9090;
+	border-radius: 25px;
+	font-size: smaller;
+	position: absolute;
+	left: 15px;
+	top: 50px;
+}
+.status_g_sp{
+	float: left;
+	padding: 10px;
+	background-color: #cccccc;
+	border-radius: 25px;
+	font-size: smaller;
+	position: absolute;
+	left: 15px;
+	top: 50px;
 }
 .vol_block_title{
 	font-size: 22px;
@@ -329,6 +352,7 @@ a {
 	padding: 5px;
 	cursor: pointer;
 }
+
 
 /** layout float etc */
 .float_r{

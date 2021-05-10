@@ -131,6 +131,9 @@ public class CenterController extends HttpServlet {
 		case "endVol":
 			endVol(request, response);
 			break;
+		case "centerNameCheck":
+			centerNameCheck(request, response);
+			break;
 		}
 	}
 
@@ -217,6 +220,7 @@ public class CenterController extends HttpServlet {
 		String ceoMobile2 = request.getParameter("ceoMobile2");
 		String ceoMobile3 = request.getParameter("ceoMobile3");
 		String service = request.getParameter("service");
+		String appStatus = request.getParameter("appStatus");
 
 		if (centerMemberName == null || centerMemberName.trim().length() == 0) {
 			out.println("<script>alert('이름을 입력해 주세요');history.go(-1); </script>");
@@ -326,45 +330,6 @@ public class CenterController extends HttpServlet {
 
 		CenterMemberDto cMemberDto = new CenterMemberDto();
 		CenterInfoDto centerDto = new CenterInfoDto();
-
-		String appStatus = "0";
-		try {
-			String urlStr1 = "http://openapi.seoul.go.kr:8088/4f5874664c7268783837774a656e55/json/VOpenGroup/1/1000/";
-			String urlStr2 = "http://openapi.seoul.go.kr:8088/4f5874664c7268783837774a656e55/json/VOpenGroup/1001/2000/";
-			String urlStr3 = "http://openapi.seoul.go.kr:8088/4f5874664c7268783837774a656e55/json/VOpenGroup/2001/2477/";
-			String[] urlStrArr = { urlStr1, urlStr2, urlStr3 };
-
-			for (String urlStr : urlStrArr) {
-				URL url = new URL(urlStr);
-
-				String line = "";
-				String result = "";
-
-				BufferedReader br;
-				br = new BufferedReader(new InputStreamReader(url.openStream()));
-				while ((line = br.readLine()) != null) {
-					result = result.concat(line);
-				}
-				// JSON parser 만들어 문자열 데이터를 객체화한다.
-				JSONParser parser = new JSONParser();
-				JSONObject obj = (JSONObject) parser.parse(result);
-				JSONObject data = (JSONObject) obj.get("VOpenGroup");
-				JSONArray data2 = (JSONArray) data.get("row");
-
-				// 객체형태로
-				for (int i = 0; i < data2.size(); i++) {
-					JSONObject row = (JSONObject) data2.get(i);
-					String centerNameData = (String) row.get("KORNAME");
-					if (centerName.equals(centerNameData)) {
-						System.out.println("centerName : " + centerNameData);
-						appStatus = "1";
-					}
-				}
-				br.close();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
 		System.out.println("appStatus : " + appStatus);
 		cMemberDto.setCenterName(centerMemberName);
@@ -1411,4 +1376,72 @@ public class CenterController extends HttpServlet {
 		}
 
 	}
+	
+	/**
+	 * 센터이름 등록여부 확인
+	 */
+	protected void centerNameCheck(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String centerName = request.getParameter("centerName");
+		System.out.println("centerName : " + centerName);
+		PrintWriter out = response.getWriter();
+
+		if (centerName == null || centerName.trim().length() == 0) {
+			out.print("none");
+			out.flush();
+			out.close();
+			return;
+		}
+		
+		String appStatus = "0";
+		try {
+			String urlStr1 = "http://openapi.seoul.go.kr:8088/4f5874664c7268783837774a656e55/json/VOpenGroup/1/1000/";
+			String urlStr2 = "http://openapi.seoul.go.kr:8088/4f5874664c7268783837774a656e55/json/VOpenGroup/1001/2000/";
+			String urlStr3 = "http://openapi.seoul.go.kr:8088/4f5874664c7268783837774a656e55/json/VOpenGroup/2001/2477/";
+			String[] urlStrArr = { urlStr1, urlStr2, urlStr3 };
+
+			for (String urlStr : urlStrArr) {
+				URL url = new URL(urlStr);
+
+				String line = "";
+				String result = "";
+
+				BufferedReader br;
+				br = new BufferedReader(new InputStreamReader(url.openStream()));
+				while ((line = br.readLine()) != null) {
+					result = result.concat(line);
+				}
+				// JSON parser 만들어 문자열 데이터를 객체화한다.
+				JSONParser parser = new JSONParser();
+				JSONObject obj = (JSONObject) parser.parse(result);
+				JSONObject data = (JSONObject) obj.get("VOpenGroup");
+				JSONArray data2 = (JSONArray) data.get("row");
+
+				// 객체형태로
+				for (int i = 0; i < data2.size(); i++) {
+					JSONObject row = (JSONObject) data2.get(i);
+					String centerNameData = (String) row.get("KORNAME");
+					if (centerName.equals(centerNameData)) {
+						System.out.println("centerName : " + centerNameData);
+						appStatus = "1";
+					}
+				}
+				br.close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+			if (appStatus.equals("0")) {
+				out.print("not-usable");
+				out.flush();
+				out.close();
+			} else {
+				out.print("usable");
+				out.flush();
+				out.close();
+			}
+		}
+	
 }

@@ -5,6 +5,7 @@ package com.nanum.model.biz;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.nanum.dto.CenterInfoDto;
 import com.nanum.dto.CenterMemberDto;
@@ -232,6 +233,23 @@ public class AdminBiz {
 		try {
 			dao.selectCenterDetail(conn, dto, centerId);
 		}catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+	
+	/**
+	 * 봉사 확인서 내역 조회
+	 * @param list ArrayList<HashMap<String, Object>>
+	 * @throws CommonException
+	 */
+	public void getConfirmationList(ArrayList<HashMap<String, Object>> list) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.searchConfirmationList(conn, list);
+		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;
 		} finally {

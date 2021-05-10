@@ -1047,11 +1047,9 @@ public class CommonController extends HttpServlet {
 			int total = biz.volListTotalCount(searchMap, sql);
 			System.out.println("total : " + total);
 			
-			int pageCount = 2; // 원하는 row 수 
+			int pageCount = 5; // 원하는 row 수 
 			int curPage = Integer.parseInt(pageNum) * pageCount;		// 현재 rownum 계산 
 			
-			// 페이징 숫자값들 호출
-
 			// 현재 페이지가 속한 block의 시작 번호, 끝 번호를 계산
 			Paging.makeBlock(curPage, pageCount); // 현재페이지 번호, 원하는row 건수
 
