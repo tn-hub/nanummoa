@@ -153,26 +153,7 @@ $(document).ready(function() {
 		<li id="c_stan_btnArea">
 			<a href="${CONTEXT_PATH}/admin/adminController?action=centerRefuse&centerId=${dto.centerId}"><input type="button" value="반려" id="c_in_refuse" style="cursor:hand;"></a>
 			<a href="${CONTEXT_PATH}/admin/adminController?action=centerAccept&centerId=${dto.centerId}"><input type="button" value="승인" id="c_in_accept" style="cursor:hand;"></a>
-	
-		<li>
-		<br><br>
-		<div>
-			<ul>
-			<li>[센터등록일자] ${dto.centerEntryDate}</li>
-			<li>[센터 주소] ${dto.centerAddress}</li>
-			<li>[등록번호] ${dto.registerCode}</li>
-			<li>[서비스대상] ${dto.service}</li>
-			<li>[대표이름] ${dto.ceoName}</li>
-			<li>[대표연락처] ${dto.ceoMobile}</li>
-			<li>[센터멤버전화번호] ${dto.cmemberMobile}</li>
-			<li>[센터멤버이메일] ${dto.cmemberEmail}</li>
-		</ul>
-		</div>
-		</li>
 	</ul>
-	
-		
-	
 </div>
 <hr>
 </c:forEach>

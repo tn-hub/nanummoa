@@ -49,8 +49,12 @@ public class GeneralMemberDto {
 	
 	/** 카테고리 */
 	private String categoryName;
+	
 
 	private String localName;
+	
+	/** 구분 */
+	private String gubun;
 	
 
 	/**
@@ -76,9 +80,29 @@ public class GeneralMemberDto {
 	 * @param localName
 	 */
 	
+	
+
+	
+	
+	/**
+	 * @param generalId
+	 * @param generalPass
+	 * @param generalName
+	 * @param gender
+	 * @param birthday
+	 * @param generalZipCode
+	 * @param generalAddress
+	 * @param generalMobile
+	 * @param generalEmail
+	 * @param categoryNo
+	 * @param localNo
+	 * @param categoryName
+	 * @param localName
+	 * @param gubun
+	 */
 	public GeneralMemberDto(String generalId, String generalPass, String generalName, String gender, String birthday,
 			String generalZipCode, String generalAddress, String generalMobile, String generalEmail, String categoryNo,
-			String localNo, String categoryName, String localName) {
+			String localNo, String categoryName, String localName, String gubun) {
 		super();
 		this.generalId = generalId;
 		this.generalPass = generalPass;
@@ -93,16 +117,18 @@ public class GeneralMemberDto {
 		this.localNo = localNo;
 		this.categoryName = categoryName;
 		this.localName = localName;
+		this.gubun = gubun;
 	}
-
 	
+	
+
 	/**
 	 * @return the generalId
 	 */
 	public String getGeneralId() {
 		return generalId;
 	}
-	
+
 	/**
 	 * @param generalId the generalId to set
 	 */
@@ -280,6 +306,20 @@ public class GeneralMemberDto {
 
 
 
+	/**
+	 * @return the gubun
+	 */
+	public String getGubun() {
+		return gubun;
+	}
+
+	/**
+	 * @param gubun the gubun to set
+	 */
+	public void setGubun(String gubun) {
+		this.gubun = gubun;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -304,7 +344,14 @@ public class GeneralMemberDto {
 		builder.append(categoryNo);
 		builder.append(", ");
 		builder.append(localNo);
+		builder.append(", ");
+		builder.append(categoryName);
+		builder.append(", ");
+		builder.append(localName);
+		builder.append(", ");
+		builder.append(gubun);
 		return builder.toString();
 	}
 
+	
 }

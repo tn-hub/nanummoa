@@ -907,18 +907,22 @@ public class CommonController extends HttpServlet {
 			throws ServletException, IOException {
 		CommonBiz biz = new CommonBiz();
 		GeneralBiz gBiz = new GeneralBiz();
-		String volInfoNo = request.getParameter("volInfoNo");
-
+		String volInfoNoStr = request.getParameter("volInfoNo");
+		int volInfoNo =  Integer.parseInt(volInfoNoStr);
+		HashMap<String, Object> map = new HashMap<String, Object>();
 		// 카테고리 가져오기
 		ArrayList<VolCategoryDto> categoryList = new ArrayList<VolCategoryDto>();
 
 		try {
-			gBiz.getVolCategoryList(categoryList);
-			request.setAttribute("volCategory", categoryList);
 			// 상세조회
 			VolInfoDto dto = new VolInfoDto();
-			biz.volDetailInfo(dto, Integer.parseInt(volInfoNo));
+			biz.volDetailInfo(dto, volInfoNo);
+			
+			biz.volDetailInfo(map, volInfoNo);			
+			gBiz.getVolCategoryList(categoryList);
+			request.setAttribute("volCategory", categoryList);
 			request.setAttribute("vDto", dto);
+			request.setAttribute("map", map);
 			request.getRequestDispatcher("/volInfo.jsp").forward(request, response);
 
 		} catch (CommonException e1) {

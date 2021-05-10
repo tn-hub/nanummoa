@@ -32,7 +32,10 @@ public class CenterMemberDto {
 	
 	/** 가입일 */
 	private String entryDate;
-
+	
+	/** 구분 */
+	private String gubun;
+	
 	/**
 	 * 기본 생성자
 	 */
@@ -50,8 +53,22 @@ public class CenterMemberDto {
 	 * @param appStatus    승인상태
 	 * @param entryDate	     가입일
 	 */
-	public CenterMemberDto(String centerId, String centerPass, String centerName, String centerMobile, String centerEmail,
-			String appStatus, String entryDate) {
+	
+
+
+	/**
+	 * @param centerId
+	 * @param centerPass
+	 * @param centerName
+	 * @param centerMobile
+	 * @param centerEmail
+	 * @param appStatus
+	 * @param entryDate
+	 * @param gubun
+	 */
+	public CenterMemberDto(String centerId, String centerPass, String centerName, String centerMobile,
+			String centerEmail, String appStatus, String entryDate, String gubun) {
+		super();
 		this.centerId = centerId;
 		this.centerPass = centerPass;
 		this.centerName = centerName;
@@ -59,14 +76,17 @@ public class CenterMemberDto {
 		this.centerEmail = centerEmail;
 		this.appStatus = appStatus;
 		this.entryDate = entryDate;
+		this.gubun = gubun;
 	}
-
+	
+	
 	/**
 	 * @return the centerId
 	 */
 	public String getCenterId() {
 		return centerId;
 	}
+
 
 	/**
 	 * @param centerId the centerId to set
@@ -158,6 +178,22 @@ public class CenterMemberDto {
 	public void setEntryDate(String entryDate) {
 		this.entryDate = entryDate;
 	}
+	
+	
+
+	/**
+	 * @return the gubun
+	 */
+	public String getGubun() {
+		return gubun;
+	}
+
+	/**
+	 * @param gubun the gubun to set
+	 */
+	public void setGubun(String gubun) {
+		this.gubun = gubun;
+	}
 
 	@Override
 	public String toString() {
@@ -175,6 +211,8 @@ public class CenterMemberDto {
 		builder.append(appStatus);
 		builder.append(", ");
 		builder.append(entryDate);
+		builder.append(", ");
+		builder.append(gubun);
 		return builder.toString();
 	}
 
