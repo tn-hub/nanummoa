@@ -993,7 +993,7 @@ public class CommonDao {
 				+ "to_char(i.start_date,'yyyy-mm-dd') as 모집시작일, to_char(i.end_date,'yyyy-mm-dd') as 모집마감일,"
 				+ " min(d.vol_date) as 봉사시작일, max(d.vol_date) as 봉사종료일  " 
 				+ "from vol_info i, vol_detail d " 
-				+ "where i.vol_info_no = d.vol_info_no and d.rec_status = 0 "
+				+ "where i.vol_info_no = d.vol_info_no "
 				+ "group by i.vol_info_no, i.v_title, i.category_no, i.local_no, i.start_date, i.end_date "
 				+ "order by 1 desc";
 		
@@ -1065,7 +1065,7 @@ public class CommonDao {
 				+ "to_char(i.start_date,'yyyy-mm-dd') as 모집시작일, to_char(i.end_date,'yyyy-mm-dd') as 모집마감일,"
 				+ " min(d.vol_date) as 봉사시작일, max(d.vol_date) as 봉사종료일  " 
 				+ "from vol_info i, vol_detail d " 
-				+ "where i.vol_info_no = d.vol_info_no and d.rec_status = 0 "
+				+ "where i.vol_info_no = d.vol_info_no "
 				+ "group by i.vol_info_no, i.v_title, i.category_no, i.local_no, i.start_date, i.end_date "
 				+ "order by 1";
 		System.out.println("sql : " + sql);
