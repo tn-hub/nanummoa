@@ -92,7 +92,7 @@ function main_btnPageNum(ret){
 <div>
 <ul class="searchAllMember" style="cursor:hand;">
 	<li><a href="${CONTEXT_PATH}/admin/adminController?action=generalMinList">일반회원</a></li>
-	<li><a href="${CONTEXT_PATH}/admin/adminController?action=centerMinList">샌터회원</a></li>
+	<li><a href="${CONTEXT_PATH}/admin/adminController?action=centerMinList">센터회원</a></li>
 	<li><a href="${CONTEXT_PATH}/admin/adminController?action=centerAcceptList">센터대기회원</a></li>
 </ul>
  <input type="hidden" value="1" id="pageNum" name="pageNum">

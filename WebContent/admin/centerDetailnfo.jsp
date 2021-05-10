@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>센터 회원가입</title>
+<title>센터회원 상세정보</title>
 <link type="text/css" rel="stylesheet" href="${initParam.CONTEXT_PATH}/resources/css/common.css">
 <script src="${initParam.CONTEXT_PATH}/resources/js/jquery-3.6.0.min.js"></script>
 <!-- 통합 로딩 방식 : postcode.v2.js 라는 이름의 파일 로딩을 통해 우편번호 서비스를 이용 -->

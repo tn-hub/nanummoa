@@ -91,6 +91,7 @@ public class CenterController extends HttpServlet {
 			break;
 		case "centerDelete":
 			centerDelete(request, response);
+			break;
 		case "deadlineList":
 			deadlineList(request, response);
 			break;

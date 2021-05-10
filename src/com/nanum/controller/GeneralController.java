@@ -127,10 +127,11 @@ public class GeneralController extends HttpServlet {
 		try {
 			boolean result = biz.isGeneralId(id);
 			if (result) {
-				out.println("<script>alert('not-usable');history.go(-1); </script>");
+				out.print("not-usable");
 			} else {
-				out.println("<script>alert('usable');history.go(-1); </script>");
+				out.print("usable");
 			}
+
 		} catch (CommonException e) {
 			e.printStackTrace();
 		} finally {

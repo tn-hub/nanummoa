@@ -34,13 +34,13 @@
 							<label>접수</label>
 						</c:when>
 						<c:when test="${dto.volStatus == '1'}">
-							<label>마감</label>
+							<label>승인</label>
 						</c:when>
 						<c:when test="${dto.volStatus == '2'}">
 							<label>활동완료</label>
 						</c:when>
 						<c:when test="${dto.volStatus == '3'}">
-							<label>인증서발급</label>
+							<label>발급완료</label>
 						</c:when>
 					</c:choose>
 					</div>
