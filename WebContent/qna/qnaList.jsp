@@ -112,6 +112,10 @@ a.bold { font-weight: bold; }
 	border-style: none;
 	font-size: 17px;
 }
+
+em{
+	color: red;
+	}
 </style>
 </head>
 <script type="text/javascript">
@@ -157,7 +161,7 @@ $(document).ready(function() {
 		document.qnaListForm.submit();
 		
 	}
-
+	
 </script>
 
 <body>
