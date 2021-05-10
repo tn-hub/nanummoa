@@ -66,7 +66,7 @@
 </div>
 </c:if>
 <c:if test="${dto.gubun eq 'cen'}">
-<div id="gener_standBy">
+<div>
 	<c:forEach var="dto" items="${list}">
 	<ul id="cecnter_standBy_ul">
 		<li id="centerNAme_li">[아이디] <br>${cDto.centerName}</li>
