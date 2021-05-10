@@ -472,14 +472,9 @@ function clearMessageBirthday(){
 
 /* 아이디 에러메세지 클리어, 중복확인 버튼 활성화 */
 function clearMessageId(){
+	console.log("아이디 클리어");
 	$("#idMessage").html("");
-	$("#idBtn").attr("disabled", false);
-}
-
-/* 아이디 에러메세지 클리어, 중복확인 버튼 활성화 */
-function clearMessageId(){
-	$("#idMessage").html("");
-	$("#centerIdBtn").attr("disabled", false);
+	$("#idBtn").prop("disabled", false);
 }
 
 /* 비밀번호 에러메세지 클리어 */
@@ -520,6 +515,7 @@ function clearMessageRegisterCode(){
 /* 센터이름 에러메세지 클리어 */
 function clearMessageCenterName(){
 	$("#centerNameMessage").html("");
+	$("#centerNameBtn").prop("disabled", false);
 }
 
 /* 센터등록일 에러메세지 클리어 */
@@ -566,8 +562,12 @@ function generalUpdateCheck() {
 function centerInputCheck() {
 	if (nameCheck() && idCheck() && pwCheck() && mobileCheck() && emailCheck() && registerCodeCheck() && 
 		centerNameCheck() && centerEntryDateCheck() && addressCheck() && ceoNameCheck() && ceoMobileCheck()) {
-		if (!$("#centerIdBtn").prop("disabled")){
+		if (!$("#idBtn").prop("disabled")){
 			alert("아이디 중복확인을 해주세요");
+			return false;
+		}
+		if (!$("#centerNameBtn").prop("disabled")){
+			alert("기관이름 인증확인을 해주세요");
 			return false;
 		}
 		return true;

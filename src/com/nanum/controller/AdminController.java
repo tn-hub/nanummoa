@@ -3,6 +3,7 @@ package com.nanum.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -81,6 +82,11 @@ public class AdminController extends HttpServlet {
 			break;
 		case "adminUpdate":
 			adminUpdate(request, response);
+		case "confirmationListForm" :
+			confirmationListForm(request, response);
+			break;
+		case "confirmationForm" :
+			confirmationForm(request, response);
 			break;
 		}
 
@@ -455,6 +461,64 @@ PrintWriter out = response.getWriter();
 		} finally {
 			out.flush();
 			out.close();
+		}
+	}
+	
+	/**
+	 * 봉사확인서 내역 조회 페이지
+	 */
+	private void confirmationListForm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || 
+				session.getAttribute("dto") == null ||
+				session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");	
+			return;
+		}
+		
+		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String,Object>>();
+		AdminBiz biz = new AdminBiz();
+		try{
+			biz.getConfirmationList(list);
+			request.setAttribute("list", list);
+			request.setAttribute("totalcount", list.size());
+			request.getRequestDispatcher("/admin/confirmationList.jsp").forward(request, response);
+			
+		} catch(CommonException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 봉사확인서 다운
+	 */
+	private void confirmationForm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || 
+				session.getAttribute("dto") == null ||
+				session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");	
+			return;
+		}
+		
+		String volConNo = request.getParameter("volConNo");
+		String volInfoNo = request.getParameter("volInfoNo");
+		String generalId = request.getParameter("gId");
+		HashMap<String, String> selectInfo = new HashMap<String, String>();
+		selectInfo.put("volConNo", volConNo);
+		selectInfo.put("volInfoNo", volInfoNo);
+		selectInfo.put("generalId", generalId);
+		HashMap<String, String> map = new HashMap<String, String>();
+		GeneralBiz biz = new GeneralBiz();
+		try{
+			biz.getConfirmation(selectInfo, map);
+			request.setAttribute("map", map);
+			request.getRequestDispatcher("/general/confirmation.jsp").forward(request, response);
+			
+		} catch(CommonException e) {
+			e.printStackTrace();
 		}
 	}
 }

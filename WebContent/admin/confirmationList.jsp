@@ -4,26 +4,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>신청자 목록</title>
+<title>인증서 발급</title>
 <link type="text/css" rel="stylesheet" href="${initParam.CONTEXT_PATH}/resources/css/common.css">
-
 <style type="text/css">
-.wrapper{
-width: 100%;
-}
-
-.title{
-width: 1000px;
-margin:  auto;
-}
-
-.link{
-text-align: center;
-
-}
-
-#vol_list_div {
+	#vol_list_div {
 		width: 1000px;
+		/* background-color: blue; */
 		margin: auto;
 	}
 	
@@ -144,6 +130,10 @@ text-align: center;
 		border: 1px solid black;
 		margin-bottom: 20px;
 	}
+	.list_end_hr {
+		border: 1px solid black;
+		margin-top: -21px;
+	}
 	
 	.list_hr {
 		margin-top: 20px;
@@ -165,100 +155,87 @@ text-align: center;
 		font-weight: bold;
 	}
 	
-	.vol_list_ul .span_box1 {
+	.vol_list_ul .span_box {
 		display: inline-block;
-		width: 250px;
+		width: 295px;
 	}
 	
 	.vol_list_ul .deadline_box {
 		text-align: right;
 	}
-	
-	.link_div{
-	text-align: right;
-    height: 30px;
-    width: 900px;
+	.apply_status{
+		background-color: #FBD157;
+		width: 70px;
+		height: 25px;
+		border-radius: 25px;
+		margin-left: 20px;
+		text-align: center;
+		text-indent: 0px;
+		padding: 5px;
 	}
 	
-	.link_box{
-	display: inline-block;
-    font-weight: bold;
-    width: 490px;
-    margin: 0 auto;
-    text-align: center;
+	.confirm_span_box {
+		display: inline-block;
+		width: 295px;
 	}
-	
-	.link{
-	margin: -60px;
-    padding: 7px 0;
-    border: 2px solid #666;
-    font-size: 16px;
-    text-align: center;
-	
-	}
-	
-	h2{
-	text-align: center;
-	}	
-	
-	.detatil_btn{
-	margin-left: 3px; 
-	}
-	
 </style>
+<script type="text/javascript">
+	function createPdf(volInfoNo, volConNo, gId){
+		console.log("들어옴");
+		console.log(volInfoNo, volConNo);
+		var popupX = (window.screen.width / 2) - 600;
+		var popupY = (window.screen.height /2) - 200;
+		window.open('${CONTEXT_PATH}/admin/adminController?action=confirmationForm&volInfoNo=' +volInfoNo + '&volConNo=' + volConNo + '&gId=' + gId, 
+				'window팝업', 'status=no, height=400, width=1200, left='+ popupX +
+				'top='+ popupY + ', screenX='+ popupX + ', screenY= '+ popupY);
+		
+	}
+</script>
+</head>
 <body>
 <%@ include file="/common/header.jsp"%>
-
 <div class="contents">
-	<div class="wrapper">
-		<div class="title">
-			<h1>신청자 목록</h1>
-		<hr>
+	<div id="vol_list_div">
+		<h1>봉사 신청내역</h1>
+		<hr class="head_hr" style="margin-bottom:20px;">
+		<!-- 봉사모집글 목록----------------------------------------------------------------------->
+		<p style="margin-bottom:-5px;">[전체 
+			<em>${totalcount}</em>건]
+		</p>
+		<p style="float: right;">
+		</p>
+		<hr class="list_head_hr" style="clear: right;">
 		
-	<h2>${list[0].volTitle }</h2>
-	<p>[전체 <em style="color: red;">${fn:length(list)}
-	</em>건, 현재페이지 <em>0</em>/0]</p>
-	<hr class="list_head_hr">
-	<c:forEach var="dto" items="${list}">
-	<ul class="vol_list_ul">
-		<li>
-			<div class="list_box">
-				<div class="span_box1">
-					<span class="title_span">[신청인 이름]</span>
-					<span>${dto.generalName }</span>
+		<ul class="vol_list_ul">
+		<c:forEach var="dto" items="${list}">
+			<li>
+				<div class="list_box">
+					<input type="button" value="다운로드" class="float_r y_btn" onclick="createPdf('${dto.volInfoNo}', '${dto.volConNo}', '${dto.gId}')">	
+					<h3><a href="${CONTEXT_PATH}/common/commonController?action=volDetatilForm&volInfoNo=${dto.volInfoNo}">${dto.volTitle}</a></h3>
+					<div class="confirm_span_box">
+						<span class="title_span">[아이디]</span>
+						<span>${dto.gId}</span>
+					</div>
+					<div class="confirm_span_box">
+						<span class="title_span">[모집기관]</span>
+						<span>${dto.centerName}</span>
+					</div>
+					
+					<div class="confirm_span_box">
+						<span class="title_span">[봉사기간]</span>
+						<span>${dto.startDate}</span> -
+						<span>${dto.endDate}</span>
+					</div>
+					
 				</div>
-				
-				<div class="span_box1">
-					<span class="title_span">[신청회원 아이디]</span>
-					<span>${dto.generalId }</span>
-				</div>
-				
-				<div class="span_box1">
-					<span class="title_span">[연락처]</span>
-					<span>${dto.generalMobile }</span> 
-				</div>
-				
-				<input type="button" value="상세정보" class="g_btn detatil_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=issueInfoForm&volInfoNo=${dto.volInfoNo}&generalId=${dto.generalId }'">
-				<c:choose>
-					<c:when test="${dto.activityStatus == 2 and dto.recStatus == 2}">
-							<input type="button" value="인증서 발급" class="y_btn detatil_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=volIssueForm&volInfoNo=${dto.volInfoNo}&generalId=${dto.generalId }'">
-					</c:when>
-					<c:when test="${dto.activityStatus == 3 and dto.recStatus == 2}">
-							<input type="button" disabled="disabled" value="인증서 발급" class="y_btn detatil_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=volIssueForm&volInfoNo=${dto.volInfoNo}&generalId=${dto.generalId }'">
-					</c:when>
-					<c:otherwise>
-					</c:otherwise>
-				</c:choose> 	
-			</div>
-			
-			<hr class="list_hr">
-		</li>
-	</ul>
-	</c:forEach>
-		</div>
+				<hr class="list_hr">
+			</li>
+		</c:forEach>	
+		</ul>
+		<hr class="list_end_hr">
+		<!-- 봉사모집글 목록 -->
 	</div>
 </div>
-
 <%@ include file="/common/footer.jsp"%>
 </body>
 </html>

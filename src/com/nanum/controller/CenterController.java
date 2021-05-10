@@ -131,6 +131,9 @@ public class CenterController extends HttpServlet {
 		case "endVol":
 			endVol(request, response);
 			break;
+		case "centerNameCheck":
+			centerNameCheck(request, response);
+			break;
 		}
 	}
 
@@ -158,7 +161,6 @@ public class CenterController extends HttpServlet {
 	 */
 	protected void idCheck(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
 		String id = request.getParameter("id");
 		PrintWriter out = response.getWriter();
 
@@ -179,7 +181,6 @@ public class CenterController extends HttpServlet {
 				out.print("usable");
 			}
 		} catch (CommonException e) {
-			e.printStackTrace();
 		} finally {
 			out.flush();
 			out.close();
@@ -213,6 +214,7 @@ public class CenterController extends HttpServlet {
 		String ceoMobile2 = request.getParameter("ceoMobile2");
 		String ceoMobile3 = request.getParameter("ceoMobile3");
 		String service = request.getParameter("service");
+		String appStatus = request.getParameter("appStatus");
 
 		if (centerMemberName == null || centerMemberName.trim().length() == 0) {
 			out.println("<script>alert('이름을 입력해 주세요');history.go(-1); </script>");
@@ -323,43 +325,6 @@ public class CenterController extends HttpServlet {
 		CenterMemberDto cMemberDto = new CenterMemberDto();
 		CenterInfoDto centerDto = new CenterInfoDto();
 
-		String appStatus = "0";
-		try {
-			String urlStr1 = "http://openapi.seoul.go.kr:8088/4f5874664c7268783837774a656e55/json/VOpenGroup/1/1000/";
-			String urlStr2 = "http://openapi.seoul.go.kr:8088/4f5874664c7268783837774a656e55/json/VOpenGroup/1001/2000/";
-			String urlStr3 = "http://openapi.seoul.go.kr:8088/4f5874664c7268783837774a656e55/json/VOpenGroup/2001/2477/";
-			String[] urlStrArr = { urlStr1, urlStr2, urlStr3 };
-
-			for (String urlStr : urlStrArr) {
-				URL url = new URL(urlStr);
-
-				String line = "";
-				String result = "";
-
-				BufferedReader br;
-				br = new BufferedReader(new InputStreamReader(url.openStream()));
-				while ((line = br.readLine()) != null) {
-					result = result.concat(line);
-				}
-				JSONParser parser = new JSONParser();
-				JSONObject obj = (JSONObject) parser.parse(result);
-				JSONObject data = (JSONObject) obj.get("VOpenGroup");
-				JSONArray data2 = (JSONArray) data.get("row");
-
-				for (int i = 0; i < data2.size(); i++) {
-					JSONObject row = (JSONObject) data2.get(i);
-					String centerNameData = (String) row.get("KORNAME");
-					if (centerName.equals(centerNameData)) {
-						appStatus = "1";
-					}
-				}
-				br.close();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		System.out.println("appStatus : " + appStatus);
 		cMemberDto.setCenterName(centerMemberName);
 		cMemberDto.setCenterId(centerMemberId);
 		cMemberDto.setCenterPass(centerMemberPw);
@@ -659,7 +624,6 @@ public class CenterController extends HttpServlet {
 			address = address + " " + detailAddress;
 		}
 		String ceoMobile = ceoMobile1 + "-" + ceoMobile2.trim() + "-" + ceoMobile3.trim();
-		System.out.println("ceoMobile : " + ceoMobile + ", " + ceoMobile.length());
 
 		centerMemberDto.setCenterName(centerMemberName);
 		if (centerMemberPw != "") {
@@ -919,8 +883,6 @@ public class CenterController extends HttpServlet {
 			for (LocalDto localDto : localList) {
 				if (localDto.getLocalName().equals(local)) {
 					localNo = localDto.getLocalNo();
-					System.out.println("지역번호 : " + localNo);
-					System.out.println("구 : " + local);
 				}
 			}
 			map.put("localNo", localNo);
@@ -1100,8 +1062,6 @@ public class CenterController extends HttpServlet {
 			for (LocalDto localDto : localList) {
 				if (localDto.getLocalName().equals(local)) {
 					localNo = localDto.getLocalNo();
-					System.out.println("지역번호 : " + localNo);
-					System.out.println("구 : " + local);
 				}
 			}
 			map.put("localNo", localNo);
@@ -1138,7 +1098,6 @@ public class CenterController extends HttpServlet {
 		String centerId = dto.getCenterId();
 
 		int volInfoNo = Integer.parseInt(request.getParameter("volInfoNo"));
-		System.out.println("[봉사게시글 삭제] volInfoNo : " + volInfoNo);
 		CenterBiz biz = new CenterBiz();
 		try {
 			biz.deleteVol(volInfoNo, centerId);
@@ -1272,7 +1231,6 @@ public class CenterController extends HttpServlet {
 		}
 		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
 		String centerId = dto.getCenterId();
-
 		int volInfoNo = Integer.parseInt(request.getParameter("volInfoNo"));
 
 		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
@@ -1349,12 +1307,13 @@ public class CenterController extends HttpServlet {
 		map.put("centerId", centerId);
 		map.put("volInfoNo", volInfoNo);
 		map.put("generalId", generalId);
-
+		
 		CenterBiz biz = new CenterBiz();
 		try {
 			biz.volIssueForm(map);
 			request.setAttribute("volInfoNo", volInfoNo);
 			request.setAttribute("map", map);
+			request.setAttribute("generalId", generalId);
 			request.getRequestDispatcher("/center/issue/issueForm.jsp").forward(request, response);
 		} catch (CommonException e) {
 			e.printStackTrace();
@@ -1403,18 +1362,17 @@ public class CenterController extends HttpServlet {
 		map.put("volInfoNo", volInfoNo);
 		map.put("issueDate", issueDate);
 		map.put("volApplyNo", volApplyNo);
+		
+		System.out.println(map);
 
 		CenterBiz biz = new CenterBiz();
 		try {
 			biz.volIssue(map);
 			request.setAttribute("volInfoNo", volInfoNo);
 			request.setAttribute("generalId", generalId);
-			request.getRequestDispatcher("/center/centerController?action=issueDetailListForm").forward(request,
-					response);
+			request.getRequestDispatcher("/center/centerController?action=issueDetailListForm").forward(request,response);
 		} catch (CommonException e) {
-			e.printStackTrace();
-			request.getRequestDispatcher("/center/centerController?action=issueDetailListForm").forward(request,
-					response);
+			request.getRequestDispatcher("/center/centerController?action=issueDetailListForm").forward(request,response);
 		}
 	}
 
@@ -1441,14 +1399,15 @@ public class CenterController extends HttpServlet {
 		String[] checkDates = request.getParameterValues("checkDate");
 
 		CenterBiz biz = new CenterBiz();
+		
+		
 		try {
 			for (int i = 0; i < checkDates.length; i++) {
 				biz.checkVolStatus(checkDates[i]);
-				request.setAttribute("generalId", generalId);
-				request.setAttribute("volInfoNo", volInfoNo);
-				request.getRequestDispatcher("/center/centerController?action=issueInfoForm").forward(request,
-						response);
 			}
+			request.setAttribute("generalId", generalId);
+			request.setAttribute("volInfoNo", volInfoNo);
+			request.getRequestDispatcher("/center/centerController?action=issueInfoForm").forward(request,response);
 		} catch (CommonException e) {
 			request.setAttribute("generalId", generalId);
 			request.setAttribute("volInfoNo", volInfoNo);
@@ -1492,4 +1451,72 @@ public class CenterController extends HttpServlet {
 		}
 
 	}
+	
+	/**
+	 * 센터이름 등록여부 확인
+	 */
+	protected void centerNameCheck(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String centerName = request.getParameter("centerName");
+		System.out.println("centerName : " + centerName);
+		PrintWriter out = response.getWriter();
+
+		if (centerName == null || centerName.trim().length() == 0) {
+			out.print("none");
+			out.flush();
+			out.close();
+			return;
+		}
+		
+		String appStatus = "0";
+		try {
+			String urlStr1 = "http://openapi.seoul.go.kr:8088/4f5874664c7268783837774a656e55/json/VOpenGroup/1/1000/";
+			String urlStr2 = "http://openapi.seoul.go.kr:8088/4f5874664c7268783837774a656e55/json/VOpenGroup/1001/2000/";
+			String urlStr3 = "http://openapi.seoul.go.kr:8088/4f5874664c7268783837774a656e55/json/VOpenGroup/2001/2477/";
+			String[] urlStrArr = { urlStr1, urlStr2, urlStr3 };
+
+			for (String urlStr : urlStrArr) {
+				URL url = new URL(urlStr);
+
+				String line = "";
+				String result = "";
+
+				BufferedReader br;
+				br = new BufferedReader(new InputStreamReader(url.openStream()));
+				while ((line = br.readLine()) != null) {
+					result = result.concat(line);
+				}
+				// JSON parser 만들어 문자열 데이터를 객체화한다.
+				JSONParser parser = new JSONParser();
+				JSONObject obj = (JSONObject) parser.parse(result);
+				JSONObject data = (JSONObject) obj.get("VOpenGroup");
+				JSONArray data2 = (JSONArray) data.get("row");
+
+				// 객체형태로
+				for (int i = 0; i < data2.size(); i++) {
+					JSONObject row = (JSONObject) data2.get(i);
+					String centerNameData = (String) row.get("KORNAME");
+					if (centerName.equals(centerNameData)) {
+						System.out.println("centerName : " + centerNameData);
+						appStatus = "1";
+					}
+				}
+				br.close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+			if (appStatus.equals("0")) {
+				out.print("not-usable");
+				out.flush();
+				out.close();
+			} else {
+				out.print("usable");
+				out.flush();
+				out.close();
+			}
+		}
+	
 }
