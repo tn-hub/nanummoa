@@ -117,8 +117,24 @@ em{
 	color: red;
 	}
 	
-	#preBtn, #nestBtn, input[name="btnPageNum"] {
+	#page_btn {
+    text-align: center;
+    margin: 50px 0px 20px 0px;
+	}
+	
+	#preBtn, #nestBtn {
 		cursor: pointer;
+		width: 60px;
+		height: 40px;
+		text-align: center;
+		border: 1px solid #DDD;
+	}
+	
+	input[name="btnPageNum"] {
+		cursor: pointer;
+		width: 40px;
+    	height: 40px;
+		border: 1px solid #DDD;
 	}
 </style>
 </head>
@@ -177,7 +193,11 @@ $(document).ready(function() {
 	<table id="search_qna_table">
 	<tr>
 		<td id="search_qna_tdcnt">
-			[전체 <em> ${cdto.totCnt}</em> 건, 현재 페이지 <em>${curPageNum}</em> /${lastPageNum}]
+			[전체 <em> ${cdto.totCnt}</em> 건, 현재 페이지 <em>${curPageNum}</em> 
+			<c:choose>
+			<c:when test="${lastPageNum == 0}">/1]</c:when>
+			<c:otherwise>/ ${lastPageNum}]</c:otherwise>
+			</c:choose>
 		
 		</td>
 		<td id="search_qna_tdSelect">
@@ -218,9 +238,20 @@ $(document).ready(function() {
 </div>
 <div id="page_btn">
 	<input type="button" value="이전 " id="preBtn" name="preBtn">
-	 <c:forEach var="i" begin="${ 1 }" end="${lastPageNum}">
-           <input type="button" value=${ i } id="btnPageNum" name="btnPageNum" onclick="btnPageNum(${ i })">
-     </c:forEach>   
+	 <c:choose>
+			<c:when test="${lastPageNum == 0}">
+				<input type="button" value= 1  name="btnPageNum" style="background-color: #FBD157;">
+			</c:when>
+			<c:otherwise>
+				 <c:forEach var="i" begin="${ 1 }" end="${lastPageNum}">
+             <input type="button" value=${ i }  name="btnPageNum"
+             	<c:if test="${curPageNum == i}">
+             		style="background-color: #FBD157;"
+             	</c:if>
+             >
+       </c:forEach>   
+			</c:otherwise>
+		</c:choose>
 	<input type="button" value="다음 " id="nestBtn" name="nestBtn">	
 </div>
 
