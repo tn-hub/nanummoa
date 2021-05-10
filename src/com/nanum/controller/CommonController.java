@@ -810,7 +810,7 @@ public class CommonController extends HttpServlet {
 			
 			biz.qnaListTotCnt(cdto); // 총건수 조회 
 			
-			Paging.makeBlock(curPage);
+			//Paging.makeBlock(curPage);
 			
 			Integer blockStartNum = Paging.getBlockStartNum();
 			Integer blockLastNum = Paging.getBlockLastNum();
@@ -1029,14 +1029,38 @@ public class CommonController extends HttpServlet {
 			int total = biz.volListTotalCount(searchMap, sql);
 			System.out.println("total : " + total);
 			
-			int pageCount = 5; // 원하는 row 수 
+			int pageCount = 2; // 원하는 row 수 
 			int curPage = Integer.parseInt(pageNum) * pageCount;		// 현재 rownum 계산 
+			
+			// 페이징 숫자값들 호출
+
+			// 현재 페이지가 속한 block의 시작 번호, 끝 번호를 계산
+			Paging.makeBlock(curPage, pageCount); // 현재페이지 번호, 원하는row 건수
+
+			// 하단 페이징 번호 max 조회
+			Paging.makeLastPageNum(total, pageCount); // 총건수, 원하는row 건수
+
+			// 값가져오기
+			Integer startNum = Paging.getBlockStartNum();
+			Integer lastNum = Paging.getBlockLastNum();
+			Integer lastPageNum = Paging.getLastPageNum();
+		 	 
+			System.out.println("startNum : " + startNum + ", " + "lastNum : " + lastNum);
+			ArrayList<HashMap<String, Object>> resultList = new ArrayList<HashMap<String, Object>>();
+			// 목록 호출 할때 dao 조건 sartNum, lastNum 값 셋팅
+			biz.searchVolListWithPaging(resultList, searchMap, startNum, lastNum);
+			System.out.println("resultList : " + resultList.size());
+			
+			// jsp 에 총건수 및 건수 보여주기 위해 셋팅
+			request.setAttribute("lastPageNum", lastPageNum);
+			request.setAttribute("curPageNum", pageNum);
+			request.setAttribute("totCnt", total);
 			
 			request.setAttribute("date", date);
 			request.setAttribute("localList", localList);
 			request.setAttribute("volCategoryList", volCategoryList);
 			request.setAttribute("serviceList", serviceList);
-			request.setAttribute("volList", list);
+			request.setAttribute("volList", resultList);
 			request.setAttribute("total", total);
 			request.setAttribute("searchMap", searchMap);
 			request.getRequestDispatcher("/common/vol_list.jsp").forward(request, response);
