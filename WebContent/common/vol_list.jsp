@@ -164,12 +164,24 @@
 	
 	#page_btn {
     text-align: center;
-    margin: 20px 0px 20px 0px;
+    margin: 50px 0px 20px 0px;
 	}
 	
-	#preBtn, #nestBtn, input[name="btnPageNum"] {
+	#preBtn, #nestBtn {
 		cursor: pointer;
+		width: 60px;
+		height: 40px;
+		text-align: center;
+		border: 1px solid #DDD;
 	}
+	
+	input[name="btnPageNum"] {
+		cursor: pointer;
+		width: 40px;
+    	height: 40px;
+		border: 1px solid #DDD;
+	}
+
 </style>
 <script type="text/javascript">
 $(document).ready(function(){

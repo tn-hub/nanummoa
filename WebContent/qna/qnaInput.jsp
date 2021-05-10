@@ -95,8 +95,8 @@ $(document).ready(function() {
 	</tr>
 </table>
 <div id="add_qnaArea">
-<input type="reset" value="초기화" id="btn_cancel" name="btn_cancel" class="btn_add_qnaArea" style="cursor:hand;">
-<input type="submit" id="add_qna" name="add_qna" value="등록 하기" class="btn_add_qnaArea" style="cursor:hand;">
+<input type="reset" value="초기화" id="btn_cancel" name="btn_cancel" class="btn_add_qnaArea g_btn" style="cursor:hand;">
+<input type="submit" id="add_qna" name="add_qna" value="등록 하기" class="btn_add_qnaArea y_btn" style="cursor:hand;">
 </div>
 </form>
 <div id="footer" class="footer">
