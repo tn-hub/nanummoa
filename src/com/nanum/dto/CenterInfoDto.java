@@ -60,6 +60,9 @@ public class CenterInfoDto {
 	/** 전체건수  */
 	private int totCnt;
 	
+	/** 구분 */
+	private String gubun;
+	
 	
 
 	/**
@@ -85,12 +88,34 @@ public class CenterInfoDto {
 	 * @param cmemberName    	센터멤버이름
 	 * @param cmemberMobile 	 센터멤버전화번호
 	 * @param cmemberEmail   	센터멤버이메일
-	 *  @param totCnt   		전체건수
+	 * @param totCnt   			전체건수
+	 *  @param gubun			구분
+	 */
+	
+
+	/**
+	 * @param centerId
+	 * @param centerMobile
+	 * @param centerName
+	 * @param centerEntryDate
+	 * @param centerZipCode
+	 * @param centerAddress
+	 * @param registerCode
+	 * @param service
+	 * @param ceoName
+	 * @param ceoMobile
+	 * @param totAcceptCnt
+	 * @param cmemberEntryDate
+	 * @param cmemberName
+	 * @param cmemberMobile
+	 * @param cmemberEmail
+	 * @param totCnt
+	 * @param gubun
 	 */
 	public CenterInfoDto(String centerId, String centerMobile, String centerName, String centerEntryDate,
 			String centerZipCode, String centerAddress, String registerCode, String service, String ceoName,
 			String ceoMobile, int totAcceptCnt, String cmemberEntryDate, String cmemberName, String cmemberMobile,
-			String cmemberEmail, int totCnt) {
+			String cmemberEmail, int totCnt, String gubun) {
 		super();
 		this.centerId = centerId;
 		this.centerMobile = centerMobile;
@@ -108,6 +133,7 @@ public class CenterInfoDto {
 		this.cmemberMobile = cmemberMobile;
 		this.cmemberEmail = cmemberEmail;
 		this.totCnt = totCnt;
+		this.gubun = gubun;
 	}
 
 
@@ -119,6 +145,7 @@ public class CenterInfoDto {
 		return centerId;
 	}
 
+	
 	/**
 	 * @param centerId the centerId to set
 	 */
@@ -396,6 +423,22 @@ public class CenterInfoDto {
 	}
 
 
+	/**
+	 * @return the gubun
+	 */
+	public String getGubun() {
+		return gubun;
+	}
+
+
+	/**
+	 * @param gubun the gubun to set
+	 */
+	public void setGubun(String gubun) {
+		this.gubun = gubun;
+	}
+
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -430,6 +473,9 @@ public class CenterInfoDto {
 		builder.append(cmemberEmail);
 		builder.append(", ");
 		builder.append(totCnt);
+		builder.append(", ");
+		builder.append(gubun);
 		return builder.toString();
 	}
+
 }

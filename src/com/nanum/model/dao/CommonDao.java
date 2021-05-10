@@ -510,11 +510,8 @@ public class CommonDao {
 		
 		sql.append(" order by q_no desc");
 		
-		// 페이징 추가 쿼리 								
 		String page_sql = "select b.* from (select a.*, rownum as page_num from (" + sql.toString() + ") a ) b where page_num between ? and ?";
 
-		 
-		
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		

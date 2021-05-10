@@ -60,26 +60,7 @@ em{
 	text-align: center;
 }
 
-#c_in_refuse{
-	border-style: none;
-	width: 100px;
-	height: 30px;
-	margin-right: 30px;
-	border-radius: 5px;
-	font-size: 16px;
-	background-color: #D6D09C;
-	color: #FFFFFF;
-}
 
-#c_in_accept{
-	border-style: none;
-	width: 100px;
-	height: 30px;
-	border-radius: 5px;
-	font-size: 16px;
-	background-color: #F15F5F;
-	color: #FFFFFF;
-}
 
 
 #centerDetail{
@@ -92,27 +73,13 @@ em{
 	margin: 20px 0px 20px 0px;
 }
 
+.r_btn{
+	margin-left: 20px;
+}
+
 </style>
 </head>
-<script type="text/javascript">
 
-$(document).ready(function() {
-
-	// 페이징 submit
-	function btnPageNum(ret){
-		$("#pageNum").val(ret);
-		document.centerAcceptListForm.submit();
-		
-	}
-	
-	function divhideen(ret){
-		alert(ret);
-		
-	}
-	
-	
-
-</script>
 
 <body>
 <%@ include file="/common/header.jsp"%>
@@ -125,20 +92,20 @@ $(document).ready(function() {
 <div id="cecnter_standBy">
 	<ul id="cecnter_standBy_ul">
 		<li id="centerNAme_li">[센터명] <br>${dto.centerName}</li>
-		<li id="centerId_li">[센터 아이디] <br><span id="detailCId" style="cursor:hand;" onclick="divhideen(${dto.centerId})">${dto.centerId}</span></li>
+		<li id="centerId_li">[센터 아이디]<br><a href="${CONTEXT_PATH}/admin/adminController?action=centerDetail&centerId=${dto.centerId}">${dto.centerId}</a></li>
 		<li id="centerDate_li">[신청일] <br>${dto.cmemberEntryDate}</li>
 		<li id="c_stan_btnArea">
-			<a href="${CONTEXT_PATH}/admin/adminController?action=centerRefuse&centerId=${dto.centerId}"><input type="button" value="반려" id="c_in_refuse" style="cursor:hand;"></a>
-			<a href="${CONTEXT_PATH}/admin/adminController?action=centerAccept&centerId=${dto.centerId}"><input type="button" value="승인" id="c_in_accept" style="cursor:hand;"></a>
+			<a href="${CONTEXT_PATH}/admin/adminController?action=centerRefuse&centerId=${dto.centerId}"><input type="button" value="반려" class="y_btn" class="btn_ac"></a>
+			<a href="${CONTEXT_PATH}/admin/adminController?action=centerAccept&centerId=${dto.centerId}"><input type="button" value="승인" class="r_btn" class="btn_re"></a>
 	</ul>
 </div>
 <hr>
 </c:forEach>
 </form>
 
+</div>
 <div id="footer" class="footer">
 	<%@ include file="/common/footer.jsp"%>
-</div>
 </div>
 </body>
 </html>
