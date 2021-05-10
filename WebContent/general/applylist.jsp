@@ -173,6 +173,10 @@
 		text-indent: 0px;
 		padding: 5px;
 	}
+	
+	label{
+	font-weight: bold;
+	}
 </style>
 </head>
 <body>
@@ -198,8 +202,30 @@
 			<li>
 				<div class="list_box">
 					<div>
+					
 					<div class="apply_status">${dto.recStatus == "1" ? "승인" : "접수"}</div>
-						<input type="button" value="취소하기" class="float_r g_btn" onclick="location.href='${CONTEXT_PATH}/general/generalController?action=cancelVol&volApplyNo=${dto.volApplyNo}&volDetailNo=${dto.volDetailNo}'">
+					<%-- <div class="apply_status">
+					<c:choose>
+						<c:when test="${dto.recStatus == '0'}">
+							<label>접수</label>
+						</c:when>
+						<c:when test="${dto.recStatus == '1'}">
+							<label>마감</label>
+						</c:when>
+						<c:when test="${dto.recStatus == '2'}">
+							<label>활동완료</label>
+						</c:when>
+					</c:choose>
+					</div>--%>
+					<%-- <c:choose> 
+						<c:when test="${dto.recStatus == '0'}">
+						</c:when>
+						<c:otherwise>
+						</c:otherwise>
+					</c:choose> --%>
+							<input type="button" value="취소하기" class="float_r g_btn" onclick="location.href='${CONTEXT_PATH}/general/generalController?action=cancelVol&volApplyNo=${dto.volApplyNo}&volDetailNo=${dto.volDetailNo}'">
+						
+						
 					</div>
 					<h3><a href="${CONTEXT_PATH}/common/commonController?action=volDetatilForm&volInfoNo=${dto.volInfoNo}">${dto.volTitle}</a></h3>
 					<div class="span_box">
