@@ -72,7 +72,9 @@ public class AdminController extends HttpServlet {
 			break;
 		case "centerMinList":
 			centerMinList(request, response);
+			break;
 		case "deleteReply":
+			deleteReply(request, response);
 			break;
 		case "updateReply":
 			updateReply(request, response);
@@ -82,6 +84,7 @@ public class AdminController extends HttpServlet {
 			break;
 		case "adminUpdate":
 			adminUpdate(request, response);
+			break;
 		case "generalDetail" :
 			generalDetail(request, response);
 			break;

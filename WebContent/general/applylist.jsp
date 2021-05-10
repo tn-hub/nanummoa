@@ -28,22 +28,28 @@
 			<li>
 				<div class="list_box">
 					<div>
-					 <div class="apply_status">
 					<c:choose>
 						<c:when test="${dto.volStatus == '0'}">
+						 <div class="apply_status">
 							<label>접수</label>
+						</div>	
 						</c:when>
 						<c:when test="${dto.volStatus == '1'}">
-							<label>마감</label>
+						 <div class="apply_status" style="background-color: #FF9090">
+							<label>승인</label>
+						</div>	
 						</c:when>
 						<c:when test="${dto.volStatus == '2'}">
+						 <div class="apply_status" style="background-color: #dddddd">
 							<label>활동완료</label>
+						</div>	
 						</c:when>
 						<c:when test="${dto.volStatus == '3'}">
-							<label>인증서발급</label>
+						 <div class="apply_status" style="background-color: #dddddd">
+							<label>발급완료</label>
+						</div>	
 						</c:when>
 					</c:choose>
-					</div>
 					 <c:choose> 
 						<c:when test="${dto.volStatus == '0'}">
 								<input type="button" value="취소하기" class="float_r g_btn" onclick="location.href='${CONTEXT_PATH}/general/generalController?action=cancelVol&volApplyNo=${dto.volApplyNo}&volDetailNo=${dto.volDetailNo}'">

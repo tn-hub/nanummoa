@@ -92,10 +92,29 @@ width: 1000px;
 	padding: 20px;
 }
 
-#page_btn{
-	text-align: center; 
-	margin: 20px 0px 20px 0px;
+em {
+	color: red;
 }
+
+#page_btn {
+    text-align: center;
+    margin: 50px 0px 20px 0px;
+	}
+	
+	#preBtn, #nestBtn {
+		cursor: pointer;
+		width: 60px;
+		height: 40px;
+		text-align: center;
+		border: 1px solid #DDD;
+	}
+	
+	input[name="btnPageNum"] {
+		cursor: pointer;
+		width: 40px;
+    	height: 40px;
+		border: 1px solid #DDD;
+	}
 
 </style>
 </head>
@@ -166,14 +185,18 @@ function main_btnPageNum(ret){
 </div>
 <div class="searchAllDVS_area">
 <ul class="searchAllDVS_menu" style="cursor:hand;">
-	<li id="tab_searchAll">전체</li>
-	<li id="tab_searchVol">봉사</li>
-	<li id="tab_searchQna">문의</li>
+	<li id="tab_searchAll" <c:if test="${searchAllOpt eq 'A'}">style="font-weight:bold;"</c:if>>전체</li>
+	<li id="tab_searchVol" <c:if test="${searchAllOpt eq 'V'}">style="font-weight:bold;"</c:if> >봉사</li>
+	<li id="tab_searchQna" <c:if test="${searchAllOpt eq 'Q'}">style="font-weight:bold;"</c:if>>문의</li>
 </ul>
 </div>
 <input type="hidden" value="1" id="pageNum" name="pageNum">
 </form>
-[전체 <em> ${totCnt}</em> 건, 현재 페이지 <em>${curPageNum}</em> /${lastPageNum}]
+[전체 <em> ${totCnt}</em> 건, 현재 페이지 <em>${curPageNum}</em>
+		<c:choose>
+			<c:when test="${lastPageNum == 0}">/1]</c:when>
+			<c:otherwise>/ ${lastPageNum}]</c:otherwise>
+		</c:choose>
 <div class="search_all_list">
 <ul class="searchAllListUl">
 <c:forEach var="dto" items="${saList}">
@@ -195,9 +218,20 @@ function main_btnPageNum(ret){
 </div>
 <div id="page_btn">
 	<input type="button" value="이전 " id="preBtn" name="preBtn">
-	 <c:forEach var="i" begin="${ 1 }" end="${lastPageNum}">
-           <input type="button" value=${ i } id="btnPageNum" name="btnPageNum" onclick="main_btnPageNum(${ i })">
-     </c:forEach>   
+	 <c:choose>
+			<c:when test="${lastPageNum == 0}">
+				<input type="button" value= 1  name="btnPageNum" style="background-color: #FBD157;">
+			</c:when>
+			<c:otherwise>
+				 <c:forEach var="i" begin="${ 1 }" end="${lastPageNum}">
+             <input type="button" value=${ i }  name="btnPageNum"
+             	<c:if test="${curPageNum == i}">
+             		style="background-color: #FBD157;"
+             	</c:if>
+             >
+       </c:forEach>   
+			</c:otherwise>
+		</c:choose>
 	<input type="button" value="다음 " id="nestBtn" name="nestBtn">	
 </div>
 </div>

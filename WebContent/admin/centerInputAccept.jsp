@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>센터회원 목록</title>
+<title>센터회원  승인관리</title>
 <style type="text/css">
 
 em{

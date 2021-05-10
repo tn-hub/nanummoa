@@ -184,6 +184,9 @@ text-align: center;
 	.g_btn{
 	    margin-left: 10px;
 	}
+	.bg_y{
+	background-color: #ffdf89;
+	}
 </style>
 </head>
 <body>
@@ -194,15 +197,15 @@ text-align: center;
 		<div class="title">
 			<h1>자원 봉사 목록</h1>
 		<hr>
-		<div class="link_box">
+		<div class="link_box ${tap == 1? ' bg_y' : ''}">
 			<a href="${CONTEXT_PATH}/center/centerController?action=centerVolListForm">모집 봉사</a>
 		</div>
-		<div class="link_box">
+		<div class="link_box ${tap == 2? 'bg_y' : ''}">
 			<a href="${CONTEXT_PATH }/center/centerController?action=deadlineList">마감 봉사</a>
 		</div>
 		<hr>
 		
-	<p>[전체 <em style="color: red;">${fn:length(list)}</em>건, 현재페이지 <em>0</em>/0]</p>
+	<p>[전체 <em style="color: red;">${fn:length(list)}</em>건]</p>
 	<hr class="list_head_hr">
 	<c:forEach var="dto" items="${list }">
 	<ul class="vol_list_ul">
