@@ -170,6 +170,7 @@
 	#preBtn, #nestBtn, input[name="btnPageNum"] {
 		cursor: pointer;
 	}
+
 </style>
 <script type="text/javascript">
 $(document).ready(function(){

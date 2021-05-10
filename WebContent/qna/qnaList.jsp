@@ -116,6 +116,10 @@ a.bold { font-weight: bold; }
 em{
 	color: red;
 	}
+	
+	#preBtn, #nestBtn, input[name="btnPageNum"] {
+		cursor: pointer;
+	}
 </style>
 </head>
 <script type="text/javascript">
@@ -167,7 +171,7 @@ $(document).ready(function() {
 <body>
 <%@ include file="/common/header.jsp"%>
 <div id="section_contents">
-<h2>QNA</h2>
+<h1>QNA</h1>
 <form name="qnaListForm" id="qnaListForm" action="${CONTEXT_PATH}/common/commonController?action=qnaList" method="post">
 <div id="search_qna">
 	<table id="search_qna_table">
@@ -221,10 +225,7 @@ $(document).ready(function() {
 </div>
 
 
-<hr>
 
-<div id="footer" class="footer">
 		<%@ include file="/common/footer.jsp"%>
-</div>
 </body>
 </html>
