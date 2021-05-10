@@ -12,11 +12,9 @@ import java.util.HashMap;
 import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.LocalDto;
 import com.nanum.dto.ServiceCategoryDto;
-import com.nanum.dto.VolApplyListDto;
 import com.nanum.dto.VolCategoryDto;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
-import com.nanum.util.MessageEntity;
 
 /**
  * 일반회원 Dao 클래스
@@ -36,7 +34,6 @@ public class GeneralDao {
 	 */
 	public void selectLocal(Connection conn, ArrayList<LocalDto> list) throws CommonException {
 		String sql = "select * from local";
-		System.out.println(sql);
 		
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -68,7 +65,6 @@ public class GeneralDao {
 	 */
 	public void selectVolCategory(Connection conn, ArrayList<VolCategoryDto> list) throws CommonException {
 		String sql = "select * from vol_category";
-		System.out.println(sql);
 		
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -100,7 +96,6 @@ public class GeneralDao {
 	 */
 	public boolean isGeneralId(Connection conn, String generalId) throws CommonException {
 		String sql = "select 1 from general_member where g_id = ?";
-		System.out.println(sql);
 		
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -128,14 +123,11 @@ public class GeneralDao {
 	 */
 	public void insertGeneralMember(Connection conn, GeneralMemberDto dto) throws CommonException {
 		String sql = "insert into general_member values(?,?,?,?,?,?,?,?,?,?,?)";
-		System.out.println(sql);
 		
 		PreparedStatement pstmt = null;
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
-			System.out.println(dto.getGeneralId());
-			System.out.println("localNo : " + dto.getLocalNo());
 			pstmt.setString(1, dto.getGeneralId());
 			pstmt.setString(2, dto.getGeneralPass());
 			pstmt.setString(3, dto.getGeneralName());
@@ -148,7 +140,6 @@ public class GeneralDao {
 			pstmt.setString(10, dto.getCategoryNo());
 			pstmt.setString(11, dto.getLocalNo());
 			int rows = pstmt.executeUpdate();
-			System.out.println("rows : " + rows);
 			if (rows != 1) {
 				throw new Exception();
 			}
@@ -169,7 +160,6 @@ public class GeneralDao {
 	 */
 	public void selectGeneralInfo(Connection conn, GeneralMemberDto dto) throws CommonException {
 		String sql = "select * from general_member where g_id = ?";
-		System.out.println(sql);
 		
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -179,7 +169,6 @@ public class GeneralDao {
 			pstmt.setString(1, dto.getGeneralId());
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
-				System.out.println("쿼리 들어옴");
 				dto.setGeneralName(rs.getString("g_name"));
 				dto.setGender(rs.getString("gender"));
 				dto.setBirthday(rs.getString("birthday"));
@@ -209,7 +198,6 @@ public class GeneralDao {
 				+ "set g_pass = ?, g_name = ?, gender = ?, birthday = ?, g_zipcode = ?, g_address = ?, "
 				+ "g_mobile = ?, g_email = ?, category_no = ?, local_no = ? "
 				+ "where g_id = ?";
-		System.out.println(sql);
 		
 		PreparedStatement pstmt = null;
 		
@@ -227,7 +215,6 @@ public class GeneralDao {
 			pstmt.setString(10, dto.getLocalNo());
 			pstmt.setString(11, dto.getGeneralId());
 			int rows = pstmt.executeUpdate();
-			System.out.println("rows : " + rows);
 			if (rows != 1) {
 				throw new Exception();
 			}
@@ -245,7 +232,6 @@ public class GeneralDao {
 	 */
 	public void deleteGeneralMember(Connection conn, String generalId) throws CommonException {
 		String sql = "delete general_member where g_id = ?";
-		System.out.println(sql);
 		
 		PreparedStatement pstmt = null;
 		
@@ -253,7 +239,6 @@ public class GeneralDao {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, generalId);
 			int rows = pstmt.executeUpdate();
-			System.out.println("rows : " + rows);
 			if (rows != 1) {
 				throw new Exception();
 			}
@@ -271,7 +256,6 @@ public class GeneralDao {
 	 */
 	public void selectServiceCategory(Connection conn, ArrayList<ServiceCategoryDto> list) throws CommonException {
 		String sql = "select * from service_category";
-		System.out.println(sql);
 		
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -318,7 +302,6 @@ public class GeneralDao {
 				"and d.vol_detail_no = a.vol_detail_no\r\n" + 
 				"and a.g_id = ? \r\n" + 
 				"order by 6 desc, 7";
-		System.out.println(sql);
 		HashMap<String, Object> map = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -327,7 +310,6 @@ public class GeneralDao {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, generalId);
 			rs = pstmt.executeQuery();
-			System.out.println("[dao] generalId : "+generalId);
 			while(rs.next()) {
 				map = new HashMap<String, Object>();
 				map.put("volInfoNo", rs.getString(1));
@@ -359,7 +341,6 @@ public class GeneralDao {
 	 */
 	public void cancelVol(Connection conn, String generalId, String volApplyNo) throws CommonException {
 		String sql = "delete from vol_apply_list where g_id =? and vol_apply_no = ?";
-		System.out.println(sql);
 		
 		PreparedStatement pstmt = null;
 		
@@ -384,7 +365,6 @@ public class GeneralDao {
 	 */
 	public void enrollVol(Connection conn, String generalId, String volDetailNo) throws CommonException {
 		String sql = "insert into vol_apply_list values(vol_apply_seq.nextval, sysdate, ?, ?, 0)";
-		System.out.println(sql);
 		
 		PreparedStatement pstmt = null;
 		
@@ -400,41 +380,6 @@ public class GeneralDao {
 			e.printStackTrace();
 			throw new CommonException();
 		} finally {
-			JdbcTemplate.close(pstmt);
-		}
-	}
-
-	/**
-	 * 봉사상세조회(통합)
-	 */
-	public void getVolInfo(Connection conn, String volInfoNo, HashMap<String, Object> map) throws CommonException {
-		String sql = "select * from vol_apply_list where g_id = ?";
-		System.out.println(sql);
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		
-		try {
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, volInfoNo);
-			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
-				map.put("", "");
-				map.put("", "");
-				map.put("", "");
-				map.put("", "");
-				map.put("", "");
-				map.put("", "");
-				map.put("", "");
-				map.put("", "");
-				map.put("", "");
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CommonException();
-		} finally {
-			JdbcTemplate.close(rs);
 			JdbcTemplate.close(pstmt);
 		}
 	}
@@ -466,7 +411,6 @@ public class GeneralDao {
 				"d.apply_count, d.total_count\r\n" + 
 				"order by 4";
 		
-		System.out.println(sql);
 		HashMap<String, Object> map = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -507,7 +451,6 @@ public class GeneralDao {
 		String sql = "update vol_detail \r\n" + 
 				"set apply_count = apply_count + ? \r\n" + 
 				"where vol_detail_no = ?";
-		System.out.println(sql);
 		
 		PreparedStatement pstmt = null;
 		
@@ -549,7 +492,6 @@ public class GeneralDao {
 				"group by i.vol_info_no, vc.vol_con_no, i.v_title, c.c_name, i.start_time, i.end_time, vc.vol_date\r\n" + 
 				"order by vc.vol_date desc";
 		
-		System.out.println(sql);
 		HashMap<String, Object> map = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -558,7 +500,6 @@ public class GeneralDao {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, generalId);
 			rs = pstmt.executeQuery();
-			System.out.println("[dao] generalId : "+generalId);
 			while(rs.next()) {
 				map = new HashMap<String, Object>();
 				map.put("volInfoNo", rs.getString(1));
@@ -611,7 +552,6 @@ public class GeneralDao {
 							"i.start_time, i.end_time, vc.vol_date, vc.vol_date, i.v_title\r\n" + 
 				"order by vc.vol_date desc";
 		
-		System.out.println(sql);
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
