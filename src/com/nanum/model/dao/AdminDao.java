@@ -272,6 +272,90 @@ public class AdminDao {
 			JdbcTemplate.close(stmt);
 		}
 		
+	}
+	
+	/**
+	 * 댓글 삭제
+	 * @param conn
+	 * @param rNo 댓글번호
+	 * @throws CommonException
+	 */
+	public void deleteReply(Connection conn, int rNo) throws CommonException{
+		String sql = "delete from qna_reply where r_no = ?";
+		
+		PreparedStatement stmt = null;
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, rNo);
+			
+			int rows = stmt.executeUpdate();
+			
+			if (rows != 1) {
+				throw new Exception();
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}  finally {
+			JdbcTemplate.close(stmt);
+		}
+		
+	}
+	
+	/**
+	 * 댓글 삭제
+	 * @param conn
+	 * @param qNo 문의글번호
+	 * @throws CommonException
+	 */
+	public void deleteAllReply(Connection conn, int qNo) throws CommonException{
+		String sql = "delete from qna_reply where q_no = ?";
+		
+		PreparedStatement stmt = null;
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, qNo);
+			
+			int rows = stmt.executeUpdate();
+			
+			if (rows != 1) {
+				throw new Exception();
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}  finally {
+			JdbcTemplate.close(stmt);
+		}
+		
+	}
+	
+	/**
+	 * 댓글 수정
+	 * @param conn
+	 * @param rNo 댓글번호
+	 * @param content 내용
+	 * @throws CommonException
+	 */
+	public void updateReply(Connection conn, int rNo, String content) throws CommonException{
+		String sql = "update qna_reply set r_contents = ? where r_no = ?";
+		
+		PreparedStatement stmt = null;
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, content);
+			stmt.setInt(2, rNo);
+			int rows = stmt.executeUpdate();
+			
+			if (rows != 1) {
+				throw new Exception();
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}  finally {
+			JdbcTemplate.close(stmt);
+		}
 		
 	}
 

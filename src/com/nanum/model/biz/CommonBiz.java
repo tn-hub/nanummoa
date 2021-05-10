@@ -17,6 +17,7 @@ import com.nanum.dto.LocalDto;
 import com.nanum.dto.VolBlockDto;
 import com.nanum.dto.VolCategoryDto;
 import com.nanum.dto.VolInfoDto;
+import com.nanum.model.dao.AdminDao;
 import com.nanum.model.dao.CommonDao;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
@@ -340,8 +341,9 @@ public class CommonBiz {
 	 */
 	public void qnaDelete(String qnaNo) throws CommonException{
 		Connection conn = JdbcTemplate.getConnection();// 비즈에서 커넥션 생성해서 dao전달
-		
+		AdminDao aDao = AdminDao.getInstance();
 		try {
+			aDao.deleteAllReply(conn, Integer.parseInt(qnaNo));
 			dao.qnaDelete(conn, qnaNo);
 			JdbcTemplate.commit(conn); // commit;
 		} catch (CommonException e) {
@@ -566,6 +568,24 @@ public class CommonBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
+	
+	
+	/**
+	 * 지역별 신청자 수 통계
+	 * @param list ArrayList<HashMap<String, Object>>
+	 * @throws CommonException
+	 */
+	public void getLocalStatistics(ArrayList<HashMap<String, Object>> list) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.selectLocalStatistics(conn, list);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
 
 	/**
 	 * 통합검색 게시판 건수
@@ -577,6 +597,61 @@ public class CommonBiz {
 		Connection conn = JdbcTemplate.getConnection();
 		try {
 			dao.selectSearchAllListTotCnt(conn, aDto, searchAllOpt, searchAllText);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+	
+	/**
+	 * 분야별 자원봉사 모집 현황
+	 * @param list ArrayList<HashMap<String, Object>>
+	 * @throws CommonException
+	 */
+	public void getCategoryStatistics(ArrayList<HashMap<String, Object>> list) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.selectCategoryStatistics(conn, list);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+	
+	/**
+	 * 이용자별 가입 현황
+	 * @param map HashMap<String, Integer>
+	 * @throws CommonException
+	 */
+	public void getMemberStatistics(HashMap<String, Integer> map) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		try {
+			dao.selectMemberStatistics(conn, map);
+		} catch (CommonException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+	
+	/**
+	 * 봉사모집 전체조회 페이징 추가
+	 * @param list
+	 * @param searchMap
+	 * @param startNum
+	 * @param lastNum
+	 * @throws CommonException
+	 */
+	public void searchVolListWithPaging(ArrayList<HashMap<String, Object>> list,  HashMap<String, String> searchMap, int startNum, int lastNum) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		
+		try {
+			dao.searchVolListWithPaging(conn, list, searchMap, startNum, lastNum);
 		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;

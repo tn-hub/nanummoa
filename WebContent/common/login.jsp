@@ -20,7 +20,7 @@ margin:  auto;
 }
 
 input[type='submit']{
-        width: 403px;
+    width: 403px;
     padding: 10px 30px;
     cursor: pointer;
     background: #FBD157;
@@ -44,11 +44,12 @@ input[type='text'],input[type='password'] {
 }
 
 .radio{
-height : 100px;
+height : 80px;
 width: 500px;
 font-size: 22px;
 font-weight: bold;
 margin: 70px auto -40px auto;
+
 }
 input[type='radio'] {
 	width: 30px;

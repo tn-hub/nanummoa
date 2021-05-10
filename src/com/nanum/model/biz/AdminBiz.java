@@ -119,6 +119,27 @@ public class AdminBiz {
 			e.printStackTrace();
 			throw e;
 		} finally {
+				JdbcTemplate.close(conn);
+		}
+			
+	}
+	
+	/**
+	 * 댓글 삭제
+	 * @param rNo 댓글번호
+	 * @throws CommonException
+	 */
+	public void deleteReply(int rNo) throws CommonException{
+		Connection conn = JdbcTemplate.getConnection();
+		
+		try {
+			dao.deleteReply(conn, rNo);
+			JdbcTemplate.commit(conn);
+		}catch (Exception e) {
+			e.printStackTrace();
+			JdbcTemplate.rollback(conn);
+			throw e;
+		} finally {
 			JdbcTemplate.close(conn);
 		}
 		
@@ -131,6 +152,28 @@ public class AdminBiz {
 			dao.selectCenterMinList(conn,list);
 		}catch (Exception e) {
 			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+	
+	
+	/**
+	 * 댓글 수정
+	 * @param rNo 댓글 번호
+	 * @param content 내용
+	 * @throws CommonException
+	 */
+	public void updateReply(int rNo, String content) throws CommonException{
+		Connection conn = JdbcTemplate.getConnection();
+		
+		try {
+			dao.updateReply(conn, rNo, content);
+			JdbcTemplate.commit(conn);
+		}catch (Exception e) {
+			e.printStackTrace();
+			JdbcTemplate.rollback(conn);
 			throw e;
 		} finally {
 			JdbcTemplate.close(conn);
