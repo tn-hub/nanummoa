@@ -540,7 +540,7 @@ public class GeneralDao {
 							"(select count(*)\r\n" + 
 								"from vol_detail d, vol_apply_list a\r\n" + 
 								"where d.vol_detail_no = a.vol_detail_no \r\n" + 
-										"and a.g_id = ? and d.vol_info_no = ? and a.vol_status = 3) as cnt\r\n" + 
+										"and a.g_id = ? and d.vol_info_no = ? and a.vol_status = '3') as cnt\r\n" + 
 				"from vol_info i, vol_detail d, center_info c, vol_confirmation vc, general_member g\r\n" + 
 				"where i.vol_info_no = d.vol_info_no\r\n" + 
 						"and i.c_id = c.c_id\r\n" + 

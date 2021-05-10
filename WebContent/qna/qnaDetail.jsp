@@ -303,8 +303,8 @@ $(document).ready(function() {
 			<li>작성일 : ${sdto.qnaWriteDate}</li>
 		</ul>
 	</div>
-	<h4>제목 : <input type="text" id="qnaTitle" name="qnaTitle" value="${sdto.qnaTitle}"></h4>
-	<div id="qna_det_contexts"><textarea id="qnaContents" name="qnaContents">${sdto.qnaContents}</textarea> </div>	
+	<h4>제목 : <input type="text" id="qnaTitle" name="qnaTitle" value="${sdto.qnaTitle}" readonly="readonly"></h4>
+	<div id="qna_det_contexts"><textarea id="qnaContents" name="qnaContents" readonly="readonly">${sdto.qnaContents}</textarea> </div>	
 	</div>
 	<c:if test="${(grade eq 'G' and dto.generalId eq sdto.generalId) or (grade eq 'C' and dto.centerId eq sdto.centerId)}">
 		<div class="btn_right_box">

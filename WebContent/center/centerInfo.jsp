@@ -202,7 +202,7 @@ text-align: center;
 		</div>
 		<hr>
 		
-	<p>[전체 <em style="color: red;">${fn:length(list)}</em>건, 현재페이지 <em>0</em>/0]</p>
+	<p>[전체 <em style="color: red;">${fn:length(list)}</em>건]</p>
 	<hr class="list_head_hr">
 	<c:forEach var="dto" items="${list }">
 	<ul class="vol_list_ul">
