@@ -16,12 +16,11 @@ margin:  auto;
     width:400px;
     height:300px;
     margin:0 auto;
+    text-align: center;
 }
 
  .g_btn{
  font-weight: bold;
- text-align: center;
- 
  }
 
 </style>
@@ -32,8 +31,7 @@ margin:  auto;
 	<div id="wrap">	
 		<div class="box">
 		<h1><font color="red">${message.message }</font></h1>
-		
-		<h3>${id }</h3>
+		<h1>${id }</h1>
 		
 			<a class="g_btn" href="${message.url}">${message.linkTitle}</a>
 		

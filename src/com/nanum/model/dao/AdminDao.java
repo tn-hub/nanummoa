@@ -9,10 +9,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import com.nanum.dto.AdminMemberDto;
 import com.nanum.dto.CenterInfoDto;
 import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.GeneralMemberDto;
+import com.nanum.dto.LocalDto;
 import com.nanum.dto.QnAReplyDto;
+import com.nanum.dto.VolCategoryDto;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
 
@@ -431,4 +434,74 @@ public class AdminDao {
 			JdbcTemplate.close(stmt);
 		}
 	}
+
+	/**
+	 * 관리자 상세조회
+	 * 
+	 * @param conn
+	 * @param dto
+	 * @throws CommonException 
+	 */
+	public void selectAdminInfo(Connection conn, AdminMemberDto dto) throws CommonException {
+		String sql = "select * from admin_member where a_id = ?";
+		
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getAdminId());
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				dto.setAdminId(rs.getString("a_id"));
+				dto.setAdminPass(rs.getString("a_pass"));
+				dto.setAdminName(rs.getString("a_name"));
+				dto.setAdminMobile(rs.getString("a_mobile"));
+				dto.setAdminEmail(rs.getString("a_email"));
+			} else {
+				throw new Exception();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(rs);
+			JdbcTemplate.close(pstmt);
+		}
+		
+	}
+
+	/**
+	 * 관리자 정보 수정
+	 * 
+	 * @param conn
+	 * @param dto
+	 * @throws CommonException 
+	 */
+	public void updateAdminMember(Connection conn, AdminMemberDto dto) throws CommonException {
+		String sql = "update admin_member set a_pass = ?, a_name = ? ,a_mobile = ?, a_email = ? where a_id = ?";
+		
+		PreparedStatement pstmt = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getAdminPass());
+			pstmt.setString(2, dto.getAdminName());
+			pstmt.setString(3, dto.getAdminMobile());
+			pstmt.setString(4, dto.getAdminEmail());
+			pstmt.setString(5, dto.getAdminId());
+			int rows = pstmt.executeUpdate();
+			System.out.println("rows : " + rows);
+			if (rows != 1) {
+				throw new Exception();
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(pstmt);
+		}
+	}
+	
 }

@@ -312,7 +312,7 @@ public class GeneralDao {
 				", d.vol_date \r\n" + 
 				", to_char(i.start_time, 'HH24:MI')\r\n" + 
 				", to_char(i.end_time, 'HH24:MI')\r\n" + 
-				", a.vol_status\\r\\n "+
+				", a.vol_status\r\n "+
 				"from vol_info i, vol_detail d, vol_apply_list a\r\n" + 
 				"where i.vol_info_no = d.vol_info_no \r\n" + 
 				"and d.vol_detail_no = a.vol_detail_no\r\n" + 

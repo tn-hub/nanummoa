@@ -52,13 +52,13 @@ public class CenterController extends HttpServlet {
 		application = getServletContext();
 		CONTEXT_PATH = (String) application.getAttribute("CONTEXT_PATH");
 	}
-
+  
 	protected void process(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
+		
 		String action = request.getParameter("action");
-		System.out.println("action : " + action);
 		switch (action) {
 		case "centerInputForm":
 			centerInputForm(request, response);
@@ -136,13 +136,11 @@ public class CenterController extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		response.setContentType("text/html; charset=utf-8");
 		process(request, response);
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		response.setContentType("text/html; charset=utf-8");
 		process(request, response);
 	}
 
@@ -162,7 +160,6 @@ public class CenterController extends HttpServlet {
 			throws ServletException, IOException {
 
 		String id = request.getParameter("id");
-		System.out.println("id : " + id);
 		PrintWriter out = response.getWriter();
 
 		if (id == null || id.trim().length() == 0) {
@@ -176,7 +173,6 @@ public class CenterController extends HttpServlet {
 		CenterBiz biz = new CenterBiz();
 		try {
 			boolean result = biz.isCenterId(id);
-			System.out.println("result : " + result);
 			if (result) {
 				out.print("not-usable");
 			} else {
@@ -345,18 +341,15 @@ public class CenterController extends HttpServlet {
 				while ((line = br.readLine()) != null) {
 					result = result.concat(line);
 				}
-				// JSON parser 만들어 문자열 데이터를 객체화한다.
 				JSONParser parser = new JSONParser();
 				JSONObject obj = (JSONObject) parser.parse(result);
 				JSONObject data = (JSONObject) obj.get("VOpenGroup");
 				JSONArray data2 = (JSONArray) data.get("row");
 
-				// 객체형태로
 				for (int i = 0; i < data2.size(); i++) {
 					JSONObject row = (JSONObject) data2.get(i);
 					String centerNameData = (String) row.get("KORNAME");
 					if (centerName.equals(centerNameData)) {
-						System.out.println("centerName : " + centerNameData);
 						appStatus = "1";
 					}
 				}
@@ -387,7 +380,6 @@ public class CenterController extends HttpServlet {
 		}
 
 		CenterBiz biz = new CenterBiz();
-
 		try {
 			biz.addCenterMember(cMemberDto, centerDto);
 			String url = CONTEXT_PATH + "/common/commonController?action=loginForm";
@@ -416,7 +408,13 @@ public class CenterController extends HttpServlet {
 	 */
 	protected void centerVolListForm(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(false);
+
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+			return;
+		}
+
 		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
 		String centerId = dto.getCenterId();
 
@@ -441,7 +439,13 @@ public class CenterController extends HttpServlet {
 	 */
 	protected void deadlineList(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(false);
+
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+			return;
+		}
+
 		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
 		String centerId = dto.getCenterId();
 
@@ -462,9 +466,14 @@ public class CenterController extends HttpServlet {
 	 */
 	protected void centerMyInfoForm(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession session = request.getSession(false);
-		response.setContentType("text/html; charset=utf-8");
 		PrintWriter out = response.getWriter();
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+			return;
+		}
+		
 		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
 		String centerId = dto.getCenterId();
 		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null) {
@@ -500,10 +509,15 @@ public class CenterController extends HttpServlet {
 	 */
 	protected void applyList(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+			return;
+		}
+		
 		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
 		String centerId = dto.getCenterId();
-
 		int volInfoNo = Integer.parseInt(request.getParameter("volInfoNo"));
 
 		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
@@ -522,8 +536,13 @@ public class CenterController extends HttpServlet {
 	 */
 	protected void centerUpdate(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		response.setContentType("text/html; charset=utf-8");
 		PrintWriter out = response.getWriter();
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+			return;
+		}
 
 		String centerMemberName = request.getParameter("name");
 		String centerMemberPw = request.getParameter("pw");
@@ -627,7 +646,6 @@ public class CenterController extends HttpServlet {
 			return;
 		}
 
-		HttpSession session = request.getSession();
 		CenterMemberDto centerMemberDto = (CenterMemberDto) session.getAttribute("dto");
 		CenterInfoDto centerDto = new CenterInfoDto();
 
@@ -681,10 +699,14 @@ public class CenterController extends HttpServlet {
 	 */
 	protected void centerDelete(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		response.setContentType("text/html; charset=utf-8");
 		PrintWriter out = response.getWriter();
-
 		HttpSession session = request.getSession(false);
+		
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+			return;
+		}
+		
 		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
 		String centerId = dto.getCenterId();
 		CenterBiz biz = new CenterBiz();
@@ -722,7 +744,12 @@ public class CenterController extends HttpServlet {
 	 */
 	protected void applicantInfoForm(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+			return;
+		}
 		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
 		String centerId = dto.getCenterId();
 		String generalId = request.getParameter("generalId");
@@ -899,7 +926,7 @@ public class CenterController extends HttpServlet {
 			map.put("localNo", localNo);
 			ArrayList<String> dateList = Utility.getDateList(startVolDateStr, endVolDateStr);
 			cBiz.addVol(map, dateList);
-			
+
 			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=volListForm");
 		} catch (CommonException | ParseException e) {
 			out.println("<script>alert('글 등록에 실패했습니다.');history.back();</script>");
@@ -914,29 +941,34 @@ public class CenterController extends HttpServlet {
 	 */
 	private void updateVolForm(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+			return;
+		}
 		ArrayList<VolCategoryDto> categoryList = new ArrayList<VolCategoryDto>();
 		ArrayList<ServiceCategoryDto> serviceCategoryList = new ArrayList<ServiceCategoryDto>();
 		ArrayList<LocalDto> list = new ArrayList<>();
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		
+
 		String volInfoNoStr = request.getParameter("volInfoNo");
-		int volInfoNo =  Integer.parseInt(volInfoNoStr);
-		
+		int volInfoNo = Integer.parseInt(volInfoNoStr);
+
 		GeneralBiz gBiz = new GeneralBiz();
 		CommonBiz biz = new CommonBiz();
 		try {
 			gBiz.getVolCategoryList(categoryList);
 			gBiz.getServiceCategoryList(serviceCategoryList);
 			biz.volDetailInfo(map, volInfoNo);
-			
-			
+
 			gBiz.getLocalList(list);
 			for (LocalDto dto : list) {
 				if (dto.getLocalNo() == map.get("localNo")) {
 					map.put("local", dto.getLocalName());
 				}
 			}
-			
+
 			request.setAttribute("map", map);
 			request.setAttribute("volCategory", categoryList);
 			request.setAttribute("volSubject", serviceCategoryList);
@@ -954,12 +986,12 @@ public class CenterController extends HttpServlet {
 			throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
 		PrintWriter out = response.getWriter();
-		
+
 		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null) {
 			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
 			return;
 		}
-		
+
 		int volInfoNo = Integer.parseInt(request.getParameter("volInfoNo"));
 		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
 		String centerId = dto.getCenterId();
@@ -987,8 +1019,7 @@ public class CenterController extends HttpServlet {
 
 		String totalCountStr = request.getParameter("totalCount");
 		int totalCount = Integer.parseInt(totalCountStr);
-		
-		
+
 		if (volTitle == null || volTitle.trim().length() == 0) {
 			out.println("<script>alert('제목을 입력해 주세요');history.back();</script>");
 			out.flush();
@@ -1074,13 +1105,13 @@ public class CenterController extends HttpServlet {
 				}
 			}
 			map.put("localNo", localNo);
-			
-			
+
 			ArrayList<String> dateList = Utility.getDateList(startVolDateStr, endVolDateStr);
-			
+
 			cBiz.updateVol(volInfoNo, startVolDateStr, endVolDateStr, dateList, totalCount, map);
-			
-			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=volDetatilForm&volInfoNo=" + volInfoNo);
+
+			response.sendRedirect(
+					CONTEXT_PATH + "/common/commonController?action=volDetatilForm&volInfoNo=" + volInfoNo);
 		} catch (CommonException | ParseException e) {
 			e.printStackTrace();
 			out.println("<script>alert('글수정에 실패했습니다.');history.back();</script>");
@@ -1097,10 +1128,15 @@ public class CenterController extends HttpServlet {
 	private void deleteVol(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
+		
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+			return;
+		}
 		PrintWriter out = response.getWriter();
 		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
 		String centerId = dto.getCenterId();
-		
+
 		int volInfoNo = Integer.parseInt(request.getParameter("volInfoNo"));
 		System.out.println("[봉사게시글 삭제] volInfoNo : " + volInfoNo);
 		CenterBiz biz = new CenterBiz();
@@ -1126,7 +1162,12 @@ public class CenterController extends HttpServlet {
 	 */
 	protected void applyGeneral(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+			return;
+		}
 		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
 		String centerId = dto.getCenterId();
 		String generalId = request.getParameter("generalId");
@@ -1157,7 +1198,12 @@ public class CenterController extends HttpServlet {
 	 */
 	protected void closeApply(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+			return;
+		}
 		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
 		String centerId = dto.getCenterId();
 		String generalId = request.getParameter("generalId");
@@ -1187,7 +1233,12 @@ public class CenterController extends HttpServlet {
 	 */
 	protected void issueListForm(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+			return;
+		}
 		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
 		String centerId = dto.getCenterId();
 
@@ -1213,7 +1264,12 @@ public class CenterController extends HttpServlet {
 	 */
 	protected void issueDetailListForm(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+			return;
+		}
 		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
 		String centerId = dto.getCenterId();
 
@@ -1240,7 +1296,12 @@ public class CenterController extends HttpServlet {
 	 */
 	protected void issueInfoForm(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+			return;
+		}
 		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
 		String centerId = dto.getCenterId();
 		String generalId = request.getParameter("generalId");
@@ -1273,7 +1334,12 @@ public class CenterController extends HttpServlet {
 	 */
 	protected void volIssueForm(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+			return;
+		}
 		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
 		String centerId = dto.getCenterId();
 		String volInfoNo = request.getParameter("volInfoNo");
@@ -1306,7 +1372,12 @@ public class CenterController extends HttpServlet {
 	protected void volIssue(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+			return;
+		}
 		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
 
 		String generalId = request.getParameter("generalId");
@@ -1348,7 +1419,7 @@ public class CenterController extends HttpServlet {
 	}
 
 	/**
-	 * 활동상태 변경(활동완료)
+	 * 활동상태 변경(활동종료)
 	 * 
 	 * @param request
 	 * @param response
@@ -1357,7 +1428,12 @@ public class CenterController extends HttpServlet {
 	 */
 	protected void checkVolStatus(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+			return;
+		}
 		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
 		String centerId = dto.getCenterId();
 		String generalId = request.getParameter("generalId");
@@ -1390,7 +1466,12 @@ public class CenterController extends HttpServlet {
 	 */
 	protected void endVol(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+			return;
+		}
 		CenterMemberDto dto = (CenterMemberDto) session.getAttribute("dto");
 		String centerId = dto.getCenterId();
 		int volInfoNo = Integer.parseInt(request.getParameter("volInfoNo"));

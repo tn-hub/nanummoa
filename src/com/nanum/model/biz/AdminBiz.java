@@ -6,10 +6,13 @@ package com.nanum.model.biz;
 import java.sql.Connection;
 import java.util.ArrayList;
 
+import com.nanum.dto.AdminMemberDto;
 import com.nanum.dto.CenterInfoDto;
 import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.GeneralMemberDto;
+import com.nanum.dto.LocalDto;
 import com.nanum.dto.QnAReplyDto;
+import com.nanum.dto.VolCategoryDto;
 import com.nanum.model.dao.AdminDao;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
@@ -174,6 +177,48 @@ public class AdminBiz {
 		}catch (Exception e) {
 			e.printStackTrace();
 			JdbcTemplate.rollback(conn);
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+	
+	/**
+	 * 관리자 상세 조회 
+	 * 
+	 * @param dto
+	 * @throws CommonException 
+	 */
+	public void getaAminInfo(AdminMemberDto dto) throws CommonException {
+Connection conn = JdbcTemplate.getConnection();
+		
+		try {
+			dao.selectAdminInfo(conn, dto);
+			JdbcTemplate.commit(conn);
+		} catch (CommonException e) {
+			JdbcTemplate.rollback(conn);
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
+	
+	/**
+	 * 관리자 정보 수정
+	 * 
+	 * @param dto
+	 * @throws CommonException 
+	 */
+	public void updateAdminMember(AdminMemberDto dto) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
+		
+		try {
+			dao.updateAdminMember(conn, dto);
+			JdbcTemplate.commit(conn);
+		} catch (CommonException e) {
+			JdbcTemplate.rollback(conn);
+			e.printStackTrace();
 			throw e;
 		} finally {
 			JdbcTemplate.close(conn);

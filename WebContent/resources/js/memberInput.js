@@ -576,6 +576,21 @@ function centerInputCheck() {
 	return false;
 }
 
+/* 관리자 회원정보 수정 체크 */
+function adminUpdateCheck() {
+	if (nameCheck() && mobileCheck() && emailCheck()) {
+		if ($("#modiPw").prop("disabled")) {
+			if (pwCheck()) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		return true;
+	}
+	return false;
+}
+
 /* 센터회원 회원정보 수정 체크 */
 function centerUpdateCheck() {
 	if (nameCheck() && mobileCheck() && emailCheck() && registerCodeCheck() && 

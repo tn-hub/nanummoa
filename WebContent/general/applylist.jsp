@@ -202,28 +202,30 @@
 			<li>
 				<div class="list_box">
 					<div>
-					
-					<div class="apply_status">${dto.recStatus == "1" ? "승인" : "접수"}</div>
-					<%-- <div class="apply_status">
+					 <div class="apply_status">
 					<c:choose>
-						<c:when test="${dto.recStatus == '0'}">
+						<c:when test="${dto.volStatus == '0'}">
 							<label>접수</label>
 						</c:when>
-						<c:when test="${dto.recStatus == '1'}">
+						<c:when test="${dto.volStatus == '1'}">
 							<label>마감</label>
 						</c:when>
-						<c:when test="${dto.recStatus == '2'}">
+						<c:when test="${dto.volStatus == '2'}">
 							<label>활동완료</label>
 						</c:when>
+						<c:when test="${dto.volStatus == '3'}">
+							<label>인증서발급</label>
+						</c:when>
 					</c:choose>
-					</div>--%>
-					<%-- <c:choose> 
-						<c:when test="${dto.recStatus == '0'}">
+					</div>
+					 <c:choose> 
+						<c:when test="${dto.volStatus == '0'}">
+								<input type="button" value="취소하기" class="float_r g_btn" onclick="location.href='${CONTEXT_PATH}/general/generalController?action=cancelVol&volApplyNo=${dto.volApplyNo}&volDetailNo=${dto.volDetailNo}'">
 						</c:when>
 						<c:otherwise>
 						</c:otherwise>
-					</c:choose> --%>
-							<input type="button" value="취소하기" class="float_r g_btn" onclick="location.href='${CONTEXT_PATH}/general/generalController?action=cancelVol&volApplyNo=${dto.volApplyNo}&volDetailNo=${dto.volDetailNo}'">
+					</c:choose> 
+						
 						
 						
 					</div>
