@@ -36,6 +36,7 @@ public class GeneralController extends HttpServlet {
 
 	protected void process(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
+		response.setContentType("text/html; charset=utf-8");
 		String action = request.getParameter("action");
 		System.out.println("action : " + action);
 		
@@ -49,9 +50,6 @@ public class GeneralController extends HttpServlet {
 		case "generalInput" :
 			generalInput(request, response);
 			break;
-		case "volInfo" :
-			volInfo(request, response);
-			break;	
 		case "enrollVolForm" :
 			enrollVolForm(request, response);
 			break;	
@@ -83,12 +81,10 @@ public class GeneralController extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html; charset=utf-8");
 		process(request, response);
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html; charset=utf-8");
 		process(request, response);
 	}
 	
@@ -103,8 +99,7 @@ public class GeneralController extends HttpServlet {
 		try {
 			biz.getLocalList(localList);
 			biz.getVolCategoryList(categoryList);
-			System.out.println("localList size" + localList.size());
-			System.out.println("categoryList size" + categoryList.size());
+			
 			request.setAttribute("local", localList);
 			request.setAttribute("volCategory", categoryList);
 			request.getRequestDispatcher("/general/generalInput.jsp").forward(request, response);
@@ -117,10 +112,7 @@ public class GeneralController extends HttpServlet {
 	 * 일반회원 아이디 중복 확인
 	 */
 	protected void idCheck(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html; charset=utf-8");
-		
 		String id = request.getParameter("id");
-		System.out.println("id : " + id);
 		PrintWriter out = response.getWriter();
 		
 		if (id == null || id.trim().length() == 0) {
@@ -134,11 +126,10 @@ public class GeneralController extends HttpServlet {
 		GeneralBiz biz = new GeneralBiz();
 		try {
 			boolean result = biz.isGeneralId(id);
-			System.out.println("result : " + result);
 			if (result) {
-				out.print("not-usable");
+				out.println("<script>alert('not-usable');history.go(-1); </script>");
 			} else {
-				out.print("usable");
+				out.println("<script>alert('usable');history.go(-1); </script>");
 			}
 		} catch (CommonException e) {
 			e.printStackTrace();
@@ -152,7 +143,6 @@ public class GeneralController extends HttpServlet {
 	 * 일반회원 회원가입 요청 서비스
 	 */
 	protected void generalInput(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html; charset=utf-8");
 		PrintWriter out = response.getWriter();
 		
 		String generalName = request.getParameter("name");
@@ -273,7 +263,6 @@ public class GeneralController extends HttpServlet {
 	 * 일반회원 내 정보 조회 페이지 요청 서비스
 	 */
 	protected void generalMyInfoForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html; charset=utf-8");
 		PrintWriter out = response.getWriter();
 		
 		HttpSession session = request.getSession(false);
@@ -307,7 +296,6 @@ public class GeneralController extends HttpServlet {
 	 * 일반회원 내 정보 수정 요청 서비스
 	 */
 	protected void generalUpdate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html; charset=utf-8");
 		PrintWriter out = response.getWriter();
 		
 		String generalName = request.getParameter("name");
@@ -429,7 +417,6 @@ public class GeneralController extends HttpServlet {
 	 * 일반회원 회원탈퇴 서비스
 	 */
 	protected void generalDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html; charset=utf-8");
 		PrintWriter out = response.getWriter();
 		
 		HttpSession session = request.getSession(false);
@@ -465,11 +452,12 @@ public class GeneralController extends HttpServlet {
 	 */
 	protected void enrollVolForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
-		
-		if (session == null || 
-				session.getAttribute("dto") == null ||
-				session.getAttribute("grade") == null) {
-			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");	
+		PrintWriter out = response.getWriter();
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null ) {
+			String url = CONTEXT_PATH + "/common/commonController?action=loginForm";
+			out.println("<script>alert('로그인 후 이용해 주시기 바랍니다');location.href='" + url + "'; </script>");
+			out.flush();
+			out.close();
 			return;
 		}
 		GeneralMemberDto dto = (GeneralMemberDto) session.getAttribute("dto");
@@ -496,15 +484,16 @@ public class GeneralController extends HttpServlet {
 	/**
 	 * 봉사신청
 	 */
-	private void enrollVol(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void enrollVol(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
-		
-		if (session == null || 
-				session.getAttribute("dto") == null ||
-				session.getAttribute("grade") == null) {
-			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");	
-			return;
-		}
+		PrintWriter out = response.getWriter();
+				if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null ) {
+					String url = CONTEXT_PATH + "/common/commonController?action=loginForm";
+					out.println("<script>alert('로그인 후 이용해 주시기 바랍니다');location.href='" + url + "'; </script>");
+					out.flush();
+					out.close();
+					return;
+				}
 		GeneralMemberDto dto = (GeneralMemberDto) session.getAttribute("dto");
 		String generalId = dto.getGeneralId();
 		String[] volDetailNos = request.getParameterValues("volDetailNo");
@@ -522,14 +511,14 @@ public class GeneralController extends HttpServlet {
 	/**
 	 * 봉사신청 취소
 	 */
-	private void cancelVol(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void cancelVol(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
-		
-		if (session == null || 
-				session.getAttribute("dto") == null ||
-				session.getAttribute("grade") == null) {
-			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
-			request.getRequestDispatcher("/common/commonController?action=loginForm");
+		PrintWriter out = response.getWriter();
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null ) {
+			String url = CONTEXT_PATH + "/common/commonController?action=loginForm";
+			out.println("<script>alert('로그인 후 이용해 주시기 바랍니다');location.href='" + url + "'; </script>");
+			out.flush();
+			out.close();
 			return;
 		}
 		GeneralMemberDto dto = (GeneralMemberDto) session.getAttribute("dto");
@@ -551,14 +540,14 @@ public class GeneralController extends HttpServlet {
 	/**
 	 * 봉사신청목록 조회
 	 */
-	private void volApplyList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void volApplyList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
-		
-		if (session == null ||
-				session.getAttribute("dto") == null ||
-				session.getAttribute("grade") == null) {
-			System.out.println("dd");
-			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+		PrintWriter out = response.getWriter();
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null ) {
+			String url = CONTEXT_PATH + "/common/commonController?action=loginForm";
+			out.println("<script>alert('로그인 후 이용해 주시기 바랍니다');location.href='" + url + "'; </script>");
+			out.flush();
+			out.close();
 			return;
 		}
 		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String,Object>>();
@@ -571,13 +560,7 @@ public class GeneralController extends HttpServlet {
 			
 			if(list != null) {
 				int totalCnt = list.size();
-				System.out.println("총"+ totalCnt+"건");
-				for (HashMap<String, Object> hashMap : list) {
-					System.out.println("===");
-					for(String key : hashMap.keySet()){
-						System.out.println(key+" : "+hashMap.get(key));
-					}
-				}
+				
 				request.setAttribute("totalCnt", totalCnt);
 				request.setAttribute("list", list);
 			}
@@ -588,71 +571,16 @@ public class GeneralController extends HttpServlet {
 	}
 	
 	/**
-	 * 봉사상세정보 조회(통합)
-	 */
-	private void volInfo(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		String volInfoNo = request.getParameter("volInfoNo");
-		GeneralBiz biz = new GeneralBiz();
-		
-		HashMap<String, Object> resultMap = new HashMap<String, Object>();
-		
-		try{
-			biz.getVolInfo(volInfoNo, resultMap);
-			
-			for(String key : resultMap.keySet()){
-				System.out.println(key+" : "+resultMap.get(key));
-			}
-			
-			request.getRequestDispatcher("/vol_list.jsp").forward(request, response);
-			
-		} catch(CommonException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * 봉사정보 조회(날짜별)-신청시
-	 */
-	private void volInfoByDate(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		HttpSession session = request.getSession(false);
-		
-		if (session == null || 
-				session.getAttribute("dto") == null ||
-				session.getAttribute("grade") == null) {
-			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");	
-			return;
-		}
-		String volInfoNo = request.getParameter("volInfoNo");
-		GeneralBiz biz = new GeneralBiz();
-		
-		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String,Object>>();
-		GeneralMemberDto dto = (GeneralMemberDto) session.getAttribute("dto");
-		String generalId = dto.getGeneralId();
-		try{
-			biz.volInfoByDate(generalId, volInfoNo, list);
-			for (HashMap<String, Object> hashMap : list) {
-				for(String key : hashMap.keySet()){
-					System.out.println(key+" : "+hashMap.get(key));
-				}
-			}
-			request.setAttribute("list", list);
-			request.getRequestDispatcher("/vol_list.jsp").forward(request, response);
-			
-		} catch(CommonException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/**
 	 * 봉사확인서 내역 조회 페이지
 	 */
-	private void confirmationListForm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	protected void confirmationListForm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		HttpSession session = request.getSession(false);
-		
-		if (session == null || 
-				session.getAttribute("dto") == null ||
-				session.getAttribute("grade") == null) {
-			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");	
+		PrintWriter out = response.getWriter();
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null ) {
+			String url = CONTEXT_PATH + "/common/commonController?action=loginForm";
+			out.println("<script>alert('로그인 후 이용해 주시기 바랍니다');location.href='" + url + "'; </script>");
+			out.flush();
+			out.close();
 			return;
 		}
 		
@@ -662,6 +590,7 @@ public class GeneralController extends HttpServlet {
 		GeneralBiz biz = new GeneralBiz();
 		try{
 			biz.getConfirmationList(generalId, list);
+			
 			request.setAttribute("list", list);
 			request.setAttribute("totalcount", list.size());
 			request.getRequestDispatcher("/general/confirmationList.jsp").forward(request, response);
@@ -674,13 +603,14 @@ public class GeneralController extends HttpServlet {
 	/**
 	 * 봉사확인서 다운
 	 */
-	private void confirmationForm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	protected void confirmationForm(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		HttpSession session = request.getSession(false);
-		
-		if (session == null || 
-				session.getAttribute("dto") == null ||
-				session.getAttribute("grade") == null) {
-			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");	
+		PrintWriter out = response.getWriter();
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null ) {
+			String url = CONTEXT_PATH + "/common/commonController?action=loginForm";
+			out.println("<script>alert('로그인 후 이용해 주시기 바랍니다');location.href='" + url + "'; </script>");
+			out.flush();
+			out.close();
 			return;
 		}
 		
@@ -696,6 +626,7 @@ public class GeneralController extends HttpServlet {
 		GeneralBiz biz = new GeneralBiz();
 		try{
 			biz.getConfirmation(selectInfo, map);
+			
 			request.setAttribute("map", map);
 			request.getRequestDispatcher("/general/confirmation.jsp").forward(request, response);
 			

@@ -54,7 +54,6 @@ $(document).ready(function() {
 			return false;
 		}
 		
-		// submit
 		document.main_searchAllForm.submit();
 	});
 });
@@ -118,7 +117,7 @@ $(document).ready(function() {
 					</c:when>
 					<c:when test="${grade == 'A'}">
 						<li><a href="${CONTEXT_PATH}/common/commonController?action=volListForm">봉사 관리</a></li>
-						<li><a href="${CONTEXT_PATH}/center/centerController?action=centerVolListForm">인증서 관리</a></li>
+						<li><a href="${CONTEXT_PATH}/admin/adminController?action=confirmationListForm">인증서 관리</a></li>
 						<li><a href="${CONTEXT_PATH}/common/commonController?action=qnaList">문의 내역</a></li>
 						<li><a href="${CONTEXT_PATH}/admin/adminController?action=searchAllMemberForm" class="">회원 관리</a></li>
 					</c:when>

@@ -10,7 +10,6 @@ import java.util.HashMap;
 import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.LocalDto;
 import com.nanum.dto.ServiceCategoryDto;
-import com.nanum.dto.VolApplyListDto;
 import com.nanum.dto.VolCategoryDto;
 import com.nanum.model.dao.GeneralDao;
 import com.nanum.util.CommonException;
@@ -190,7 +189,6 @@ public class GeneralBiz {
 		
 		try {
 			for (String volDetailNo : volDetailNos) {
-				System.out.println("[biz] 봉사신청 volDetailNo" + volDetailNo);
 				gDao.enrollVol(conn, generalId, volDetailNo);
 				gDao.updateApplyCount(conn, volDetailNo, 1);
 				JdbcTemplate.commit(conn);
@@ -211,7 +209,6 @@ public class GeneralBiz {
 		Connection conn = JdbcTemplate.getConnection();
 		
 		try {
-			System.out.println("[biz] 봉사신청 volDetailNo" + volDetailNo);
 			gDao.enrollVol(conn, generalId, volDetailNo);
 			gDao.updateApplyCount(conn, volDetailNo, 1);
 			JdbcTemplate.commit(conn);
@@ -237,22 +234,6 @@ public class GeneralBiz {
 			JdbcTemplate.commit(conn);
 		} catch (CommonException e) {
 			JdbcTemplate.rollback(conn);
-			e.printStackTrace();
-			throw e;
-		} finally {
-			JdbcTemplate.close(conn);
-		}
-		
-	}
-	
-	/**
-	 * 봉사상세조회(통합)
-	 */
-	public void getVolInfo(String volInfoNo, HashMap<String, Object> resultMap) throws CommonException {
-		Connection conn = JdbcTemplate.getConnection();
-		try {
-			gDao.getVolInfo(conn, volInfoNo, resultMap);
-		} catch (CommonException e) {
 			e.printStackTrace();
 			throw e;
 		} finally {
