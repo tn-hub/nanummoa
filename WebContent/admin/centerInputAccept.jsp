@@ -105,10 +105,10 @@ display: inline-block;
 	<a href="${CONTEXT_PATH}/admin/adminController?action=centerMinList">센터회원</a>
 </div>
 <div class="link_box ${tap == 3? ' bg_y' : ''}" style="cursor:hand;">
-	<a href="${CONTEXT_PATH}/admin/adminController?action=centerAcceptList">센터대기회원</a>
+	<a href="${CONTEXT_PATH}/admin/adminController?action=centerAcceptList">가입대기 센터회원</a>
 </div>
 <hr>
-[가입대기 센터회원 <em>${cDto.totAcceptCnt}</em> 건]
+[전체 <em>${cDto.totAcceptCnt}</em> 건]
 <form name="centerAcceptListForm" id="centerAcceptListForm" action="${CONTEXT_PATH}/admin/adminController?action=centerAcceptList" method="post">
 <c:forEach var="dto" items="${centerActList}">
 <div id="cecnter_standBy">
