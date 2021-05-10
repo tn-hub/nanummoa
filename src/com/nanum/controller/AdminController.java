@@ -167,6 +167,7 @@ public class AdminController extends HttpServlet {
 			request.setAttribute("centerActList", centerActList);
 
 			// jsp 에 총건수 및 건수 보여주기 위해 셋팅
+			request.setAttribute("tap", 3);
 			request.setAttribute("lastPageNum", lastPageNum);
 			request.setAttribute("curPageNum", pageNum);
 
@@ -303,6 +304,7 @@ public class AdminController extends HttpServlet {
 			// 목록조회
 			biz.getGenralMinList(list);
 			request.setAttribute("list", list);
+			request.setAttribute("tap", 1);
 			request.getRequestDispatcher("/admin/searchAllMember.jsp").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -334,6 +336,7 @@ public class AdminController extends HttpServlet {
 			request.setAttribute("clist", list);
 
 			request.setAttribute("list", list);
+			request.setAttribute("tap", 2);
 			request.getRequestDispatcher("/admin/searchAllMember.jsp").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -101,25 +101,25 @@ $(document).ready(function() {
 						<li><a href="${CONTEXT_PATH}/common/commonController?action=volListForm">봉사조회</a></li>
 						<li><a href="${CONTEXT_PATH}/common/commonController?action=loginForm">인증서발급</a></li>
 						<li><a href="${CONTEXT_PATH}/common/commonController?action=qnaList">문의하기</a></li>
-						<li><a href="${CONTEXT_PATH}/common/commonController?action=loginForm" class="">나의 봉사내역</a></li>
+						<li><a href="${CONTEXT_PATH}/common/commonController?action=loginForm">나의 봉사내역</a></li>
 					</c:when>
 					<c:when test="${grade == 'G'}">
 						<li><a href="${CONTEXT_PATH}/common/commonController?action=volListForm">봉사조회</a></li>
 						<li><a href="${CONTEXT_PATH}/general/generalController?action=confirmationListForm">인증서발급</a></li>
 						<li><a href="${CONTEXT_PATH}/common/commonController?action=qnaList">문의하기</a></li>
-						<li><a href="${CONTEXT_PATH}/general/generalController?action=volApplyList" class="">나의 봉사내역</a></li>
+						<li><a href="${CONTEXT_PATH}/general/generalController?action=volApplyList">나의 봉사내역</a></li>
 					</c:when>
 					<c:when test="${grade == 'C'}">
 						<li><a href="${CONTEXT_PATH}/common/commonController?action=volListForm">봉사조회</a></li>
 						<li><a href="${CONTEXT_PATH}/center/centerController?action=issueListForm">인증서발급</a></li>
 						<li><a href="${CONTEXT_PATH}/common/commonController?action=qnaList">문의하기</a></li>
-						<li><a href="${CONTEXT_PATH}/center/centerController?action=centerVolListForm" class="">나의 봉사내역</a></li>
+						<li><a href="${CONTEXT_PATH}/center/centerController?action=centerVolListForm">나의 봉사내역</a></li>
 					</c:when>
 					<c:when test="${grade == 'A'}">
 						<li><a href="${CONTEXT_PATH}/common/commonController?action=volListForm">봉사 관리</a></li>
 						<li><a href="${CONTEXT_PATH}/admin/adminController?action=confirmationListForm">인증서 관리</a></li>
 						<li><a href="${CONTEXT_PATH}/common/commonController?action=qnaList">문의 내역</a></li>
-						<li><a href="${CONTEXT_PATH}/admin/adminController?action=searchAllMemberForm" class="">회원 관리</a></li>
+						<li><a href="${CONTEXT_PATH}/admin/adminController?action=generalMinList">회원 관리</a></li>
 					</c:when>
 				</c:choose>
 				<li id="searchSlide"><a href="#"><i class="fas fa-search search_btn"></i></a></li>
