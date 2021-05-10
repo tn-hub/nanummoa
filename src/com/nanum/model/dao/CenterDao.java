@@ -922,8 +922,8 @@ public class CenterDao {
 	 * @throws CommonException 
 	 */
 	public void updateStatus(Connection conn, HashMap<String, Object> map) throws CommonException {
-		String sql = "update vol_apply_list set vol_status = '3' \n" + 
-				"where vol_detail_no in (select vol_detail_no from vol_detail where vol_info_no = ?)\n" + 
+		String sql = "update vol_apply_list set vol_status = '3'\n" + 
+				"where vol_detail_no in (select vol_detail_no from vol_detail where vol_info_no = ? and g_id = ?)\n" + 
 				"and vol_status = '2'";
 
 		PreparedStatement pstmt = null;
@@ -931,6 +931,7 @@ public class CenterDao {
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, (int)map.get("volInfoNo"));
+			pstmt.setString(2, (String)map.get("generalId"));
 			int rows = pstmt.executeUpdate();
 			System.out.println("rows : " + rows);
 
@@ -1186,7 +1187,6 @@ public class CenterDao {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * 봉사등록 마감
 	 * 
 	 * @param conn

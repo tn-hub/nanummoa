@@ -94,9 +94,9 @@ $(document).ready(function(){
 					  } else if (data == "none") {
 						  alert("아이디를 입력해 주세요");
 					  }
-				      
 				  },
 				  error : function(xhr,status,error) {
+					 alert("[오류]");
 				     console.log("error");
 				  }
 				});
@@ -127,6 +127,7 @@ $(document).ready(function(){
 				      
 				  },
 				  error : function(xhr,status,error) {
+					  alert("[오류]");
 				     console.log("error");
 				  }
 				});

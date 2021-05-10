@@ -83,8 +83,8 @@ margin-top: 300px;
 <input type="submit" class="y_btn detatil_btn" value="발급하기">
 
 <input type="hidden" id="volInfoNo" name="volInfoNo" value="${map.volInfoNo}">
-<input type="hidden" id="generalId" name="generalId" value="${map.generalId }">
-<input type="hidden" id="generalId" name="volApplyNo" value="${map.volApplyNo }">
+<input type="hidden" id="generalId" name="generalId" value="${generalId }">
+<input type="hidden" id="volApplyNo" name="volApplyNo" value="${map.volApplyNo }">
 <input type="hidden" id="issueDate" name="issueDate" value="${map.issueDate }">
 
 <div id="pdf_wrap">

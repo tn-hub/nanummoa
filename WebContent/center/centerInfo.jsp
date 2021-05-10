@@ -225,7 +225,7 @@ text-align: center;
 					<input type="button" value="신청 내역" class="float_r g_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=applyList&volInfoNo=${dto.volInfoNo}'">
 				<c:choose>
 					<c:when test="${dto.recStatus == '0' }">
-						<input type="button" value="등록 마감 " class="float_r g_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=endVol&volInfoNo=${dto.volInfoNo}&recStatus=${dto.recStatus}'">
+						<input type="button" value="모집 마감 " class="float_r g_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=endVol&volInfoNo=${dto.volInfoNo}&recStatus=${dto.recStatus}'">
 					</c:when>
 					<c:when test="${dto.recStatus == '1' }">
 						<input type="button" value="활동 종료 " class="float_r g_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=endVol&volInfoNo=${dto.volInfoNo}&recStatus=${dto.recStatus}'">

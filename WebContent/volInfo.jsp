@@ -107,10 +107,10 @@
 }
 
 #area_text{
-	height: 300px; 
-	padding: 20px; 
-	margin-bottom: 10px; 
-	border: 1px solid gray;
+	min-height: 300px; 
+	padding-left : 30px; 
+	padding-bottom : 30px;
+	margin-bottom: 5px; 
 }
 
 textarea{

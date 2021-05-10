@@ -447,7 +447,7 @@ $(document).ready(function() {
 	</ul>
 	</c:forEach>
 			<div id="add_btn">
-				<input type="submit" id="btn_add" value="활동 여부" class="y_btn detatil_btn" >
+				<input type="submit" id="btn_add" value="활동 확인" class="y_btn detatil_btn" >
 			</div>
 </form>
 		</div>

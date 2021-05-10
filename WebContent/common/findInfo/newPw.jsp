@@ -69,14 +69,14 @@ $(document).ready(function() {
 	}
 
 	/* 비밀번호 에러메세지 클리어 */
-	function clearMessagePw(){
-		$("#pwMessage").html("");
-	}
-
+	$("#memberPw").keydown(function () {
+		$("#pwMessage").text("");
+	});
+	
 	/* 비밀번호2 에러메세지 클리어 */
-	function clearMessagePw2(){
-		$("#pw2Message").html("");
-	}
+	$("#checkMemberPw").keydown(function () {
+		$("#pw2Message").text("");
+	});
 	
 });
 
@@ -125,6 +125,10 @@ text-align: center;
  .g_btn{
  font-weight: bold;
  }
+ 
+ .pwMessage, .pw2Message{
+ color: red;
+ }
 
 </style>
 
@@ -151,7 +155,7 @@ text-align: center;
 					<tr>
 						<th>새 비밀번호</th> 
 						<td>
-							<input type="password" id="memberPw" name="memberPw" size="30" required="required">
+							<input type="password" id="memberPw" name="memberPw" size="30" required="required" >
 							<div class="pwMessage" id="pwMessage"></div>
 						</td>
 					</tr>
@@ -159,7 +163,7 @@ text-align: center;
 					<tr>
 						<th>비밀번호 확인</th> 
 						<td>
-							<input type="password" id="checkMemberPw" name="checkMemberPw" size="30" required="required">
+							<input type="password" id="checkMemberPw" name="checkMemberPw" size="30" required="required" >
 							<div class="pw2Message" id="pw2Message"></div>
 							<input type="checkbox" id="pwVisible" name="pwVisible"> <span>비밀번호 표시</span>
 						</td>
