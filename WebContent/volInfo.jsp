@@ -16,7 +16,7 @@
 	width: 1000px; 
 	border: 1px gray; 
 	margin: 0 auto;
-	margin-top: 70px;
+	margin-top: 20px;
 	margin-bottom: 70px;
 }
 
@@ -56,6 +56,7 @@
 	margin-right: 10px;
 	margin-bottom: 10px;
 	border-radius: 25px;
+	font-size: smaller;
 }
 
 #volAdd{
@@ -207,7 +208,7 @@ pageContext.setAttribute("newLineChar", "\n");
 <%@ include file="/common/header.jsp"%>
 <hr>
 <div id="section_contents">
-<h2>자원봉사 상세</h2>
+<h1>자원봉사 상세</h1>
 <hr>
 <input class="btn_list g_btn" type="button" value="목록"  style="cursor:hand;" onclick="location.href='${CONTEXT_PATH}/common/commonController?action=volListForm'">
 <c:if test="${grade == 'G' }">
@@ -222,41 +223,34 @@ pageContext.setAttribute("newLineChar", "\n");
 
 <hr class="clear_b">
 
-<h3>${vDto.volTitle} <span id="recSt">${vDto.recStatuse}</span></h3>   
+<h3>${map['volTitle']} <span id="recSt">${vDto.recStatuse}</span></h3>   
 <form action="${CONTEXT_PATH}/common/commonController?action=volDetatilForm" method="post">
 	<table id="volAdd">
 		<tr>
+			<th>모집 시작일</th>
+			<td>${map['startDate']}</td>
+			<th>모집 마감일</th>
+			<td>${map['endDate']}</td>
+		</tr>
+		<tr>
 			<th>봉사 시작일</th>
-				<td>
-					${vDto.startTime}
-				</td>
+			<td>${map['startVolDate']}</td>
 			<th>봉사 마감일</th>
-			<td>
-				${vDto.endTime}
-			</td>
+			<td>${map['endVolDate']}</td>
 		</tr>
 		<tr>
 			<th>봉사 시작 시간</th>
-			<td>${vDto.volStartTime}</td>
+			<td>${map['startTime']}</td>
 			<th>봉사 마감 시간</th>
-			<td>${vDto.volEndTime}</td>
+			<td>${map['endTime']}</td>
 		</tr>
-		<tr>
-			<th>모집 시작일</th>
-			<td>
-				${vDto.startDate}
-			</td>
-			<th>모집 마감일</th>
-			<td>
-				${vDto.endDate}
-			</td>
-		</tr>
+		
 		<tr>
 			<th>모집 인원</th>
-			<td>${vDto.totalCount} 명</td>
+			<td>${map['totalCount']}명/1일</td>
 			<th>봉사 장소</th>
 			<td id="place_td" colspan="3">
-				${vDto.volPlace}
+				${map['volPlace']}
 			</td>
 		</tr>
 		<tr>
@@ -294,9 +288,9 @@ pageContext.setAttribute("newLineChar", "\n");
 			</div>
 		</li>
 	</ul>
+	<hr>
 </form>
-
-<%@ include file="/common/footer.jsp"%>
 </div>
+<%@ include file="/common/footer.jsp"%>
 </body>
 </html>

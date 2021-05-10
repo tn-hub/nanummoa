@@ -394,11 +394,19 @@ $(document).ready(function(){
 					<span>${list.volEnd}</span>
 				</div>
 			</div>
+			
 			<div class="deadline_box">
-					<p>마감
-						<em>${list.deadLine}</em>
-						일전
-					</p>
+			<c:choose>	
+				<c:when test="${list.deadLine > 0}">
+					<p>마감 <em>${list.deadLine }</em> 일전</p>
+				</c:when>
+				<c:when test="${list.deadLine == 0}">
+					<em>오늘 마감</em>
+				</c:when>
+				<c:otherwise>
+					<p>마감 종료</p>
+				</c:otherwise>
+			</c:choose>
 			</div>
 			<hr class="list_hr">
 		</li>

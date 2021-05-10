@@ -94,35 +94,63 @@ public class AdminDao {
 	 * 가입대기 승인 목록
 	 * @param conn
 	 * @param centerActList
+	 * @param lastNum 
+	 * @param sartNum 
 	 * @throws CommonException
 	 */
-	public void selCenterAcceptList(Connection conn, ArrayList<CenterInfoDto> centerActList) throws CommonException{
+	public void selCenterAcceptList(Connection conn, ArrayList<CenterInfoDto> centerActList, Integer sartNum, Integer lastNum) throws CommonException{
 		StringBuilder sql = new StringBuilder();
 		
-		sql.append(" select ");
-		sql.append("  c.c_id ");
-		sql.append(" , i.c_name ");
-		sql.append(" , to_char(c.entry_date,'yyyy-mm-dd') as entry_date ");
-		sql.append(" from center_member c, center_info i ");
-		sql.append(" where c.c_id = i.c_id ");
-		sql.append(" and  c.app_status = 0 ");
-		sql.append(" order by c.entry_date ");
 		
+		sql.append(" select  ");
+		sql.append("  c.c_id  ");
+		sql.append("  , i.c_name   ");
+		sql.append("  , to_char(c.entry_date,'yyyy-mm-dd') as member_entry_date "); 
+		sql.append("  , rownum as page_num  ");
+		sql.append("  , c.c_name as member_name ");
+		sql.append("  , c.c_mobile as member_mobile ");
+		sql.append("  , c.c_email as member_email ");
+		sql.append("  , i.register_code ");
+		sql.append("  , i.c_entry_date ");
+		sql.append("  , i.c_address ");
+		sql.append("  , i.ceo_name ");
+		sql.append("  , i.ceo_mobile ");
+		sql.append("  , i.service_subject ");
+		sql.append("  from center_member c, center_info i  ");
+		sql.append("  where c.c_id = i.c_id  ");
+		sql.append("  and  c.app_status = 0  ");
+		sql.append("  order by c.entry_date  ");
+		 
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		
+		 // 페이징 추가 쿼리 
+		String page_sql = "select * from ("+sql.toString()+") where page_num between ? and ?";
+		
+		
 		try {
-			stmt = conn.prepareStatement(sql.toString()); 
+			stmt = conn.prepareStatement(page_sql); 
+			stmt.setInt(1, sartNum);
+			stmt.setInt(2, lastNum);
+			
 			rs = stmt.executeQuery();
 			
 			CenterInfoDto dto = null;
 			
 			while(rs.next()) { 
-				
 				dto = new CenterInfoDto();
 				dto.setCenterId(rs.getString("c_id"));
 				dto.setCenterName(rs.getString("c_name"));
-				dto.setCenterEntryDate(rs.getString("entry_date"));
+				dto.setCmemberEntryDate(rs.getString("member_entry_date"));
+				dto.setCmemberName(rs.getString("member_name"));
+				dto.setCmemberMobile(rs.getString("member_mobile"));
+				dto.setCmemberEmail(rs.getString("member_email"));
+				dto.setRegisterCode(rs.getString("register_code"));
+				dto.setCenterEntryDate(rs.getString("c_entry_date"));
+				dto.setCenterAddress(rs.getString("c_address"));
+				dto.setCeoName(rs.getString("ceo_name"));
+				dto.setCeoMobile(rs.getString("ceo_mobile"));
+				dto.setService(rs.getString("service_subject"));
 				
 				centerActList.add(dto);
 			}

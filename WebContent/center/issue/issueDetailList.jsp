@@ -208,7 +208,7 @@ text-align: center;
 </style>
 
 <script language='javascript'>
-
+/* 
 function noEvent() {
     if (event.keyCode == 116) {
         event.keyCode= 2;
@@ -219,7 +219,7 @@ function noEvent() {
         return false;
     }
 }
-document.onkeydown = noEvent;
+document.onkeydown = noEvent; */
 
 </script>
 </head>
@@ -256,10 +256,16 @@ document.onkeydown = noEvent;
 				</div>
 				
 				<input type="button" value="상세정보" class="g_btn detatil_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=issueInfoForm&volInfoNo=${dto.volInfoNo}&generalId=${dto.generalId }'">
-					<c:if test="${dto.activityStatus == 2 and dto.recStatus == 2}">
-				<input type="button" value="인증서 발급" class="y_btn detatil_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=volIssue&volInfoNo=${dto.volInfoNo}&generalId=${dto.generalId }'">
-				<input type="button" value="인증서 발급폼" class="y_btn detatil_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=volIssueForm&volInfoNo=${dto.volInfoNo}&generalId=${dto.generalId }'">
-					</c:if> 	
+				<c:choose>
+					<c:when test="${dto.activityStatus == 2 and dto.recStatus == 2}">
+							<input type="button" value="인증서 발급" class="y_btn detatil_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=volIssueForm&volInfoNo=${dto.volInfoNo}&generalId=${dto.generalId }'">
+					</c:when>
+					<c:when test="${dto.activityStatus == 3 and dto.recStatus == 2}">
+							<input type="button" disabled="disabled" value="인증서 발급" class="y_btn detatil_btn" onclick="location.href='${CONTEXT_PATH }/center/centerController?action=volIssueForm&volInfoNo=${dto.volInfoNo}&generalId=${dto.generalId }'">
+					</c:when>
+					<c:otherwise>
+					</c:otherwise>
+				</c:choose> 	
 			</div>
 			
 			<hr class="list_hr">

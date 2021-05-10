@@ -31,9 +31,13 @@ public class SearchAllDto {
 	/** 내용 */
 	private String contents;
 	
+	/** 전체건수  */
+	private int totCnt;
+	
 	
 	
 	public SearchAllDto() {}
+
 
 
 	/**
@@ -43,9 +47,10 @@ public class SearchAllDto {
 	 * @param writer
 	 * @param title
 	 * @param contents
+	 * @param totCnt
 	 */
 	public SearchAllDto(String dvisionName, String divisionSub, int infoNo, String writer, String title,
-			String contents) {
+			String contents, int totCnt) {
 		super();
 		this.dvisionName = dvisionName;
 		this.divisionSub = divisionSub;
@@ -53,6 +58,7 @@ public class SearchAllDto {
 		this.writer = writer;
 		this.title = title;
 		this.contents = contents;
+		this.totCnt = totCnt;
 	}
 
 
@@ -152,6 +158,23 @@ public class SearchAllDto {
 	}
 
 
+	/**
+	 * @return the totCnt
+	 */
+	public int getTotCnt() {
+		return totCnt;
+	}
+
+
+	/**
+	 * @param totCnt the totCnt to set
+	 */
+	public void setTotCnt(int totCnt) {
+		this.totCnt = totCnt;
+	}
+
+
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -166,6 +189,10 @@ public class SearchAllDto {
 		builder.append(title);
 		builder.append(", ");
 		builder.append(contents);
+		builder.append(", ");
+		builder.append(totCnt);
 		return builder.toString();
 	}
+
+	
 }

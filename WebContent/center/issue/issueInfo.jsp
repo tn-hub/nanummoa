@@ -322,7 +322,7 @@ $(document).ready(function() {
 			return false;
 		 }
 	 });
-	 
+	
 });
  
 </script>
@@ -407,17 +407,17 @@ $(document).ready(function() {
 				
 				<div class="span_box1">
 					<span class="title_span">[봉사상태]</span>
-					<c:choose>
-						<c:when test="${dto.recStatus == '0'}">
-							<span>모집중</span>
-						</c:when>
-						<c:when test="${dto.recStatus == '1'}">
-							<span>모집마감</span>
-						</c:when>
-						<c:when test="${dto.recStatus == '2'}">
-							<span>활동종료</span>
-						</c:when>
-					</c:choose>
+						<c:choose>
+							<c:when test="${dto.recStatus == '0'}">
+								<span>모집중</span>
+							</c:when>
+							<c:when test="${dto.recStatus == '1'}">
+								<span>모집마감</span>
+							</c:when>
+							<c:when test="${dto.recStatus == '2'}">
+								<span>활동종료</span>
+							</c:when>
+						</c:choose>
 				</div>
 				
 				<div class="span_box1">
@@ -433,6 +433,9 @@ $(document).ready(function() {
 					</c:when>
 					<c:when test="${dto.volStatus == '2' and dto.recStatus == '2'}">
 						<span class="title_span g_btn">활동 완료</span>
+					</c:when>
+					<c:when test="${dto.volStatus == '3' and dto.recStatus == '2'}">
+						<span class="title_span g_btn">인증서발급 완료</span>
 					</c:when>
 				</c:choose>
 				

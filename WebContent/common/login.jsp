@@ -48,8 +48,7 @@ height : 100px;
 width: 500px;
 font-size: 22px;
 font-weight: bold;
-margin: 0 auto;
-
+margin: 70px auto -40px auto;
 }
 input[type='radio'] {
 	width: 30px;

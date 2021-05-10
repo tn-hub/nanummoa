@@ -206,7 +206,7 @@
 	</ul>
 	
 	<h3>◎ 신청자 정보</h3>
-	<input type="button" value="내정보수정" class="float_r y_btn" onclick="location.href=''">
+	<input type="button" value="내정보수정" class="float_r y_btn" onclick="location.href='${CONTEXT_PATH}/general/generalController?action=generalMyInfoForm'">
 	<hr class="clear_b">
 	<ul class="vol_list_ul">
 		<li>
