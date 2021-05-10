@@ -88,7 +88,7 @@ $(document).ready(function(){
 				  success: function(data, textStatus){
 					  if (data == "usable") {
 						  alert("사용 가능한 아이디 입니다");
-						  $("#idBtn").attr("disabled", true);
+						  $("#idBtn").prop("disabled", true);
 					  } else if (data == "not-usable") {
 						  alert("이미 존재하는 아이디 입니다");
 					  } else if (data == "none") {
@@ -115,11 +115,11 @@ $(document).ready(function(){
 				  success: function(data, textStatus){
 					  if (data == "usable") {
 						  alert("서울시에 등록된 기관입니다. 회원가입 후 바로 활동 가능합니다");
-						  $("#centerNameBtn").attr("disabled", true);
+						  $("#centerNameBtn").prop("disabled", true);
 						  $("#appStatus").val("1");
 					  } else if (data == "not-usable") {
 						  alert("서울시에 미등록된 기관입니다. 관리자 승인 후 활동 가능합니다");
-						  $("#centerNameBtn").attr("disabled", true);
+						  $("#centerNameBtn").prop("disabled", true);
 						  $("#appStatus").val("0");
 					  } else if (data == "none") {
 						  alert("기관 이름을 입력해 주세요");
