@@ -219,6 +219,10 @@ pageContext.setAttribute("newLineChar", "\n");
 	<input class="y_btn float_r" type="button" value="수정하기"  style="cursor:hand;" onclick="location.href='${CONTEXT_PATH}/center/centerController?action=updateVolForm&volInfoNo=${vDto.volInfoNo}'">
 </c:if>
 
+<c:if test = "${grade == 'A'}">
+	<input class="g_btn float_r" type="button" value="삭제하기"  style="cursor:hand;margin-left: 10px;" onclick="location.href='${CONTEXT_PATH}/admin/adminController?action=deleteVol&volInfoNo=${vDto.volInfoNo}'">
+</c:if>
+
 
 <hr class="clear_b">
 
