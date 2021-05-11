@@ -24,6 +24,7 @@ import com.nanum.dto.LocalDto;
 import com.nanum.dto.QnAReplyDto;
 import com.nanum.dto.VolCategoryDto;
 import com.nanum.model.biz.AdminBiz;
+import com.nanum.model.biz.CenterBiz;
 import com.nanum.model.biz.CommonBiz;
 import com.nanum.model.biz.GeneralBiz;
 import com.nanum.util.CommonException;
@@ -106,11 +107,13 @@ public class AdminController extends HttpServlet {
 		case "confirmationForm" :
 			confirmationForm(request, response);
 			break;
+		case "deleteVol":
+			deleteVol(request, response);
+			break;	
 		}
 
 	}
 
-	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		process(request, response);
 	}
@@ -695,6 +698,31 @@ public class AdminController extends HttpServlet {
 			
 		} catch(CommonException e) {
 			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	private void deleteVol(HttpServletRequest request, HttpServletResponse response)  throws IOException, ServletException {
+		HttpSession session = request.getSession(false);
+		
+		if (session == null || session.getAttribute("dto") == null || session.getAttribute("grade") == null) {
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=loginForm");
+			return;
+		}
+		PrintWriter out = response.getWriter();
+
+		int volInfoNo = Integer.parseInt(request.getParameter("volInfoNo"));
+		CenterBiz biz = new CenterBiz();
+		try {
+			biz.deleteVol(volInfoNo);
+			response.sendRedirect(CONTEXT_PATH + "/common/commonController?action=volListForm");
+		} catch (CommonException e) {
+			e.printStackTrace();
+			out.println("<script>alert('글삭제에 실패했습니다.');history.back();</script>");
+			out.flush();
+			out.close();
+			return;
 		}
 		
 	}
