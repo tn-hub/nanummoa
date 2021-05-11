@@ -951,7 +951,7 @@ public class CenterDao {
 	 */
 	public void deleteVolDetail(Connection conn, int volInfoNo) throws CommonException {
 		String sql = "delete from vol_detail where vol_info_no = ?";
-
+		System.out.println(sql);
 		PreparedStatement pstmt = null;
 
 		try {
@@ -959,7 +959,7 @@ public class CenterDao {
 			pstmt.setInt(1, volInfoNo);
 			int rows = pstmt.executeUpdate();
 			System.out.println("rows : " + rows);
-			if (rows < 1) {
+			if (rows < 0) {
 				throw new Exception();
 			}
 
@@ -978,7 +978,7 @@ public class CenterDao {
 	 * @param centerId 
 	 */
 	public void deleteVolInfo(Connection conn, int volInfoNo, String centerId) throws CommonException {
-		String sql = "delete from vol_info where vol_info_no = ? and c_id = ?";
+		String sql = "delete from vol_info where vol_info_no = ? and c_id=?";
 		System.out.println(sql);
 
 		PreparedStatement pstmt = null;
@@ -1000,6 +1000,109 @@ public class CenterDao {
 			JdbcTemplate.close(pstmt);
 		}
 	}
+	
+	/**
+	 * 봉사정보 삭제
+	 * @param conn
+	 * @param volInfoNo
+	 * @param centerId 
+	 */
+	public void deleteVolInfo(Connection conn, int volInfoNo) throws CommonException {
+		String sql = "delete from vol_info where vol_info_no = ?";
+		System.out.println(sql);
+
+		PreparedStatement pstmt = null;
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, volInfoNo);
+			int rows = pstmt.executeUpdate();
+			System.out.println("rows : " + rows);
+			if (rows != 1) {
+				throw new Exception();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(pstmt);
+		}
+	}
+	
+	/**
+	 * 봉사정보 삭제
+	 * @param conn
+	 * @param volInfoNo
+	 */
+	public void deleteVolInfoByNo(Connection conn, int volInfoNo) throws CommonException {
+		String sql_del_con = " delete from vol_confirmation where vol_info_no= ? ";
+		String sql_del_detail = " delete from vol_detail where vol_info_no = ? ";
+		String sql_del_info = " delete from vol_info where vol_info_no =? ";
+		System.out.println(sql_del_con);
+		System.out.println(sql_del_detail);
+		System.out.println(sql_del_info);
+
+		PreparedStatement pstmt = null;
+		PreparedStatement pstmt2 = null;
+		PreparedStatement pstmt3 = null;
+		try {
+			pstmt = conn.prepareStatement(sql_del_con);
+			pstmt.setInt(1, volInfoNo);
+			pstmt.executeUpdate();
+			
+			pstmt2 = conn.prepareStatement(sql_del_detail);
+			pstmt2.setInt(1, volInfoNo);
+			pstmt2.executeUpdate();
+			
+			pstmt3 = conn.prepareStatement(sql_del_info);
+			pstmt3.setInt(1, volInfoNo);
+			int rows = pstmt3.executeUpdate();
+			
+			System.out.println("rows : " + rows);
+			if (rows == 0) {
+				throw new Exception();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(pstmt);
+			JdbcTemplate.close(pstmt2);
+			JdbcTemplate.close(pstmt3);
+		}
+	}
+	
+	/**
+	 * 봉사확인서삭제
+	 * @param conn
+	 * @param volInfoNo
+	 * @throws CommonException
+	 */
+	public void deleteConfirmation(Connection conn, int volInfoNo) throws CommonException {
+		String sql = "delete from vol_confirmation where vol_info_no= ?";
+		System.out.println(sql);
+
+		PreparedStatement pstmt = null;
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, volInfoNo);
+			int rows = pstmt.executeUpdate();
+			System.out.println("rows : " + rows);
+			if (rows < 0) {
+				throw new Exception();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommonException();
+		} finally {
+			JdbcTemplate.close(pstmt);
+		}
+	}
+	
 
 	/**
 	 * 활동상태 변경(활동 완료)
@@ -1272,5 +1375,6 @@ public class CenterDao {
 			JdbcTemplate.close(pstmt);
 		}
 	}
-	
+
+
 }

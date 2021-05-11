@@ -403,6 +403,7 @@ public class CenterBiz {
 		Connection conn = JdbcTemplate.getConnection();
 
 		try {
+			dao.deleteConfirmation(conn, volInfoNo);
 			dao.deleteVolDetail(conn, volInfoNo);
 			dao.deleteVolInfo(conn, volInfoNo, centerId);
 			JdbcTemplate.commit(conn);
@@ -414,7 +415,26 @@ public class CenterBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
+	
+	/**
+	 * 봉사게시글 삭제(info, 연관 detail)
+	 * 
+	 * @param volInfoNo
+	 */
+	public void deleteVol(int volInfoNo) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
 
+		try {
+			dao.deleteVolInfoByNo(conn, volInfoNo);
+			JdbcTemplate.commit(conn);
+		} catch (CommonException e) {
+			JdbcTemplate.rollback(conn);
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
 	/**
 	 * 활동상태 변경(활동완료)
 	 * 
