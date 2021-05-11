@@ -11,6 +11,7 @@ import com.nanum.dto.GeneralMemberDto;
 import com.nanum.dto.LocalDto;
 import com.nanum.dto.ServiceCategoryDto;
 import com.nanum.dto.VolCategoryDto;
+import com.nanum.model.dao.AdminDao;
 import com.nanum.model.dao.GeneralDao;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
@@ -264,9 +265,9 @@ public class GeneralBiz {
 	 */
 	public void deleteGeneralMember(String generalId) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
-		
+		AdminDao aDao = new AdminDao();
 		try {
-			gDao.deleteGeneralMember(conn, generalId);
+			aDao.generalDelete(conn, generalId);
 			JdbcTemplate.commit(conn);
 		} catch (CommonException e) {
 			JdbcTemplate.rollback(conn);

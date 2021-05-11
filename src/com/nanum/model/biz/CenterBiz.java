@@ -6,14 +6,13 @@ package com.nanum.model.biz;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
-import com.nanum.dto.VolDetailDto;
 import com.nanum.dto.CenterInfoDto;
 import com.nanum.dto.CenterMemberDto;
 import com.nanum.dto.CenterVolDto;
 import com.nanum.dto.GeneralMemberDto;
-import com.nanum.dto.VolApplyListDto;
+import com.nanum.dto.VolDetailDto;
+import com.nanum.model.dao.AdminDao;
 import com.nanum.model.dao.CenterDao;
 import com.nanum.util.CommonException;
 import com.nanum.util.JdbcTemplate;
@@ -311,17 +310,16 @@ public class CenterBiz {
 	}
 
 	/**
-	 * 센터회원 및 센터정보 삭제
+	 * 센터회원 탈퇴
 	 * 
 	 * @param centerId 센터회원 아이디
 	 * @throws CommonException
 	 */
 	public void deleteCenterMember(String centerId) throws CommonException {
 		Connection conn = JdbcTemplate.getConnection();
-
+		AdminDao aDao = new AdminDao();
 		try {
-			cDao.deleteCenter(conn, centerId);
-			cDao.deleteCenterMember(conn, centerId);
+			aDao.centerDelete(conn, centerId);
 			JdbcTemplate.commit(conn);
 		} catch (CommonException e) {
 			JdbcTemplate.rollback(conn);
@@ -403,6 +401,7 @@ public class CenterBiz {
 		Connection conn = JdbcTemplate.getConnection();
 
 		try {
+			dao.deleteConfirmation(conn, volInfoNo);
 			dao.deleteVolDetail(conn, volInfoNo);
 			dao.deleteVolInfo(conn, volInfoNo, centerId);
 			JdbcTemplate.commit(conn);
@@ -414,7 +413,26 @@ public class CenterBiz {
 			JdbcTemplate.close(conn);
 		}
 	}
+	
+	/**
+	 * 봉사게시글 삭제(info, 연관 detail)
+	 * 
+	 * @param volInfoNo
+	 */
+	public void deleteVol(int volInfoNo) throws CommonException {
+		Connection conn = JdbcTemplate.getConnection();
 
+		try {
+			dao.deleteVolInfoByNo(conn, volInfoNo);
+			JdbcTemplate.commit(conn);
+		} catch (CommonException e) {
+			JdbcTemplate.rollback(conn);
+			e.printStackTrace();
+			throw e;
+		} finally {
+			JdbcTemplate.close(conn);
+		}
+	}
 	/**
 	 * 활동상태 변경(활동완료)
 	 * 
