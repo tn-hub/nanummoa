@@ -6,7 +6,6 @@
 <head>
 <meta charset="UTF-8">
 <title>인증서 다운</title>
-<script type="text/javascript" src="${CONTEXT_PATH }/resources/js/common.js"></script>
 <style type="text/css">
 #pdf_wrap {
   position: absolute;

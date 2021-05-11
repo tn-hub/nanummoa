@@ -5,6 +5,8 @@
 <head>
 <meta charset="UTF-8">
 <title>인증서 발급</title>
+<!-- jquery-3.6.0.min.js -->
+<script type="text/javascript" src="${CONTEXT_PATH }/resources/js/jquery-3.6.0.min.js"></script>
 <link type="text/css" rel="stylesheet" href="${initParam.CONTEXT_PATH}/resources/css/common.css">
 <style type="text/css">
 #section_contents{
@@ -313,6 +315,12 @@ text-align: center;
 </style>
 <script type="text/javascript">
 $(document).ready(function() {
+	
+	if ($("input:checkbox[name='checkDate']:disabled").length >= 1) {
+		console.log($("input:checkbox[name='checkDate']:disabled").length);
+		$(".checkDate").attr("disabled",true);
+	}
+	
 	/* 신청승인 버튼 체크박스 값 없을시 return */
 	$("#btn_add").click(function() {
 		if ($("input:checkbox[name='checkDate']:checked").length == 0) {
@@ -389,10 +397,10 @@ $(document).ready(function() {
 					<span class="title_span">
 						<c:choose>
 							<c:when test="${dto.volStatus != '1'}">
-								<span><input type="checkbox" name="checkDate" id="checkDate" value="${dto.volApplyNo }" disabled="disabled"></span>
+								<span><input type="checkbox" class="checkDate" name="checkDate" id="checkDate" value="${dto.volApplyNo }" disabled="disabled"></span>
 							</c:when>
 							<c:otherwise>
-								<span><input type="checkbox" name="checkDate" id="checkDate" value="${dto.volApplyNo }" ></span>
+								<span><input type="checkbox" class="checkDate" name="checkDate" id="checkDate" value="${dto.volApplyNo }" ></span>
 							</c:otherwise>
 						</c:choose>
 					</span>

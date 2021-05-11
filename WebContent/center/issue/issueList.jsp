@@ -5,7 +5,8 @@
 <head>
 <meta charset="UTF-8">
 <title>인증서 발급</title>
-<script type="text/javascript" src="${CONTEXT_PATH }/resources/js/common.js"></script>
+<!-- jquery-3.6.0.min.js -->
+<script type="text/javascript" src="${CONTEXT_PATH }/resources/js/jquery-3.6.0.min.js"></script>
 <link type="text/css" rel="stylesheet" href="${initParam.CONTEXT_PATH}/resources/css/common.css">
 <style type="text/css">
 .wrapper{
